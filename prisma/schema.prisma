@@ -1,0 +1,190 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ============================================================================
+// USER & AUTHENTICATION
+// ============================================================================
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  passwordHash  String
+  name          String
+  phone         String?
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  customers     Customer[]
+  maintenances  Maintenance[]
+  sessions      Session[]
+
+  @@map("users")
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String
+  token        String   @unique
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@map("sessions")
+}
+
+// ============================================================================
+// CUSTOMERS & HEATERS
+// ============================================================================
+
+model Customer {
+  id         String   @id @default(uuid())
+  name       String
+  street     String
+  zipCode    String
+  city       String
+  phone      String
+  email      String?
+  emailOptIn EmailOptInStatus @default(NONE)
+  optInToken String?  @unique // for double opt-in confirmation
+  optInTokenExpires DateTime? // token expiry (48 hours)
+  optInConfirmedAt DateTime? // when customer confirmed
+  optInIpAddress String? // for GDPR proof
+  unsubscribedAt DateTime? // if customer unsubscribed
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  heaters    Heater[]
+  emailLogs  EmailLog[]
+
+  @@index([userId])
+  @@index([email])
+  @@index([emailOptIn])
+  @@map("customers")
+}
+
+enum EmailOptInStatus {
+  NONE       // no email provided or not opted in
+  PENDING    // confirmation email sent, awaiting click
+  CONFIRMED  // customer clicked confirmation link
+  UNSUBSCRIBED // customer unsubscribed
+}
+
+model Heater {
+  id                  String   @id @default(uuid())
+  model               String
+  serialNumber        String?
+  installationDate    DateTime?
+  maintenanceInterval Int      // in months (1, 3, 6, 12, 24)
+  lastMaintenance     DateTime?
+  nextMaintenance     DateTime? // auto-calculated
+  requiredParts       String?  // JSON array stored as text
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+
+  // Relations
+  customerId  String
+  customer    Customer    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  maintenances Maintenance[]
+
+  @@index([customerId])
+  @@index([nextMaintenance]) // for querying upcoming maintenances
+  @@map("heaters")
+}
+
+// ============================================================================
+// MAINTENANCE TRACKING
+// ============================================================================
+
+model Maintenance {
+  id        String   @id @default(uuid())
+  date      DateTime @default(now())
+  notes     String?
+  photos    String[] @default([]) // array of file URLs
+  syncedAt  DateTime? // when synced from offline (null = created online)
+  createdAt DateTime @default(now())
+
+  // Relations
+  heaterId String
+  heater   Heater @relation(fields: [heaterId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([heaterId])
+  @@index([userId])
+  @@index([date])
+  @@map("maintenances")
+}
+
+// ============================================================================
+// EMAIL AUTOMATION
+// ============================================================================
+
+model EmailLog {
+  id           String   @id @default(uuid())
+  customerId   String
+  type         EmailType
+  sentAt       DateTime @default(now())
+  opened       Boolean  @default(false)
+  openedAt     DateTime?
+  clicked      Boolean  @default(false)
+  clickedAt    DateTime?
+  resendId     String?  // Resend email ID for tracking
+  error        String?  // if send failed
+
+  customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+
+  @@index([customerId])
+  @@index([type])
+  @@index([sentAt])
+  @@map("email_logs")
+}
+
+enum EmailType {
+  OPT_IN_CONFIRMATION  // double opt-in confirmation
+  REMINDER_4_WEEKS     // 4 weeks before maintenance
+  REMINDER_1_WEEK      // 1 week before maintenance
+  WEEKLY_SUMMARY       // weekly summary to Max (sent to user, not customer)
+}
+
+// ============================================================================
+// CRON JOB TRACKING
+// ============================================================================
+
+model CronRun {
+  id          String   @id @default(uuid())
+  jobType     String   // "daily_reminders", "weekly_summary"
+  startedAt   DateTime @default(now())
+  completedAt DateTime?
+  status      CronStatus @default(RUNNING)
+  emailsSent  Int      @default(0)
+  errors      String?  // JSON array of errors
+
+  @@index([jobType])
+  @@index([startedAt])
+  @@map("cron_runs")
+}
+
+enum CronStatus {
+  RUNNING
+  SUCCESS
+  FAILED
+}
