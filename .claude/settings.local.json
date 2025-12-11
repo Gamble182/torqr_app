@@ -2,7 +2,14 @@
   "permissions": {
     "allow": [
       "Bash(npx prisma migrate:*)",
-      "Bash(npx prisma dev)"
+      "Bash(npx prisma dev)",
+      "Bash(find:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npx kill-port:*)",
+      "Bash(cat:*)",
+      "Bash(ls:*)",
+      "Bash(npm run build:*)",
+      "Bash(npx prisma generate)"
     ]
   }
 }

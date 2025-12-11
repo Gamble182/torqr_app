@@ -501,13 +501,13 @@ npx shadcn-ui@latest init
 
 ```bash
 # Install commonly used components
-npx shadcn-ui@latest add button
-npx shadcn-ui@latest add input
-npx shadcn-ui@latest add form
-npx shadcn-ui@latest add card
-npx shadcn-ui@latest add dialog
-npx shadcn-ui@latest add select
-npx shadcn-ui@latest add label
+npx shadcn@latest add button
+npx shadcn@latest add input
+npx shadcn@latest add form
+npx shadcn@latest add card
+npx shadcn@latest add dialog
+npx shadcn@latest add select
+npx shadcn@latest add label
 
 # Install as needed during development
 ```
@@ -545,10 +545,10 @@ mkdir -p app/api/heaters
 mkdir -p app/api/maintenances
 mkdir -p app/api/upload
 mkdir -p app/api/cron
-mkdir -p app/(auth)/login
-mkdir -p app/(auth)/register
-mkdir -p app/(dashboard)/dashboard
-mkdir -p app/(dashboard)/customers
+mkdir -p app/auth/login
+mkdir -p app/auth/register
+mkdir -p app/dashboard/dashboard
+mkdir -p app/dashboard/customers
 mkdir -p components/ui
 mkdir -p lib
 mkdir -p emails
