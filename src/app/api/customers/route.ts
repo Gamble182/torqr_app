@@ -3,6 +3,17 @@ import { requireAuth } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 
+// Enum values for validation
+const HeatingTypeEnum = z.enum([
+  'GAS', 'OIL', 'DISTRICT_HEATING', 'HEAT_PUMP_AIR', 'HEAT_PUMP_GROUND',
+  'HEAT_PUMP_WATER', 'PELLET_BIOMASS', 'NIGHT_STORAGE', 'ELECTRIC_DIRECT',
+  'HYBRID', 'CHP'
+]);
+
+const AdditionalEnergyEnum = z.enum([
+  'PHOTOVOLTAIC', 'SOLAR_THERMAL', 'SMALL_WIND', 'BATTERY_STORAGE', 'HEAT_STORAGE'
+]);
+
 // Validation schema for creating a customer
 const createCustomerSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100, 'Name too long'),
@@ -11,6 +22,8 @@ const createCustomerSchema = z.object({
   city: z.string().min(1, 'City is required').max(100, 'City too long'),
   phone: z.string().min(1, 'Phone is required').max(20, 'Phone too long'),
   email: z.string().email('Invalid email').optional().or(z.literal('')),
+  heatingType: HeatingTypeEnum.optional().or(z.literal('')),
+  additionalEnergy: AdditionalEnergyEnum.optional().or(z.literal('')),
   notes: z.string().max(1000, 'Notes too long').optional(),
 });
 
@@ -27,9 +40,17 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = createCustomerSchema.parse(body);
 
-    // 3. Convert empty email string to null
+    // 3. Convert empty strings to null
     const email = validatedData.email && validatedData.email.trim() !== ''
       ? validatedData.email
+      : null;
+
+    const heatingType = validatedData.heatingType && validatedData.heatingType.trim() !== ''
+      ? validatedData.heatingType as any
+      : null;
+
+    const additionalEnergy = validatedData.additionalEnergy && validatedData.additionalEnergy.trim() !== ''
+      ? validatedData.additionalEnergy as any
       : null;
 
     // 4. Create customer in database
@@ -41,6 +62,8 @@ export async function POST(request: NextRequest) {
         city: validatedData.city,
         phone: validatedData.phone,
         email: email,
+        heatingType: heatingType,
+        additionalEnergy: additionalEnergy,
         notes: validatedData.notes || null,
         userId: userId,
       },

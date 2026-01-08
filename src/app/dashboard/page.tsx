@@ -12,7 +12,7 @@ export default async function DashboardPage() {
     <div>
       <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
       <p className="mt-2 text-gray-600">
-        Welcome to Torqr. Your customer management dashboard.
+        Willkommen bei Torqr. Ihr Kundenverwaltungs-Dashboard.
       </p>
 
       <div className="mt-8">
@@ -30,7 +30,7 @@ export default async function DashboardPage() {
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">Total Customers</dt>
+                    <dt className="text-sm font-medium text-gray-500 truncate">Kunden gesamt</dt>
                     <dd className="text-3xl font-semibold text-gray-900">-</dd>
                   </dl>
                 </div>

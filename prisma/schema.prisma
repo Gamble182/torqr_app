@@ -65,6 +65,8 @@ model Customer {
   optInConfirmedAt DateTime? // when customer confirmed
   optInIpAddress String? // for GDPR proof
   unsubscribedAt DateTime? // if customer unsubscribed
+  heatingType HeatingType? // primary heating system type
+  additionalEnergy AdditionalEnergy? // additional energy source (optional)
   notes      String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -86,6 +88,28 @@ enum EmailOptInStatus {
   PENDING    // confirmation email sent, awaiting click
   CONFIRMED  // customer clicked confirmation link
   UNSUBSCRIBED // customer unsubscribed
+}
+
+enum HeatingType {
+  GAS                 // Gasheizung
+  OIL                 // Ölheizung
+  DISTRICT_HEATING    // Fernwärme
+  HEAT_PUMP_AIR       // Wärmepumpe (Luft)
+  HEAT_PUMP_GROUND    // Wärmepumpe (Erde)
+  HEAT_PUMP_WATER     // Wärmepumpe (Wasser)
+  PELLET_BIOMASS      // Pelletheizung / Biomasse
+  NIGHT_STORAGE       // Nachtspeicherheizung (Strom)
+  ELECTRIC_DIRECT     // Elektro-Direktheizung (Infrarot, Heizlüfter etc.)
+  HYBRID              // Hybridheizungen (z. B. Gas + Wärmepumpe)
+  CHP                 // Blockheizkraftwerk (BHKW - Combined Heat and Power)
+}
+
+enum AdditionalEnergy {
+  PHOTOVOLTAIC        // Photovoltaik
+  SOLAR_THERMAL       // Solarthermie
+  SMALL_WIND          // Windkraft (Kleinwindanlage)
+  BATTERY_STORAGE     // Stromspeicher/Batterie
+  HEAT_STORAGE        // Wärmespeicher (Pufferspeicher)
 }
 
 model Heater {

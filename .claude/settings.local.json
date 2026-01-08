@@ -22,7 +22,9 @@
       "Bash(findstr:*)",
       "Bash(node:*)",
       "Bash(wc:*)",
-      "Bash(DATABASE_URL=\"postgresql://postgres:yCJGTJ9NAxVuBwwz@db.vvsmxzebaoslofigxakt.supabase.co:5432/postgres\" npx tsx:*)"
+      "Bash(DATABASE_URL=\"postgresql://postgres:yCJGTJ9NAxVuBwwz@db.vvsmxzebaoslofigxakt.supabase.co:5432/postgres\" npx tsx:*)",
+      "Bash(dir \"C:\\\\Users\\\\y.dorth\\\\Documents\" /b)",
+      "Bash(timeout 5 bash:*)"
     ]
   }
 }

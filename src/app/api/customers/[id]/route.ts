@@ -3,6 +3,17 @@ import { requireAuth } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 
+// Enum values for validation
+const HeatingTypeEnum = z.enum([
+  'GAS', 'OIL', 'DISTRICT_HEATING', 'HEAT_PUMP_AIR', 'HEAT_PUMP_GROUND',
+  'HEAT_PUMP_WATER', 'PELLET_BIOMASS', 'NIGHT_STORAGE', 'ELECTRIC_DIRECT',
+  'HYBRID', 'CHP'
+]);
+
+const AdditionalEnergyEnum = z.enum([
+  'PHOTOVOLTAIC', 'SOLAR_THERMAL', 'SMALL_WIND', 'BATTERY_STORAGE', 'HEAT_STORAGE'
+]);
+
 // Validation schema for updating a customer
 const updateCustomerSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100, 'Name too long').optional(),
@@ -11,6 +22,8 @@ const updateCustomerSchema = z.object({
   city: z.string().min(1, 'City is required').max(100, 'City too long').optional(),
   phone: z.string().min(1, 'Phone is required').max(20, 'Phone too long').optional(),
   email: z.string().email('Invalid email').optional().or(z.literal('')).nullable(),
+  heatingType: HeatingTypeEnum.optional().or(z.literal('')).nullable(),
+  additionalEnergy: AdditionalEnergyEnum.optional().or(z.literal('')).nullable(),
   notes: z.string().max(1000, 'Notes too long').optional().nullable(),
 });
 
@@ -118,10 +131,18 @@ export async function PATCH(
     const body = await request.json();
     const validatedData = updateCustomerSchema.parse(body);
 
-    // 5. Convert empty email string to null
+    // 5. Convert empty strings to null
     const email = validatedData.email === ''
       ? null
       : validatedData.email;
+
+    const heatingType = validatedData.heatingType === ''
+      ? null
+      : validatedData.heatingType;
+
+    const additionalEnergy = validatedData.additionalEnergy === ''
+      ? null
+      : validatedData.additionalEnergy;
 
     // 6. Update customer
     const updatedCustomer = await prisma.customer.update({
@@ -135,6 +156,8 @@ export async function PATCH(
         ...(validatedData.city && { city: validatedData.city }),
         ...(validatedData.phone && { phone: validatedData.phone }),
         ...(email !== undefined && { email: email }),
+        ...(heatingType !== undefined && { heatingType: heatingType as any }),
+        ...(additionalEnergy !== undefined && { additionalEnergy: additionalEnergy as any }),
         ...(validatedData.notes !== undefined && { notes: validatedData.notes }),
       },
     });

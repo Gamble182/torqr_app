@@ -11,7 +11,7 @@ export function DashboardNav() {
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard' },
-    { name: 'Customers', href: '/dashboard/customers' },
+    { name: 'Kunden', href: '/dashboard/customers' },
   ];
 
   const isActive = (href: string) => {
@@ -52,7 +52,7 @@ export function DashboardNav() {
               size="sm"
               onClick={() => signOut({ callbackUrl: '/login' })}
             >
-              Sign out
+              Abmelden
             </Button>
           </div>
         </div>
