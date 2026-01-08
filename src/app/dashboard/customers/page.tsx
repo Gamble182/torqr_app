@@ -21,8 +21,9 @@ interface Customer {
   city: string;
   phone: string;
   email: string | null;
-  heatingType: string | null;
-  additionalEnergy: string | null;
+  heatingType: string;
+  additionalEnergySources: string[];
+  energyStorageSystems: string[];
   notes: string | null;
   heaters: Heater[];
   createdAt: string;
@@ -50,14 +51,20 @@ const getHeatingTypeLabel = (type: string | null): string | null => {
   return labels[type] || type;
 };
 
-// Helper function to get German label for additional energy
-const getAdditionalEnergyLabel = (type: string | null): string | null => {
-  if (!type) return null;
-
+// Helper function to get German label for additional energy sources
+const getAdditionalEnergyLabel = (type: string): string => {
   const labels: Record<string, string> = {
     'PHOTOVOLTAIC': 'Photovoltaik',
     'SOLAR_THERMAL': 'Solarthermie',
     'SMALL_WIND': 'Kleinwindanlage',
+  };
+
+  return labels[type] || type;
+};
+
+// Helper function to get German label for energy storage systems
+const getEnergyStorageLabel = (type: string): string => {
+  const labels: Record<string, string> = {
     'BATTERY_STORAGE': 'Batterie',
     'HEAT_STORAGE': 'Wärmespeicher',
   };
@@ -279,18 +286,23 @@ export default function CustomersPage() {
                           </div>
 
                           {/* Heating info */}
-                          {(customer.heatingType || customer.additionalEnergy) && (
+                          {(customer.heatingType || customer.additionalEnergySources?.length > 0 || customer.energyStorageSystems?.length > 0) && (
                             <div className="mt-2 flex flex-wrap gap-1.5">
                               {customer.heatingType && (
                                 <span className="inline-flex items-center rounded-md bg-blue-50 px-2 py-1 text-xs font-medium text-blue-700">
                                   {getHeatingTypeLabel(customer.heatingType)}
                                 </span>
                               )}
-                              {customer.additionalEnergy && (
-                                <span className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700">
-                                  + {getAdditionalEnergyLabel(customer.additionalEnergy)}
+                              {customer.additionalEnergySources?.map((source) => (
+                                <span key={source} className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700">
+                                  + {getAdditionalEnergyLabel(source)}
                                 </span>
-                              )}
+                              ))}
+                              {customer.energyStorageSystems?.map((system) => (
+                                <span key={system} className="inline-flex items-center rounded-md bg-amber-50 px-2 py-1 text-xs font-medium text-amber-700">
+                                  🔋 {getEnergyStorageLabel(system)}
+                                </span>
+                              ))}
                             </div>
                           )}
                         </div>

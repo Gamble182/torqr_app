@@ -10,8 +10,12 @@ const HeatingTypeEnum = z.enum([
   'HYBRID', 'CHP'
 ]);
 
-const AdditionalEnergyEnum = z.enum([
-  'PHOTOVOLTAIC', 'SOLAR_THERMAL', 'SMALL_WIND', 'BATTERY_STORAGE', 'HEAT_STORAGE'
+const AdditionalEnergySourceEnum = z.enum([
+  'PHOTOVOLTAIC', 'SOLAR_THERMAL', 'SMALL_WIND'
+]);
+
+const EnergyStorageSystemEnum = z.enum([
+  'BATTERY_STORAGE', 'HEAT_STORAGE'
 ]);
 
 // Validation schema for updating a customer
@@ -22,8 +26,9 @@ const updateCustomerSchema = z.object({
   city: z.string().min(1, 'City is required').max(100, 'City too long').optional(),
   phone: z.string().min(1, 'Phone is required').max(20, 'Phone too long').optional(),
   email: z.string().email('Invalid email').optional().or(z.literal('')).nullable(),
-  heatingType: HeatingTypeEnum.optional().or(z.literal('')).nullable(),
-  additionalEnergy: AdditionalEnergyEnum.optional().or(z.literal('')).nullable(),
+  heatingType: HeatingTypeEnum.optional(),
+  additionalEnergySources: z.array(AdditionalEnergySourceEnum).optional(),
+  energyStorageSystems: z.array(EnergyStorageSystemEnum).optional(),
   notes: z.string().max(1000, 'Notes too long').optional().nullable(),
 });
 
@@ -131,18 +136,10 @@ export async function PATCH(
     const body = await request.json();
     const validatedData = updateCustomerSchema.parse(body);
 
-    // 5. Convert empty strings to null
-    const email = validatedData.email === ''
-      ? null
-      : validatedData.email;
-
-    const heatingType = validatedData.heatingType === ''
-      ? null
-      : validatedData.heatingType;
-
-    const additionalEnergy = validatedData.additionalEnergy === ''
-      ? null
-      : validatedData.additionalEnergy;
+    // 5. Convert empty email string to null
+    const email = validatedData.email && validatedData.email.trim() !== ''
+      ? validatedData.email
+      : null;
 
     // 6. Update customer
     const updatedCustomer = await prisma.customer.update({
@@ -156,8 +153,9 @@ export async function PATCH(
         ...(validatedData.city && { city: validatedData.city }),
         ...(validatedData.phone && { phone: validatedData.phone }),
         ...(email !== undefined && { email: email }),
-        ...(heatingType !== undefined && { heatingType: heatingType as any }),
-        ...(additionalEnergy !== undefined && { additionalEnergy: additionalEnergy as any }),
+        ...(validatedData.heatingType && { heatingType: validatedData.heatingType as any }),
+        ...(validatedData.additionalEnergySources !== undefined && { additionalEnergySources: validatedData.additionalEnergySources || [] }),
+        ...(validatedData.energyStorageSystems !== undefined && { energyStorageSystems: validatedData.energyStorageSystems || [] }),
         ...(validatedData.notes !== undefined && { notes: validatedData.notes }),
       },
     });
@@ -174,7 +172,7 @@ export async function PATCH(
       return NextResponse.json({
         success: false,
         error: 'Validation error',
-        details: error.errors,
+        details: error.issues,
       }, { status: 400 });
     }
 

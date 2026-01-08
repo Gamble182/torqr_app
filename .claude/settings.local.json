@@ -24,7 +24,9 @@
       "Bash(wc:*)",
       "Bash(DATABASE_URL=\"postgresql://postgres:yCJGTJ9NAxVuBwwz@db.vvsmxzebaoslofigxakt.supabase.co:5432/postgres\" npx tsx:*)",
       "Bash(dir \"C:\\\\Users\\\\y.dorth\\\\Documents\" /b)",
-      "Bash(timeout 5 bash:*)"
+      "Bash(timeout 5 bash:*)",
+      "Bash(timeout /t 3 /nobreak)",
+      "Bash(npx tsc:*)"
     ]
   }
 }
