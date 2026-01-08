@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card } from '@/components/ui/card';
+import { toast } from 'sonner';
 import { PlusIcon, SearchIcon, PencilIcon, TrashIcon } from 'lucide-react';
 
 interface Heater {
@@ -134,12 +135,13 @@ export default function CustomersPage() {
       if (result.success) {
         // Remove from list
         setCustomers(customers.filter(c => c.id !== id));
+        toast.success(`Kunde "${name}" wurde gelöscht`);
       } else {
-        alert(`Fehler beim Löschen: ${result.error}`);
+        toast.error(`Fehler beim Löschen: ${result.error}`);
       }
     } catch (err) {
       console.error('Error deleting customer:', err);
-      alert('Fehler beim Löschen des Kunden');
+      toast.error('Fehler beim Löschen des Kunden');
     }
   };
 

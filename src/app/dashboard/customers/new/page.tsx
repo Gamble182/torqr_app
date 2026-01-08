@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { MultiSelect } from '@/components/ui/multi-select';
+import { toast } from 'sonner';
 import { ArrowLeftIcon } from 'lucide-react';
 
 interface FormData {
@@ -153,6 +154,7 @@ export default function NewCustomerPage() {
       const result = await response.json();
 
       if (result.success) {
+        toast.success('Kunde erfolgreich erstellt!');
         router.push('/dashboard/customers');
       } else {
         if (result.details) {
@@ -162,13 +164,14 @@ export default function NewCustomerPage() {
             apiErrors[field] = error.message;
           });
           setErrors(apiErrors);
+          toast.error('Bitte überprüfen Sie Ihre Eingaben');
         } else {
-          alert(`Fehler: ${result.error}`);
+          toast.error(`Fehler: ${result.error}`);
         }
       }
     } catch (err) {
       console.error('Error creating customer:', err);
-      alert('Fehler beim Erstellen des Kunden');
+      toast.error('Fehler beim Erstellen des Kunden');
     } finally {
       setLoading(false);
     }

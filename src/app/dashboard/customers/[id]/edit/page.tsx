@@ -15,6 +15,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { MultiSelect } from '@/components/ui/multi-select';
+import { toast } from 'sonner';
 import { ArrowLeftIcon } from 'lucide-react';
 
 interface FormData {
@@ -107,12 +108,12 @@ export default function EditCustomerPage() {
             notes: customer.notes || '',
           });
         } else {
-          alert(`Fehler: ${result.error}`);
+          toast.error(`Fehler: ${result.error}`);
           router.push('/dashboard/customers');
         }
       } catch (err) {
         console.error('Error fetching customer:', err);
-        alert('Fehler beim Laden des Kunden');
+        toast.error('Fehler beim Laden des Kunden');
         router.push('/dashboard/customers');
       } finally {
         setFetchLoading(false);
@@ -196,7 +197,7 @@ export default function EditCustomerPage() {
       const result = await response.json();
 
       if (result.success) {
-        // Redirect to customers list
+        toast.success('Kunde erfolgreich aktualisiert!');
         router.push('/dashboard/customers');
       } else {
         // Handle validation errors from API
@@ -207,13 +208,14 @@ export default function EditCustomerPage() {
             apiErrors[field] = error.message;
           });
           setErrors(apiErrors);
+          toast.error('Bitte überprüfen Sie Ihre Eingaben');
         } else {
-          alert(`Fehler: ${result.error}`);
+          toast.error(`Fehler: ${result.error}`);
         }
       }
     } catch (err) {
       console.error('Error updating customer:', err);
-      alert('Fehler beim Aktualisieren des Kunden');
+      toast.error('Fehler beim Aktualisieren des Kunden');
     } finally {
       setLoading(false);
     }
