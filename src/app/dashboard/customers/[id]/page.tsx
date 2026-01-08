@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -15,8 +15,10 @@ import {
   MapPinIcon,
   HomeIcon,
   BatteryChargingIcon,
-  CalendarIcon
+  CalendarIcon,
+  PlusIcon
 } from 'lucide-react';
+import { HeaterFormModal } from '@/components/HeaterFormModal';
 
 interface Customer {
   id: string;
@@ -37,11 +39,11 @@ interface Customer {
 
 interface Heater {
   id: string;
-  manufacturer: string;
   model: string;
   serialNumber: string | null;
-  installDate: string;
+  installationDate: string | null;
   maintenanceInterval: number;
+  lastMaintenance: string | null;
   nextMaintenance: string | null;
 }
 
@@ -89,30 +91,32 @@ export default function CustomerDetailPage() {
 
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showHeaterForm, setShowHeaterForm] = useState(false);
+  const [editingHeater, setEditingHeater] = useState<Heater | null>(null);
+
+  const fetchCustomer = useCallback(async () => {
+    try {
+      const response = await fetch(`/api/customers/${customerId}`);
+      const result = await response.json();
+
+      if (result.success) {
+        setCustomer(result.data);
+      } else {
+        toast.error(`Fehler: ${result.error}`);
+        router.push('/dashboard/customers');
+      }
+    } catch (err) {
+      console.error('Error fetching customer:', err);
+      toast.error('Fehler beim Laden des Kunden');
+      router.push('/dashboard/customers');
+    } finally {
+      setLoading(false);
+    }
+  }, [customerId, router]);
 
   useEffect(() => {
-    const fetchCustomer = async () => {
-      try {
-        const response = await fetch(`/api/customers/${customerId}`);
-        const result = await response.json();
-
-        if (result.success) {
-          setCustomer(result.data);
-        } else {
-          toast.error(`Fehler: ${result.error}`);
-          router.push('/dashboard/customers');
-        }
-      } catch (err) {
-        console.error('Error fetching customer:', err);
-        toast.error('Fehler beim Laden des Kunden');
-        router.push('/dashboard/customers');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchCustomer();
-  }, [customerId, router]);
+  }, [fetchCustomer]);
 
   const handleDelete = async () => {
     if (!customer) return;
@@ -146,6 +150,44 @@ export default function CustomerDetailPage() {
       month: '2-digit',
       year: 'numeric',
     });
+  };
+
+  const isMaintenanceSoon = (nextMaintenance: string | null): boolean => {
+    if (!nextMaintenance) return false;
+    const next = new Date(nextMaintenance);
+    const now = new Date();
+    const thirtyDaysFromNow = new Date();
+    thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+    return next >= now && next <= thirtyDaysFromNow;
+  };
+
+  const handleEditHeater = (heater: Heater) => {
+    setEditingHeater(heater);
+    setShowHeaterForm(true);
+  };
+
+  const handleDeleteHeater = async (id: string, model: string) => {
+    if (!confirm(`Möchten Sie die Heizung "${model}" wirklich löschen?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/heaters/${id}`, {
+        method: 'DELETE',
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast.success(`Heizung "${model}" wurde gelöscht`);
+        fetchCustomer(); // Refresh data
+      } else {
+        toast.error(`Fehler: ${result.error}`);
+      }
+    } catch (err) {
+      console.error('Error deleting heater:', err);
+      toast.error('Fehler beim Löschen der Heizung');
+    }
   };
 
   if (loading) {
@@ -302,19 +344,121 @@ export default function CustomerDetailPage() {
             </Card>
           )}
 
-          {/* Heaters Section - Placeholder for Sprint 3 */}
-          <Card className="p-6 border-2 border-dashed border-gray-200 bg-gray-50">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <HomeIcon className="h-5 w-5 text-gray-400" />
-              Heizungen
-            </h2>
-            <div className="text-center py-8">
-              <HomeIcon className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-semibold text-gray-900">Noch keine Heizungen</h3>
-              <p className="mt-1 text-sm text-gray-500">
-                Die Heizungsverwaltung wird in Sprint 3 implementiert
-              </p>
+          {/* Heaters Section */}
+          <Card className="p-6">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <HomeIcon className="h-5 w-5 text-gray-400" />
+                Heizungen ({customer.heaters?.length || 0})
+              </h2>
+              <Button
+                onClick={() => setShowHeaterForm(true)}
+                className="flex items-center gap-2"
+                size="sm"
+              >
+                <PlusIcon className="h-4 w-4" />
+                Heizung hinzufügen
+              </Button>
             </div>
+
+            {(!customer.heaters || customer.heaters.length === 0) ? (
+              <div className="text-center py-8 border-2 border-dashed border-gray-200 rounded-lg">
+                <HomeIcon className="mx-auto h-12 w-12 text-gray-400" />
+                <h3 className="mt-2 text-sm font-semibold text-gray-900">Noch keine Heizungen</h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  Fügen Sie die erste Heizung für diesen Kunden hinzu
+                </p>
+                <Button
+                  onClick={() => setShowHeaterForm(true)}
+                  className="mt-4"
+                  size="sm"
+                >
+                  <PlusIcon className="h-4 w-4 mr-2" />
+                  Erste Heizung hinzufügen
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {customer.heaters.map((heater) => (
+                  <div
+                    key={heater.id}
+                    className="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-gray-900">{heater.model}</h3>
+                        {heater.serialNumber && (
+                          <p className="text-sm text-gray-600">SN: {heater.serialNumber}</p>
+                        )}
+
+                        <div className="mt-3 grid grid-cols-2 gap-3 text-sm">
+                          {heater.installationDate && (
+                            <div>
+                              <p className="text-gray-500">Installiert</p>
+                              <p className="font-medium text-gray-900">
+                                {formatDate(heater.installationDate)}
+                              </p>
+                            </div>
+                          )}
+                          <div>
+                            <p className="text-gray-500">Wartungsintervall</p>
+                            <p className="font-medium text-gray-900">
+                              {heater.maintenanceInterval} Monat{heater.maintenanceInterval > 1 ? 'e' : ''}
+                            </p>
+                          </div>
+                          {heater.lastMaintenance && (
+                            <div>
+                              <p className="text-gray-500">Letzte Wartung</p>
+                              <p className="font-medium text-gray-900">
+                                {formatDate(heater.lastMaintenance)}
+                              </p>
+                            </div>
+                          )}
+                          {heater.nextMaintenance && (
+                            <div>
+                              <p className="text-gray-500">Nächste Wartung</p>
+                              <p className={`font-medium ${
+                                isMaintenanceSoon(heater.nextMaintenance)
+                                  ? 'text-amber-600'
+                                  : 'text-gray-900'
+                              }`}>
+                                {formatDate(heater.nextMaintenance)}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex gap-2 ml-4">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleEditHeater(heater)}
+                        >
+                          <PencilIcon className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDeleteHeater(heater.id, heater.model)}
+                          className="text-red-600 hover:bg-red-50 hover:text-red-700"
+                        >
+                          <TrashIcon className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+
+                    {isMaintenanceSoon(heater.nextMaintenance) && (
+                      <div className="mt-3 p-3 bg-amber-50 rounded-md border border-amber-200">
+                        <p className="text-sm text-amber-800">
+                          ⚠️ Wartung fällig in den nächsten 30 Tagen
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </Card>
         </div>
 
@@ -357,8 +501,11 @@ export default function CustomerDetailPage() {
               </Link>
               <Button
                 variant="outline"
-                className="w-full justify-start text-gray-400 cursor-not-allowed"
-                disabled
+                className="w-full justify-start"
+                onClick={() => {
+                  setEditingHeater(null);
+                  setShowHeaterForm(true);
+                }}
               >
                 <HomeIcon className="h-4 w-4 mr-2" />
                 Heizung hinzufügen
@@ -378,6 +525,23 @@ export default function CustomerDetailPage() {
           </Card>
         </div>
       </div>
+
+      {/* Heater Form Modal */}
+      {showHeaterForm && (
+        <HeaterFormModal
+          customerId={customer.id}
+          heater={editingHeater}
+          onClose={() => {
+            setShowHeaterForm(false);
+            setEditingHeater(null);
+          }}
+          onSuccess={() => {
+            setShowHeaterForm(false);
+            setEditingHeater(null);
+            fetchCustomer(); // Refresh customer data
+          }}
+        />
+      )}
     </div>
   );
 }
