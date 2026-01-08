@@ -153,8 +153,10 @@ export default function NewCustomerPage() {
       const result = await response.json();
 
       if (result.success) {
+        // Redirect to customers list
         router.push('/dashboard/customers');
       } else {
+        // Handle validation errors from API
         if (result.details) {
           const apiErrors: FormErrors = {};
           result.details.forEach((error: any) => {
@@ -196,98 +198,52 @@ export default function NewCustomerPage() {
 
       <Card className="max-w-5xl">
         <form onSubmit={handleSubmit} className="p-6 md:p-8">
-          {/* Section 1: Kontaktdaten */}
+          {/* Section: Kundendaten */}
           <div className="mb-8">
             <h2 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
-              Kontaktdaten
+              Kundendaten
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Name - Full Width */}
-              <div className="md:col-span-2">
-                <Label htmlFor="name" className="mb-2 block">
-                  Name <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="name"
-                  name="name"
-                  type="text"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className={errors.name ? 'border-red-500' : ''}
-                  placeholder="Max Mustermann"
-                />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-red-600">{errors.name}</p>
-                )}
-              </div>
-
-              {/* Phone */}
-              <div>
-                <Label htmlFor="phone" className="mb-2 block">
-                  Telefon <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className={errors.phone ? 'border-red-500' : ''}
-                  placeholder="030 12345678"
-                />
-                {errors.phone && (
-                  <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
-                )}
-              </div>
-
-              {/* Email */}
-              <div>
-                <Label htmlFor="email" className="mb-2 block">E-Mail (optional)</Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className={errors.email ? 'border-red-500' : ''}
-                  placeholder="max@beispiel.de"
-                />
-                {errors.email && (
-                  <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-                )}
-                <p className="mt-1 text-xs text-gray-500">
-                  Für automatische Wartungserinnerungen
-                </p>
-              </div>
+            <div className="space-y-5">
+            {/* Name */}
+            <div>
+              <Label htmlFor="name" className="mb-2 block">
+                Name <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="name"
+                name="name"
+                type="text"
+                value={formData.name}
+                onChange={handleChange}
+                className={errors.name ? 'border-red-500' : ''}
+                placeholder="Max Mustermann"
+              />
+              {errors.name && (
+                <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+              )}
             </div>
-          </div>
 
-          {/* Section 2: Adresse */}
-          <div className="mb-8">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
-              Adresse
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Street - Full Width */}
-              <div className="md:col-span-3">
-                <Label htmlFor="street" className="mb-2 block">
-                  Straße und Hausnummer <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="street"
-                  name="street"
-                  type="text"
-                  value={formData.street}
-                  onChange={handleChange}
-                  className={errors.street ? 'border-red-500' : ''}
-                  placeholder="Musterstraße 123"
-                />
-                {errors.street && (
-                  <p className="mt-1 text-sm text-red-600">{errors.street}</p>
-                )}
-              </div>
+            {/* Street */}
+            <div>
+              <Label htmlFor="street" className="mb-2 block">
+                Straße und Hausnummer <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="street"
+                name="street"
+                type="text"
+                value={formData.street}
+                onChange={handleChange}
+                className={errors.street ? 'border-red-500' : ''}
+                placeholder="Musterstraße 123"
+              />
+              {errors.street && (
+                <p className="mt-1 text-sm text-red-600">{errors.street}</p>
+              )}
+            </div>
 
-              {/* ZIP Code */}
+            {/* ZIP and City */}
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div>
                 <Label htmlFor="zipCode" className="mb-2 block">
                   PLZ <span className="text-red-500">*</span>
@@ -306,8 +262,7 @@ export default function NewCustomerPage() {
                 )}
               </div>
 
-              {/* City */}
-              <div className="md:col-span-2">
+              <div>
                 <Label htmlFor="city" className="mb-2 block">
                   Stadt <span className="text-red-500">*</span>
                 </Label>
@@ -325,87 +280,114 @@ export default function NewCustomerPage() {
                 )}
               </div>
             </div>
-          </div>
 
-          {/* Section 3: Heizsystem */}
-          <div className="mb-8">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
-              Heizsystem
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Heating Type */}
-              <div className="md:col-span-2">
-                <Label htmlFor="heatingType" className="mb-2 block">
-                  Art der Heizung <span className="text-red-500">*</span>
-                </Label>
-                <Select
-                  value={formData.heatingType}
-                  onValueChange={(value) => {
-                    setFormData((prev) => ({ ...prev, heatingType: value }));
-                    if (errors.heatingType) {
-                      setErrors((prev) => {
-                        const newErrors = { ...prev };
-                        delete newErrors.heatingType;
-                        return newErrors;
-                      });
-                    }
-                  }}
-                >
-                  <SelectTrigger className={errors.heatingType ? 'border-red-500' : ''}>
-                    <SelectValue placeholder="Bitte wählen..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {HEATING_TYPES.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.heatingType && (
-                  <p className="mt-1 text-sm text-red-600">{errors.heatingType}</p>
-                )}
-              </div>
-
-              {/* Additional Energy Sources - Multiselect */}
-              <div>
-                <Label htmlFor="additionalEnergySources" className="mb-2 block">
-                  Zusätzliche Energiequellen (optional)
-                </Label>
-                <MultiSelect
-                  options={ADDITIONAL_ENERGY_SOURCES}
-                  value={formData.additionalEnergySources}
-                  onChange={(value) => setFormData((prev) => ({ ...prev, additionalEnergySources: value }))}
-                  placeholder="Auswählen..."
-                />
-                <p className="mt-1 text-xs text-gray-500">
-                  z.B. Photovoltaik, Solarthermie
-                </p>
-              </div>
-
-              {/* Energy Storage Systems - Multiselect */}
-              <div>
-                <Label htmlFor="energyStorageSystems" className="mb-2 block">
-                  Energiespeichersysteme (optional)
-                </Label>
-                <MultiSelect
-                  options={ENERGY_STORAGE_SYSTEMS}
-                  value={formData.energyStorageSystems}
-                  onChange={(value) => setFormData((prev) => ({ ...prev, energyStorageSystems: value }))}
-                  placeholder="Auswählen..."
-                />
-                <p className="mt-1 text-xs text-gray-500">
-                  Batterie- oder Wärmespeicher
-                </p>
-              </div>
+            {/* Phone */}
+            <div>
+              <Label htmlFor="phone" className="mb-2 block">
+                Telefon <span className="text-red-500">*</span>
+              </Label>
+              <Input
+                id="phone"
+                name="phone"
+                type="tel"
+                value={formData.phone}
+                onChange={handleChange}
+                className={errors.phone ? 'border-red-500' : ''}
+                placeholder="030 12345678"
+              />
+              {errors.phone && (
+                <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
+              )}
             </div>
-          </div>
 
-          {/* Section 4: Notizen */}
-          <div className="mb-8">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
-              Zusätzliche Informationen
-            </h2>
+            {/* Email */}
+            <div>
+              <Label htmlFor="email" className="mb-2 block">E-Mail (optional)</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                className={errors.email ? 'border-red-500' : ''}
+                placeholder="max@beispiel.de"
+              />
+              {errors.email && (
+                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+              )}
+              <p className="mt-1 text-xs text-gray-500">
+                Für automatische Wartungserinnerungen per E-Mail
+              </p>
+            </div>
+
+            {/* Heating Type */}
+            <div>
+              <Label htmlFor="heatingType" className="mb-2 block">Art der Heizung (optional)</Label>
+              <Select
+                value={formData.heatingType}
+                onValueChange={(value) => {
+                  setFormData((prev) => ({ ...prev, heatingType: value }));
+                  if (errors.heatingType) {
+                    setErrors((prev) => {
+                      const newErrors = { ...prev };
+                      delete newErrors.heatingType;
+                      return newErrors;
+                    });
+                  }
+                }}
+              >
+                <SelectTrigger className={errors.heatingType ? 'border-red-500' : ''}>
+                  <SelectValue placeholder="Bitte wählen..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {HEATING_TYPES.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {errors.heatingType && (
+                <p className="mt-1 text-sm text-red-600">{errors.heatingType}</p>
+              )}
+            </div>
+
+            {/* Additional Energy Source */}
+            <div>
+              <Label htmlFor="additionalEnergy" className="mb-2 block">Zusätzliche Energiequelle (optional)</Label>
+              <Select
+                value={formData.additionalEnergy}
+                onValueChange={(value) => {
+                  setFormData((prev) => ({ ...prev, additionalEnergy: value }));
+                  if (errors.additionalEnergy) {
+                    setErrors((prev) => {
+                      const newErrors = { ...prev };
+                      delete newErrors.additionalEnergy;
+                      return newErrors;
+                    });
+                  }
+                }}
+              >
+                <SelectTrigger className={errors.additionalEnergy ? 'border-red-500' : ''}>
+                  <SelectValue placeholder="Bitte wählen..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {ADDITIONAL_ENERGY_SOURCES.map((source) => (
+                    <SelectItem key={source.value} value={source.value}>
+                      {source.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {errors.additionalEnergy && (
+                <p className="mt-1 text-sm text-red-600">{errors.additionalEnergy}</p>
+              )}
+              <p className="mt-1 text-xs text-gray-500">
+                z.B. Photovoltaik, Solarthermie oder Stromspeicher
+              </p>
+            </div>
+
+            {/* Notes */}
             <div>
               <Label htmlFor="notes" className="mb-2 block">Notizen (optional)</Label>
               <textarea
@@ -424,7 +406,7 @@ export default function NewCustomerPage() {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-4 pt-6 border-t">
+          <div className="mt-8 flex items-center justify-end gap-4">
             <Link href="/dashboard/customers">
               <Button type="button" variant="outline" disabled={loading}>
                 Abbrechen

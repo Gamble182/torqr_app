@@ -65,8 +65,9 @@ model Customer {
   optInConfirmedAt DateTime? // when customer confirmed
   optInIpAddress String? // for GDPR proof
   unsubscribedAt DateTime? // if customer unsubscribed
-  heatingType HeatingType? // primary heating system type
-  additionalEnergy AdditionalEnergy? // additional energy source (optional)
+  heatingType HeatingType // primary heating system type (REQUIRED)
+  additionalEnergySources String[] @default([]) // additional energy sources (array, can select multiple)
+  energyStorageSystems String[] @default([]) // energy storage systems (array, can select multiple)
   notes      String?
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
@@ -104,13 +105,9 @@ enum HeatingType {
   CHP                 // Blockheizkraftwerk (BHKW - Combined Heat and Power)
 }
 
-enum AdditionalEnergy {
-  PHOTOVOLTAIC        // Photovoltaik
-  SOLAR_THERMAL       // Solarthermie
-  SMALL_WIND          // Windkraft (Kleinwindanlage)
-  BATTERY_STORAGE     // Stromspeicher/Batterie
-  HEAT_STORAGE        // Wärmespeicher (Pufferspeicher)
-}
+// Note: AdditionalEnergy and EnergyStorage are now stored as String arrays
+// Valid values for additionalEnergySources: PHOTOVOLTAIC, SOLAR_THERMAL, SMALL_WIND
+// Valid values for energyStorageSystems: BATTERY_STORAGE, HEAT_STORAGE
 
 model Heater {
   id                  String   @id @default(uuid())
