@@ -277,9 +277,11 @@ export default function CustomersPage() {
                     <div className="flex-1">
                       <div className="flex items-start gap-4">
                         <div className="flex-1">
-                          <h3 className="text-lg font-semibold text-gray-900">
-                            {customer.name}
-                          </h3>
+                          <Link href={`/dashboard/customers/${customer.id}`}>
+                            <h3 className="text-lg font-semibold text-gray-900 hover:text-blue-600 cursor-pointer">
+                              {customer.name}
+                            </h3>
+                          </Link>
                           <div className="mt-1 space-y-1 text-sm text-gray-600">
                             <p>{customer.street}</p>
                             <p>{customer.zipCode} {customer.city}</p>
