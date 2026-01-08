@@ -19,6 +19,15 @@ import {
   PlusIcon
 } from 'lucide-react';
 import { HeaterFormModal } from '@/components/HeaterFormModal';
+import { MaintenanceFormModal } from '@/components/MaintenanceFormModal';
+import { MaintenanceHistory } from '@/components/MaintenanceHistory';
+
+interface Maintenance {
+  id: string;
+  date: string;
+  notes: string | null;
+  photos: string[];
+}
 
 interface Customer {
   id: string;
@@ -45,6 +54,7 @@ interface Heater {
   maintenanceInterval: number;
   lastMaintenance: string | null;
   nextMaintenance: string | null;
+  maintenances?: Maintenance[];
 }
 
 // Helper function to get German label for heating type
@@ -93,6 +103,8 @@ export default function CustomerDetailPage() {
   const [loading, setLoading] = useState(true);
   const [showHeaterForm, setShowHeaterForm] = useState(false);
   const [editingHeater, setEditingHeater] = useState<Heater | null>(null);
+  const [showMaintenanceForm, setShowMaintenanceForm] = useState(false);
+  const [selectedHeater, setSelectedHeater] = useState<Heater | null>(null);
 
   const fetchCustomer = useCallback(async () => {
     try {
@@ -431,6 +443,16 @@ export default function CustomerDetailPage() {
 
                       <div className="flex gap-2 ml-4">
                         <Button
+                          size="sm"
+                          onClick={() => {
+                            setSelectedHeater(heater);
+                            setShowMaintenanceForm(true);
+                          }}
+                          className="bg-green-600 hover:bg-green-700 text-white"
+                        >
+                          Wartung erledigt
+                        </Button>
+                        <Button
                           variant="outline"
                           size="sm"
                           onClick={() => handleEditHeater(heater)}
@@ -453,6 +475,19 @@ export default function CustomerDetailPage() {
                         <p className="text-sm text-amber-800">
                           ⚠️ Wartung fällig in den nächsten 30 Tagen
                         </p>
+                      </div>
+                    )}
+
+                    {/* Maintenance History */}
+                    {heater.maintenances && heater.maintenances.length > 0 && (
+                      <div className="mt-4">
+                        <h4 className="text-sm font-medium text-gray-700 mb-2">
+                          Wartungshistorie
+                        </h4>
+                        <MaintenanceHistory
+                          maintenances={heater.maintenances}
+                          onDelete={() => fetchCustomer()} // Refresh data
+                        />
                       </div>
                     )}
                   </div>
@@ -539,6 +574,23 @@ export default function CustomerDetailPage() {
             setShowHeaterForm(false);
             setEditingHeater(null);
             fetchCustomer(); // Refresh customer data
+          }}
+        />
+      )}
+
+      {/* Maintenance Form Modal */}
+      {showMaintenanceForm && selectedHeater && (
+        <MaintenanceFormModal
+          heaterId={selectedHeater.id}
+          heaterModel={selectedHeater.model}
+          onClose={() => {
+            setShowMaintenanceForm(false);
+            setSelectedHeater(null);
+          }}
+          onSuccess={() => {
+            setShowMaintenanceForm(false);
+            setSelectedHeater(null);
+            fetchCustomer(); // Refresh data
           }}
         />
       )}
