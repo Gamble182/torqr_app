@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     nextMaintenance.setMonth(nextMaintenance.getMonth() + heater.maintenanceInterval);
 
     // 5. Create maintenance record and update heater in a transaction
-    const result = await prisma.$transaction(async (tx) => {
+    const result = await prisma.$transaction(async (tx: Omit<typeof prisma, '$connect' | '$disconnect' | '$on' | '$transaction' | '$extends'>) => {
       // Create maintenance record with photos
       const maintenance = await tx.maintenance.create({
         data: {
