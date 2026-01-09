@@ -26,7 +26,8 @@
       "Bash(dir \"C:\\\\Users\\\\y.dorth\\\\Documents\" /b)",
       "Bash(timeout 5 bash:*)",
       "Bash(timeout /t 3 /nobreak)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(dir /b:*)"
     ]
   }
 }
