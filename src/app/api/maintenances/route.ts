@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
-import type { Prisma } from '@prisma/client';
 
 // Validation schema for creating a maintenance record
 const createMaintenanceSchema = z.object({
@@ -48,7 +47,7 @@ export async function POST(request: NextRequest) {
     nextMaintenance.setMonth(nextMaintenance.getMonth() + heater.maintenanceInterval);
 
     // 5. Create maintenance record and update heater in a transaction
-    const result = await prisma.$transaction(async (tx: Prisma.TransactionClient) => {
+    const result = await prisma.$transaction(async (tx) => {
       // Create maintenance record with photos
       const maintenance = await tx.maintenance.create({
         data: {
