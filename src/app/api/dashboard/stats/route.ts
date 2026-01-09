@@ -6,7 +6,7 @@ import { prisma } from '@/lib/prisma';
  * GET /api/dashboard/stats
  * Get dashboard statistics for the authenticated user
  */
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     // 1. Authenticate user
     const { userId } = await requireAuth();

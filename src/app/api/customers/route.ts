@@ -59,6 +59,7 @@ export async function POST(request: NextRequest) {
         city: validatedData.city,
         phone: validatedData.phone,
         email: email,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         heatingType: validatedData.heatingType as any, // REQUIRED field
         additionalEnergySources: validatedData.additionalEnergySources || [],
         energyStorageSystems: validatedData.energyStorageSystems || [],

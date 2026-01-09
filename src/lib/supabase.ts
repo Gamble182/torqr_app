@@ -17,7 +17,7 @@ export async function uploadMaintenancePhoto(
   const fileName = `${maintenanceId}-${Date.now()}.${fileExt}`;
   const filePath = `maintenances/${fileName}`;
 
-  const { data, error } = await supabase.storage
+  const { error } = await supabase.storage
     .from('maintenance-photos')
     .upload(filePath, file, {
       cacheControl: '3600',

@@ -62,7 +62,7 @@ export default function RegisterPage() {
       if (!response.ok) {
         if (result.details) {
           // Validation errors from server
-          setError(result.details.map((d: any) => d.message).join(', '));
+          setError(result.details.map((d: { message: string }) => d.message).join(', '));
         } else {
           setError(result.error || 'Registration failed');
         }

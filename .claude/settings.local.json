@@ -27,7 +27,11 @@
       "Bash(timeout 5 bash:*)",
       "Bash(timeout /t 3 /nobreak)",
       "Bash(npx tsc:*)",
-      "Bash(dir /b:*)"
+      "Bash(dir /b:*)",
+      "Bash(npm run lint)",
+      "Bash(npm run lint:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }

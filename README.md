@@ -35,7 +35,7 @@ Create a test user for development:
 npx tsx scripts/create-test-user.ts
 ```
 
-**Test Credentials:** See [TEST-CREDENTIALS.md](./TEST-CREDENTIALS.md) for login details.
+**Test Credentials:** See [TEST-CREDENTIALS.md](./docs/testing/TEST-CREDENTIALS.md) for login details.
 
 ### 5. Run Development Server
 
@@ -56,7 +56,7 @@ For local development and testing, use these credentials:
 | Email    | test@torqr.app |
 | Password | Test123!       |
 
-See [TEST-CREDENTIALS.md](./TEST-CREDENTIALS.md) for more details.
+See [TEST-CREDENTIALS.md](./docs/testing/TEST-CREDENTIALS.md) for more details.
 
 ---
 
@@ -105,19 +105,30 @@ torqr-app/
 
 ## Documentation
 
-- [PROJECT-SUMMARY.md](./docs/PROJECT-SUMMARY.md) - Executive overview and roadmap
-- [DEVELOPER-SETUP-GUIDE.md](./docs/DEVELOPER-SETUP-GUIDE.md) - Step-by-step setup
-- [TEST-CREDENTIALS.md](./TEST-CREDENTIALS.md) - Test user credentials
-- [SPRINT-02-CUSTOMER-MANAGEMENT.md](./docs/SPRINT-02-CUSTOMER-MANAGEMENT.md) - Current sprint guide
+📚 **Main Documentation:** [docs/README.md](./docs/README.md)
+
+**Quick Links:**
+- [Deployment Guide](./docs/deployment/DEPLOYMENT.md) - How to deploy to production
+- [Testing Checklist](./docs/testing/TESTING_CHECKLIST.md) - 170+ test cases
+- [Test Credentials](./docs/testing/TEST-CREDENTIALS.md) - Development login info
+- [Time Tracking](./docs/development/TIMESHEET.md) - MVP cost calculation
+
+**Development Docs:**
+- [PROJECT-SUMMARY.md](./docs/PROJECT-SUMMARY.md) - Executive overview
+- [DEVELOPER-SETUP-GUIDE.md](./docs/DEVELOPER-SETUP-GUIDE.md) - Setup guide
+- [Sprint Documentation](./docs/) - Sprint planning & guides
 
 ---
 
 ## Current Development Status
 
 **Sprint 1:** ✅ Complete - Authentication & Security
-**Sprint 2:** 🚧 In Progress - Customer Management (API complete, UI in progress)
+**Sprint 2:** ✅ Complete - Customer Management
+**Sprint 3:** ✅ Complete - Heater & Maintenance Tracking
+**Sprint 5:** ✅ Complete - Dashboard Statistics
+**Sprint 6:** ✅ Complete - Testing & Polish
 
-See [PROJECT-SUMMARY.md](./docs/PROJECT-SUMMARY.md) for full roadmap.
+**Status:** Ready for deployment 🚀
 
 ---
 

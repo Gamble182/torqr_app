@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { EmailOptInStatus } from '@prisma/client';
+// Type imports for future use
+// import { EmailOptInStatus } from '@prisma/client';
 
 // ============================================================================
 // COMMON VALIDATION PATTERNS

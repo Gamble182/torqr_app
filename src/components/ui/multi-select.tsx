@@ -3,14 +3,6 @@
 import * as React from 'react';
 import { CheckIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 
 interface MultiSelectOption {
   value: string;

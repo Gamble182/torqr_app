@@ -3,7 +3,8 @@ import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
 import { prisma } from './prisma';
 import { verifyPassword } from './password';
-import type { User as PrismaUser } from '@prisma/client';
+// Type imports for future use
+// import type { User as PrismaUser } from '@prisma/client';
 
 // Validation schema for login credentials
 const loginSchema = z.object({
