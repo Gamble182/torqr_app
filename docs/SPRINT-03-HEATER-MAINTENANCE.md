@@ -29,6 +29,7 @@ By the end of Sprint 3, you will have:
 - [ ] Test all heater endpoints
 - [ ] German error messages
 
+
 ### Day 2: Heater Management UI
 - [ ] Create heater form component
 - [ ] Integrate heaters into customer detail page
