@@ -3,6 +3,9 @@ import type { NextConfig } from "next";
 // import { withSentryConfig } from "@sentry/nextjs";
 
 const nextConfig: NextConfig = {
+  // Enable Turbopack (Next.js 16 default)
+  turbopack: {},
+
   images: {
     remotePatterns: [
       {

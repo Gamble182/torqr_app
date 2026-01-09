@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "tw-animate-css";
+/* @import "tw-animate-css"; */ /* Disabled for Turbopack compatibility */
 
 @custom-variant dark (&:is(.dark *));
 
