@@ -12,7 +12,9 @@ import {
   CalendarIcon,
   WrenchIcon,
   ClockIcon,
+  PlusIcon,
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 
@@ -122,11 +124,19 @@ export default function HeatersPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-foreground">Heizungen</h1>
-        <p className="mt-2 text-muted-foreground">
-          Verwalten Sie alle Heizungsanlagen Ihrer Kunden
-        </p>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">Heizungen</h1>
+          <p className="mt-2 text-muted-foreground">
+            Verwalten Sie alle Heizungsanlagen Ihrer Kunden
+          </p>
+        </div>
+        <Link href="/dashboard/heaters/new">
+          <Button>
+            <PlusIcon className="h-4 w-4 mr-2" />
+            Neue Heizung
+          </Button>
+        </Link>
       </div>
 
       {/* Stats */}
