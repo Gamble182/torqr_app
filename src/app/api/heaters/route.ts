@@ -188,8 +188,20 @@ export async function GET(request: NextRequest) {
       where.OR = [
         { model: { contains: search, mode: 'insensitive' as const } },
         { serialNumber: { contains: search, mode: 'insensitive' as const } },
-        { customer: { name: { contains: search, mode: 'insensitive' as const } } },
-        { customer: { city: { contains: search, mode: 'insensitive' as const } } },
+        {
+          customer: {
+            is: {
+              name: { contains: search, mode: 'insensitive' as const }
+            }
+          }
+        },
+        {
+          customer: {
+            is: {
+              city: { contains: search, mode: 'insensitive' as const }
+            }
+          }
+        },
       ];
     }
 
