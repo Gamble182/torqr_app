@@ -1,5 +1,5 @@
 {
-  "buildCommand": "prisma migrate deploy --config=config/prisma.config.ts && next build",
+  "buildCommand": "next build",
   "env": {
     "SKIP_ENV_VALIDATION": "true"
   }
