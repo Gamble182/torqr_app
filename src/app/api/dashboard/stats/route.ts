@@ -21,6 +21,8 @@ export async function GET() {
       totalHeaters,
       overdueMaintenances,
       upcomingMaintenances,
+      upcomingMaintenancesList,
+      recentMaintenances,
     ] = await Promise.all([
       // Total customers count
       prisma.customer.count({
@@ -62,6 +64,57 @@ export async function GET() {
           },
         },
       }),
+
+      // Upcoming maintenances list with details
+      prisma.heater.findMany({
+        where: {
+          customer: {
+            userId: userId,
+          },
+          nextMaintenance: {
+            gte: now,
+            lte: thirtyDaysFromNow,
+          },
+        },
+        include: {
+          customer: {
+            select: {
+              id: true,
+              name: true,
+              city: true,
+              phone: true,
+            },
+          },
+        },
+        orderBy: {
+          nextMaintenance: 'asc',
+        },
+        take: 10,
+      }),
+
+      // Recent maintenances (last 5)
+      prisma.maintenance.findMany({
+        where: {
+          user: {
+            id: userId,
+          },
+        },
+        include: {
+          heater: {
+            include: {
+              customer: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          date: 'desc',
+        },
+        take: 5,
+      }),
     ]);
 
     // 3. Return statistics
@@ -72,6 +125,8 @@ export async function GET() {
         totalHeaters,
         overdueMaintenances,
         upcomingMaintenances,
+        upcomingMaintenancesList,
+        recentMaintenances,
       },
     });
 

@@ -35,7 +35,8 @@
       "Bash(git push:*)",
       "Bash(npx prisma validate:*)",
       "Bash(npm run postinstall:*)",
-      "Bash(vercel env:*)"
+      "Bash(vercel env:*)",
+      "Bash(xargs ls:*)"
     ]
   }
 }
