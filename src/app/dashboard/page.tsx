@@ -40,35 +40,37 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2Icon className="h-8 w-8 animate-spin text-gray-400" />
+        <Loader2Icon className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-      <p className="mt-2 text-gray-600">
-        Willkommen bei Torqr. Ihr Kundenverwaltungs-Dashboard.
-      </p>
+    <div className="space-y-8">
+      <div>
+        <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+        <p className="mt-2 text-muted-foreground">
+          Übersicht über Ihre Kunden und anstehende Wartungen
+        </p>
+      </div>
 
       <div className="mt-8">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {/* Total Customers */}
-          <div className="bg-white overflow-hidden shadow rounded-lg">
+          <div className="bg-card overflow-hidden shadow-sm rounded-lg border border-border hover:shadow-md transition-shadow">
             <div className="p-5">
               <div className="flex items-center">
                 <div className="shrink-0">
-                  <div className="rounded-md bg-blue-500 p-3">
-                    <UsersIcon className="h-6 w-6 text-white" />
+                  <div className="rounded-lg bg-primary p-3">
+                    <UsersIcon className="h-6 w-6 text-primary-foreground" />
                   </div>
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">
+                    <dt className="text-sm font-medium text-muted-foreground truncate">
                       Kunden gesamt
                     </dt>
-                    <dd className="text-3xl font-semibold text-gray-900">
+                    <dd className="text-3xl font-bold text-foreground">
                       {stats?.totalCustomers || 0}
                     </dd>
                   </dl>
@@ -78,20 +80,20 @@ export default function DashboardPage() {
           </div>
 
           {/* Total Heaters */}
-          <div className="bg-white overflow-hidden shadow rounded-lg">
+          <div className="bg-card overflow-hidden shadow-sm rounded-lg border border-border hover:shadow-md transition-shadow">
             <div className="p-5">
               <div className="flex items-center">
                 <div className="shrink-0">
-                  <div className="rounded-md bg-green-500 p-3">
-                    <BoltIcon className="h-6 w-6 text-white" />
+                  <div className="rounded-lg bg-secondary p-3">
+                    <BoltIcon className="h-6 w-6 text-secondary-foreground" />
                   </div>
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">
+                    <dt className="text-sm font-medium text-muted-foreground truncate">
                       Heizungen gesamt
                     </dt>
-                    <dd className="text-3xl font-semibold text-gray-900">
+                    <dd className="text-3xl font-bold text-foreground">
                       {stats?.totalHeaters || 0}
                     </dd>
                   </dl>
@@ -101,20 +103,20 @@ export default function DashboardPage() {
           </div>
 
           {/* Overdue Maintenances */}
-          <div className="bg-white overflow-hidden shadow rounded-lg">
+          <div className="bg-card overflow-hidden shadow-sm rounded-lg border border-destructive hover:shadow-md transition-shadow">
             <div className="p-5">
               <div className="flex items-center">
                 <div className="shrink-0">
-                  <div className="rounded-md bg-red-500 p-3">
-                    <AlertTriangleIcon className="h-6 w-6 text-white" />
+                  <div className="rounded-lg bg-destructive p-3">
+                    <AlertTriangleIcon className="h-6 w-6 text-destructive-foreground" />
                   </div>
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">
+                    <dt className="text-sm font-medium text-muted-foreground truncate">
                       Überfällige Wartungen
                     </dt>
-                    <dd className="text-3xl font-semibold text-gray-900">
+                    <dd className="text-3xl font-bold text-destructive">
                       {stats?.overdueMaintenances || 0}
                     </dd>
                   </dl>
@@ -124,20 +126,20 @@ export default function DashboardPage() {
           </div>
 
           {/* Upcoming Maintenances */}
-          <div className="bg-white overflow-hidden shadow rounded-lg">
+          <div className="bg-card overflow-hidden shadow-sm rounded-lg border border-border hover:shadow-md transition-shadow">
             <div className="p-5">
               <div className="flex items-center">
                 <div className="shrink-0">
-                  <div className="rounded-md bg-amber-500 p-3">
-                    <CalendarIcon className="h-6 w-6 text-white" />
+                  <div className="rounded-lg bg-warning p-3">
+                    <CalendarIcon className="h-6 w-6 text-warning-foreground" />
                   </div>
                 </div>
                 <div className="ml-5 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">
-                      Anstehende Wartungen
+                    <dt className="text-sm font-medium text-muted-foreground truncate">
+                      Nächste 30 Tage
                     </dt>
-                    <dd className="text-3xl font-semibold text-gray-900">
+                    <dd className="text-3xl font-bold text-foreground">
                       {stats?.upcomingMaintenances || 0}
                     </dd>
                   </dl>
