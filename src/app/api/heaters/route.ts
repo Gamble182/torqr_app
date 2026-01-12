@@ -75,6 +75,7 @@ export async function POST(request: NextRequest) {
     // 5. Create heater
     const heater = await prisma.heater.create({
       data: {
+        userId: userId, // Owner of the heater
         customerId: validatedData.customerId || null,
         model: validatedData.model,
         serialNumber: validatedData.serialNumber || null,
@@ -159,9 +160,7 @@ export async function GET(request: NextRequest) {
 
     // 3. Build where clause
     let where: any = {
-      customer: {
-        userId: userId,
-      },
+      userId: userId, // Filter by heater owner
     };
 
     // If customerId provided, filter by that customer

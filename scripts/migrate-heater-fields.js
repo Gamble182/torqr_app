@@ -36,6 +36,42 @@ async function migrate() {
 
     console.log('✅ Made customerId nullable');
 
+    // Add userId column and populate it from customer's userId
+    await client.query(`
+      -- Add userId column (nullable first)
+      ALTER TABLE "heaters"
+      ADD COLUMN IF NOT EXISTS "userId" TEXT;
+    `);
+
+    console.log('✅ Added userId column');
+
+    // Populate userId from existing customer relationships
+    await client.query(`
+      -- Update userId from customer.userId for existing heaters
+      UPDATE "heaters" h
+      SET "userId" = c."userId"
+      FROM "customers" c
+      WHERE h."customerId" = c.id
+      AND h."userId" IS NULL;
+    `);
+
+    console.log('✅ Populated userId from existing customers');
+
+    // Make userId NOT NULL after populating
+    await client.query(`
+      ALTER TABLE "heaters"
+      ALTER COLUMN "userId" SET NOT NULL;
+    `);
+
+    console.log('✅ Made userId NOT NULL');
+
+    // Add index on userId
+    await client.query(`
+      CREATE INDEX IF NOT EXISTS "heaters_userId_idx" ON "heaters"("userId");
+    `);
+
+    console.log('✅ Added index on userId');
+
     console.log('✅ Migration completed successfully!');
   } catch (error) {
     console.error('❌ Migration failed:', error);

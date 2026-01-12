@@ -27,6 +27,7 @@ model User {
 
   // Relations
   customers     Customer[]
+  heaters       Heater[]
   maintenances  Maintenance[]
   sessions      Session[]
 
@@ -139,10 +140,14 @@ model Heater {
   updatedAt           DateTime @updatedAt
 
   // Relations
+  userId      String   // Owner of the heater (required for heaters without customer)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   customerId  String?  // Made optional - heater can exist without customer initially
   customer    Customer?    @relation(fields: [customerId], references: [id], onDelete: Cascade)
   maintenances Maintenance[]
 
+  @@index([userId])
   @@index([customerId])
   @@index([nextMaintenance]) // for querying upcoming maintenances
   @@map("heaters")

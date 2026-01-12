@@ -5,51 +5,104 @@
       "manufacturers": [
         {
           "manufacturer": "Vaillant",
-          "models": ["ecoTEC plus VCW 1-5", "ecoTEC exclusive", "ecoTEC pro", "ecoCompact"]
+          "models": [
+            "ecoTEC plus VCW 1-5",
+            "ecoTEC exclusive",
+            "ecoTEC pro",
+            "ecoCompact"
+          ]
         },
         {
           "manufacturer": "Viessmann",
-          "models": ["Vitodens 200-W", "Vitodens 300-W", "Vitodens 050-W", "Vitodens 100-W"]
+          "models": [
+            "Vitodens 200-W",
+            "Vitodens 300-W",
+            "Vitodens 050-W",
+            "Vitodens 100-W"
+          ]
         },
         {
           "manufacturer": "Buderus",
-          "models": ["Logamax plus GB272", "Logano plus KB372", "Logano plus SB745", "Logamax plus GB192i"]
+          "models": [
+            "Logamax plus GB272",
+            "Logano plus KB372",
+            "Logano plus SB745",
+            "Logamax plus GB192i"
+          ]
         },
         {
           "manufacturer": "Junkers Bosch",
-          "models": ["Condens GC9000iW", "Cerapur", "Ceramini", "Cerastar Comfort"]
+          "models": [
+            "Condens GC9000iW",
+            "Cerapur",
+            "Ceramini",
+            "Cerastar Comfort"
+          ]
         },
         {
           "manufacturer": "Wolf",
-          "models": ["CGB-2", "CGW-2", "CGS-2"]
+          "models": [
+            "CGB-2",
+            "CGW-2",
+            "CGS-2"
+          ]
         },
         {
           "manufacturer": "Brötje",
-          "models": ["WGB EVO", "WGB-M EVO", "WGB-K EVO", "WGB-U", "WGB-C", "WMS", "WMC", "BGB EVO", "SGB", "BBS EVO", "BBK EVO"]
+          "models": [
+            "WGB EVO",
+            "WGB-M EVO",
+            "WGB-K EVO",
+            "WGB-U",
+            "WGB-C",
+            "WMS",
+            "WMC",
+            "BGB EVO",
+            "SGB",
+            "BBS EVO",
+            "BBK EVO"
+          ]
         },
         {
           "manufacturer": "Weishaupt",
-          "models": ["Thermo Condens WTC-GW", "Thermo Condens WTC-GB", "WTC-OB"]
+          "models": [
+            "Thermo Condens WTC-GW",
+            "Thermo Condens WTC-GB",
+            "WTC-OB"
+          ]
         },
         {
           "manufacturer": "Remeha",
-          "models": ["Tzerra", "Calenta"]
+          "models": [
+            "Tzerra",
+            "Calenta"
+          ]
         },
         {
           "manufacturer": "MHG Heiztechnik",
-          "models": ["Procon E"]
+          "models": [
+            "Procon E"
+          ]
         },
         {
           "manufacturer": "ELCO",
-          "models": ["Thision S", "Thision L"]
+          "models": [
+            "Thision S",
+            "Thision L"
+          ]
         },
         {
           "manufacturer": "Rotex",
-          "models": ["GW", "GB"]
+          "models": [
+            "GW",
+            "GB"
+          ]
         },
         {
           "manufacturer": "Stiebel Eltron",
-          "models": ["WGB Gasthermen"]
+          "models": [
+            "WGB Gasthermen"
+          ]
         }
       ]
     },
@@ -58,31 +111,49 @@
       "manufacturers": [
         {
           "manufacturer": "Viessmann",
-          "models": ["Vitorondens 200-T", "Vitoladens 300-C"]
+          "models": [
+            "Vitorondens 200-T",
+            "Vitoladens 300-C"
+          ]
         },
         {
           "manufacturer": "Buderus",
-          "models": ["Logano plus SB105", "Logano plus KB195"]
+          "models": [
+            "Logano plus SB105",
+            "Logano plus KB195"
+          ]
         },
         {
           "manufacturer": "Brötje",
-          "models": ["EcoTherm Plus WBS", "NovoCondens SOB"]
+          "models": [
+            "EcoTherm Plus WBS",
+            "NovoCondens SOB"
+          ]
         },
         {
           "manufacturer": "Vaillant",
-          "models": ["icoVIT"]
+          "models": [
+            "icoVIT"
+          ]
         },
         {
           "manufacturer": "Wolf",
-          "models": ["COB", "TOB"]
+          "models": [
+            "COB",
+            "TOB"
+          ]
         },
         {
           "manufacturer": "Weishaupt",
-          "models": ["WTC-OB"]
+          "models": [
+            "WTC-OB"
+          ]
         },
         {
           "manufacturer": "Remeha",
-          "models": ["Condens Oil"]
+          "models": [
+            "Condens Oil"
+          ]
         }
       ]
     },
@@ -90,116 +161,221 @@
       "category": "Luft/Wasser-Wärmepumpe",
       "manufacturers": [
         {
-          "manufacturer": "Viessmann",
-          "models": ["Vitocal 250-A", "Vitocal 150-A", "Vitocal 300-A", "Vitocal 350-A", "Vitocal 200-A", "Vitocal 262-A"]
-        },
-        {
-          "manufacturer": "Vaillant",
-          "models": ["aroTHERM plus", "aroTHERM plus VWL 125/6 A", "aroTHERM plus VWL 155/6 A", "aroTHERM plus VWL 195/6 A"]
-        },
-        {
-          "manufacturer": "Buderus",
-          "models": ["Logatherm WLW186i AR", "Logatherm WLW196i AR", "Logatherm WLW276", "Logatherm WLW MBE+ AR", "Compress 7000i AW", "Compress 8800i AW"]
-        },
-        {
-          "manufacturer": "Wolf",
-          "models": ["CHA-07 Monoblock", "CHA-10 Monoblock", "CHA-16/20 Monoblock", "CHA-20/24 Monoblock", "BWL-1S(B) Split"]
-        },
-        {
-          "manufacturer": "Daikin",
-          "models": ["Altherma 4 H", "Altherma 4 HS-S+", "Altherma 4 X", "Altherma 3 R", "Altherma 3 R MT", "Altherma 3 M", "Altherma 3 H", "Altherma 3 H HT"]
-        },
-        {
-          "manufacturer": "Mitsubishi Electric",
-          "models": ["Ecodan", "Zubadan"]
-        },
-        {
-          "manufacturer": "Panasonic",
-          "models": ["Aquarea", "Aquarea T-CAP", "Aquarea J"]
-        },
-        {
-          "manufacturer": "LG",
-          "models": ["Therma V"]
-        },
-        {
-          "manufacturer": "Samsung",
-          "models": ["EHS Mono"]
-        },
-        {
-          "manufacturer": "Stiebel Eltron",
-          "models": ["WPL-A", "WPL-E", "WPL classic"]
-        },
-        {
-          "manufacturer": "NIBE",
-          "models": ["F2120", "F2030", "F2040", "S1156", "S1256"]
-        },
-        {
-          "manufacturer": "Dimplex",
-          "models": ["LA", "LIK", "System E"]
-        },
-        {
-          "manufacturer": "tecalor",
-          "models": ["TTL", "TTA"]
-        },
-        {
           "manufacturer": "alpha innotec",
-          "models": ["alira", "alterra"]
-        },
-        {
-          "manufacturer": "Ochsner",
-          "models": ["Air Eco", "Air Hawk"]
-        },
-        {
-          "manufacturer": "iDM",
-          "models": ["TERRA", "AERO"]
-        },
-        {
-          "manufacturer": "Kermi",
-          "models": ["x-change dynamic pro M", "x-change dynamic pro L"]
-        },
-        {
-          "manufacturer": "Waterkotte",
-          "models": ["Ai1 Air", "Ai1 Geo"]
-        },
-        {
-          "manufacturer": "Midea",
-          "models": ["M-Thermal"]
-        },
-        {
-          "manufacturer": "SPRSUN",
-          "models": ["DC Inverter R290", "DC Inverter R32"]
-        },
-        {
-          "manufacturer": "Phnix",
-          "models": ["Phnix Heat Pump"]
-        },
-        {
-          "manufacturer": "NEWNTIDE",
-          "models": ["NEWNTIDE Air Source Heat Pump"]
-        },
-        {
-          "manufacturer": "Guangdong New Energy",
-          "models": ["OEM Models"]
+          "models": [
+            "alira",
+            "alterra"
+          ]
         },
         {
           "manufacturer": "Bosch",
-          "models": ["Compress 5800i AW", "Compress 7000i AW"]
+          "models": [
+            "Compress 5800i AW",
+            "Compress 7000i AW"
+          ]
         },
         {
           "manufacturer": "Brötje",
-          "models": ["WLS"]
+          "models": [
+            "WLS"
+          ]
         },
         {
-          "manufacturer": "Toshiba",
-          "models": ["Estia"]
-        },
-        {
-          "manufacturer": "Hitachi",
-          "models": ["Yutaki"]
+          "manufacturer": "Buderus",
+          "models": [
+            "Logatherm WLW186i AR",
+            "Logatherm WLW196i AR",
+            "Logatherm WLW276",
+            "Logatherm WLW MBE+ AR",
+            "Compress 7000i AW",
+            "Compress 8800i AW"
+          ]
         },
         {
           "manufacturer": "Carrier",
-          "models": ["Aquasnap"]
+          "models": [
+            "Aquasnap"
+          ]
+        },
+        {
+          "manufacturer": "Daikin",
+          "models": [
+            "Altherma 4 H",
+            "Altherma 4 HS-S+",
+            "Altherma 4 X",
+            "Altherma 3 R",
+            "Altherma 3 R MT",
+            "Altherma 3 M",
+            "Altherma 3 H",
+            "Altherma 3 H HT"
+          ]
+        },
+        {
+          "manufacturer": "Dimplex",
+          "models": [
+            "LA",
+            "LIK",
+            "System E"
+          ]
+        },
+        {
+          "manufacturer": "Guangdong New Energy",
+          "models": [
+            "OEM Models"
+          ]
+        },
+        {
+          "manufacturer": "Hitachi",
+          "models": [
+            "Yutaki"
+          ]
+        },
+        {
+          "manufacturer": "iDM",
+          "models": [
+            "TERRA",
+            "AERO"
+          ]
+        },
+        {
+          "manufacturer": "Kermi",
+          "models": [
+            "x-change dynamic pro M",
+            "x-change dynamic pro L"
+          ]
+        },
+        {
+          "manufacturer": "LG",
+          "models": [
+            "Therma V"
+          ]
+        },
+        {
+          "manufacturer": "Midea",
+          "models": [
+            "M-Thermal"
+          ]
+        },
+        {
+          "manufacturer": "Mitsubishi Electric",
+          "models": [
+            "Ecodan",
+            "Zubadan"
+          ]
+        },
+        {
+          "manufacturer": "NEWNTIDE",
+          "models": [
+            "NEWNTIDE Air Source Heat Pump"
+          ]
+        },
+        {
+          "manufacturer": "NIBE",
+          "models": [
+            "F2120",
+            "F2030",
+            "F2040",
+            "S1156",
+            "S1256"
+          ]
+        },
+        {
+          "manufacturer": "Ochsner",
+          "models": [
+            "Air Eco",
+            "Air Hawk"
+          ]
+        },
+        {
+          "manufacturer": "Panasonic",
+          "models": [
+            "Aquarea",
+            "Aquarea T-CAP",
+            "Aquarea J"
+          ]
+        },
+        {
+          "manufacturer": "Phnix",
+          "models": [
+            "Phnix Heat Pump"
+          ]
+        },
+        {
+          "manufacturer": "Samsung",
+          "models": [
+            "EHS Mono"
+          ]
+        },
+        {
+          "manufacturer": "Solarfocus",
+          "models": [
+            "VampAir Pro 20"
+          ]
+        },
+        {
+          "manufacturer": "SPRSUN",
+          "models": [
+            "DC Inverter R290",
+            "DC Inverter R32"
+          ]
+        },
+        {
+          "manufacturer": "Stiebel Eltron",
+          "models": [
+            "WPL-A",
+            "WPL-E",
+            "WPL classic"
+          ]
+        },
+        {
+          "manufacturer": "tecalor",
+          "models": [
+            "TTL",
+            "TTA"
+          ]
+        },
+        {
+          "manufacturer": "Toshiba",
+          "models": [
+            "Estia"
+          ]
+        },
+        {
+          "manufacturer": "Vaillant",
+          "models": [
+            "aroTHERM plus",
+            "aroTHERM plus VWL 125/6 A",
+            "aroTHERM plus VWL 155/6 A",
+            "aroTHERM plus VWL 195/6 A"
+          ]
+        },
+        {
+          "manufacturer": "Viessmann",
+          "models": [
+            "Vitocal 250-A",
+            "Vitocal 150-A",
+            "Vitocal 300-A",
+            "Vitocal 350-A",
+            "Vitocal 200-A",
+            "Vitocal 262-A"
+          ]
+        },
+        {
+          "manufacturer": "Waterkotte",
+          "models": [
+            "Ai1 Air",
+            "Ai1 Geo"
+          ]
+        },
+        {
+          "manufacturer": "Wolf",
+          "models": [
+            "CHA-07 Monoblock",
+            "CHA-10 Monoblock",
+            "CHA-16/20 Monoblock",
+            "CHA-20/24 Monoblock",
+            "BWL-1S(B) Split"
+          ]
         }
       ]
     },
@@ -208,43 +384,70 @@
       "manufacturers": [
         {
           "manufacturer": "Viessmann",
-          "models": ["Vitocal 222-G", "Vitocal 200-G", "Vitocal 300-G"]
+          "models": [
+            "Vitocal 222-G",
+            "Vitocal 200-G",
+            "Vitocal 300-G"
+          ]
         },
         {
           "manufacturer": "Vaillant",
-          "models": ["flexoTHERM exclusive", "geoTHERM"]
+          "models": [
+            "flexoTHERM exclusive",
+            "geoTHERM"
+          ]
         },
         {
           "manufacturer": "Buderus",
-          "models": ["Logatherm WSW196i"]
+          "models": [
+            "Logatherm WSW196i"
+          ]
         },
         {
           "manufacturer": "Wolf",
-          "models": ["BWS-1"]
+          "models": [
+            "BWS-1"
+          ]
         },
         {
           "manufacturer": "Stiebel Eltron",
-          "models": ["WPE-I", "WPC"]
+          "models": [
+            "WPE-I",
+            "WPC"
+          ]
         },
         {
           "manufacturer": "NIBE",
-          "models": ["F1155", "F1255", "S1156", "S1256"]
+          "models": [
+            "F1155",
+            "F1255",
+            "S1156",
+            "S1256"
+          ]
         },
         {
           "manufacturer": "Waterkotte",
-          "models": ["EcoTouch"]
+          "models": [
+            "EcoTouch"
+          ]
         },
         {
           "manufacturer": "alpha innotec",
-          "models": ["SW"]
+          "models": [
+            "SW"
+          ]
         },
         {
           "manufacturer": "Ochsner",
-          "models": ["Europa"]
+          "models": [
+            "Europa"
+          ]
         },
         {
           "manufacturer": "iDM",
-          "models": ["TERRA"]
+          "models": [
+            "TERRA"
+          ]
         }
       ]
     },
@@ -253,27 +456,41 @@
       "manufacturers": [
         {
           "manufacturer": "Viessmann",
-          "models": ["Vitocal 200-G", "Vitocal 222-G"]
+          "models": [
+            "Vitocal 200-G",
+            "Vitocal 222-G"
+          ]
         },
         {
           "manufacturer": "Wolf",
-          "models": ["BWW-1"]
+          "models": [
+            "BWW-1"
+          ]
         },
         {
           "manufacturer": "Waterkotte",
-          "models": ["EcoTouch"]
+          "models": [
+            "EcoTouch"
+          ]
         },
         {
           "manufacturer": "Stiebel Eltron",
-          "models": ["WPW"]
+          "models": [
+            "WPW"
+          ]
         },
         {
           "manufacturer": "NIBE",
-          "models": ["F1155", "F1255"]
+          "models": [
+            "F1155",
+            "F1255"
+          ]
         },
         {
           "manufacturer": "alpha innotec",
-          "models": ["WW"]
+          "models": [
+            "WW"
+          ]
         }
       ]
     },
@@ -282,27 +499,43 @@
       "manufacturers": [
         {
           "manufacturer": "Viessmann",
-          "models": ["Vitocal 060-A", "Vitocal 262-A"]
+          "models": [
+            "Vitocal 060-A",
+            "Vitocal 262-A"
+          ]
         },
         {
           "manufacturer": "Wolf",
-          "models": ["FHS-180", "FHS-280", "FHS-280-HE"]
+          "models": [
+            "FHS-180",
+            "FHS-280",
+            "FHS-280-HE"
+          ]
         },
         {
           "manufacturer": "Stiebel Eltron",
-          "models": ["WWK", "WPF"]
+          "models": [
+            "WWK",
+            "WPF"
+          ]
         },
         {
           "manufacturer": "Vaillant",
-          "models": ["aroSTOR"]
+          "models": [
+            "aroSTOR"
+          ]
         },
         {
           "manufacturer": "Dimplex",
-          "models": ["BWP 30H"]
+          "models": [
+            "BWP 30H"
+          ]
         },
         {
           "manufacturer": "alpha innotec",
-          "models": ["BWP"]
+          "models": [
+            "BWP"
+          ]
         }
       ]
     },
@@ -311,43 +544,72 @@
       "manufacturers": [
         {
           "manufacturer": "ÖkoFEN",
-          "models": ["Pellematic Smart XS", "Pellematic Condens", "Pellematic Maxi"]
+          "models": [
+            "Pellematic Smart XS",
+            "Pellematic Condens",
+            "Pellematic Maxi"
+          ]
         },
         {
           "manufacturer": "Fröling",
-          "models": ["PE1 Pellet", "P4 Pellet"]
+          "models": [
+            "PE1 Pellet",
+            "P4 Pellet"
+          ]
         },
         {
           "manufacturer": "Hargassner",
-          "models": ["Nano-PK", "Classic-PK", "Eco-PK"]
+          "models": [
+            "Nano-PK",
+            "Classic-PK",
+            "Eco-PK"
+          ]
         },
         {
           "manufacturer": "KWB",
-          "models": ["Easyfire", "Multifire"]
+          "models": [
+            "Easyfire",
+            "Multifire"
+          ]
         },
         {
           "manufacturer": "ETA Heiztechnik",
-          "models": ["ePE", "eHACK"]
+          "models": [
+            "ePE",
+            "eHACK"
+          ]
         },
         {
           "manufacturer": "HDG Bavaria",
-          "models": ["HDG Compact"]
+          "models": [
+            "HDG Compact"
+          ]
         },
         {
           "manufacturer": "Windhager",
-          "models": ["BioWIN2", "DuoWIN"]
+          "models": [
+            "BioWIN2",
+            "DuoWIN"
+          ]
         },
         {
           "manufacturer": "Guntamatic",
-          "models": ["Biostar", "Powerchip"]
+          "models": [
+            "Biostar",
+            "Powerchip"
+          ]
         },
         {
           "manufacturer": "Paradigma",
-          "models": ["Pelletti"]
+          "models": [
+            "Pelletti"
+          ]
         },
         {
           "manufacturer": "Viessmann",
-          "models": ["Vitoligno 300-P"]
+          "models": [
+            "Vitoligno 300-P"
+          ]
         },
         {
           "manufacturer": "Wolf",
@@ -359,7 +621,10 @@
         },
         {
           "manufacturer": "Solarfocus",
-          "models": ["pelletsmart", "pelletelegance"]
+          "models": [
+            "pelletsmart",
+            "pelletelegance"
+          ]
         },
         {
           "manufacturer": "Biotech",
@@ -371,7 +636,9 @@
         },
         {
           "manufacturer": "Atmos",
-          "models": ["P"]
+          "models": [
+            "P"
+          ]
         },
         {
           "manufacturer": "Extraflame",
@@ -396,39 +663,61 @@
       "manufacturers": [
         {
           "manufacturer": "Fröling",
-          "models": ["S4 Turbo", "S1 Turbo"]
+          "models": [
+            "S4 Turbo",
+            "S1 Turbo"
+          ]
         },
         {
           "manufacturer": "Atmos",
-          "models": ["DC", "GSE"]
+          "models": [
+            "DC",
+            "GSE"
+          ]
         },
         {
           "manufacturer": "Viessmann",
-          "models": ["Vitoligno 150-S", "Vitoligno 200-S"]
+          "models": [
+            "Vitoligno 150-S",
+            "Vitoligno 200-S"
+          ]
         },
         {
           "manufacturer": "HDG",
-          "models": ["FK"]
+          "models": [
+            "FK"
+          ]
         },
         {
           "manufacturer": "ETA",
-          "models": ["SH", "TWIN"]
+          "models": [
+            "SH",
+            "TWIN"
+          ]
         },
         {
           "manufacturer": "Hargassner",
-          "models": ["HSV"]
+          "models": [
+            "HSV"
+          ]
         },
         {
           "manufacturer": "Guntamatic",
-          "models": ["BMK"]
+          "models": [
+            "BMK"
+          ]
         },
         {
           "manufacturer": "Windhager",
-          "models": ["LogWIN"]
+          "models": [
+            "LogWIN"
+          ]
         },
         {
           "manufacturer": "KWB",
-          "models": ["Classicfire"]
+          "models": [
+            "Classicfire"
+          ]
         }
       ]
     },
@@ -437,7 +726,9 @@
       "manufacturers": [
         {
           "manufacturer": "Fröling",
-          "models": ["T4"]
+          "models": [
+            "T4"
+          ]
         },
         {
           "manufacturer": "HDG",
@@ -445,15 +736,22 @@
         },
         {
           "manufacturer": "Hargassner",
-          "models": ["HSV", "Eco-HK"]
+          "models": [
+            "HSV",
+            "Eco-HK"
+          ]
         },
         {
           "manufacturer": "ETA",
-          "models": ["HACK"]
+          "models": [
+            "HACK"
+          ]
         },
         {
           "manufacturer": "Guntamatic",
-          "models": ["Powerchip"]
+          "models": [
+            "Powerchip"
+          ]
         },
         {
           "manufacturer": "Herz",
@@ -474,27 +772,40 @@
       "manufacturers": [
         {
           "manufacturer": "Viessmann",
-          "models": ["Vitosol"]
+          "models": [
+            "Vitosol"
+          ]
         },
         {
           "manufacturer": "Vaillant",
-          "models": ["auroTHERM"]
+          "models": [
+            "auroTHERM"
+          ]
         },
         {
           "manufacturer": "Buderus",
-          "models": ["Logasol"]
+          "models": [
+            "Logasol"
+          ]
         },
         {
           "manufacturer": "Wolf",
-          "models": ["TopSon"]
+          "models": [
+            "TopSon"
+          ]
         },
         {
           "manufacturer": "Paradigma",
-          "models": ["Aqua Plasma", "CPC"]
+          "models": [
+            "Aqua Plasma",
+            "CPC"
+          ]
         },
         {
           "manufacturer": "Wagner Solar",
-          "models": ["EURO"]
+          "models": [
+            "EURO"
+          ]
         },
         {
           "manufacturer": "CitrinSolar",
@@ -515,19 +826,28 @@
       "manufacturers": [
         {
           "manufacturer": "Viessmann",
-          "models": ["Vitovalor PT2", "Vitovalor PA2"]
+          "models": [
+            "Vitovalor PT2",
+            "Vitovalor PA2"
+          ]
         },
         {
           "manufacturer": "SenerTec",
-          "models": ["Dachs InnoGen"]
+          "models": [
+            "Dachs InnoGen"
+          ]
         },
         {
           "manufacturer": "SOLIDpower",
-          "models": ["BlueGEN"]
+          "models": [
+            "BlueGEN"
+          ]
         },
         {
           "manufacturer": "Buderus",
-          "models": ["Logapower FC10"]
+          "models": [
+            "Logapower FC10"
+          ]
         }
       ]
     },
@@ -536,11 +856,16 @@
       "manufacturers": [
         {
           "manufacturer": "SenerTec",
-          "models": ["Dachs", "Dachs Pro 20"]
+          "models": [
+            "Dachs",
+            "Dachs Pro 20"
+          ]
         },
         {
           "manufacturer": "Viessmann",
-          "models": ["Vitobloc"]
+          "models": [
+            "Vitobloc"
+          ]
         },
         {
           "manufacturer": "Wolf",
@@ -548,7 +873,9 @@
         },
         {
           "manufacturer": "Vaillant",
-          "models": ["ecoPOWER"]
+          "models": [
+            "ecoPOWER"
+          ]
         }
       ]
     },
@@ -557,19 +884,29 @@
       "manufacturers": [
         {
           "manufacturer": "Stiebel Eltron",
-          "models": ["ETS", "ETW"]
+          "models": [
+            "ETS",
+            "ETW"
+          ]
         },
         {
           "manufacturer": "AEG",
-          "models": ["WKL", "WSP"]
+          "models": [
+            "WKL",
+            "WSP"
+          ]
         },
         {
           "manufacturer": "Glen Dimplex",
-          "models": ["Quantum"]
+          "models": [
+            "Quantum"
+          ]
         },
         {
           "manufacturer": "Vaillant",
-          "models": ["eloSTOR"]
+          "models": [
+            "eloSTOR"
+          ]
         }
       ]
     },
@@ -607,7 +944,10 @@
         },
         {
           "manufacturer": "Wolf",
-          "models": ["CAT-2", "CAT-2-Convert"]
+          "models": [
+            "CAT-2",
+            "CAT-2-Convert"
+          ]
         },
         {
           "manufacturer": "PAW",

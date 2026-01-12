@@ -47,13 +47,11 @@ export async function GET(
     // 2. Get heater ID from params
     const { id } = await params;
 
-    // 3. Fetch heater with customer verification
+    // 3. Fetch heater with user verification
     const heater = await prisma.heater.findFirst({
       where: {
         id: id,
-        customer: {
-          userId: userId, // Ensure user owns the customer
-        },
+        userId: userId, // Ensure user owns the heater
       },
       include: {
         customer: {
@@ -123,9 +121,7 @@ export async function PATCH(
     const existingHeater = await prisma.heater.findFirst({
       where: {
         id: id,
-        customer: {
-          userId: userId,
-        },
+        userId: userId,
       },
     });
 
@@ -248,9 +244,7 @@ export async function DELETE(
     const existingHeater = await prisma.heater.findFirst({
       where: {
         id: id,
-        customer: {
-          userId: userId,
-        },
+        userId: userId,
       },
     });
 
