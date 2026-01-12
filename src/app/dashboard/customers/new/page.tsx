@@ -114,7 +114,7 @@ export default function NewCustomerPage() {
     }
 
     if (!formData.city.trim()) {
-      newErrors.city = 'Stadt ist erforderlich';
+      newErrors.city = 'Ort ist erforderlich';
     }
 
     if (!formData.phone.trim()) {
@@ -312,7 +312,7 @@ export default function NewCustomerPage() {
               {/* City */}
               <div className="md:col-span-2">
                 <Label htmlFor="city" className="mb-2 block">
-                  Stadt <span className="text-red-500">*</span>
+                  Ort <span className="text-red-500">*</span>
                 </Label>
                 <Input
                   id="city"

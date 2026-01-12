@@ -251,7 +251,7 @@ export default function CustomersPage() {
           <div className="text-sm text-muted-foreground">Gesamt</div>
           <div className="text-2xl font-bold text-foreground mt-1">{stats.total}</div>
         </div>
-        <div className="bg-card rounded-lg border border-destructive/50 p-4">
+        <div className={`bg-card rounded-lg border p-4 ${stats.overdue > 0 ? 'border-destructive/50' : 'border-border'}`}>
           <div className="text-sm text-muted-foreground">Überfällig</div>
           <div className="text-2xl font-bold text-destructive mt-1">{stats.overdue}</div>
         </div>
@@ -273,7 +273,7 @@ export default function CustomersPage() {
             <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <input
               type="text"
-              placeholder="Suche nach Name, Stadt, Adresse oder Telefon..."
+              placeholder="Suche nach Name, Ort, Adresse oder Telefon..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
@@ -317,7 +317,7 @@ export default function CustomersPage() {
                 className="px-3 py-1.5 bg-background border border-border rounded-md text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               >
                 <option value="name">Name</option>
-                <option value="city">Stadt</option>
+                <option value="city">Ort</option>
                 <option value="maintenance">Nächste Wartung</option>
                 <option value="heaters">Anzahl Heizungen</option>
               </select>
