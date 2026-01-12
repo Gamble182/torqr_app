@@ -57,11 +57,12 @@ interface DashboardStats {
 export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [timeRange, setTimeRange] = useState(30); // days for upcoming maintenances
 
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch('/api/dashboard/stats');
+        const response = await fetch(`/api/dashboard/stats?days=${timeRange}`);
         const result = await response.json();
 
         if (result.success) {
@@ -78,7 +79,7 @@ export default function DashboardPage() {
     };
 
     fetchStats();
-  }, []);
+  }, [timeRange]);
 
   if (loading) {
     return (
@@ -182,8 +183,8 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Overdue Maintenances */}
-          <div className={`bg-card overflow-hidden shadow-sm rounded-lg border hover:shadow-md transition-shadow ${(stats?.overdueMaintenances || 0) > 0 ? 'border-destructive' : 'border-border'}`}>
+          {/* Overdue Maintenances - Clickable */}
+          <Link href="/dashboard/wartungen?status=overdue" className={`block bg-card overflow-hidden shadow-sm rounded-lg border hover:shadow-md transition-shadow cursor-pointer ${(stats?.overdueMaintenances || 0) > 0 ? 'border-destructive' : 'border-border'}`}>
             <div className="p-5">
               <div className="flex items-center">
                 <div className="shrink-0">
@@ -203,7 +204,7 @@ export default function DashboardPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
 
           {/* Upcoming Maintenances */}
           <div className="bg-card overflow-hidden shadow-sm rounded-lg border border-border hover:shadow-md transition-shadow">
@@ -233,13 +234,27 @@ export default function DashboardPage() {
       {/* Upcoming Maintenances Calendar */}
       <div className="bg-card shadow-sm rounded-lg border border-border">
         <div className="px-6 py-4 border-b border-border">
-          <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
-            <CalendarIcon className="h-5 w-5 text-primary" />
-            Anstehende Wartungen
-          </h2>
-          <p className="text-sm text-muted-foreground mt-1">
-            Wartungen in den nächsten 30 Tagen
-          </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                <CalendarIcon className="h-5 w-5 text-primary" />
+                Anstehende Wartungen
+              </h2>
+              <p className="text-sm text-muted-foreground mt-1">
+                Wartungen in den nächsten {timeRange} Tagen
+              </p>
+            </div>
+            <select
+              value={timeRange}
+              onChange={(e) => setTimeRange(parseInt(e.target.value))}
+              className="px-3 py-1.5 bg-background border border-border rounded-md text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            >
+              <option value="7">7 Tage</option>
+              <option value="30">30 Tage</option>
+              <option value="90">3 Monate</option>
+              <option value="180">6 Monate</option>
+            </select>
+          </div>
         </div>
         <div className="p-6">
           {stats?.upcomingMaintenancesList && stats.upcomingMaintenancesList.length > 0 ? (

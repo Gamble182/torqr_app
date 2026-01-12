@@ -3,18 +3,22 @@ import { requireAuth } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 
 /**
- * GET /api/dashboard/stats
+ * GET /api/dashboard/stats?days=30
  * Get dashboard statistics for the authenticated user
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     // 1. Authenticate user
     const { userId } = await requireAuth();
 
-    // 2. Calculate all statistics in parallel
+    // 2. Get time range parameter
+    const searchParams = request.nextUrl.searchParams;
+    const days = parseInt(searchParams.get('days') || '30');
+
+    // 3. Calculate all statistics in parallel
     const now = new Date();
-    const thirtyDaysFromNow = new Date();
-    thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+    const futureDate = new Date();
+    futureDate.setDate(futureDate.getDate() + days);
 
     const [
       totalCustomers,
@@ -52,7 +56,7 @@ export async function GET() {
         },
       }),
 
-      // Upcoming maintenances (nextMaintenance between now and 30 days)
+      // Upcoming maintenances (nextMaintenance between now and future date)
       prisma.heater.count({
         where: {
           customer: {
@@ -60,7 +64,7 @@ export async function GET() {
           },
           nextMaintenance: {
             gte: now,
-            lte: thirtyDaysFromNow,
+            lte: futureDate,
           },
         },
       }),
@@ -73,7 +77,7 @@ export async function GET() {
           },
           nextMaintenance: {
             gte: now,
-            lte: thirtyDaysFromNow,
+            lte: futureDate,
           },
         },
         include: {

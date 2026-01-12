@@ -1,0 +1,118 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { requireAuth } from '@/lib/auth-helpers';
+import { prisma } from '@/lib/prisma';
+
+/**
+ * GET /api/wartungen?status=overdue&days=30
+ * Get all scheduled maintenances with filtering
+ */
+export async function GET(request: NextRequest) {
+  try {
+    // 1. Authenticate user
+    const { userId } = await requireAuth();
+
+    // 2. Get query params
+    const searchParams = request.nextUrl.searchParams;
+    const status = searchParams.get('status') || 'all'; // overdue, upcoming, all
+    const days = parseInt(searchParams.get('days') || '30'); // time range in days
+
+    // 3. Calculate date ranges
+    const now = new Date();
+    const futureDate = new Date();
+    futureDate.setDate(futureDate.getDate() + days);
+
+    // 4. Build where clause based on status
+    let where: any = {
+      customer: {
+        userId: userId,
+      },
+      nextMaintenance: {
+        not: null,
+      },
+    };
+
+    if (status === 'overdue') {
+      where.nextMaintenance = {
+        lt: now,
+      };
+    } else if (status === 'upcoming') {
+      where.nextMaintenance = {
+        gte: now,
+        lte: futureDate,
+      };
+    } else if (status === 'all') {
+      where.nextMaintenance = {
+        lte: futureDate,
+      };
+    }
+
+    // 5. Fetch heaters with upcoming/overdue maintenances
+    const heaters = await prisma.heater.findMany({
+      where,
+      include: {
+        customer: {
+          select: {
+            id: true,
+            name: true,
+            street: true,
+            city: true,
+            phone: true,
+            email: true,
+          },
+        },
+        maintenances: {
+          orderBy: {
+            date: 'desc',
+          },
+          take: 1, // Last maintenance
+        },
+      },
+      orderBy: [
+        { nextMaintenance: 'asc' }, // Most urgent first
+      ],
+    });
+
+    // 6. Calculate statistics
+    const stats = {
+      total: heaters.length,
+      overdue: heaters.filter(h => h.nextMaintenance && new Date(h.nextMaintenance) < now).length,
+      thisWeek: heaters.filter(h => {
+        if (!h.nextMaintenance) return false;
+        const date = new Date(h.nextMaintenance);
+        const weekFromNow = new Date();
+        weekFromNow.setDate(weekFromNow.getDate() + 7);
+        return date >= now && date <= weekFromNow;
+      }).length,
+      thisMonth: heaters.filter(h => {
+        if (!h.nextMaintenance) return false;
+        const date = new Date(h.nextMaintenance);
+        const monthFromNow = new Date();
+        monthFromNow.setDate(monthFromNow.getDate() + 30);
+        return date >= now && date <= monthFromNow;
+      }).length,
+    };
+
+    // 7. Return data
+    return NextResponse.json({
+      success: true,
+      data: heaters,
+      stats,
+    });
+
+  } catch (error) {
+    // Handle authentication errors
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      return NextResponse.json({
+        success: false,
+        error: 'Nicht autorisiert',
+      }, { status: 401 });
+    }
+
+    // Handle other errors
+    console.error('Error fetching wartungen:', error);
+    return NextResponse.json({
+      success: false,
+      error: 'Fehler beim Laden der Wartungen',
+    }, { status: 500 });
+  }
+}
