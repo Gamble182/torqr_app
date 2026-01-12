@@ -20,14 +20,14 @@ export default async function Home() {
               Willkommen bei <span className="text-blue-600">Torqr</span>
             </h1>
             <p className="text-xl text-gray-600">
-              Der Hebel für Ihr Handwerk
+              Der Hebel für dein Handwerk
             </p>
           </div>
 
           <p className="mx-auto max-w-2xl text-lg text-gray-700">
-            Verwalten Sie Ihre Wartungspläne für Heizungen, überwachen Sie Kundenheizungen
-            und automatisieren Sie Ihren Workflow mit unserer leistungsstarken Plattform,
-            die speziell für Heizungstechniker entwickelt wurde.
+            Verwalten Sie Ihre Kunden, planen Sie Wartungstermine automatisch
+            und digitalisieren Sie Ihre Arbeitsprozesse. Unsere Plattform hilft Ihnen,
+            administrative Aufgaben zu minimieren und mehr Zeit für Ihr Kerngeschäft zu haben.
           </p>
 
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
@@ -46,10 +46,10 @@ export default async function Home() {
           <div className="mt-16 grid gap-8 sm:grid-cols-3">
             <div className="rounded-lg bg-white p-6 shadow-sm">
               <h3 className="mb-2 text-lg font-semibold text-gray-900">
-                Kunden verfolgen
+                Kunden verwalten
               </h3>
               <p className="text-sm text-gray-600">
-                Verwalten Sie alle Ihre Kunden und deren Heizungsinformationen an einem Ort
+                Alle Kundendaten und Geräteinformationen zentral an einem Ort organisiert
               </p>
             </div>
             <div className="rounded-lg bg-white p-6 shadow-sm">
