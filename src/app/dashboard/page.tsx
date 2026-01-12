@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { toast } from 'sonner';
 import { Loader2Icon, UsersIcon, BoltIcon, AlertTriangleIcon, CalendarIcon } from 'lucide-react';
 
@@ -57,7 +58,7 @@ export default function DashboardPage() {
       <div className="mt-8">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {/* Total Customers */}
-          <div className="bg-card overflow-hidden shadow-sm rounded-lg border border-border hover:shadow-md transition-shadow">
+          <Link href="/dashboard/customers" className="block bg-card overflow-hidden shadow-sm rounded-lg border border-border hover:shadow-md transition-shadow cursor-pointer">
             <div className="p-5">
               <div className="flex items-center">
                 <div className="shrink-0">
@@ -77,7 +78,7 @@ export default function DashboardPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
 
           {/* Total Heaters */}
           <div className="bg-card overflow-hidden shadow-sm rounded-lg border border-border hover:shadow-md transition-shadow">
@@ -103,7 +104,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Overdue Maintenances */}
-          <div className="bg-card overflow-hidden shadow-sm rounded-lg border border-destructive hover:shadow-md transition-shadow">
+          <div className={`bg-card overflow-hidden shadow-sm rounded-lg border hover:shadow-md transition-shadow ${(stats?.overdueMaintenances || 0) > 0 ? 'border-destructive' : 'border-border'}`}>
             <div className="p-5">
               <div className="flex items-center">
                 <div className="shrink-0">
