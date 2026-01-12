@@ -1,0 +1,22 @@
+{
+  "heaterTypes": [
+    "Wärmepumpe (Luft)",
+    "Wärmepumpe (Erde)",
+    "Wärmepumpe (Wasser)"
+  ],
+  "manufacturers": [
+    "Viessmann",
+    "Vaillant",
+    "Buderus"
+  ],
+  "storageManufacturers": [
+    "Viessmann",
+    "Vaillant",
+    "Buderus"
+  ],
+  "batteryManufacturers": [
+    "Tesla",
+    "BYD",
+    "Sonnen"
+  ]
+}

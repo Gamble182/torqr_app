@@ -5,6 +5,7 @@ import { z } from 'zod';
 
 // Validation schema for updating a heater
 const updateHeaterSchema = z.object({
+  customerId: z.string().uuid('Ungültige Kunden-ID').optional().nullable(),
   model: z.string().min(1, 'Modell ist erforderlich').max(100, 'Modell zu lang').optional(),
   serialNumber: z.string().max(100, 'Seriennummer zu lang').optional().nullable(),
   installationDate: z.string().datetime('Ungültiges Installationsdatum').optional().nullable(),
@@ -13,6 +14,22 @@ const updateHeaterSchema = z.object({
   }).optional(),
   lastMaintenance: z.string().datetime('Ungültiges Wartungsdatum').optional().nullable(),
   requiredParts: z.string().optional().nullable(),
+
+  // Heating System Information
+  heaterType: z.string().optional().nullable(),
+  manufacturer: z.string().optional().nullable(),
+
+  // Heat Storage
+  hasStorage: z.boolean().optional(),
+  storageManufacturer: z.string().optional().nullable(),
+  storageModel: z.string().optional().nullable(),
+  storageCapacity: z.number().int().positive().optional().nullable(),
+
+  // Battery
+  hasBattery: z.boolean().optional(),
+  batteryManufacturer: z.string().optional().nullable(),
+  batteryModel: z.string().optional().nullable(),
+  batteryCapacity: z.number().positive().optional().nullable(),
 });
 
 /**
@@ -145,6 +162,7 @@ export async function PATCH(
         id: id,
       },
       data: {
+        ...(validatedData.customerId !== undefined && { customerId: validatedData.customerId }),
         ...(validatedData.model && { model: validatedData.model }),
         ...(validatedData.serialNumber !== undefined && { serialNumber: validatedData.serialNumber }),
         ...(validatedData.installationDate !== undefined && {
@@ -157,6 +175,23 @@ export async function PATCH(
           lastMaintenance: validatedData.lastMaintenance ? new Date(validatedData.lastMaintenance) : null
         }),
         ...(validatedData.requiredParts !== undefined && { requiredParts: validatedData.requiredParts }),
+
+        // Heating System Information
+        ...(validatedData.heaterType !== undefined && { heaterType: validatedData.heaterType }),
+        ...(validatedData.manufacturer !== undefined && { manufacturer: validatedData.manufacturer }),
+
+        // Heat Storage
+        ...(validatedData.hasStorage !== undefined && { hasStorage: validatedData.hasStorage }),
+        ...(validatedData.storageManufacturer !== undefined && { storageManufacturer: validatedData.storageManufacturer }),
+        ...(validatedData.storageModel !== undefined && { storageModel: validatedData.storageModel }),
+        ...(validatedData.storageCapacity !== undefined && { storageCapacity: validatedData.storageCapacity }),
+
+        // Battery
+        ...(validatedData.hasBattery !== undefined && { hasBattery: validatedData.hasBattery }),
+        ...(validatedData.batteryManufacturer !== undefined && { batteryManufacturer: validatedData.batteryManufacturer }),
+        ...(validatedData.batteryModel !== undefined && { batteryModel: validatedData.batteryModel }),
+        ...(validatedData.batteryCapacity !== undefined && { batteryCapacity: validatedData.batteryCapacity }),
+
         nextMaintenance: nextMaintenance,
       },
     });

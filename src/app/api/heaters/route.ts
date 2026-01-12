@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 // Validation schema for creating a heater
 const createHeaterSchema = z.object({
-  customerId: z.string().uuid('Ungültige Kunden-ID'),
+  customerId: z.string().uuid('Ungültige Kunden-ID').optional().nullable(),
   model: z.string().min(1, 'Modell ist erforderlich').max(100, 'Modell zu lang'),
   serialNumber: z.string().max(100, 'Seriennummer zu lang').optional().nullable(),
   installationDate: z.string().datetime('Ungültiges Installationsdatum').optional().nullable(),
@@ -13,6 +13,24 @@ const createHeaterSchema = z.object({
     message: 'Wartungsintervall muss 1, 3, 6, 12 oder 24 Monate sein'
   }),
   lastMaintenance: z.string().datetime('Ungültiges Wartungsdatum').optional().nullable(),
+
+  // Heating System Information
+  heaterType: z.string().optional().nullable(),
+  manufacturer: z.string().optional().nullable(),
+
+  // Heat Storage
+  hasStorage: z.boolean().optional(),
+  storageManufacturer: z.string().optional().nullable(),
+  storageModel: z.string().optional().nullable(),
+  storageCapacity: z.number().int().positive().optional().nullable(),
+
+  // Battery
+  hasBattery: z.boolean().optional(),
+  batteryManufacturer: z.string().optional().nullable(),
+  batteryModel: z.string().optional().nullable(),
+  batteryCapacity: z.number().positive().optional().nullable(),
+
+  requiredParts: z.string().optional().nullable(),
 });
 
 /**
@@ -28,19 +46,21 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = createHeaterSchema.parse(body);
 
-    // 3. Verify customer belongs to user
-    const customer = await prisma.customer.findUnique({
-      where: {
-        id: validatedData.customerId,
-        userId: userId,
-      },
-    });
+    // 3. Verify customer belongs to user (if customerId provided)
+    if (validatedData.customerId) {
+      const customer = await prisma.customer.findUnique({
+        where: {
+          id: validatedData.customerId,
+          userId: userId,
+        },
+      });
 
-    if (!customer) {
-      return NextResponse.json({
-        success: false,
-        error: 'Kunde nicht gefunden',
-      }, { status: 404 });
+      if (!customer) {
+        return NextResponse.json({
+          success: false,
+          error: 'Kunde nicht gefunden',
+        }, { status: 404 });
+      }
     }
 
     // 4. Calculate next maintenance date
@@ -55,21 +75,38 @@ export async function POST(request: NextRequest) {
     // 5. Create heater
     const heater = await prisma.heater.create({
       data: {
-        customerId: validatedData.customerId,
+        customerId: validatedData.customerId || null,
         model: validatedData.model,
         serialNumber: validatedData.serialNumber || null,
         installationDate: validatedData.installationDate ? new Date(validatedData.installationDate) : null,
         maintenanceInterval: interval,
         lastMaintenance: lastMaintenance,
         nextMaintenance: nextMaintenance,
+        requiredParts: validatedData.requiredParts || null,
+
+        // Heating System Information
+        heaterType: validatedData.heaterType || null,
+        manufacturer: validatedData.manufacturer || null,
+
+        // Heat Storage
+        hasStorage: validatedData.hasStorage || false,
+        storageManufacturer: validatedData.storageManufacturer || null,
+        storageModel: validatedData.storageModel || null,
+        storageCapacity: validatedData.storageCapacity || null,
+
+        // Battery
+        hasBattery: validatedData.hasBattery || false,
+        batteryManufacturer: validatedData.batteryManufacturer || null,
+        batteryModel: validatedData.batteryModel || null,
+        batteryCapacity: validatedData.batteryCapacity || null,
       },
       include: {
-        customer: {
+        customer: validatedData.customerId ? {
           select: {
             id: true,
             name: true,
           },
-        },
+        } : false,
       },
     });
 
