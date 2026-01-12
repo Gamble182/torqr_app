@@ -12,6 +12,7 @@ const updateHeaterSchema = z.object({
     message: 'Wartungsintervall muss 1, 3, 6, 12 oder 24 Monate sein'
   }).optional(),
   lastMaintenance: z.string().datetime('Ungültiges Wartungsdatum').optional().nullable(),
+  requiredParts: z.string().optional().nullable(),
 });
 
 /**
@@ -155,6 +156,7 @@ export async function PATCH(
         ...(validatedData.lastMaintenance !== undefined && {
           lastMaintenance: validatedData.lastMaintenance ? new Date(validatedData.lastMaintenance) : null
         }),
+        ...(validatedData.requiredParts !== undefined && { requiredParts: validatedData.requiredParts }),
         nextMaintenance: nextMaintenance,
       },
     });

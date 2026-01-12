@@ -36,7 +36,8 @@
       "Bash(npx prisma validate:*)",
       "Bash(npm run postinstall:*)",
       "Bash(vercel env:*)",
-      "Bash(xargs ls:*)"
+      "Bash(xargs ls:*)",
+      "Bash(test:*)"
     ]
   }
 }

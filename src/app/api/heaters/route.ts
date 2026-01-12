@@ -107,56 +107,85 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * GET /api/heaters?customerId=xxx
- * Get all heaters for a customer
+ * GET /api/heaters?customerId=xxx&search=xxx
+ * Get heaters - optionally filtered by customer or search query
  */
 export async function GET(request: NextRequest) {
   try {
     // 1. Authenticate user
     const { userId } = await requireAuth();
 
-    // 2. Get customer ID from query params
+    // 2. Get query params
     const searchParams = request.nextUrl.searchParams;
     const customerId = searchParams.get('customerId');
+    const search = searchParams.get('search') || '';
 
-    if (!customerId) {
-      return NextResponse.json({
-        success: false,
-        error: 'Kunden-ID fehlt',
-      }, { status: 400 });
-    }
-
-    // 3. Verify customer belongs to user
-    const customer = await prisma.customer.findUnique({
-      where: {
-        id: customerId,
+    // 3. Build where clause
+    let where: any = {
+      customer: {
         userId: userId,
       },
-    });
+    };
 
-    if (!customer) {
-      return NextResponse.json({
-        success: false,
-        error: 'Kunde nicht gefunden',
-      }, { status: 404 });
+    // If customerId provided, filter by that customer
+    if (customerId) {
+      // Verify customer belongs to user
+      const customer = await prisma.customer.findUnique({
+        where: {
+          id: customerId,
+          userId: userId,
+        },
+      });
+
+      if (!customer) {
+        return NextResponse.json({
+          success: false,
+          error: 'Kunde nicht gefunden',
+        }, { status: 404 });
+      }
+
+      where.customerId = customerId;
+    }
+
+    // Add search filter if provided
+    if (search) {
+      where.OR = [
+        { model: { contains: search, mode: 'insensitive' as const } },
+        { serialNumber: { contains: search, mode: 'insensitive' as const } },
+        { customer: { name: { contains: search, mode: 'insensitive' as const } } },
+        { customer: { city: { contains: search, mode: 'insensitive' as const } } },
+      ];
     }
 
     // 4. Fetch heaters
     const heaters = await prisma.heater.findMany({
-      where: {
-        customerId: customerId,
-      },
+      where,
       include: {
-        maintenances: {
+        customer: {
+          select: {
+            id: true,
+            name: true,
+            street: true,
+            city: true,
+            phone: true,
+          },
+        },
+        _count: {
+          select: {
+            maintenances: true,
+          },
+        },
+        maintenances: customerId ? {
           orderBy: {
             date: 'desc',
           },
-          take: 5, // Last 5 maintenances
-        },
+          take: 5, // Last 5 maintenances (only when viewing single customer)
+        } : false,
       },
-      orderBy: {
-        nextMaintenance: 'asc', // Soonest first
-      },
+      orderBy: [
+        { nextMaintenance: 'asc' }, // Soonest maintenance first
+        { customer: { name: 'asc' } },
+      ],
     });
 
     // 5. Return heaters

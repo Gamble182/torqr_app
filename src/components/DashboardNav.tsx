@@ -12,6 +12,7 @@ export function DashboardNav() {
   const navigation = [
     { name: 'Dashboard', href: '/dashboard' },
     { name: 'Kunden', href: '/dashboard/customers' },
+    { name: 'Heizungen', href: '/dashboard/heaters' },
   ];
 
   const isActive = (href: string) => {

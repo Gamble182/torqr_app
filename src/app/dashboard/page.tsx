@@ -39,6 +39,7 @@ interface Maintenance {
   heater: {
     model: string;
     customer: {
+      id: string;
       name: string;
     };
   };
@@ -317,9 +318,10 @@ export default function DashboardPage() {
           {stats?.recentMaintenances && stats.recentMaintenances.length > 0 ? (
             <div className="space-y-4">
               {stats.recentMaintenances.map((maintenance) => (
-                <div
+                <Link
                   key={maintenance.id}
-                  className="flex items-start gap-4 p-4 bg-muted/30 rounded-lg border border-border hover:bg-muted/50 transition-colors"
+                  href={`/dashboard/maintenances/${maintenance.id}`}
+                  className="flex items-start gap-4 p-4 bg-muted/30 rounded-lg border border-border hover:bg-muted/50 hover:shadow-sm transition-all cursor-pointer"
                 >
                   <div className="shrink-0">
                     <div className="rounded-lg bg-secondary/20 p-2">
@@ -347,7 +349,7 @@ export default function DashboardPage() {
                       {format(new Date(maintenance.date), 'yyyy', { locale: de })}
                     </p>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           ) : (

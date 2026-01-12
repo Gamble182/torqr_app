@@ -104,6 +104,7 @@ export async function GET() {
             include: {
               customer: {
                 select: {
+                  id: true,
                   name: true,
                 },
               },
