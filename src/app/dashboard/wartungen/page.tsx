@@ -16,6 +16,8 @@ import {
   ClockIcon,
   FilterIcon,
   XIcon,
+  DownloadIcon,
+  FileTextIcon,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -154,6 +156,208 @@ export default function WartungenPage() {
   const displayedHeaters = heaters.slice(0, displayLimit);
   const hasMore = heaters.length > displayLimit;
 
+  // CSV Export Function
+  const exportToCSV = () => {
+    try {
+      // CSV Headers
+      const headers = [
+        'Heizungsmodell',
+        'Seriennummer',
+        'Kunde',
+        'Straße',
+        'Ort',
+        'Telefon',
+        'Email',
+        'Nächste Wartung',
+        'Status',
+        'Tage bis Wartung',
+        'Wartungsintervall (Monate)',
+        'Letzte Wartung',
+      ];
+
+      // CSV Rows
+      const rows = heaters.map((heater) => {
+        const urgency = getMaintenanceUrgency(heater.nextMaintenance);
+        const date = new Date(heater.nextMaintenance);
+        const now = new Date();
+        const diffDays = Math.ceil((date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+        const lastMaintenance = heater.maintenances[0];
+
+        let status = 'Geplant';
+        if (urgency === 'overdue') status = 'Überfällig';
+        else if (urgency === 'urgent') status = 'Diese Woche';
+        else if (urgency === 'soon') status = 'Bald fällig';
+
+        return [
+          heater.model,
+          heater.serialNumber || '',
+          heater.customer.name,
+          heater.customer.street,
+          heater.customer.city,
+          heater.customer.phone,
+          heater.customer.email || '',
+          format(new Date(heater.nextMaintenance), 'dd.MM.yyyy', { locale: de }),
+          status,
+          diffDays.toString(),
+          heater.maintenanceInterval.toString(),
+          lastMaintenance ? format(new Date(lastMaintenance.date), 'dd.MM.yyyy', { locale: de }) : '',
+        ];
+      });
+
+      // Create CSV content
+      const csvContent = [
+        headers.join(';'),
+        ...rows.map((row) => row.map((cell) => `"${cell}"`).join(';')),
+      ].join('\n');
+
+      // Add BOM for Excel compatibility with German characters
+      const BOM = '\uFEFF';
+      const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+
+      // Download
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.setAttribute('href', url);
+      link.setAttribute('download', `wartungen_${format(new Date(), 'yyyy-MM-dd')}.csv`);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toast.success('CSV-Export erfolgreich');
+    } catch (err) {
+      console.error('Error exporting CSV:', err);
+      toast.error('Fehler beim CSV-Export');
+    }
+  };
+
+  // PDF Export Function
+  const exportToPDF = () => {
+    try {
+      // Create PDF content as HTML
+      const pdfContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <title>Wartungsübersicht</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            h1 { color: #01204E; margin-bottom: 10px; }
+            .meta { color: #666; margin-bottom: 20px; font-size: 14px; }
+            .stats { display: flex; gap: 20px; margin-bottom: 30px; }
+            .stat-card { border: 1px solid #ddd; padding: 15px; border-radius: 8px; flex: 1; }
+            .stat-card h3 { margin: 0 0 5px 0; font-size: 14px; color: #666; }
+            .stat-card .value { font-size: 24px; font-weight: bold; }
+            .overdue { color: #F85525; border-color: #F85525; }
+            .warning { color: #FAA968; }
+            .accent { color: #028391; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th { background-color: #01204E; color: white; padding: 12px; text-align: left; font-size: 12px; }
+            td { padding: 10px; border-bottom: 1px solid #ddd; font-size: 11px; }
+            tr:hover { background-color: #f5f5f5; }
+            .badge { display: inline-block; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: bold; }
+            .badge-overdue { background-color: #F85525; color: white; }
+            .badge-urgent { background-color: #FAA968; color: white; }
+            .badge-soon { background-color: #028391; color: white; }
+            .badge-scheduled { background-color: #e0e0e0; color: #666; }
+          </style>
+        </head>
+        <body>
+          <h1>Wartungsübersicht</h1>
+          <div class="meta">Erstellt am ${format(new Date(), 'dd. MMMM yyyy, HH:mm', { locale: de })} Uhr</div>
+
+          <div class="stats">
+            <div class="stat-card">
+              <h3>Gesamt</h3>
+              <div class="value">${stats.total}</div>
+            </div>
+            <div class="stat-card overdue">
+              <h3>Überfällig</h3>
+              <div class="value">${stats.overdue}</div>
+            </div>
+            <div class="stat-card warning">
+              <h3>Diese Woche</h3>
+              <div class="value">${stats.thisWeek}</div>
+            </div>
+            <div class="stat-card accent">
+              <h3>Dieser Monat</h3>
+              <div class="value">${stats.thisMonth}</div>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Heizung</th>
+                <th>Kunde</th>
+                <th>Ort</th>
+                <th>Telefon</th>
+                <th>Nächste Wartung</th>
+                <th>Status</th>
+                <th>Intervall</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${heaters.map((heater) => {
+                const urgency = getMaintenanceUrgency(heater.nextMaintenance);
+                let badgeClass = 'badge-scheduled';
+                let statusText = 'Geplant';
+
+                if (urgency === 'overdue') {
+                  badgeClass = 'badge-overdue';
+                  statusText = 'Überfällig';
+                } else if (urgency === 'urgent') {
+                  badgeClass = 'badge-urgent';
+                  statusText = 'Diese Woche';
+                } else if (urgency === 'soon') {
+                  badgeClass = 'badge-soon';
+                  statusText = 'Bald fällig';
+                }
+
+                return `
+                  <tr>
+                    <td>
+                      <strong>${heater.model}</strong><br>
+                      ${heater.serialNumber ? `<small>SN: ${heater.serialNumber}</small>` : ''}
+                    </td>
+                    <td>${heater.customer.name}</td>
+                    <td>${heater.customer.city}</td>
+                    <td>${heater.customer.phone}</td>
+                    <td>${format(new Date(heater.nextMaintenance), 'dd.MM.yyyy', { locale: de })}</td>
+                    <td><span class="badge ${badgeClass}">${statusText}</span></td>
+                    <td>${heater.maintenanceInterval} ${heater.maintenanceInterval === 1 ? 'Monat' : 'Monate'}</td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        </body>
+        </html>
+      `;
+
+      // Open print dialog
+      const printWindow = window.open('', '_blank');
+      if (printWindow) {
+        printWindow.document.write(pdfContent);
+        printWindow.document.close();
+        printWindow.focus();
+
+        // Wait for content to load, then print
+        printWindow.onload = () => {
+          printWindow.print();
+        };
+
+        toast.success('PDF-Druckvorschau geöffnet');
+      } else {
+        toast.error('Popup wurde blockiert. Bitte erlauben Sie Popups für diese Seite.');
+      }
+    } catch (err) {
+      console.error('Error exporting PDF:', err);
+      toast.error('Fehler beim PDF-Export');
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -165,11 +369,33 @@ export default function WartungenPage() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold text-foreground">Wartungen</h1>
-        <p className="mt-2 text-muted-foreground">
-          Übersicht aller anstehenden und überfälligen Wartungen
-        </p>
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">Wartungen</h1>
+          <p className="mt-2 text-muted-foreground">
+            Übersicht aller anstehenden und überfälligen Wartungen
+          </p>
+        </div>
+        {heaters.length > 0 && (
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={exportToCSV}
+            >
+              <DownloadIcon className="h-4 w-4 mr-1" />
+              CSV Export
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={exportToPDF}
+            >
+              <FileTextIcon className="h-4 w-4 mr-1" />
+              PDF Export
+            </Button>
+          </div>
+        )}
       </div>
 
       {/* Stats Cards */}

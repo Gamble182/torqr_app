@@ -4,9 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'sonner';
-import { ArrowLeftIcon, Loader2Icon, PlusIcon } from 'lucide-react';
+import { ArrowLeftIcon, Loader2Icon, PlusIcon, XIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import heaterTypesConfig from '@/config/heater-types.json';
 
 interface Customer {
   id: string;
@@ -14,24 +13,44 @@ interface Customer {
   city: string;
 }
 
+interface Model {
+  manufacturer: string;
+  models: string[];
+}
+
+interface Category {
+  category: string;
+  manufacturers: Model[];
+}
+
+interface HeatingSystemsConfig {
+  heating_categories: Category[];
+}
+
 export default function NewHeaterPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [loadingCustomers, setLoadingCustomers] = useState(true);
+  const [heatingConfig, setHeatingConfig] = useState<HeatingSystemsConfig | null>(null);
+  const [loadingConfig, setLoadingConfig] = useState(true);
 
   // Basic heater fields
   const [customerId, setCustomerId] = useState('');
-  const [model, setModel] = useState('');
   const [serialNumber, setSerialNumber] = useState('');
   const [installationDate, setInstallationDate] = useState('');
   const [maintenanceInterval, setMaintenanceInterval] = useState('12');
   const [lastMaintenance, setLastMaintenance] = useState('');
   const [requiredParts, setRequiredParts] = useState('');
 
-  // Heating system fields
-  const [heaterType, setHeaterType] = useState('');
+  // Heating system fields with cascading dropdowns
+  const [category, setCategory] = useState('');
   const [manufacturer, setManufacturer] = useState('');
+  const [model, setModel] = useState('');
+
+  // Available options based on selection
+  const [availableManufacturers, setAvailableManufacturers] = useState<Model[]>([]);
+  const [availableModels, setAvailableModels] = useState<string[]>([]);
 
   // Storage fields
   const [hasStorage, setHasStorage] = useState(false);
@@ -45,9 +64,48 @@ export default function NewHeaterPage() {
   const [batteryModel, setBatteryModel] = useState('');
   const [batteryCapacity, setBatteryCapacity] = useState('');
 
+  // Add new entry modal state
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [addModalType, setAddModalType] = useState<'category' | 'manufacturer' | 'model'>('category');
+  const [newEntryValue, setNewEntryValue] = useState('');
+  const [addingEntry, setAddingEntry] = useState(false);
+
   useEffect(() => {
     fetchCustomers();
+    fetchHeatingConfig();
   }, []);
+
+  // Update available manufacturers when category changes
+  useEffect(() => {
+    if (category && heatingConfig) {
+      const selectedCategory = heatingConfig.heating_categories.find(
+        (cat) => cat.category === category
+      );
+      setAvailableManufacturers(selectedCategory?.manufacturers || []);
+      setManufacturer('');
+      setModel('');
+      setAvailableModels([]);
+    } else {
+      setAvailableManufacturers([]);
+      setManufacturer('');
+      setModel('');
+      setAvailableModels([]);
+    }
+  }, [category, heatingConfig]);
+
+  // Update available models when manufacturer changes
+  useEffect(() => {
+    if (manufacturer && availableManufacturers.length > 0) {
+      const selectedManufacturer = availableManufacturers.find(
+        (mfr) => mfr.manufacturer === manufacturer
+      );
+      setAvailableModels(selectedManufacturer?.models || []);
+      setModel('');
+    } else {
+      setAvailableModels([]);
+      setModel('');
+    }
+  }, [manufacturer, availableManufacturers]);
 
   const fetchCustomers = async () => {
     try {
@@ -63,8 +121,101 @@ export default function NewHeaterPage() {
     }
   };
 
+  const fetchHeatingConfig = async () => {
+    try {
+      const response = await fetch('/api/heating-systems');
+      const result = await response.json();
+      if (result.success) {
+        setHeatingConfig(result.data);
+      } else {
+        toast.error('Fehler beim Laden der Heizungssysteme');
+      }
+    } catch (err) {
+      console.error('Error fetching heating config:', err);
+      toast.error('Fehler beim Laden der Heizungssysteme');
+    } finally {
+      setLoadingConfig(false);
+    }
+  };
+
+  const handleAddNewEntry = async () => {
+    if (!newEntryValue.trim()) {
+      toast.error('Bitte geben Sie einen Wert ein');
+      return;
+    }
+
+    setAddingEntry(true);
+
+    try {
+      const body: any = { type: addModalType };
+
+      if (addModalType === 'category') {
+        body.category = newEntryValue.trim();
+      } else if (addModalType === 'manufacturer') {
+        if (!category) {
+          toast.error('Bitte wählen Sie zuerst eine Kategorie');
+          return;
+        }
+        body.category = category;
+        body.manufacturer = newEntryValue.trim();
+      } else if (addModalType === 'model') {
+        if (!category || !manufacturer) {
+          toast.error('Bitte wählen Sie zuerst Kategorie und Hersteller');
+          return;
+        }
+        body.category = category;
+        body.manufacturer = manufacturer;
+        body.model = newEntryValue.trim();
+      }
+
+      const response = await fetch('/api/heating-systems', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast.success(result.message || 'Erfolgreich hinzugefügt');
+        setHeatingConfig(result.data);
+
+        // Auto-select the newly added entry
+        if (addModalType === 'category') {
+          setCategory(newEntryValue.trim());
+        } else if (addModalType === 'manufacturer') {
+          setManufacturer(newEntryValue.trim());
+        } else if (addModalType === 'model') {
+          setModel(newEntryValue.trim());
+        }
+
+        setShowAddModal(false);
+        setNewEntryValue('');
+      } else {
+        toast.error(result.error || 'Fehler beim Hinzufügen');
+      }
+    } catch (err) {
+      console.error('Error adding entry:', err);
+      toast.error('Fehler beim Hinzufügen');
+    } finally {
+      setAddingEntry(false);
+    }
+  };
+
+  const openAddModal = (type: 'category' | 'manufacturer' | 'model') => {
+    setAddModalType(type);
+    setNewEntryValue('');
+    setShowAddModal(true);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!model) {
+      toast.error('Bitte geben Sie ein Modell ein');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -79,7 +230,7 @@ export default function NewHeaterPage() {
           maintenanceInterval,
           lastMaintenance: lastMaintenance ? new Date(lastMaintenance).toISOString() : null,
           requiredParts: requiredParts || null,
-          heaterType: heaterType || null,
+          heaterType: category || null,
           manufacturer: manufacturer || null,
           hasStorage,
           storageManufacturer: hasStorage ? (storageManufacturer || null) : null,
@@ -107,6 +258,36 @@ export default function NewHeaterPage() {
       setLoading(false);
     }
   };
+
+  const getModalTitle = () => {
+    switch (addModalType) {
+      case 'category':
+        return 'Neue Kategorie hinzufügen';
+      case 'manufacturer':
+        return 'Neuen Hersteller hinzufügen';
+      case 'model':
+        return 'Neues Modell hinzufügen';
+    }
+  };
+
+  const getModalPlaceholder = () => {
+    switch (addModalType) {
+      case 'category':
+        return 'z.B. Gasheizung';
+      case 'manufacturer':
+        return 'z.B. Viessmann';
+      case 'model':
+        return 'z.B. Vitodens 200-W';
+    }
+  };
+
+  if (loadingConfig) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2Icon className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -153,23 +334,34 @@ export default function NewHeaterPage() {
               </select>
             </div>
 
-            {/* Heater Type */}
+            {/* Category */}
             <div>
               <label className="block text-sm font-medium text-foreground mb-2">
-                Heizungstyp
+                Kategorie
               </label>
-              <select
-                value={heaterType}
-                onChange={(e) => setHeaterType(e.target.value)}
-                className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-              >
-                <option value="">Bitte wählen...</option>
-                {heaterTypesConfig.heaterTypes.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
+              <div className="flex gap-2">
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="flex-1 px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                >
+                  <option value="">Bitte wählen...</option>
+                  {heatingConfig?.heating_categories.map((cat) => (
+                    <option key={cat.category} value={cat.category}>
+                      {cat.category}
+                    </option>
+                  ))}
+                </select>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => openAddModal('category')}
+                  title="Neue Kategorie hinzufügen"
+                >
+                  <PlusIcon className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
 
             {/* Manufacturer */}
@@ -177,18 +369,36 @@ export default function NewHeaterPage() {
               <label className="block text-sm font-medium text-foreground mb-2">
                 Hersteller
               </label>
-              <select
-                value={manufacturer}
-                onChange={(e) => setManufacturer(e.target.value)}
-                className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-              >
-                <option value="">Bitte wählen...</option>
-                {heaterTypesConfig.manufacturers.map((mfr) => (
-                  <option key={mfr} value={mfr}>
-                    {mfr}
-                  </option>
-                ))}
-              </select>
+              <div className="flex gap-2">
+                <select
+                  value={manufacturer}
+                  onChange={(e) => setManufacturer(e.target.value)}
+                  disabled={!category}
+                  className="flex-1 px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring disabled:opacity-50"
+                >
+                  <option value="">Bitte wählen...</option>
+                  {availableManufacturers.map((mfr) => (
+                    <option key={mfr.manufacturer} value={mfr.manufacturer}>
+                      {mfr.manufacturer}
+                    </option>
+                  ))}
+                </select>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => openAddModal('manufacturer')}
+                  disabled={!category}
+                  title="Neuen Hersteller hinzufügen"
+                >
+                  <PlusIcon className="h-4 w-4" />
+                </Button>
+              </div>
+              {!category && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  Bitte wählen Sie zuerst eine Kategorie
+                </p>
+              )}
             </div>
 
             {/* Model */}
@@ -196,14 +406,48 @@ export default function NewHeaterPage() {
               <label className="block text-sm font-medium text-foreground mb-2">
                 Modell <span className="text-destructive">*</span>
               </label>
-              <input
-                type="text"
-                required
-                value={model}
-                onChange={(e) => setModel(e.target.value)}
-                className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                placeholder="z.B. Vitocal 200-S"
-              />
+              <div className="flex gap-2">
+                {availableModels.length > 0 ? (
+                  <select
+                    required
+                    value={model}
+                    onChange={(e) => setModel(e.target.value)}
+                    className="flex-1 px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  >
+                    <option value="">Bitte wählen...</option>
+                    {availableModels.map((mdl) => (
+                      <option key={mdl} value={mdl}>
+                        {mdl}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    type="text"
+                    required
+                    value={model}
+                    onChange={(e) => setModel(e.target.value)}
+                    className="flex-1 px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    placeholder="z.B. Vitocal 200-S"
+                  />
+                )}
+                {manufacturer && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => openAddModal('model')}
+                    title="Neues Modell hinzufügen"
+                  >
+                    <PlusIcon className="h-4 w-4" />
+                  </Button>
+                )}
+              </div>
+              {!manufacturer && category && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  Bitte wählen Sie zuerst einen Hersteller oder geben Sie das Modell manuell ein
+                </p>
+              )}
             </div>
 
             {/* Serial Number */}
@@ -309,18 +553,13 @@ export default function NewHeaterPage() {
                 <label className="block text-sm font-medium text-foreground mb-2">
                   Hersteller
                 </label>
-                <select
+                <input
+                  type="text"
                   value={storageManufacturer}
                   onChange={(e) => setStorageManufacturer(e.target.value)}
                   className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                >
-                  <option value="">Bitte wählen...</option>
-                  {heaterTypesConfig.storageManufacturers.map((mfr) => (
-                    <option key={mfr} value={mfr}>
-                      {mfr}
-                    </option>
-                  ))}
-                </select>
+                  placeholder="z.B. Viessmann"
+                />
               </div>
 
               <div>
@@ -374,18 +613,13 @@ export default function NewHeaterPage() {
                 <label className="block text-sm font-medium text-foreground mb-2">
                   Hersteller
                 </label>
-                <select
+                <input
+                  type="text"
                   value={batteryManufacturer}
                   onChange={(e) => setBatteryManufacturer(e.target.value)}
                   className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-                >
-                  <option value="">Bitte wählen...</option>
-                  {heaterTypesConfig.batteryManufacturers.map((mfr) => (
-                    <option key={mfr} value={mfr}>
-                      {mfr}
-                    </option>
-                  ))}
-                </select>
+                  placeholder="z.B. Tesla"
+                />
               </div>
 
               <div>
@@ -441,6 +675,90 @@ export default function NewHeaterPage() {
           </Link>
         </div>
       </form>
+
+      {/* Add Entry Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-card rounded-lg border border-border p-6 max-w-md w-full mx-4">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-semibold text-foreground">
+                {getModalTitle()}
+              </h3>
+              <button
+                onClick={() => setShowAddModal(false)}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                <XIcon className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {addModalType === 'manufacturer' && category && (
+                <p className="text-sm text-muted-foreground">
+                  Für Kategorie: <span className="font-medium text-foreground">{category}</span>
+                </p>
+              )}
+              {addModalType === 'model' && category && manufacturer && (
+                <p className="text-sm text-muted-foreground">
+                  Für {category} - <span className="font-medium text-foreground">{manufacturer}</span>
+                </p>
+              )}
+
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  {addModalType === 'category' && 'Kategorie'}
+                  {addModalType === 'manufacturer' && 'Hersteller'}
+                  {addModalType === 'model' && 'Modell'}
+                </label>
+                <input
+                  type="text"
+                  value={newEntryValue}
+                  onChange={(e) => setNewEntryValue(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleAddNewEntry();
+                    }
+                  }}
+                  className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  placeholder={getModalPlaceholder()}
+                  autoFocus
+                />
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  type="button"
+                  onClick={handleAddNewEntry}
+                  disabled={addingEntry || !newEntryValue.trim()}
+                  className="flex-1"
+                >
+                  {addingEntry ? (
+                    <>
+                      <Loader2Icon className="h-4 w-4 mr-2 animate-spin" />
+                      Wird hinzugefügt...
+                    </>
+                  ) : (
+                    <>
+                      <PlusIcon className="h-4 w-4 mr-2" />
+                      Hinzufügen
+                    </>
+                  )}
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowAddModal(false)}
+                  disabled={addingEntry}
+                  className="flex-1"
+                >
+                  Abbrechen
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
