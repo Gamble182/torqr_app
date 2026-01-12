@@ -20,14 +20,14 @@ import { Label } from '@/components/ui/label';
 
 // Validation schema (matching API validation)
 const registerSchema = z.object({
-  email: z.string().email('Invalid email address'),
+  email: z.string().email('Ungültige E-Mail-Adresse'),
   password: z
     .string()
-    .min(8, 'Password must be at least 8 characters')
-    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
-    .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
-    .regex(/[0-9]/, 'Password must contain at least one number'),
-  name: z.string().min(2, 'Name must be at least 2 characters'),
+    .min(8, 'Passwort muss mindestens 8 Zeichen lang sein')
+    .regex(/[A-Z]/, 'Passwort muss mindestens einen Großbuchstaben enthalten')
+    .regex(/[a-z]/, 'Passwort muss mindestens einen Kleinbuchstaben enthalten')
+    .regex(/[0-9]/, 'Passwort muss mindestens eine Zahl enthalten'),
+  name: z.string().min(2, 'Name muss mindestens 2 Zeichen lang sein'),
   phone: z.string().optional(),
 });
 
@@ -64,7 +64,7 @@ export default function RegisterPage() {
           // Validation errors from server
           setError(result.details.map((d: { message: string }) => d.message).join(', '));
         } else {
-          setError(result.error || 'Registration failed');
+          setError(result.error || 'Registrierung fehlgeschlagen');
         }
         return;
       }
@@ -72,7 +72,7 @@ export default function RegisterPage() {
       // Registration successful, redirect to login
       router.push('/login?registered=true');
     } catch (err) {
-      setError('An unexpected error occurred. Please try again.');
+      setError('Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
       console.error('Registration error:', err);
     } finally {
       setIsLoading(false);
@@ -83,9 +83,9 @@ export default function RegisterPage() {
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Create an account</CardTitle>
+          <CardTitle className="text-2xl font-bold">Konto erstellen</CardTitle>
           <CardDescription>
-            Enter your details to register for Torqr
+            Geben Sie Ihre Daten ein, um sich für Torqr zu registrieren
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -97,7 +97,7 @@ export default function RegisterPage() {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="name">Vollständiger Name</Label>
               <Input
                 id="name"
                 placeholder="Max Mustermann"
@@ -110,11 +110,11 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">E-Mail</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="max@example.com"
+                placeholder="max@beispiel.de"
                 {...register('email')}
                 disabled={isLoading}
               />
@@ -124,7 +124,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Passwort</Label>
               <Input
                 id="password"
                 type="password"
@@ -136,12 +136,12 @@ export default function RegisterPage() {
                 <p className="text-sm text-red-600">{errors.password.message}</p>
               )}
               <p className="text-xs text-gray-500">
-                Must be 8+ characters with uppercase, lowercase, and number
+                Muss mindestens 8 Zeichen mit Groß-, Kleinbuchstaben und einer Zahl enthalten
               </p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone (Optional)</Label>
+              <Label htmlFor="phone">Telefon (Optional)</Label>
               <Input
                 id="phone"
                 type="tel"
@@ -156,12 +156,12 @@ export default function RegisterPage() {
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? 'Creating account...' : 'Create account'}
+              {isLoading ? 'Konto wird erstellt...' : 'Konto erstellen'}
             </Button>
             <p className="text-center text-sm text-gray-600">
-              Already have an account?{' '}
+              Bereits ein Konto?{' '}
               <Link href="/login" className="font-medium text-blue-600 hover:underline">
-                Sign in
+                Anmelden
               </Link>
             </p>
           </CardFooter>

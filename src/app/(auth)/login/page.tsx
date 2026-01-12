@@ -21,8 +21,8 @@ import { Label } from '@/components/ui/label';
 
 // Validation schema
 const loginSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(1, 'Password is required'),
+  email: z.string().email('Ungültige E-Mail-Adresse'),
+  password: z.string().min(1, 'Passwort ist erforderlich'),
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -55,7 +55,7 @@ function LoginForm() {
       });
 
       if (result?.error) {
-        setError('Invalid email or password');
+        setError('Ungültige E-Mail oder Passwort');
         return;
       }
 
@@ -65,7 +65,7 @@ function LoginForm() {
         router.refresh();
       }
     } catch (err) {
-      setError('An unexpected error occurred. Please try again.');
+      setError('Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
       console.error('Login error:', err);
     } finally {
       setIsLoading(false);
@@ -76,16 +76,16 @@ function LoginForm() {
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold">Sign in</CardTitle>
+          <CardTitle className="text-2xl font-bold">Anmelden</CardTitle>
           <CardDescription>
-            Enter your email and password to access your account
+            Geben Sie Ihre E-Mail und Ihr Passwort ein, um auf Ihr Konto zuzugreifen
           </CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit(onSubmit)}>
           <CardContent className="space-y-4">
             {registered && (
               <div className="rounded-md bg-green-50 p-3 text-sm text-green-800">
-                Registration successful! Please sign in with your credentials.
+                Registrierung erfolgreich! Bitte melden Sie sich mit Ihren Zugangsdaten an.
               </div>
             )}
 
@@ -96,11 +96,11 @@ function LoginForm() {
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">E-Mail</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="max@example.com"
+                placeholder="max@beispiel.de"
                 {...register('email')}
                 disabled={isLoading}
               />
@@ -111,12 +111,12 @@ function LoginForm() {
 
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <Label htmlFor="password">Password</Label>
+                <Label htmlFor="password">Passwort</Label>
                 <Link
                   href="/forgot-password"
                   className="text-sm text-blue-600 hover:underline"
                 >
-                  Forgot password?
+                  Passwort vergessen?
                 </Link>
               </div>
               <Input
@@ -133,12 +133,12 @@ function LoginForm() {
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? 'Signing in...' : 'Sign in'}
+              {isLoading ? 'Wird angemeldet...' : 'Anmelden'}
             </Button>
             <p className="text-center text-sm text-gray-600">
-              Don&apos;t have an account?{' '}
+              Noch kein Konto?{' '}
               <Link href="/register" className="font-medium text-blue-600 hover:underline">
-                Create account
+                Konto erstellen
               </Link>
             </p>
           </CardFooter>
@@ -152,7 +152,7 @@ export default function LoginPage() {
   return (
     <Suspense fallback={
       <div className="flex min-h-screen items-center justify-center bg-gray-50">
-        <div className="text-center">Loading...</div>
+        <div className="text-center">Laden...</div>
       </div>
     }>
       <LoginForm />

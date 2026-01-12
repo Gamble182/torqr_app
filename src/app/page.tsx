@@ -17,7 +17,7 @@ export default async function Home() {
         <div className="space-y-8">
           <div className="space-y-4">
             <h1 className="text-5xl font-bold tracking-tight text-gray-900">
-              Welcome to <span className="text-blue-600">Torqr</span>
+              Willkommen bei <span className="text-blue-600">Torqr</span>
             </h1>
             <p className="text-xl text-gray-600">
               Der Hebel für Ihr Handwerk
@@ -25,20 +25,20 @@ export default async function Home() {
           </div>
 
           <p className="mx-auto max-w-2xl text-lg text-gray-700">
-            Manage your heating maintenance schedules, track customer heaters,
-            and automate your workflow with our powerful platform designed
-            specifically for heating technicians.
+            Verwalten Sie Ihre Wartungspläne für Heizungen, überwachen Sie Kundenheizungen
+            und automatisieren Sie Ihren Workflow mit unserer leistungsstarken Plattform,
+            die speziell für Heizungstechniker entwickelt wurde.
           </p>
 
           <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
             <Link href="/register">
               <Button size="lg" className="w-full sm:w-auto">
-                Get Started
+                Loslegen
               </Button>
             </Link>
             <Link href="/login">
               <Button size="lg" variant="outline" className="w-full sm:w-auto">
-                Sign In
+                Anmelden
               </Button>
             </Link>
           </div>
@@ -46,26 +46,26 @@ export default async function Home() {
           <div className="mt-16 grid gap-8 sm:grid-cols-3">
             <div className="rounded-lg bg-white p-6 shadow-sm">
               <h3 className="mb-2 text-lg font-semibold text-gray-900">
-                Track Customers
+                Kunden verfolgen
               </h3>
               <p className="text-sm text-gray-600">
-                Manage all your customers and their heater information in one place
+                Verwalten Sie alle Ihre Kunden und deren Heizungsinformationen an einem Ort
               </p>
             </div>
             <div className="rounded-lg bg-white p-6 shadow-sm">
               <h3 className="mb-2 text-lg font-semibold text-gray-900">
-                Schedule Maintenance
+                Wartung planen
               </h3>
               <p className="text-sm text-gray-600">
-                Automated reminders ensure you never miss a maintenance appointment
+                Automatische Erinnerungen stellen sicher, dass Sie keinen Wartungstermin verpassen
               </p>
             </div>
             <div className="rounded-lg bg-white p-6 shadow-sm">
               <h3 className="mb-2 text-lg font-semibold text-gray-900">
-                Save Time
+                Zeit sparen
               </h3>
               <p className="text-sm text-gray-600">
-                Reduce administrative work by up to 75% and focus on what matters
+                Reduzieren Sie administrative Arbeiten um bis zu 75% und konzentrieren Sie sich auf das Wesentliche
               </p>
             </div>
           </div>
