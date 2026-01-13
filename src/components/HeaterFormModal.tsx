@@ -156,7 +156,7 @@ export function HeaterFormModal({
       const result = await response.json();
 
       if (result.success) {
-        toast.success(heater ? 'Heizung aktualisiert!' : 'Heizung hinzugefügt!');
+        toast.success(heater ? 'Heizsystem aktualisiert!' : 'Heizsystem hinzugefügt!');
         onSuccess();
       } else {
         if (result.details) {
@@ -173,7 +173,7 @@ export function HeaterFormModal({
       }
     } catch (err) {
       console.error('Error saving heater:', err);
-      toast.error('Fehler beim Speichern der Heizung');
+      toast.error('Fehler beim Speichern des Heizsystems');
     } finally {
       setLoading(false);
     }
@@ -186,7 +186,7 @@ export function HeaterFormModal({
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold text-gray-900">
-              {heater ? 'Heizung bearbeiten' : 'Neue Heizung hinzufügen'}
+              {heater ? 'Heizsystem bearbeiten' : 'Neues Heizsystem hinzufügen'}
             </h2>
             <Button
               variant="outline"
@@ -279,6 +279,7 @@ export function HeaterFormModal({
                 type="date"
                 value={formData.installationDate}
                 onChange={handleChange}
+                max={new Date().toISOString().split('T')[0]}
               />
             </div>
 
@@ -293,6 +294,8 @@ export function HeaterFormModal({
                 type="date"
                 value={formData.lastMaintenance}
                 onChange={handleChange}
+                max={new Date().toISOString().split('T')[0]}
+                min={formData.installationDate || undefined}
               />
               <p className="mt-1 text-xs text-gray-500">
                 Wenn leer, wird heute als Datum verwendet
@@ -316,7 +319,7 @@ export function HeaterFormModal({
                     Wird gespeichert...
                   </>
                 ) : (
-                  heater ? 'Änderungen speichern' : 'Heizung hinzufügen'
+                  heater ? 'Änderungen speichern' : 'Heizsystem hinzufügen'
                 )}
               </Button>
             </div>

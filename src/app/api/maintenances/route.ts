@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     if (!heater) {
       return NextResponse.json({
         success: false,
-        error: 'Heizung nicht gefunden',
+        error: 'Heizsystem nicht gefunden',
       }, { status: 404 });
     }
 
@@ -151,7 +151,7 @@ export async function GET(request: NextRequest) {
     if (!heater) {
       return NextResponse.json({
         success: false,
-        error: 'Heizung nicht gefunden',
+        error: 'Heizsystem nicht gefunden',
       }, { status: 404 });
     }
 

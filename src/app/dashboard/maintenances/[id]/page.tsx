@@ -306,7 +306,7 @@ export default function MaintenanceDetailPage() {
           <div className="bg-card shadow-sm rounded-lg border border-border p-6">
             <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
               <FlameIcon className="h-5 w-5 text-primary" />
-              Heizung
+              Heizsystem
             </h2>
             <div className="space-y-3">
               <div>

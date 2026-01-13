@@ -74,7 +74,7 @@ export async function GET(
     if (!heater) {
       return NextResponse.json({
         success: false,
-        error: 'Heizung nicht gefunden',
+        error: 'Heizsystem nicht gefunden',
       }, { status: 404 });
     }
 
@@ -97,7 +97,7 @@ export async function GET(
     console.error('Error fetching heater:', error);
     return NextResponse.json({
       success: false,
-      error: 'Fehler beim Laden der Heizung',
+      error: 'Fehler beim Laden des Heizsystems',
     }, { status: 500 });
   }
 }
@@ -128,7 +128,7 @@ export async function PATCH(
     if (!existingHeater) {
       return NextResponse.json({
         success: false,
-        error: 'Heizung nicht gefunden',
+        error: 'Heizsystem nicht gefunden',
       }, { status: 404 });
     }
 
@@ -220,7 +220,7 @@ export async function PATCH(
     console.error('Error updating heater:', error);
     return NextResponse.json({
       success: false,
-      error: 'Fehler beim Aktualisieren der Heizung',
+      error: 'Fehler beim Aktualisieren des Heizsystems',
     }, { status: 500 });
   }
 }
@@ -251,7 +251,7 @@ export async function DELETE(
     if (!existingHeater) {
       return NextResponse.json({
         success: false,
-        error: 'Heizung nicht gefunden',
+        error: 'Heizsystem nicht gefunden',
       }, { status: 404 });
     }
 
@@ -265,7 +265,7 @@ export async function DELETE(
     // 5. Return success
     return NextResponse.json({
       success: true,
-      message: 'Heizung erfolgreich gelöscht',
+      message: 'Heizsystem erfolgreich gelöscht',
     });
 
   } catch (error) {
@@ -281,7 +281,7 @@ export async function DELETE(
     console.error('Error deleting heater:', error);
     return NextResponse.json({
       success: false,
-      error: 'Fehler beim Löschen der Heizung',
+      error: 'Fehler beim Löschen des Heizsystems',
     }, { status: 500 });
   }
 }

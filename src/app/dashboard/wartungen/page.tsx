@@ -55,7 +55,7 @@ interface Stats {
   thisMonth: number;
 }
 
-type FilterStatus = 'all' | 'overdue' | 'upcoming';
+type FilterStatus = 'all' | 'overdue' | 'upcoming' | 'thisWeek' | 'thisMonth';
 
 export default function WartungenPage() {
   const searchParams = useSearchParams();
@@ -68,15 +68,31 @@ export default function WartungenPage() {
   const [timeRange, setTimeRange] = useState(30); // days
   const [showFilters, setShowFilters] = useState(false);
   const [displayLimit, setDisplayLimit] = useState(20);
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
+  const [useCustomDateRange, setUseCustomDateRange] = useState(false);
 
   useEffect(() => {
-    fetchWartungen();
-  }, [filterStatus, timeRange]);
+    // Only fetch if custom date range is disabled, or if both dates are set
+    if (!useCustomDateRange || (useCustomDateRange && dateFrom && dateTo)) {
+      fetchWartungen();
+    }
+  }, [filterStatus, timeRange, dateFrom, dateTo, useCustomDateRange]);
 
   const fetchWartungen = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`/api/wartungen?status=${filterStatus}&days=${timeRange}`);
+
+      // Build query string
+      let queryString = `status=${filterStatus}`;
+
+      if (useCustomDateRange && dateFrom && dateTo) {
+        queryString += `&dateFrom=${dateFrom}&dateTo=${dateTo}`;
+      } else {
+        queryString += `&days=${timeRange}`;
+      }
+
+      const response = await fetch(`/api/wartungen?${queryString}`);
       const result = await response.json();
 
       if (result.success) {
@@ -398,24 +414,44 @@ export default function WartungenPage() {
         )}
       </div>
 
-      {/* Stats Cards */}
+      {/* Stats Cards - Clickable */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-card rounded-lg border border-border p-4">
+        <button
+          onClick={() => setFilterStatus('all')}
+          className={`bg-card rounded-lg border p-4 text-left hover:shadow-md hover:scale-105 transition-all cursor-pointer ${
+            filterStatus === 'all' ? 'ring-2 ring-primary border-primary' : 'border-border'
+          }`}
+        >
           <div className="text-sm text-muted-foreground">Gesamt</div>
           <div className="text-2xl font-bold text-foreground mt-1">{stats.total}</div>
-        </div>
-        <div className={`bg-card rounded-lg border p-4 ${stats.overdue > 0 ? 'border-destructive/50' : 'border-border'}`}>
+        </button>
+        <button
+          onClick={() => setFilterStatus('overdue')}
+          className={`bg-card rounded-lg border p-4 text-left hover:shadow-md hover:scale-105 transition-all cursor-pointer ${
+            filterStatus === 'overdue' ? 'ring-2 ring-destructive border-destructive' : stats.overdue > 0 ? 'border-destructive/50' : 'border-border'
+          }`}
+        >
           <div className="text-sm text-muted-foreground">Überfällig</div>
           <div className="text-2xl font-bold text-destructive mt-1">{stats.overdue}</div>
-        </div>
-        <div className="bg-card rounded-lg border border-warning/50 p-4">
+        </button>
+        <button
+          onClick={() => setFilterStatus('thisWeek')}
+          className={`bg-card rounded-lg border p-4 text-left hover:shadow-md hover:scale-105 transition-all cursor-pointer ${
+            filterStatus === 'thisWeek' ? 'ring-2 ring-warning border-warning' : 'border-warning/50'
+          }`}
+        >
           <div className="text-sm text-muted-foreground">Diese Woche</div>
           <div className="text-2xl font-bold text-warning mt-1">{stats.thisWeek}</div>
-        </div>
-        <div className="bg-card rounded-lg border border-accent/50 p-4">
+        </button>
+        <button
+          onClick={() => setFilterStatus('thisMonth')}
+          className={`bg-card rounded-lg border p-4 text-left hover:shadow-md hover:scale-105 transition-all cursor-pointer ${
+            filterStatus === 'thisMonth' ? 'ring-2 ring-accent border-accent' : 'border-accent/50'
+          }`}
+        >
           <div className="text-sm text-muted-foreground">Dieser Monat</div>
           <div className="text-2xl font-bold text-accent mt-1">{stats.thisMonth}</div>
-        </div>
+        </button>
       </div>
 
       {/* Filters */}
@@ -458,29 +494,76 @@ export default function WartungenPage() {
         </div>
 
         {showFilters && (
-          <div className="flex flex-wrap gap-4 pt-4 border-t border-border">
+          <div className="flex flex-col gap-4 pt-4 border-t border-border">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">Zeitraum:</span>
-              <select
-                value={timeRange}
-                onChange={(e) => setTimeRange(parseInt(e.target.value))}
-                className="px-3 py-1.5 bg-background border border-border rounded-md text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-              >
-                <option value="7">Nächste 7 Tage</option>
-                <option value="30">Nächste 30 Tage</option>
-                <option value="90">Nächste 3 Monate</option>
-                <option value="180">Nächste 6 Monate</option>
-                <option value="365">Nächstes Jahr</option>
-              </select>
+              <input
+                type="checkbox"
+                id="useCustomDateRange"
+                checked={useCustomDateRange}
+                onChange={(e) => {
+                  setUseCustomDateRange(e.target.checked);
+                  if (!e.target.checked) {
+                    setDateFrom('');
+                    setDateTo('');
+                  }
+                }}
+                className="h-4 w-4 rounded border-border text-primary focus:ring-2 focus:ring-ring"
+              />
+              <label htmlFor="useCustomDateRange" className="text-sm text-muted-foreground cursor-pointer">
+                Benutzerdefinierten Zeitraum verwenden
+              </label>
             </div>
 
-            {(filterStatus !== 'all' || timeRange !== 30) && (
+            {useCustomDateRange ? (
+              <div className="flex flex-wrap items-center gap-4">
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-muted-foreground">Von:</label>
+                  <input
+                    type="date"
+                    value={dateFrom}
+                    onChange={(e) => setDateFrom(e.target.value)}
+                    max={dateTo || undefined}
+                    className="px-3 py-1.5 bg-background border border-border rounded-md text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  <label className="text-sm text-muted-foreground">Bis:</label>
+                  <input
+                    type="date"
+                    value={dateTo}
+                    onChange={(e) => setDateTo(e.target.value)}
+                    min={dateFrom || undefined}
+                    className="px-3 py-1.5 bg-background border border-border rounded-md text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground">Zeitraum:</span>
+                <select
+                  value={timeRange}
+                  onChange={(e) => setTimeRange(parseInt(e.target.value))}
+                  className="px-3 py-1.5 bg-background border border-border rounded-md text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                >
+                  <option value="7">Nächste 7 Tage</option>
+                  <option value="30">Nächste 30 Tage</option>
+                  <option value="90">Nächste 3 Monate</option>
+                  <option value="180">Nächste 6 Monate</option>
+                  <option value="365">Nächstes Jahr</option>
+                </select>
+              </div>
+            )}
+
+            {(filterStatus !== 'all' || timeRange !== 30 || useCustomDateRange) && (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => {
                   setFilterStatus('all');
                   setTimeRange(30);
+                  setUseCustomDateRange(false);
+                  setDateFrom('');
+                  setDateTo('');
                 }}
               >
                 <XIcon className="h-4 w-4 mr-1" />
@@ -599,7 +682,7 @@ export default function WartungenPage() {
                     <Link href={`/dashboard/heaters/${heater.id}`} className="flex-1">
                       <Button variant="outline" size="sm" className="w-full">
                         <FlameIcon className="h-4 w-4 mr-1" />
-                        Heizung anzeigen
+                        Heizsystem anzeigen
                       </Button>
                     </Link>
                     <Link href={`/dashboard/customers/${heater.customer.id}`} className="flex-1">

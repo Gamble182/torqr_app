@@ -200,7 +200,7 @@ export default function HeaterDetailPage() {
       }
     } catch (err) {
       console.error('Error fetching heater:', err);
-      toast.error('Fehler beim Laden der Heizung');
+      toast.error('Fehler beim Laden des Heizsystems');
       router.push('/dashboard/heaters');
     } finally {
       setLoading(false);
@@ -267,7 +267,7 @@ export default function HeaterDetailPage() {
       const result = await response.json();
 
       if (result.success) {
-        toast.success('Heizung erfolgreich aktualisiert');
+        toast.success('Heizsystem erfolgreich aktualisiert');
         setIsEditing(false);
         fetchHeater();
       } else {
@@ -275,14 +275,14 @@ export default function HeaterDetailPage() {
       }
     } catch (err) {
       console.error('Error updating heater:', err);
-      toast.error('Fehler beim Aktualisieren der Heizung');
+      toast.error('Fehler beim Aktualisieren des Heizsystems');
     } finally {
       setSaving(false);
     }
   };
 
   const handleDelete = async () => {
-    if (!confirm('Möchten Sie diese Heizung wirklich löschen?')) return;
+    if (!confirm('Möchten Sie dieses Heizsystem wirklich löschen?')) return;
 
     setDeleting(true);
 
@@ -294,14 +294,14 @@ export default function HeaterDetailPage() {
       const result = await response.json();
 
       if (result.success) {
-        toast.success('Heizung erfolgreich gelöscht');
+        toast.success('Heizsystem erfolgreich gelöscht');
         router.push('/dashboard/heaters');
       } else {
         toast.error(`Fehler: ${result.error}`);
       }
     } catch (err) {
       console.error('Error deleting heater:', err);
-      toast.error('Fehler beim Löschen der Heizung');
+      toast.error('Fehler beim Löschen des Heizsystems');
     } finally {
       setDeleting(false);
     }
@@ -628,6 +628,7 @@ export default function HeaterDetailPage() {
                   type="date"
                   value={installationDate}
                   onChange={(e) => setInstallationDate(e.target.value)}
+                  max={new Date().toISOString().split('T')[0]}
                   className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                 />
               </div>
@@ -665,6 +666,8 @@ export default function HeaterDetailPage() {
                   type="date"
                   value={lastMaintenance}
                   onChange={(e) => setLastMaintenance(e.target.value)}
+                  max={new Date().toISOString().split('T')[0]}
+                  min={installationDate || undefined}
                   className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                 />
               </div>
@@ -841,7 +844,7 @@ export default function HeaterDetailPage() {
           <div className="bg-card rounded-lg border border-border p-6">
             <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
               <FlameIcon className="h-5 w-5 text-primary" />
-              Heizungsinformationen
+              Heizsysteminformationen
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {heater.heaterType && (

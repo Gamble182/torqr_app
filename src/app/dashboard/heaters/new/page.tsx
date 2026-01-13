@@ -246,14 +246,14 @@ export default function NewHeaterPage() {
       const result = await response.json();
 
       if (result.success) {
-        toast.success('Heizung erfolgreich erstellt');
+        toast.success('Heizsystem erfolgreich erstellt');
         router.push(`/dashboard/heaters/${result.data.id}`);
       } else {
         toast.error(`Fehler: ${result.error}`);
       }
     } catch (err) {
       console.error('Error creating heater:', err);
-      toast.error('Fehler beim Erstellen der Heizung');
+      toast.error('Fehler beim Erstellen des Heizsystems');
     } finally {
       setLoading(false);
     }
@@ -300,9 +300,9 @@ export default function NewHeaterPage() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Neue Heizung</h1>
+          <h1 className="text-3xl font-bold text-foreground">Neues Heizsystem</h1>
           <p className="mt-2 text-muted-foreground">
-            Erstellen Sie eine neue Heizungsanlage
+            Erstellen Sie ein neues Heizsystem
           </p>
         </div>
       </div>
@@ -473,6 +473,7 @@ export default function NewHeaterPage() {
                 type="date"
                 value={installationDate}
                 onChange={(e) => setInstallationDate(e.target.value)}
+                max={new Date().toISOString().split('T')[0]}
                 className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
@@ -512,6 +513,8 @@ export default function NewHeaterPage() {
                 type="date"
                 value={lastMaintenance}
                 onChange={(e) => setLastMaintenance(e.target.value)}
+                max={new Date().toISOString().split('T')[0]}
+                min={installationDate || undefined}
                 className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
@@ -664,7 +667,7 @@ export default function NewHeaterPage() {
             ) : (
               <>
                 <PlusIcon className="h-4 w-4 mr-2" />
-                Heizung erstellen
+                Heizsystem erstellen
               </>
             )}
           </Button>

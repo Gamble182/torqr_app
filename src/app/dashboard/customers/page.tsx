@@ -260,7 +260,7 @@ export default function CustomersPage() {
           <div className="text-2xl font-bold text-warning mt-1">{stats.upcoming}</div>
         </div>
         <div className="bg-card rounded-lg border border-border p-4">
-          <div className="text-sm text-muted-foreground">Heizungen</div>
+          <div className="text-sm text-muted-foreground">Heizsysteme</div>
           <div className="text-2xl font-bold text-foreground mt-1">{stats.totalHeaters}</div>
         </div>
       </div>
@@ -319,7 +319,7 @@ export default function CustomersPage() {
                 <option value="name">Name</option>
                 <option value="city">Ort</option>
                 <option value="maintenance">Nächste Wartung</option>
-                <option value="heaters">Anzahl Heizungen</option>
+                <option value="heaters">Anzahl Heizsysteme</option>
               </select>
             </div>
 
@@ -450,7 +450,7 @@ export default function CustomersPage() {
                   {/* Stats */}
                   <div className="text-right shrink-0">
                     <div className="text-sm font-medium text-foreground">
-                      {customer.heaters.length} {customer.heaters.length === 1 ? 'Heizung' : 'Heizungen'}
+                      {customer.heaters.length} {customer.heaters.length === 1 ? 'Heizsystem' : 'Heizsysteme'}
                     </div>
                     {nextMaintenance && (
                       <div className="text-xs text-muted-foreground mt-1">

@@ -211,6 +211,7 @@ export function MaintenanceFormModal({
                 type="date"
                 value={formData.date}
                 onChange={handleChange}
+                max={new Date().toISOString().split('T')[0]}
                 className={errors.date ? 'border-red-500' : ''}
               />
               {errors.date && (

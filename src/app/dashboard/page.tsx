@@ -161,7 +161,7 @@ export default function DashboardPage() {
           </Link>
 
           {/* Total Heaters */}
-          <div className="bg-card overflow-hidden shadow-sm rounded-lg border border-border hover:shadow-md transition-shadow">
+          <Link href="/dashboard/heaters" className="block bg-card overflow-hidden shadow-sm rounded-lg border border-border hover:shadow-md transition-shadow cursor-pointer">
             <div className="p-5">
               <div className="flex items-center">
                 <div className="shrink-0">
@@ -172,7 +172,7 @@ export default function DashboardPage() {
                 <div className="ml-5 w-0 flex-1">
                   <dl>
                     <dt className="text-sm font-medium text-muted-foreground truncate">
-                      Heizungen gesamt
+                      Heizsysteme gesamt
                     </dt>
                     <dd className="text-3xl font-bold text-foreground">
                       {stats?.totalHeaters || 0}
@@ -181,7 +181,7 @@ export default function DashboardPage() {
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
 
           {/* Overdue Maintenances - Clickable */}
           <Link href="/dashboard/wartungen?status=overdue" className={`block bg-card overflow-hidden shadow-sm rounded-lg border hover:shadow-md transition-shadow cursor-pointer ${(stats?.overdueMaintenances || 0) > 0 ? 'border-destructive' : 'border-border'}`}>

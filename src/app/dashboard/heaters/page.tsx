@@ -32,7 +32,7 @@ interface Heater {
     street: string;
     city: string;
     phone: string;
-  };
+  } | null;
   _count: {
     maintenances: number;
   };
@@ -78,8 +78,8 @@ export default function HeatersPage() {
     const filtered = heaters.filter((heater) =>
       heater.model.toLowerCase().includes(query) ||
       heater.serialNumber?.toLowerCase().includes(query) ||
-      heater.customer.name.toLowerCase().includes(query) ||
-      heater.customer.city.toLowerCase().includes(query)
+      heater.customer?.name.toLowerCase().includes(query) ||
+      heater.customer?.city.toLowerCase().includes(query)
     );
 
     setFilteredHeaters(filtered);
@@ -126,15 +126,15 @@ export default function HeatersPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Heizungen</h1>
+          <h1 className="text-3xl font-bold text-foreground">Heizsysteme</h1>
           <p className="mt-2 text-muted-foreground">
-            Verwalten Sie alle Heizungsanlagen Ihrer Kunden
+            Verwalten Sie alle Heizsysteme Ihrer Kunden
           </p>
         </div>
         <Link href="/dashboard/heaters/new">
           <Button>
             <PlusIcon className="h-4 w-4 mr-2" />
-            Neue Heizung
+            Neues Heizsystem
           </Button>
         </Link>
       </div>
@@ -150,7 +150,7 @@ export default function HeatersPage() {
             </div>
             <div className="ml-5">
               <dt className="text-sm font-medium text-muted-foreground">
-                Heizungen gesamt
+                Heizsysteme gesamt
               </dt>
               <dd className="text-3xl font-bold text-foreground">
                 {heaters.length}
@@ -215,7 +215,7 @@ export default function HeatersPage() {
         <div className="px-6 py-4 border-b border-border">
           <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
             <FlameIcon className="h-5 w-5 text-primary" />
-            Alle Heizungen ({filteredHeaters.length})
+            Alle Heizsysteme ({filteredHeaters.length})
           </h2>
         </div>
         <div className="p-6">
@@ -244,14 +244,23 @@ export default function HeatersPage() {
                     </div>
 
                     <div className="space-y-2 text-sm">
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <UserIcon className="h-4 w-4" />
-                        <span>{heater.customer.name}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-muted-foreground">
-                        <MapPinIcon className="h-4 w-4" />
-                        <span>{heater.customer.city}</span>
-                      </div>
+                      {heater.customer ? (
+                        <>
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <UserIcon className="h-4 w-4" />
+                            <span>{heater.customer.name}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-muted-foreground">
+                            <MapPinIcon className="h-4 w-4" />
+                            <span>{heater.customer.city}</span>
+                          </div>
+                        </>
+                      ) : (
+                        <div className="flex items-center gap-2 text-muted-foreground italic">
+                          <UserIcon className="h-4 w-4" />
+                          <span>Kein Kunde zugeordnet</span>
+                        </div>
+                      )}
                       {heater.nextMaintenance && (
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <ClockIcon className="h-4 w-4" />
@@ -276,8 +285,8 @@ export default function HeatersPage() {
               <FlameIcon className="h-12 w-12 text-muted-foreground mx-auto mb-4 opacity-50" />
               <p className="text-muted-foreground">
                 {searchQuery
-                  ? 'Keine Heizungen gefunden'
-                  : 'Noch keine Heizungen vorhanden'}
+                  ? 'Keine Heizsysteme gefunden'
+                  : 'Noch keine Heizsysteme vorhanden'}
               </p>
             </div>
           )}

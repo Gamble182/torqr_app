@@ -13,13 +13,29 @@ export async function GET(request: NextRequest) {
 
     // 2. Get query params
     const searchParams = request.nextUrl.searchParams;
-    const status = searchParams.get('status') || 'all'; // overdue, upcoming, all
+    const status = searchParams.get('status') || 'all'; // overdue, upcoming, thisWeek, thisMonth, all
     const days = parseInt(searchParams.get('days') || '30'); // time range in days
+    const dateFrom = searchParams.get('dateFrom'); // custom date range start
+    const dateTo = searchParams.get('dateTo'); // custom date range end
 
     // 3. Calculate date ranges
     const now = new Date();
-    const futureDate = new Date();
-    futureDate.setDate(futureDate.getDate() + days);
+
+    // Use custom date range if provided, otherwise use days
+    let futureDate: Date;
+    if (dateTo) {
+      futureDate = new Date(dateTo);
+      futureDate.setHours(23, 59, 59, 999); // End of day
+    } else {
+      futureDate = new Date();
+      futureDate.setDate(futureDate.getDate() + days);
+    }
+
+    const weekFromNow = new Date();
+    weekFromNow.setDate(weekFromNow.getDate() + 7);
+
+    const monthFromNow = new Date();
+    monthFromNow.setDate(monthFromNow.getDate() + 30);
 
     // 4. Build where clause based on status
     let where: any = {
@@ -31,9 +47,28 @@ export async function GET(request: NextRequest) {
       },
     };
 
-    if (status === 'overdue') {
+    // Handle custom date range if provided
+    if (dateFrom && dateTo) {
+      const customFrom = new Date(dateFrom);
+      customFrom.setHours(0, 0, 0, 0); // Start of day
+
+      where.nextMaintenance = {
+        gte: customFrom,
+        lte: futureDate,
+      };
+    } else if (status === 'overdue') {
       where.nextMaintenance = {
         lt: now,
+      };
+    } else if (status === 'thisWeek') {
+      where.nextMaintenance = {
+        gte: now,
+        lte: weekFromNow,
+      };
+    } else if (status === 'thisMonth') {
+      where.nextMaintenance = {
+        gte: now,
+        lte: monthFromNow,
       };
     } else if (status === 'upcoming') {
       where.nextMaintenance = {

@@ -139,7 +139,7 @@ export async function POST(request: NextRequest) {
     console.error('Error creating heater:', error);
     return NextResponse.json({
       success: false,
-      error: 'Fehler beim Erstellen der Heizung',
+      error: 'Fehler beim Erstellen des Heizsystems',
     }, { status: 500 });
   }
 }
@@ -255,7 +255,7 @@ export async function GET(request: NextRequest) {
     console.error('Error fetching heaters:', error);
     return NextResponse.json({
       success: false,
-      error: 'Fehler beim Laden der Heizungen',
+      error: 'Fehler beim Laden der Heizsysteme',
     }, { status: 500 });
   }
 }
