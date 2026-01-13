@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { useCustomers, useDeleteCustomer } from '@/hooks/useCustomers';
 import {
   PlusIcon,
   SearchIcon,
@@ -99,42 +100,19 @@ const formatDate = (dateString: string | null): string => {
 };
 
 export default function CustomersPage() {
-  const [customers, setCustomers] = useState<Customer[]>([]);
-  const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: customers, isLoading, error } = useCustomers();
+  const deleteCustomer = useDeleteCustomer();
+
   const [searchTerm, setSearchTerm] = useState('');
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [sortBy, setSortBy] = useState<SortOption>('name');
   const [filterBy, setFilterBy] = useState<FilterOption>('all');
   const [showFilters, setShowFilters] = useState(false);
 
-  // Fetch customers
-  useEffect(() => {
-    fetchCustomers();
-  }, []);
+  // Apply filters and sorting using useMemo
+  const filteredCustomers = useMemo(() => {
+    if (!customers) return [];
 
-  const fetchCustomers = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch('/api/customers');
-      const result = await response.json();
-
-      if (result.success) {
-        setCustomers(result.data);
-        setFilteredCustomers(result.data);
-      } else {
-        toast.error(`Fehler: ${result.error}`);
-      }
-    } catch (err) {
-      console.error('Error fetching customers:', err);
-      toast.error('Fehler beim Laden der Kunden');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Apply filters and sorting
-  useEffect(() => {
     let filtered = [...customers];
 
     // Search filter
@@ -184,7 +162,7 @@ export default function CustomersPage() {
       }
     });
 
-    setFilteredCustomers(filtered);
+    return filtered;
   }, [customers, searchTerm, sortBy, filterBy]);
 
   const handleDelete = async (id: string, name: string) => {
@@ -192,39 +170,42 @@ export default function CustomersPage() {
       return;
     }
 
-    try {
-      const response = await fetch(`/api/customers/${id}`, {
-        method: 'DELETE',
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        setCustomers(customers.filter(c => c.id !== id));
-        toast.success(`Kunde "${name}" wurde gelöscht`);
-      } else {
-        toast.error(`Fehler: ${result.error}`);
-      }
-    } catch (err) {
-      console.error('Error deleting customer:', err);
-      toast.error('Fehler beim Löschen');
-    }
+    deleteCustomer.mutate(id);
   };
 
   // Calculate stats
-  const stats = {
-    total: customers.length,
-    overdue: customers.filter(c => getMaintenanceStatus(getNextMaintenanceDate(c.heaters)) === 'overdue').length,
-    upcoming: customers.filter(c => getMaintenanceStatus(getNextMaintenanceDate(c.heaters)) === 'upcoming').length,
-    totalHeaters: customers.reduce((sum, c) => sum + c.heaters.length, 0),
-  };
+  const stats = useMemo(() => {
+    if (!customers) return { total: 0, overdue: 0, upcoming: 0, totalHeaters: 0 };
 
-  if (loading) {
+    return {
+      total: customers.length,
+      overdue: customers.filter(c => getMaintenanceStatus(getNextMaintenanceDate(c.heaters)) === 'overdue').length,
+      upcoming: customers.filter(c => getMaintenanceStatus(getNextMaintenanceDate(c.heaters)) === 'upcoming').length,
+      totalHeaters: customers.reduce((sum, c) => sum + c.heaters.length, 0),
+    };
+  }, [customers]);
+
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2Icon className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <p className="text-destructive mb-2">Fehler beim Laden der Kunden</p>
+          <p className="text-sm text-muted-foreground">{error.message}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!customers) {
+    return null;
   }
 
   return (

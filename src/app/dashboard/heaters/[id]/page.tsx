@@ -25,6 +25,13 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+interface AddNewEntryBody {
+  type: 'category' | 'manufacturer' | 'model';
+  category?: string;
+  manufacturer?: string;
+  model?: string;
+}
+
 interface Maintenance {
   id: string;
   date: string;
@@ -316,7 +323,7 @@ export default function HeaterDetailPage() {
     setAddingEntry(true);
 
     try {
-      const body: any = { type: addModalType };
+      const body: AddNewEntryBody = { type: addModalType };
 
       if (addModalType === 'category') {
         body.category = newEntryValue.trim();

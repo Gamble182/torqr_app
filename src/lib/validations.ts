@@ -109,33 +109,35 @@ export const userUpdateSchema = z.object({
 // CUSTOMER SCHEMAS
 // ============================================================================
 
+// Enum values for validation
+const HeatingTypeEnum = z.enum([
+  'GAS', 'OIL', 'DISTRICT_HEATING', 'HEAT_PUMP_AIR', 'HEAT_PUMP_GROUND',
+  'HEAT_PUMP_WATER', 'PELLET_BIOMASS', 'NIGHT_STORAGE', 'ELECTRIC_DIRECT',
+  'HYBRID', 'CHP'
+]);
+
+const AdditionalEnergySourceEnum = z.enum([
+  'PHOTOVOLTAIC', 'SOLAR_THERMAL', 'SMALL_WIND'
+]);
+
+const EnergyStorageSystemEnum = z.enum([
+  'BATTERY_STORAGE', 'HEAT_STORAGE'
+]);
+
 /**
  * Customer creation schema
  */
 export const customerCreateSchema = z.object({
-  name: z
-    .string()
-    .min(2, 'Name must be at least 2 characters')
-    .max(100, 'Name must be less than 100 characters')
-    .trim(),
-  street: z
-    .string()
-    .min(3, 'Street must be at least 3 characters')
-    .max(200, 'Street must be less than 200 characters')
-    .trim(),
-  zipCode: z
-    .string()
-    .min(3, 'Zip code must be at least 3 characters')
-    .max(10, 'Zip code must be less than 10 characters')
-    .trim(),
-  city: z
-    .string()
-    .min(2, 'City must be at least 2 characters')
-    .max(100, 'City must be less than 100 characters')
-    .trim(),
-  phone: phoneSchema,
-  email: emailSchema.optional().or(z.literal('')),
-  notes: z.string().max(1000, 'Notes must be less than 1000 characters').optional(),
+  name: z.string().min(1, 'Name ist erforderlich').max(100, 'Name zu lang'),
+  street: z.string().min(1, 'Straße ist erforderlich').max(100, 'Straße zu lang'),
+  zipCode: z.string().min(4, 'PLZ muss mindestens 4 Zeichen haben').max(10, 'PLZ zu lang'),
+  city: z.string().min(1, 'Stadt ist erforderlich').max(100, 'Stadt zu lang'),
+  phone: z.string().min(1, 'Telefon ist erforderlich').max(20, 'Telefon zu lang'),
+  email: z.string().email('Ungültige E-Mail').optional().or(z.literal('')),
+  heatingType: HeatingTypeEnum,
+  additionalEnergySources: z.array(AdditionalEnergySourceEnum).optional().default([]),
+  energyStorageSystems: z.array(EnergyStorageSystemEnum).optional().default([]),
+  notes: z.string().max(1000, 'Notizen zu lang').optional(),
 });
 
 /**
@@ -166,65 +168,92 @@ export const emailOptInConfirmSchema = z.object({
  * Heater creation schema
  */
 export const heaterCreateSchema = z.object({
-  customerId: uuidSchema,
-  model: z
-    .string()
-    .min(2, 'Model must be at least 2 characters')
-    .max(100, 'Model must be less than 100 characters')
-    .trim(),
-  serialNumber: z
-    .string()
-    .max(100, 'Serial number must be less than 100 characters')
-    .trim()
-    .optional()
-    .or(z.literal('')),
-  installationDate: optionalDateStringSchema.or(z.literal('')),
-  maintenanceInterval: z
-    .number()
-    .int('Maintenance interval must be a whole number')
-    .positive('Maintenance interval must be positive')
-    .refine(
-      (val) => [1, 3, 6, 12, 24].includes(val),
-      'Maintenance interval must be 1, 3, 6, 12, or 24 months'
-    ),
-  lastMaintenance: optionalDateStringSchema.or(z.literal('')),
-  requiredParts: z
-    .string()
-    .max(500, 'Required parts must be less than 500 characters')
-    .optional()
-    .or(z.literal('')),
+  customerId: z.string().uuid('Ungültige Kunden-ID').optional().nullable(),
+  model: z.string().min(1, 'Modell ist erforderlich').max(100, 'Modell zu lang'),
+  serialNumber: z.string().max(100, 'Seriennummer zu lang').optional().nullable(),
+  installationDate: z.string().datetime('Ungültiges Installationsdatum').optional().nullable(),
+  maintenanceInterval: z.enum(['1', '3', '6', '12', '24'], {
+    message: 'Wartungsintervall muss 1, 3, 6, 12 oder 24 Monate sein'
+  }),
+  lastMaintenance: z.string().datetime('Ungültiges Wartungsdatum').optional().nullable(),
+
+  // Heating System Information
+  heaterType: z.string().optional().nullable(),
+  manufacturer: z.string().optional().nullable(),
+
+  // Heat Storage
+  hasStorage: z.boolean().optional(),
+  storageManufacturer: z.string().optional().nullable(),
+  storageModel: z.string().optional().nullable(),
+  storageCapacity: z.number().int().positive().optional().nullable(),
+
+  // Battery
+  hasBattery: z.boolean().optional(),
+  batteryManufacturer: z.string().optional().nullable(),
+  batteryModel: z.string().optional().nullable(),
+  batteryCapacity: z.number().positive().optional().nullable(),
+
+  requiredParts: z.string().optional().nullable(),
 });
 
 /**
- * Heater update schema (all fields optional except customerId validation)
+ * Heater update schema (all fields optional)
  */
 export const heaterUpdateSchema = z.object({
-  model: z
-    .string()
-    .min(2, 'Model must be at least 2 characters')
-    .max(100, 'Model must be less than 100 characters')
-    .trim()
-    .optional(),
-  serialNumber: z
-    .string()
-    .max(100, 'Serial number must be less than 100 characters')
-    .trim()
-    .optional(),
-  installationDate: optionalDateStringSchema,
-  maintenanceInterval: z
-    .number()
-    .int('Maintenance interval must be a whole number')
-    .positive('Maintenance interval must be positive')
-    .refine(
-      (val) => [1, 3, 6, 12, 24].includes(val),
-      'Maintenance interval must be 1, 3, 6, 12, or 24 months'
-    )
-    .optional(),
-  lastMaintenance: optionalDateStringSchema,
-  requiredParts: z
-    .string()
-    .max(500, 'Required parts must be less than 500 characters')
-    .optional(),
+  customerId: z.string().uuid('Ungültige Kunden-ID').optional().nullable(),
+  model: z.string().min(1, 'Modell ist erforderlich').max(100, 'Modell zu lang').optional(),
+  serialNumber: z.string().max(100, 'Seriennummer zu lang').optional().nullable(),
+  installationDate: z.string().datetime('Ungültiges Installationsdatum').optional().nullable(),
+  maintenanceInterval: z.enum(['1', '3', '6', '12', '24'], {
+    message: 'Wartungsintervall muss 1, 3, 6, 12 oder 24 Monate sein'
+  }).optional(),
+  lastMaintenance: z.string().datetime('Ungültiges Wartungsdatum').optional().nullable(),
+
+  // Heating System Information
+  heaterType: z.string().optional().nullable(),
+  manufacturer: z.string().optional().nullable(),
+
+  // Heat Storage
+  hasStorage: z.boolean().optional(),
+  storageManufacturer: z.string().optional().nullable(),
+  storageModel: z.string().optional().nullable(),
+  storageCapacity: z.number().int().positive().optional().nullable(),
+
+  // Battery
+  hasBattery: z.boolean().optional(),
+  batteryManufacturer: z.string().optional().nullable(),
+  batteryModel: z.string().optional().nullable(),
+  batteryCapacity: z.number().positive().optional().nullable(),
+
+  requiredParts: z.string().optional().nullable(),
+});
+
+// ============================================================================
+// HEATING SYSTEMS SCHEMAS (Categories, Manufacturers, Models)
+// ============================================================================
+
+/**
+ * Add category schema
+ */
+export const addCategorySchema = z.object({
+  category: z.string().min(1, 'Kategorie ist erforderlich'),
+});
+
+/**
+ * Add manufacturer schema
+ */
+export const addManufacturerSchema = z.object({
+  category: z.string().min(1, 'Kategorie ist erforderlich'),
+  manufacturer: z.string().min(1, 'Hersteller ist erforderlich'),
+});
+
+/**
+ * Add model schema
+ */
+export const addModelSchema = z.object({
+  category: z.string().min(1, 'Kategorie ist erforderlich'),
+  manufacturer: z.string().min(1, 'Hersteller ist erforderlich'),
+  model: z.string().min(1, 'Modell ist erforderlich'),
 });
 
 // ============================================================================

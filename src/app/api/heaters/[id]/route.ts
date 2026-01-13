@@ -2,35 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
-
-// Validation schema for updating a heater
-const updateHeaterSchema = z.object({
-  customerId: z.string().uuid('Ungültige Kunden-ID').optional().nullable(),
-  model: z.string().min(1, 'Modell ist erforderlich').max(100, 'Modell zu lang').optional(),
-  serialNumber: z.string().max(100, 'Seriennummer zu lang').optional().nullable(),
-  installationDate: z.string().datetime('Ungültiges Installationsdatum').optional().nullable(),
-  maintenanceInterval: z.enum(['1', '3', '6', '12', '24'], {
-    message: 'Wartungsintervall muss 1, 3, 6, 12 oder 24 Monate sein'
-  }).optional(),
-  lastMaintenance: z.string().datetime('Ungültiges Wartungsdatum').optional().nullable(),
-  requiredParts: z.string().optional().nullable(),
-
-  // Heating System Information
-  heaterType: z.string().optional().nullable(),
-  manufacturer: z.string().optional().nullable(),
-
-  // Heat Storage
-  hasStorage: z.boolean().optional(),
-  storageManufacturer: z.string().optional().nullable(),
-  storageModel: z.string().optional().nullable(),
-  storageCapacity: z.number().int().positive().optional().nullable(),
-
-  // Battery
-  hasBattery: z.boolean().optional(),
-  batteryManufacturer: z.string().optional().nullable(),
-  batteryModel: z.string().optional().nullable(),
-  batteryCapacity: z.number().positive().optional().nullable(),
-});
+import { heaterUpdateSchema } from '@/lib/validations';
 
 /**
  * GET /api/heaters/:id
@@ -134,7 +106,7 @@ export async function PATCH(
 
     // 4. Parse and validate request body
     const body = await request.json();
-    const validatedData = updateHeaterSchema.parse(body);
+    const validatedData = heaterUpdateSchema.parse(body);
 
     // 5. Recalculate next maintenance if interval or lastMaintenance changed
     let nextMaintenance = existingHeater.nextMaintenance;

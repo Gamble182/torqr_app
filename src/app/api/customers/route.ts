@@ -2,35 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
-
-// Enum values for validation
-const HeatingTypeEnum = z.enum([
-  'GAS', 'OIL', 'DISTRICT_HEATING', 'HEAT_PUMP_AIR', 'HEAT_PUMP_GROUND',
-  'HEAT_PUMP_WATER', 'PELLET_BIOMASS', 'NIGHT_STORAGE', 'ELECTRIC_DIRECT',
-  'HYBRID', 'CHP'
-]);
-
-const AdditionalEnergySourceEnum = z.enum([
-  'PHOTOVOLTAIC', 'SOLAR_THERMAL', 'SMALL_WIND'
-]);
-
-const EnergyStorageSystemEnum = z.enum([
-  'BATTERY_STORAGE', 'HEAT_STORAGE'
-]);
-
-// Validation schema for creating a customer
-const createCustomerSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(100, 'Name too long'),
-  street: z.string().min(1, 'Street is required').max(100, 'Street too long'),
-  zipCode: z.string().min(4, 'ZIP code must be at least 4 characters').max(10, 'ZIP code too long'),
-  city: z.string().min(1, 'City is required').max(100, 'City too long'),
-  phone: z.string().min(1, 'Phone is required').max(20, 'Phone too long'),
-  email: z.string().email('Invalid email').optional().or(z.literal('')),
-  heatingType: HeatingTypeEnum, // REQUIRED
-  additionalEnergySources: z.array(AdditionalEnergySourceEnum).optional().default([]),
-  energyStorageSystems: z.array(EnergyStorageSystemEnum).optional().default([]),
-  notes: z.string().max(1000, 'Notes too long').optional(),
-});
+import { customerCreateSchema } from '@/lib/validations';
+import { rateLimitByUser, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 
 /**
  * POST /api/customers
@@ -41,9 +14,15 @@ export async function POST(request: NextRequest) {
     // 1. Authenticate user
     const { userId } = await requireAuth();
 
-    // 2. Parse and validate request body
+    // 2. Rate limiting
+    const rateLimitResponse = rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER);
+    if (rateLimitResponse) {
+      return rateLimitResponse;
+    }
+
+    // 3. Parse and validate request body
     const body = await request.json();
-    const validatedData = createCustomerSchema.parse(body);
+    const validatedData = customerCreateSchema.parse(body);
 
     // 3. Convert empty email string to null
     const email = validatedData.email && validatedData.email.trim() !== ''

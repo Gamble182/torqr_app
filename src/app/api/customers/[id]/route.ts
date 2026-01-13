@@ -2,35 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
-
-// Enum values for validation
-const HeatingTypeEnum = z.enum([
-  'GAS', 'OIL', 'DISTRICT_HEATING', 'HEAT_PUMP_AIR', 'HEAT_PUMP_GROUND',
-  'HEAT_PUMP_WATER', 'PELLET_BIOMASS', 'NIGHT_STORAGE', 'ELECTRIC_DIRECT',
-  'HYBRID', 'CHP'
-]);
-
-const AdditionalEnergySourceEnum = z.enum([
-  'PHOTOVOLTAIC', 'SOLAR_THERMAL', 'SMALL_WIND'
-]);
-
-const EnergyStorageSystemEnum = z.enum([
-  'BATTERY_STORAGE', 'HEAT_STORAGE'
-]);
-
-// Validation schema for updating a customer
-const updateCustomerSchema = z.object({
-  name: z.string().min(1, 'Name is required').max(100, 'Name too long').optional(),
-  street: z.string().min(1, 'Street is required').max(100, 'Street too long').optional(),
-  zipCode: z.string().min(4, 'ZIP code must be at least 4 characters').max(10, 'ZIP code too long').optional(),
-  city: z.string().min(1, 'City is required').max(100, 'City too long').optional(),
-  phone: z.string().min(1, 'Phone is required').max(20, 'Phone too long').optional(),
-  email: z.string().email('Invalid email').optional().or(z.literal('')).nullable(),
-  heatingType: HeatingTypeEnum.optional(),
-  additionalEnergySources: z.array(AdditionalEnergySourceEnum).optional(),
-  energyStorageSystems: z.array(EnergyStorageSystemEnum).optional(),
-  notes: z.string().max(1000, 'Notes too long').optional().nullable(),
-});
+import { customerUpdateSchema } from '@/lib/validations';
+import { rateLimitByUser, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 
 /**
  * GET /api/customers/:id
@@ -114,10 +87,16 @@ export async function PATCH(
     // 1. Authenticate user
     const { userId } = await requireAuth();
 
-    // 2. Get customer ID from params
+    // 2. Rate limiting
+    const rateLimitResponse = rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER);
+    if (rateLimitResponse) {
+      return rateLimitResponse;
+    }
+
+    // 3. Get customer ID from params
     const { id } = await params;
 
-    // 3. Check if customer exists and belongs to user
+    // 4. Check if customer exists and belongs to user
     const existingCustomer = await prisma.customer.findUnique({
       where: {
         id: id,
@@ -134,7 +113,7 @@ export async function PATCH(
 
     // 4. Parse and validate request body
     const body = await request.json();
-    const validatedData = updateCustomerSchema.parse(body);
+    const validatedData = customerUpdateSchema.parse(body);
 
     // 5. Convert empty email string to null
     const email = validatedData.email && validatedData.email.trim() !== ''

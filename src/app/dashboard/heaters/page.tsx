@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
-import { toast } from 'sonner';
 import {
   Loader2Icon,
   FlameIcon,
@@ -17,73 +16,16 @@ import {
 import { Button } from '@/components/ui/button';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
-
-interface Heater {
-  id: string;
-  model: string;
-  serialNumber: string | null;
-  installationDate: string | null;
-  maintenanceInterval: number;
-  lastMaintenance: string | null;
-  nextMaintenance: string | null;
-  customer: {
-    id: string;
-    name: string;
-    street: string;
-    city: string;
-    phone: string;
-  } | null;
-  _count: {
-    maintenances: number;
-  };
-}
+import { useHeaters } from '@/hooks/useHeaters';
 
 export default function HeatersPage() {
-  const [heaters, setHeaters] = useState<Heater[]>([]);
-  const [filteredHeaters, setFilteredHeaters] = useState<Heater[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
+  const { data: heaters, isLoading, error } = useHeaters({ search: searchQuery });
 
-  useEffect(() => {
-    const fetchHeaters = async () => {
-      try {
-        const response = await fetch('/api/heaters');
-        const result = await response.json();
-
-        if (result.success) {
-          setHeaters(result.data);
-          setFilteredHeaters(result.data);
-        } else {
-          toast.error(`Fehler: ${result.error}`);
-        }
-      } catch (err) {
-        console.error('Error fetching heaters:', err);
-        toast.error('Fehler beim Laden der Heizungen');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchHeaters();
-  }, []);
-
-  // Filter heaters based on search query
-  useEffect(() => {
-    if (!searchQuery.trim()) {
-      setFilteredHeaters(heaters);
-      return;
-    }
-
-    const query = searchQuery.toLowerCase();
-    const filtered = heaters.filter((heater) =>
-      heater.model.toLowerCase().includes(query) ||
-      heater.serialNumber?.toLowerCase().includes(query) ||
-      heater.customer?.name.toLowerCase().includes(query) ||
-      heater.customer?.city.toLowerCase().includes(query)
-    );
-
-    setFilteredHeaters(filtered);
-  }, [searchQuery, heaters]);
+  const filteredHeaters = useMemo(() => {
+    if (!heaters) return [];
+    return heaters;
+  }, [heaters]);
 
   const getMaintenanceUrgency = (dateString: string | null) => {
     if (!dateString) return 'none';
@@ -113,12 +55,27 @@ export default function HeatersPage() {
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2Icon className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <p className="text-destructive mb-2">Fehler beim Laden der Heizsysteme</p>
+          <p className="text-sm text-muted-foreground">{error.message}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!heaters) {
+    return null;
   }
 
   return (
@@ -189,7 +146,7 @@ export default function HeatersPage() {
                 Durchgeführte Wartungen
               </dt>
               <dd className="text-3xl font-bold text-foreground">
-                {heaters.reduce((sum, h) => sum + h._count.maintenances, 0)}
+                {heaters.reduce((sum, h) => sum + (h._count?.maintenances || 0), 0)}
               </dd>
             </div>
           </div>
@@ -272,7 +229,7 @@ export default function HeatersPage() {
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <WrenchIcon className="h-4 w-4" />
                         <span>
-                          {heater._count.maintenances} {heater._count.maintenances === 1 ? 'Wartung' : 'Wartungen'} durchgeführt
+                          {heater._count?.maintenances || 0} {(heater._count?.maintenances || 0) === 1 ? 'Wartung' : 'Wartungen'} durchgeführt
                         </span>
                       </div>
                     </div>

@@ -7,6 +7,13 @@ import { toast } from 'sonner';
 import { ArrowLeftIcon, Loader2Icon, PlusIcon, XIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+interface AddNewEntryBody {
+  type: 'category' | 'manufacturer' | 'model';
+  category?: string;
+  manufacturer?: string;
+  model?: string;
+}
+
 interface Customer {
   id: string;
   name: string;
@@ -147,7 +154,7 @@ export default function NewHeaterPage() {
     setAddingEntry(true);
 
     try {
-      const body: any = { type: addModalType };
+      const body: AddNewEntryBody = { type: addModalType };
 
       if (addModalType === 'category') {
         body.category = newEntryValue.trim();

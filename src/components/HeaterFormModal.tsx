@@ -14,6 +14,7 @@ import {
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { XIcon } from 'lucide-react';
+import { z } from 'zod';
 
 interface Heater {
   id: string;
@@ -22,6 +23,15 @@ interface Heater {
   installationDate: string | null;
   maintenanceInterval: number;
   lastMaintenance: string | null;
+}
+
+interface HeaterPayload {
+  model: string;
+  serialNumber: string | null;
+  maintenanceInterval: string;
+  installationDate: string | null;
+  lastMaintenance: string | null;
+  customerId?: string;
 }
 
 interface HeaterFormModalProps {
@@ -129,7 +139,7 @@ export function HeaterFormModal({
 
       const method = heater ? 'PATCH' : 'POST';
 
-      const payload: any = {
+      const payload: HeaterPayload = {
         model: formData.model,
         serialNumber: formData.serialNumber || null,
         maintenanceInterval: formData.maintenanceInterval,
@@ -161,8 +171,8 @@ export function HeaterFormModal({
       } else {
         if (result.details) {
           const apiErrors: FormErrors = {};
-          result.details.forEach((error: any) => {
-            const field = error.path[0];
+          result.details.forEach((error: z.ZodIssue) => {
+            const field = error.path[0] as string;
             apiErrors[field] = error.message;
           });
           setErrors(apiErrors);

@@ -2,14 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
-
-// Validation schema for creating a maintenance record
-const createMaintenanceSchema = z.object({
-  heaterId: z.string().uuid('Ungültige Heizungs-ID'),
-  date: z.string().datetime('Ungültiges Datum'),
-  notes: z.string().max(1000, 'Notizen zu lang').optional().nullable(),
-  photos: z.array(z.string().url('Ungültige Foto-URL')).optional(),
-});
+import { maintenanceCreateSchema } from '@/lib/validations';
+import { rateLimitByUser, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 
 /**
  * POST /api/maintenances
@@ -20,9 +14,15 @@ export async function POST(request: NextRequest) {
     // 1. Authenticate user
     const { userId } = await requireAuth();
 
-    // 2. Parse and validate request body
+    // 2. Rate limiting
+    const rateLimitResponse = rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER);
+    if (rateLimitResponse) {
+      return rateLimitResponse;
+    }
+
+    // 3. Parse and validate request body
     const body = await request.json();
-    const validatedData = createMaintenanceSchema.parse(body);
+    const validatedData = maintenanceCreateSchema.parse(body);
 
     // 3. Verify heater belongs to user
     const heater = await prisma.heater.findFirst({
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 4. Calculate next maintenance date
-    const maintenanceDate = new Date(validatedData.date);
+    const maintenanceDate = validatedData.date ? new Date(validatedData.date) : new Date();
     const nextMaintenance = new Date(maintenanceDate);
     nextMaintenance.setMonth(nextMaintenance.getMonth() + heater.maintenanceInterval);
 

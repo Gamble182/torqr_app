@@ -66,6 +66,7 @@ For testing, use these credentials:
 ## Tech Stack
 
 - **Frontend**: Next.js 16, React 19, TypeScript, Tailwind CSS 4
+- **State Management**: TanStack Query (React Query) v5 for data fetching and caching
 - **Backend**: Next.js API Routes, Prisma ORM 7
 - **Database**: PostgreSQL (Supabase with connection pooling)
 - **Authentication**: Custom JWT-based auth with bcrypt
@@ -87,10 +88,17 @@ torqr_app/
 │   │   └── api/               # API endpoints
 │   ├── components/            # Reusable React components
 │   │   ├── ui/               # shadcn/ui components
+│   │   ├── heater-form/      # Split heater form components
 │   │   └── ...               # Feature-specific components
+│   ├── hooks/                 # React Query custom hooks
+│   │   ├── useCustomers.ts   # Customer CRUD operations
+│   │   ├── useHeaters.ts     # Heater CRUD operations
+│   │   ├── useDashboard.ts   # Dashboard statistics
+│   │   └── useMaintenances.ts # Maintenance CRUD operations
 │   ├── lib/                   # Utilities and helpers
 │   │   ├── prisma.ts         # Database client
 │   │   ├── auth.ts           # Authentication logic
+│   │   ├── react-query.tsx   # React Query configuration
 │   │   └── ...
 │   └── middleware.ts          # Auth & routing middleware
 ├── prisma/

@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import { toast } from 'sonner';
 import {
   Loader2Icon,
   UsersIcon,
@@ -17,74 +16,27 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
-
-interface Customer {
-  id: string;
-  name: string;
-  city: string;
-  phone: string;
-}
-
-interface UpcomingMaintenance {
-  id: string;
-  model: string;
-  nextMaintenance: string;
-  customer: Customer;
-}
-
-interface Maintenance {
-  id: string;
-  date: string;
-  notes: string | null;
-  heater: {
-    model: string;
-    customer: {
-      id: string;
-      name: string;
-    };
-  };
-}
-
-interface DashboardStats {
-  totalCustomers: number;
-  totalHeaters: number;
-  overdueMaintenances: number;
-  upcomingMaintenances: number;
-  upcomingMaintenancesList: UpcomingMaintenance[];
-  recentMaintenances: Maintenance[];
-}
+import { useDashboardStats } from '@/hooks/useDashboard';
 
 export default function DashboardPage() {
-  const [stats, setStats] = useState<DashboardStats | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [timeRange, setTimeRange] = useState(30); // days for upcoming maintenances
+  const [timeRange, setTimeRange] = useState(30);
+  const { data: stats, isLoading, error } = useDashboardStats(timeRange);
 
-  useEffect(() => {
-    const fetchStats = async () => {
-      try {
-        const response = await fetch(`/api/dashboard/stats?days=${timeRange}`);
-        const result = await response.json();
-
-        if (result.success) {
-          setStats(result.data);
-        } else {
-          toast.error(`Fehler: ${result.error}`);
-        }
-      } catch (err) {
-        console.error('Error fetching dashboard stats:', err);
-        toast.error('Fehler beim Laden der Statistiken');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchStats();
-  }, [timeRange]);
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2Icon className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <p className="text-destructive mb-2">Fehler beim Laden der Statistiken</p>
+          <p className="text-sm text-muted-foreground">{error.message}</p>
+        </div>
       </div>
     );
   }

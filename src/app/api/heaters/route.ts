@@ -2,36 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
-
-// Validation schema for creating a heater
-const createHeaterSchema = z.object({
-  customerId: z.string().uuid('Ungültige Kunden-ID').optional().nullable(),
-  model: z.string().min(1, 'Modell ist erforderlich').max(100, 'Modell zu lang'),
-  serialNumber: z.string().max(100, 'Seriennummer zu lang').optional().nullable(),
-  installationDate: z.string().datetime('Ungültiges Installationsdatum').optional().nullable(),
-  maintenanceInterval: z.enum(['1', '3', '6', '12', '24'], {
-    message: 'Wartungsintervall muss 1, 3, 6, 12 oder 24 Monate sein'
-  }),
-  lastMaintenance: z.string().datetime('Ungültiges Wartungsdatum').optional().nullable(),
-
-  // Heating System Information
-  heaterType: z.string().optional().nullable(),
-  manufacturer: z.string().optional().nullable(),
-
-  // Heat Storage
-  hasStorage: z.boolean().optional(),
-  storageManufacturer: z.string().optional().nullable(),
-  storageModel: z.string().optional().nullable(),
-  storageCapacity: z.number().int().positive().optional().nullable(),
-
-  // Battery
-  hasBattery: z.boolean().optional(),
-  batteryManufacturer: z.string().optional().nullable(),
-  batteryModel: z.string().optional().nullable(),
-  batteryCapacity: z.number().positive().optional().nullable(),
-
-  requiredParts: z.string().optional().nullable(),
-});
+import { Prisma } from '@prisma/client';
+import { heaterCreateSchema } from '@/lib/validations';
+import { rateLimitByUser, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 
 /**
  * POST /api/heaters
@@ -42,9 +15,15 @@ export async function POST(request: NextRequest) {
     // 1. Authenticate user
     const { userId } = await requireAuth();
 
-    // 2. Parse and validate request body
+    // 2. Rate limiting
+    const rateLimitResponse = rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER);
+    if (rateLimitResponse) {
+      return rateLimitResponse;
+    }
+
+    // 3. Parse and validate request body
     const body = await request.json();
-    const validatedData = createHeaterSchema.parse(body);
+    const validatedData = heaterCreateSchema.parse(body);
 
     // 3. Verify customer belongs to user (if customerId provided)
     if (validatedData.customerId) {
@@ -159,13 +138,33 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('search') || '';
 
     // 3. Build where clause
-    let where: any = {
+    const where: Prisma.HeaterWhereInput = {
       userId: userId, // Filter by heater owner
+      ...(customerId && { customerId }), // Add customerId if provided
+      ...(search && {
+        OR: [
+          { model: { contains: search, mode: 'insensitive' as const } },
+          { serialNumber: { contains: search, mode: 'insensitive' as const } },
+          {
+            customer: {
+              is: {
+                name: { contains: search, mode: 'insensitive' as const }
+              }
+            }
+          },
+          {
+            customer: {
+              is: {
+                city: { contains: search, mode: 'insensitive' as const }
+              }
+            }
+          },
+        ],
+      }),
     };
 
-    // If customerId provided, filter by that customer
+    // If customerId provided, verify customer belongs to user
     if (customerId) {
-      // Verify customer belongs to user
       const customer = await prisma.customer.findUnique({
         where: {
           id: customerId,
@@ -179,30 +178,6 @@ export async function GET(request: NextRequest) {
           error: 'Kunde nicht gefunden',
         }, { status: 404 });
       }
-
-      where.customerId = customerId;
-    }
-
-    // Add search filter if provided
-    if (search) {
-      where.OR = [
-        { model: { contains: search, mode: 'insensitive' as const } },
-        { serialNumber: { contains: search, mode: 'insensitive' as const } },
-        {
-          customer: {
-            is: {
-              name: { contains: search, mode: 'insensitive' as const }
-            }
-          }
-        },
-        {
-          customer: {
-            is: {
-              city: { contains: search, mode: 'insensitive' as const }
-            }
-          }
-        },
-      ];
     }
 
     // 4. Fetch heaters

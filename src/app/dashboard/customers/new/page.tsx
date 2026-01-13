@@ -17,6 +17,7 @@ import {
 import { MultiSelect } from '@/components/ui/multi-select';
 import { toast } from 'sonner';
 import { ArrowLeftIcon } from 'lucide-react';
+import { z } from 'zod';
 
 interface FormData {
   name: string;
@@ -159,8 +160,8 @@ export default function NewCustomerPage() {
       } else {
         if (result.details) {
           const apiErrors: FormErrors = {};
-          result.details.forEach((error: any) => {
-            const field = error.path[0];
+          result.details.forEach((error: z.ZodIssue) => {
+            const field = error.path[0] as string;
             apiErrors[field] = error.message;
           });
           setErrors(apiErrors);

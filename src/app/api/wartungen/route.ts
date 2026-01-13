@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 
 /**
  * GET /api/wartungen?status=overdue&days=30
@@ -38,48 +39,47 @@ export async function GET(request: NextRequest) {
     monthFromNow.setDate(monthFromNow.getDate() + 30);
 
     // 4. Build where clause based on status
-    let where: any = {
-      customer: {
-        userId: userId,
-      },
-      nextMaintenance: {
-        not: null,
-      },
-    };
+    let nextMaintenanceFilter: Prisma.DateTimeNullableFilter<"Heater"> = { not: null };
 
     // Handle custom date range if provided
     if (dateFrom && dateTo) {
       const customFrom = new Date(dateFrom);
       customFrom.setHours(0, 0, 0, 0); // Start of day
-
-      where.nextMaintenance = {
+      nextMaintenanceFilter = {
         gte: customFrom,
         lte: futureDate,
       };
     } else if (status === 'overdue') {
-      where.nextMaintenance = {
+      nextMaintenanceFilter = {
         lt: now,
       };
     } else if (status === 'thisWeek') {
-      where.nextMaintenance = {
+      nextMaintenanceFilter = {
         gte: now,
         lte: weekFromNow,
       };
     } else if (status === 'thisMonth') {
-      where.nextMaintenance = {
+      nextMaintenanceFilter = {
         gte: now,
         lte: monthFromNow,
       };
     } else if (status === 'upcoming') {
-      where.nextMaintenance = {
+      nextMaintenanceFilter = {
         gte: now,
         lte: futureDate,
       };
     } else if (status === 'all') {
-      where.nextMaintenance = {
+      nextMaintenanceFilter = {
         lte: futureDate,
       };
     }
+
+    const where: Prisma.HeaterWhereInput = {
+      customer: {
+        userId: userId,
+      },
+      nextMaintenance: nextMaintenanceFilter,
+    };
 
     // 5. Fetch heaters with upcoming/overdue maintenances
     const heaters = await prisma.heater.findMany({

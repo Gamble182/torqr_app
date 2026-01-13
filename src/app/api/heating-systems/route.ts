@@ -3,6 +3,7 @@ import { requireAuth } from '@/lib/auth-helpers';
 import { z } from 'zod';
 import fs from 'fs/promises';
 import path from 'path';
+import { addCategorySchema, addManufacturerSchema, addModelSchema } from '@/lib/validations';
 
 const CONFIG_PATH = path.join(process.cwd(), 'src/config/heating-systems.json');
 
@@ -19,22 +20,6 @@ interface Category {
 interface HeatingSystemsConfig {
   heating_categories: Category[];
 }
-
-// Validation schemas
-const addCategorySchema = z.object({
-  category: z.string().min(1, 'Kategorie ist erforderlich'),
-});
-
-const addManufacturerSchema = z.object({
-  category: z.string().min(1, 'Kategorie ist erforderlich'),
-  manufacturer: z.string().min(1, 'Hersteller ist erforderlich'),
-});
-
-const addModelSchema = z.object({
-  category: z.string().min(1, 'Kategorie ist erforderlich'),
-  manufacturer: z.string().min(1, 'Hersteller ist erforderlich'),
-  model: z.string().min(1, 'Modell ist erforderlich'),
-});
 
 /**
  * GET /api/heating-systems
