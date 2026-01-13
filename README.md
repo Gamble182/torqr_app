@@ -61,6 +61,11 @@ For testing, use these credentials:
 | Email    | test@torqr.app |
 | Password | Test123!       |
 
+| Field    | Value          |
+|----------|----------------|
+| Email    | peter@beispiel.de |
+| Password | Peter123!       |
+
 ---
 
 ## Tech Stack
