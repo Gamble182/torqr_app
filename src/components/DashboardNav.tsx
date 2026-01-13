@@ -4,10 +4,13 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
+import { useState, useEffect } from 'react';
+import { CalendarIcon, ClockIcon } from 'lucide-react';
 
 export function DashboardNav() {
   const pathname = usePathname();
   const { data: session } = useSession();
+  const [currentDateTime, setCurrentDateTime] = useState(new Date());
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard' },
@@ -15,6 +18,30 @@ export function DashboardNav() {
     { name: 'Heizsysteme', href: '/dashboard/heaters' },
     { name: 'Wartungen', href: '/dashboard/wartungen' },
   ];
+
+  // Update time every minute
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentDateTime(new Date());
+    }, 60000); // Update every minute
+
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatDateTime = () => {
+    return currentDateTime.toLocaleDateString('de-DE', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    });
+  };
+
+  const formatTime = () => {
+    return currentDateTime.toLocaleTimeString('de-DE', {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
 
   const isActive = (href: string) => {
     if (href === '/dashboard') {
@@ -50,7 +77,18 @@ export function DashboardNav() {
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            <span className="text-sm text-muted-foreground">{session?.user?.name}</span>
+            <div className="hidden sm:flex items-center gap-3 text-sm text-muted-foreground">
+              <div className="flex items-center gap-1.5">
+                <CalendarIcon className="h-4 w-4" />
+                <span>{formatDateTime()}</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <ClockIcon className="h-4 w-4" />
+                <span>{formatTime()}</span>
+              </div>
+            </div>
+            <div className="h-6 w-px bg-border hidden sm:block" />
+            <span className="text-sm text-muted-foreground font-medium">{session?.user?.name}</span>
             <Button
               variant="outline"
               size="sm"

@@ -40,7 +40,8 @@
       "Bash(test:*)",
       "Bash(npx prisma:*)",
       "Bash(del prisma.config.ts)",
-      "Bash(del \"c:\\\\Users\\\\y.dorth\\\\Documents\\\\torqr_app\\\\torqr_app\\\\src\\\\config\\\\heater-types.json\")"
+      "Bash(del \"c:\\\\Users\\\\y.dorth\\\\Documents\\\\torqr_app\\\\torqr_app\\\\src\\\\config\\\\heater-types.json\")",
+      "Bash(git tag:*)"
     ]
   }
 }
