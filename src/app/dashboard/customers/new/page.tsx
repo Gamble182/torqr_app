@@ -17,6 +17,7 @@ import {
 import { MultiSelect } from '@/components/ui/multi-select';
 import { toast } from 'sonner';
 import { ArrowLeftIcon } from 'lucide-react';
+import { z } from 'zod';
 
 interface FormData {
   name: string;
@@ -114,7 +115,7 @@ export default function NewCustomerPage() {
     }
 
     if (!formData.city.trim()) {
-      newErrors.city = 'Stadt ist erforderlich';
+      newErrors.city = 'Ort ist erforderlich';
     }
 
     if (!formData.phone.trim()) {
@@ -159,8 +160,8 @@ export default function NewCustomerPage() {
       } else {
         if (result.details) {
           const apiErrors: FormErrors = {};
-          result.details.forEach((error: any) => {
-            const field = error.path[0];
+          result.details.forEach((error: z.ZodIssue) => {
+            const field = error.path[0] as string;
             apiErrors[field] = error.message;
           });
           setErrors(apiErrors);
@@ -312,7 +313,7 @@ export default function NewCustomerPage() {
               {/* City */}
               <div className="md:col-span-2">
                 <Label htmlFor="city" className="mb-2 block">
-                  Stadt <span className="text-red-500">*</span>
+                  Ort <span className="text-red-500">*</span>
                 </Label>
                 <Input
                   id="city"

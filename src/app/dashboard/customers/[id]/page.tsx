@@ -179,7 +179,7 @@ export default function CustomerDetailPage() {
   };
 
   const handleDeleteHeater = async (id: string, model: string) => {
-    if (!confirm(`Möchten Sie die Heizung "${model}" wirklich löschen?`)) {
+    if (!confirm(`Möchten Sie das Heizsystem "${model}" wirklich löschen?`)) {
       return;
     }
 
@@ -191,14 +191,14 @@ export default function CustomerDetailPage() {
       const result = await response.json();
 
       if (result.success) {
-        toast.success(`Heizung "${model}" wurde gelöscht`);
+        toast.success(`Heizsystem "${model}" wurde gelöscht`);
         fetchCustomer(); // Refresh data
       } else {
         toast.error(`Fehler: ${result.error}`);
       }
     } catch (err) {
       console.error('Error deleting heater:', err);
-      toast.error('Fehler beim Löschen der Heizung');
+      toast.error('Fehler beim Löschen des Heizsystems');
     }
   };
 
@@ -361,7 +361,7 @@ export default function CustomerDetailPage() {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
                 <HomeIcon className="h-5 w-5 text-gray-400" />
-                Heizungen ({customer.heaters?.length || 0})
+                Heizsysteme ({customer.heaters?.length || 0})
               </h2>
               <Button
                 onClick={() => setShowHeaterForm(true)}
@@ -369,16 +369,16 @@ export default function CustomerDetailPage() {
                 size="sm"
               >
                 <PlusIcon className="h-4 w-4" />
-                Heizung hinzufügen
+                Heizsystem hinzufügen
               </Button>
             </div>
 
             {(!customer.heaters || customer.heaters.length === 0) ? (
               <div className="text-center py-8 border-2 border-dashed border-gray-200 rounded-lg">
                 <HomeIcon className="mx-auto h-12 w-12 text-gray-400" />
-                <h3 className="mt-2 text-sm font-semibold text-gray-900">Noch keine Heizungen</h3>
+                <h3 className="mt-2 text-sm font-semibold text-gray-900">Noch keine Heizsysteme</h3>
                 <p className="mt-1 text-sm text-gray-500">
-                  Fügen Sie die erste Heizung für diesen Kunden hinzu
+                  Fügen Sie das erste Heizsystem für diesen Kunden hinzu
                 </p>
                 <Button
                   onClick={() => setShowHeaterForm(true)}
@@ -386,7 +386,7 @@ export default function CustomerDetailPage() {
                   size="sm"
                 >
                   <PlusIcon className="h-4 w-4 mr-2" />
-                  Erste Heizung hinzufügen
+                  Erstes Heizsystem hinzufügen
                 </Button>
               </div>
             ) : (
@@ -504,7 +504,7 @@ export default function CustomerDetailPage() {
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Übersicht</h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between py-2 border-b border-gray-100">
-                <span className="text-sm text-gray-600">Heizungen</span>
+                <span className="text-sm text-gray-600">Heizsysteme</span>
                 <span className="text-lg font-semibold text-gray-900">
                   {customer.heaters?.length || 0}
                 </span>
@@ -543,7 +543,7 @@ export default function CustomerDetailPage() {
                 }}
               >
                 <HomeIcon className="h-4 w-4 mr-2" />
-                Heizung hinzufügen
+                Heizsystem hinzufügen
               </Button>
               <Button
                 variant="outline"

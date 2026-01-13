@@ -12,6 +12,8 @@ export function DashboardNav() {
   const navigation = [
     { name: 'Dashboard', href: '/dashboard' },
     { name: 'Kunden', href: '/dashboard/customers' },
+    { name: 'Heizsysteme', href: '/dashboard/heaters' },
+    { name: 'Wartungen', href: '/dashboard/wartungen' },
   ];
 
   const isActive = (href: string) => {
@@ -22,22 +24,24 @@ export function DashboardNav() {
   };
 
   return (
-    <nav className="bg-white shadow">
+    <nav className="bg-card shadow border-b border-border">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 justify-between">
           <div className="flex">
             <div className="flex shrink-0 items-center">
-              <h1 className="text-xl font-bold text-gray-900">Torqr</h1>
+              <Link href="/dashboard" className="text-xl font-bold text-primary hover:text-secondary transition-colors">
+                Torqr
+              </Link>
             </div>
             <div className="ml-6 flex space-x-8">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium ${
+                  className={`inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium transition-colors ${
                     isActive(item.href)
-                      ? 'border-blue-500 text-gray-900'
-                      : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                      ? 'border-secondary text-foreground'
+                      : 'border-transparent text-muted-foreground hover:border-accent hover:text-foreground'
                   }`}
                 >
                   {item.name}
@@ -46,7 +50,7 @@ export function DashboardNav() {
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            <span className="text-sm text-gray-700">{session?.user?.name}</span>
+            <span className="text-sm text-muted-foreground">{session?.user?.name}</span>
             <Button
               variant="outline"
               size="sm"

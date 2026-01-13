@@ -3,24 +3,30 @@ import { requireAuth } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 
 /**
- * GET /api/dashboard/stats
+ * GET /api/dashboard/stats?days=30
  * Get dashboard statistics for the authenticated user
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
     // 1. Authenticate user
     const { userId } = await requireAuth();
 
-    // 2. Calculate all statistics in parallel
+    // 2. Get time range parameter
+    const searchParams = request.nextUrl.searchParams;
+    const days = parseInt(searchParams.get('days') || '30');
+
+    // 3. Calculate all statistics in parallel
     const now = new Date();
-    const thirtyDaysFromNow = new Date();
-    thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+    const futureDate = new Date();
+    futureDate.setDate(futureDate.getDate() + days);
 
     const [
       totalCustomers,
       totalHeaters,
       overdueMaintenances,
       upcomingMaintenances,
+      upcomingMaintenancesList,
+      recentMaintenances,
     ] = await Promise.all([
       // Total customers count
       prisma.customer.count({
@@ -50,7 +56,7 @@ export async function GET() {
         },
       }),
 
-      // Upcoming maintenances (nextMaintenance between now and 30 days)
+      // Upcoming maintenances (nextMaintenance between now and future date)
       prisma.heater.count({
         where: {
           customer: {
@@ -58,9 +64,61 @@ export async function GET() {
           },
           nextMaintenance: {
             gte: now,
-            lte: thirtyDaysFromNow,
+            lte: futureDate,
           },
         },
+      }),
+
+      // Upcoming maintenances list with details
+      prisma.heater.findMany({
+        where: {
+          customer: {
+            userId: userId,
+          },
+          nextMaintenance: {
+            gte: now,
+            lte: futureDate,
+          },
+        },
+        include: {
+          customer: {
+            select: {
+              id: true,
+              name: true,
+              city: true,
+              phone: true,
+            },
+          },
+        },
+        orderBy: {
+          nextMaintenance: 'asc',
+        },
+        take: 10,
+      }),
+
+      // Recent maintenances (last 5)
+      prisma.maintenance.findMany({
+        where: {
+          user: {
+            id: userId,
+          },
+        },
+        include: {
+          heater: {
+            include: {
+              customer: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          date: 'desc',
+        },
+        take: 5,
       }),
     ]);
 
@@ -72,6 +130,8 @@ export async function GET() {
         totalHeaters,
         overdueMaintenances,
         upcomingMaintenances,
+        upcomingMaintenancesList,
+        recentMaintenances,
       },
     });
 

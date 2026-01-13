@@ -2,18 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
-
-// Validation schema for creating a heater
-const createHeaterSchema = z.object({
-  customerId: z.string().uuid('Ungültige Kunden-ID'),
-  model: z.string().min(1, 'Modell ist erforderlich').max(100, 'Modell zu lang'),
-  serialNumber: z.string().max(100, 'Seriennummer zu lang').optional().nullable(),
-  installationDate: z.string().datetime('Ungültiges Installationsdatum').optional().nullable(),
-  maintenanceInterval: z.enum(['1', '3', '6', '12', '24'], {
-    message: 'Wartungsintervall muss 1, 3, 6, 12 oder 24 Monate sein'
-  }),
-  lastMaintenance: z.string().datetime('Ungültiges Wartungsdatum').optional().nullable(),
-});
+import { Prisma } from '@prisma/client';
+import { heaterCreateSchema } from '@/lib/validations';
+import { rateLimitByUser, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 
 /**
  * POST /api/heaters
@@ -24,23 +15,31 @@ export async function POST(request: NextRequest) {
     // 1. Authenticate user
     const { userId } = await requireAuth();
 
-    // 2. Parse and validate request body
+    // 2. Rate limiting
+    const rateLimitResponse = rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER);
+    if (rateLimitResponse) {
+      return rateLimitResponse;
+    }
+
+    // 3. Parse and validate request body
     const body = await request.json();
-    const validatedData = createHeaterSchema.parse(body);
+    const validatedData = heaterCreateSchema.parse(body);
 
-    // 3. Verify customer belongs to user
-    const customer = await prisma.customer.findUnique({
-      where: {
-        id: validatedData.customerId,
-        userId: userId,
-      },
-    });
+    // 3. Verify customer belongs to user (if customerId provided)
+    if (validatedData.customerId) {
+      const customer = await prisma.customer.findUnique({
+        where: {
+          id: validatedData.customerId,
+          userId: userId,
+        },
+      });
 
-    if (!customer) {
-      return NextResponse.json({
-        success: false,
-        error: 'Kunde nicht gefunden',
-      }, { status: 404 });
+      if (!customer) {
+        return NextResponse.json({
+          success: false,
+          error: 'Kunde nicht gefunden',
+        }, { status: 404 });
+      }
     }
 
     // 4. Calculate next maintenance date
@@ -55,21 +54,39 @@ export async function POST(request: NextRequest) {
     // 5. Create heater
     const heater = await prisma.heater.create({
       data: {
-        customerId: validatedData.customerId,
+        userId: userId, // Owner of the heater
+        customerId: validatedData.customerId || null,
         model: validatedData.model,
         serialNumber: validatedData.serialNumber || null,
         installationDate: validatedData.installationDate ? new Date(validatedData.installationDate) : null,
         maintenanceInterval: interval,
         lastMaintenance: lastMaintenance,
         nextMaintenance: nextMaintenance,
+        requiredParts: validatedData.requiredParts || null,
+
+        // Heating System Information
+        heaterType: validatedData.heaterType || null,
+        manufacturer: validatedData.manufacturer || null,
+
+        // Heat Storage
+        hasStorage: validatedData.hasStorage || false,
+        storageManufacturer: validatedData.storageManufacturer || null,
+        storageModel: validatedData.storageModel || null,
+        storageCapacity: validatedData.storageCapacity || null,
+
+        // Battery
+        hasBattery: validatedData.hasBattery || false,
+        batteryManufacturer: validatedData.batteryManufacturer || null,
+        batteryModel: validatedData.batteryModel || null,
+        batteryCapacity: validatedData.batteryCapacity || null,
       },
       include: {
-        customer: {
+        customer: validatedData.customerId ? {
           select: {
             id: true,
             name: true,
           },
-        },
+        } : false,
       },
     });
 
@@ -101,62 +118,97 @@ export async function POST(request: NextRequest) {
     console.error('Error creating heater:', error);
     return NextResponse.json({
       success: false,
-      error: 'Fehler beim Erstellen der Heizung',
+      error: 'Fehler beim Erstellen des Heizsystems',
     }, { status: 500 });
   }
 }
 
 /**
- * GET /api/heaters?customerId=xxx
- * Get all heaters for a customer
+ * GET /api/heaters?customerId=xxx&search=xxx
+ * Get heaters - optionally filtered by customer or search query
  */
 export async function GET(request: NextRequest) {
   try {
     // 1. Authenticate user
     const { userId } = await requireAuth();
 
-    // 2. Get customer ID from query params
+    // 2. Get query params
     const searchParams = request.nextUrl.searchParams;
     const customerId = searchParams.get('customerId');
+    const search = searchParams.get('search') || '';
 
-    if (!customerId) {
-      return NextResponse.json({
-        success: false,
-        error: 'Kunden-ID fehlt',
-      }, { status: 400 });
-    }
+    // 3. Build where clause
+    const where: Prisma.HeaterWhereInput = {
+      userId: userId, // Filter by heater owner
+      ...(customerId && { customerId }), // Add customerId if provided
+      ...(search && {
+        OR: [
+          { model: { contains: search, mode: 'insensitive' as const } },
+          { serialNumber: { contains: search, mode: 'insensitive' as const } },
+          {
+            customer: {
+              is: {
+                name: { contains: search, mode: 'insensitive' as const }
+              }
+            }
+          },
+          {
+            customer: {
+              is: {
+                city: { contains: search, mode: 'insensitive' as const }
+              }
+            }
+          },
+        ],
+      }),
+    };
 
-    // 3. Verify customer belongs to user
-    const customer = await prisma.customer.findUnique({
-      where: {
-        id: customerId,
-        userId: userId,
-      },
-    });
+    // If customerId provided, verify customer belongs to user
+    if (customerId) {
+      const customer = await prisma.customer.findUnique({
+        where: {
+          id: customerId,
+          userId: userId,
+        },
+      });
 
-    if (!customer) {
-      return NextResponse.json({
-        success: false,
-        error: 'Kunde nicht gefunden',
-      }, { status: 404 });
+      if (!customer) {
+        return NextResponse.json({
+          success: false,
+          error: 'Kunde nicht gefunden',
+        }, { status: 404 });
+      }
     }
 
     // 4. Fetch heaters
     const heaters = await prisma.heater.findMany({
-      where: {
-        customerId: customerId,
-      },
+      where,
       include: {
-        maintenances: {
+        customer: {
+          select: {
+            id: true,
+            name: true,
+            street: true,
+            city: true,
+            phone: true,
+          },
+        },
+        _count: {
+          select: {
+            maintenances: true,
+          },
+        },
+        maintenances: customerId ? {
           orderBy: {
             date: 'desc',
           },
-          take: 5, // Last 5 maintenances
-        },
+          take: 5, // Last 5 maintenances (only when viewing single customer)
+        } : false,
       },
-      orderBy: {
-        nextMaintenance: 'asc', // Soonest first
-      },
+      orderBy: [
+        { nextMaintenance: 'asc' }, // Soonest maintenance first
+        { customer: { name: 'asc' } },
+      ],
     });
 
     // 5. Return heaters
@@ -178,7 +230,7 @@ export async function GET(request: NextRequest) {
     console.error('Error fetching heaters:', error);
     return NextResponse.json({
       success: false,
-      error: 'Fehler beim Laden der Heizungen',
+      error: 'Fehler beim Laden der Heizsysteme',
     }, { status: 500 });
   }
 }

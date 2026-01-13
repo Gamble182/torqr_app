@@ -1,0 +1,959 @@
+{
+  "heating_categories": [
+    {
+      "category": "Gasheizung",
+      "manufacturers": [
+        {
+          "manufacturer": "Vaillant",
+          "models": [
+            "ecoTEC plus VCW 1-5",
+            "ecoTEC exclusive",
+            "ecoTEC pro",
+            "ecoCompact"
+          ]
+        },
+        {
+          "manufacturer": "Viessmann",
+          "models": [
+            "Vitodens 200-W",
+            "Vitodens 300-W",
+            "Vitodens 050-W",
+            "Vitodens 100-W"
+          ]
+        },
+        {
+          "manufacturer": "Buderus",
+          "models": [
+            "Logamax plus GB272",
+            "Logano plus KB372",
+            "Logano plus SB745",
+            "Logamax plus GB192i"
+          ]
+        },
+        {
+          "manufacturer": "Junkers Bosch",
+          "models": [
+            "Condens GC9000iW",
+            "Cerapur",
+            "Ceramini",
+            "Cerastar Comfort"
+          ]
+        },
+        {
+          "manufacturer": "Wolf",
+          "models": [
+            "CGB-2",
+            "CGW-2",
+            "CGS-2"
+          ]
+        },
+        {
+          "manufacturer": "Brötje",
+          "models": [
+            "WGB EVO",
+            "WGB-M EVO",
+            "WGB-K EVO",
+            "WGB-U",
+            "WGB-C",
+            "WMS",
+            "WMC",
+            "BGB EVO",
+            "SGB",
+            "BBS EVO",
+            "BBK EVO"
+          ]
+        },
+        {
+          "manufacturer": "Weishaupt",
+          "models": [
+            "Thermo Condens WTC-GW",
+            "Thermo Condens WTC-GB",
+            "WTC-OB"
+          ]
+        },
+        {
+          "manufacturer": "Remeha",
+          "models": [
+            "Tzerra",
+            "Calenta"
+          ]
+        },
+        {
+          "manufacturer": "MHG Heiztechnik",
+          "models": [
+            "Procon E"
+          ]
+        },
+        {
+          "manufacturer": "ELCO",
+          "models": [
+            "Thision S",
+            "Thision L"
+          ]
+        },
+        {
+          "manufacturer": "Rotex",
+          "models": [
+            "GW",
+            "GB"
+          ]
+        },
+        {
+          "manufacturer": "Stiebel Eltron",
+          "models": [
+            "WGB Gasthermen"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Ölheizung",
+      "manufacturers": [
+        {
+          "manufacturer": "Viessmann",
+          "models": [
+            "Vitorondens 200-T",
+            "Vitoladens 300-C"
+          ]
+        },
+        {
+          "manufacturer": "Buderus",
+          "models": [
+            "Logano plus SB105",
+            "Logano plus KB195"
+          ]
+        },
+        {
+          "manufacturer": "Brötje",
+          "models": [
+            "EcoTherm Plus WBS",
+            "NovoCondens SOB"
+          ]
+        },
+        {
+          "manufacturer": "Vaillant",
+          "models": [
+            "icoVIT"
+          ]
+        },
+        {
+          "manufacturer": "Wolf",
+          "models": [
+            "COB",
+            "TOB"
+          ]
+        },
+        {
+          "manufacturer": "Weishaupt",
+          "models": [
+            "WTC-OB"
+          ]
+        },
+        {
+          "manufacturer": "Remeha",
+          "models": [
+            "Condens Oil"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Luft/Wasser-Wärmepumpe",
+      "manufacturers": [
+        {
+          "manufacturer": "alpha innotec",
+          "models": [
+            "alira",
+            "alterra"
+          ]
+        },
+        {
+          "manufacturer": "Bosch",
+          "models": [
+            "Compress 5800i AW",
+            "Compress 7000i AW"
+          ]
+        },
+        {
+          "manufacturer": "Brötje",
+          "models": [
+            "WLS"
+          ]
+        },
+        {
+          "manufacturer": "Buderus",
+          "models": [
+            "Logatherm WLW186i AR",
+            "Logatherm WLW196i AR",
+            "Logatherm WLW276",
+            "Logatherm WLW MBE+ AR",
+            "Compress 7000i AW",
+            "Compress 8800i AW"
+          ]
+        },
+        {
+          "manufacturer": "Carrier",
+          "models": [
+            "Aquasnap"
+          ]
+        },
+        {
+          "manufacturer": "Daikin",
+          "models": [
+            "Altherma 4 H",
+            "Altherma 4 HS-S+",
+            "Altherma 4 X",
+            "Altherma 3 R",
+            "Altherma 3 R MT",
+            "Altherma 3 M",
+            "Altherma 3 H",
+            "Altherma 3 H HT"
+          ]
+        },
+        {
+          "manufacturer": "Dimplex",
+          "models": [
+            "LA",
+            "LIK",
+            "System E"
+          ]
+        },
+        {
+          "manufacturer": "Guangdong New Energy",
+          "models": [
+            "OEM Models"
+          ]
+        },
+        {
+          "manufacturer": "Hitachi",
+          "models": [
+            "Yutaki"
+          ]
+        },
+        {
+          "manufacturer": "iDM",
+          "models": [
+            "TERRA",
+            "AERO"
+          ]
+        },
+        {
+          "manufacturer": "Kermi",
+          "models": [
+            "x-change dynamic pro M",
+            "x-change dynamic pro L"
+          ]
+        },
+        {
+          "manufacturer": "LG",
+          "models": [
+            "Therma V"
+          ]
+        },
+        {
+          "manufacturer": "Midea",
+          "models": [
+            "M-Thermal"
+          ]
+        },
+        {
+          "manufacturer": "Mitsubishi Electric",
+          "models": [
+            "Ecodan",
+            "Zubadan"
+          ]
+        },
+        {
+          "manufacturer": "NEWNTIDE",
+          "models": [
+            "NEWNTIDE Air Source Heat Pump"
+          ]
+        },
+        {
+          "manufacturer": "NIBE",
+          "models": [
+            "F2120",
+            "F2030",
+            "F2040",
+            "S1156",
+            "S1256"
+          ]
+        },
+        {
+          "manufacturer": "Ochsner",
+          "models": [
+            "Air Eco",
+            "Air Hawk"
+          ]
+        },
+        {
+          "manufacturer": "Panasonic",
+          "models": [
+            "Aquarea",
+            "Aquarea T-CAP",
+            "Aquarea J"
+          ]
+        },
+        {
+          "manufacturer": "Phnix",
+          "models": [
+            "Phnix Heat Pump"
+          ]
+        },
+        {
+          "manufacturer": "Samsung",
+          "models": [
+            "EHS Mono"
+          ]
+        },
+        {
+          "manufacturer": "Solarfocus",
+          "models": [
+            "VampAir Pro 20"
+          ]
+        },
+        {
+          "manufacturer": "SPRSUN",
+          "models": [
+            "DC Inverter R290",
+            "DC Inverter R32"
+          ]
+        },
+        {
+          "manufacturer": "Stiebel Eltron",
+          "models": [
+            "WPL-A",
+            "WPL-E",
+            "WPL classic"
+          ]
+        },
+        {
+          "manufacturer": "tecalor",
+          "models": [
+            "TTL",
+            "TTA"
+          ]
+        },
+        {
+          "manufacturer": "Toshiba",
+          "models": [
+            "Estia"
+          ]
+        },
+        {
+          "manufacturer": "Vaillant",
+          "models": [
+            "aroTHERM plus",
+            "aroTHERM plus VWL 125/6 A",
+            "aroTHERM plus VWL 155/6 A",
+            "aroTHERM plus VWL 195/6 A"
+          ]
+        },
+        {
+          "manufacturer": "Viessmann",
+          "models": [
+            "Vitocal 250-A",
+            "Vitocal 150-A",
+            "Vitocal 300-A",
+            "Vitocal 350-A",
+            "Vitocal 200-A",
+            "Vitocal 262-A"
+          ]
+        },
+        {
+          "manufacturer": "Waterkotte",
+          "models": [
+            "Ai1 Air",
+            "Ai1 Geo"
+          ]
+        },
+        {
+          "manufacturer": "Wolf",
+          "models": [
+            "CHA-07 Monoblock",
+            "CHA-10 Monoblock",
+            "CHA-16/20 Monoblock",
+            "CHA-20/24 Monoblock",
+            "BWL-1S(B) Split"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Sole/Wasser-Wärmepumpe (Erdwärme)",
+      "manufacturers": [
+        {
+          "manufacturer": "Viessmann",
+          "models": [
+            "Vitocal 222-G",
+            "Vitocal 200-G",
+            "Vitocal 300-G"
+          ]
+        },
+        {
+          "manufacturer": "Vaillant",
+          "models": [
+            "flexoTHERM exclusive",
+            "geoTHERM"
+          ]
+        },
+        {
+          "manufacturer": "Buderus",
+          "models": [
+            "Logatherm WSW196i"
+          ]
+        },
+        {
+          "manufacturer": "Wolf",
+          "models": [
+            "BWS-1"
+          ]
+        },
+        {
+          "manufacturer": "Stiebel Eltron",
+          "models": [
+            "WPE-I",
+            "WPC"
+          ]
+        },
+        {
+          "manufacturer": "NIBE",
+          "models": [
+            "F1155",
+            "F1255",
+            "S1156",
+            "S1256"
+          ]
+        },
+        {
+          "manufacturer": "Waterkotte",
+          "models": [
+            "EcoTouch"
+          ]
+        },
+        {
+          "manufacturer": "alpha innotec",
+          "models": [
+            "SW"
+          ]
+        },
+        {
+          "manufacturer": "Ochsner",
+          "models": [
+            "Europa"
+          ]
+        },
+        {
+          "manufacturer": "iDM",
+          "models": [
+            "TERRA"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Wasser/Wasser-Wärmepumpe (Grundwasser)",
+      "manufacturers": [
+        {
+          "manufacturer": "Viessmann",
+          "models": [
+            "Vitocal 200-G",
+            "Vitocal 222-G"
+          ]
+        },
+        {
+          "manufacturer": "Wolf",
+          "models": [
+            "BWW-1"
+          ]
+        },
+        {
+          "manufacturer": "Waterkotte",
+          "models": [
+            "EcoTouch"
+          ]
+        },
+        {
+          "manufacturer": "Stiebel Eltron",
+          "models": [
+            "WPW"
+          ]
+        },
+        {
+          "manufacturer": "NIBE",
+          "models": [
+            "F1155",
+            "F1255"
+          ]
+        },
+        {
+          "manufacturer": "alpha innotec",
+          "models": [
+            "WW"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Warmwasser-Wärmepumpe",
+      "manufacturers": [
+        {
+          "manufacturer": "Viessmann",
+          "models": [
+            "Vitocal 060-A",
+            "Vitocal 262-A"
+          ]
+        },
+        {
+          "manufacturer": "Wolf",
+          "models": [
+            "FHS-180",
+            "FHS-280",
+            "FHS-280-HE"
+          ]
+        },
+        {
+          "manufacturer": "Stiebel Eltron",
+          "models": [
+            "WWK",
+            "WPF"
+          ]
+        },
+        {
+          "manufacturer": "Vaillant",
+          "models": [
+            "aroSTOR"
+          ]
+        },
+        {
+          "manufacturer": "Dimplex",
+          "models": [
+            "BWP 30H"
+          ]
+        },
+        {
+          "manufacturer": "alpha innotec",
+          "models": [
+            "BWP"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Pelletheizung",
+      "manufacturers": [
+        {
+          "manufacturer": "ÖkoFEN",
+          "models": [
+            "Pellematic Smart XS",
+            "Pellematic Condens",
+            "Pellematic Maxi"
+          ]
+        },
+        {
+          "manufacturer": "Fröling",
+          "models": [
+            "PE1 Pellet",
+            "P4 Pellet"
+          ]
+        },
+        {
+          "manufacturer": "Hargassner",
+          "models": [
+            "Nano-PK",
+            "Classic-PK",
+            "Eco-PK"
+          ]
+        },
+        {
+          "manufacturer": "KWB",
+          "models": [
+            "Easyfire",
+            "Multifire"
+          ]
+        },
+        {
+          "manufacturer": "ETA Heiztechnik",
+          "models": [
+            "ePE",
+            "eHACK"
+          ]
+        },
+        {
+          "manufacturer": "HDG Bavaria",
+          "models": [
+            "HDG Compact"
+          ]
+        },
+        {
+          "manufacturer": "Windhager",
+          "models": [
+            "BioWIN2",
+            "DuoWIN"
+          ]
+        },
+        {
+          "manufacturer": "Guntamatic",
+          "models": [
+            "Biostar",
+            "Powerchip"
+          ]
+        },
+        {
+          "manufacturer": "Paradigma",
+          "models": [
+            "Pelletti"
+          ]
+        },
+        {
+          "manufacturer": "Viessmann",
+          "models": [
+            "Vitoligno 300-P"
+          ]
+        },
+        {
+          "manufacturer": "Wolf",
+          "models": []
+        },
+        {
+          "manufacturer": "Solarbayer",
+          "models": []
+        },
+        {
+          "manufacturer": "Solarfocus",
+          "models": [
+            "pelletsmart",
+            "pelletelegance"
+          ]
+        },
+        {
+          "manufacturer": "Biotech",
+          "models": []
+        },
+        {
+          "manufacturer": "Herz",
+          "models": []
+        },
+        {
+          "manufacturer": "Atmos",
+          "models": [
+            "P"
+          ]
+        },
+        {
+          "manufacturer": "Extraflame",
+          "models": []
+        },
+        {
+          "manufacturer": "Gruppo Piazzetta",
+          "models": []
+        },
+        {
+          "manufacturer": "Edilkamin",
+          "models": []
+        },
+        {
+          "manufacturer": "HAAS+SOHN",
+          "models": []
+        }
+      ]
+    },
+    {
+      "category": "Scheitholz/Holzvergaser",
+      "manufacturers": [
+        {
+          "manufacturer": "Fröling",
+          "models": [
+            "S4 Turbo",
+            "S1 Turbo"
+          ]
+        },
+        {
+          "manufacturer": "Atmos",
+          "models": [
+            "DC",
+            "GSE"
+          ]
+        },
+        {
+          "manufacturer": "Viessmann",
+          "models": [
+            "Vitoligno 150-S",
+            "Vitoligno 200-S"
+          ]
+        },
+        {
+          "manufacturer": "HDG",
+          "models": [
+            "FK"
+          ]
+        },
+        {
+          "manufacturer": "ETA",
+          "models": [
+            "SH",
+            "TWIN"
+          ]
+        },
+        {
+          "manufacturer": "Hargassner",
+          "models": [
+            "HSV"
+          ]
+        },
+        {
+          "manufacturer": "Guntamatic",
+          "models": [
+            "BMK"
+          ]
+        },
+        {
+          "manufacturer": "Windhager",
+          "models": [
+            "LogWIN"
+          ]
+        },
+        {
+          "manufacturer": "KWB",
+          "models": [
+            "Classicfire"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Hackschnitzelheizung",
+      "manufacturers": [
+        {
+          "manufacturer": "Fröling",
+          "models": [
+            "T4"
+          ]
+        },
+        {
+          "manufacturer": "HDG",
+          "models": []
+        },
+        {
+          "manufacturer": "Hargassner",
+          "models": [
+            "HSV",
+            "Eco-HK"
+          ]
+        },
+        {
+          "manufacturer": "ETA",
+          "models": [
+            "HACK"
+          ]
+        },
+        {
+          "manufacturer": "Guntamatic",
+          "models": [
+            "Powerchip"
+          ]
+        },
+        {
+          "manufacturer": "Herz",
+          "models": []
+        },
+        {
+          "manufacturer": "KWB",
+          "models": []
+        },
+        {
+          "manufacturer": "Windhager",
+          "models": []
+        }
+      ]
+    },
+    {
+      "category": "Solarthermie",
+      "manufacturers": [
+        {
+          "manufacturer": "Viessmann",
+          "models": [
+            "Vitosol"
+          ]
+        },
+        {
+          "manufacturer": "Vaillant",
+          "models": [
+            "auroTHERM"
+          ]
+        },
+        {
+          "manufacturer": "Buderus",
+          "models": [
+            "Logasol"
+          ]
+        },
+        {
+          "manufacturer": "Wolf",
+          "models": [
+            "TopSon"
+          ]
+        },
+        {
+          "manufacturer": "Paradigma",
+          "models": [
+            "Aqua Plasma",
+            "CPC"
+          ]
+        },
+        {
+          "manufacturer": "Wagner Solar",
+          "models": [
+            "EURO"
+          ]
+        },
+        {
+          "manufacturer": "CitrinSolar",
+          "models": []
+        },
+        {
+          "manufacturer": "Solarfocus",
+          "models": []
+        },
+        {
+          "manufacturer": "Solarbayer",
+          "models": []
+        }
+      ]
+    },
+    {
+      "category": "Brennstoffzellenheizung",
+      "manufacturers": [
+        {
+          "manufacturer": "Viessmann",
+          "models": [
+            "Vitovalor PT2",
+            "Vitovalor PA2"
+          ]
+        },
+        {
+          "manufacturer": "SenerTec",
+          "models": [
+            "Dachs InnoGen"
+          ]
+        },
+        {
+          "manufacturer": "SOLIDpower",
+          "models": [
+            "BlueGEN"
+          ]
+        },
+        {
+          "manufacturer": "Buderus",
+          "models": [
+            "Logapower FC10"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Blockheizkraftwerk (BHKW)",
+      "manufacturers": [
+        {
+          "manufacturer": "SenerTec",
+          "models": [
+            "Dachs",
+            "Dachs Pro 20"
+          ]
+        },
+        {
+          "manufacturer": "Viessmann",
+          "models": [
+            "Vitobloc"
+          ]
+        },
+        {
+          "manufacturer": "Wolf",
+          "models": []
+        },
+        {
+          "manufacturer": "Vaillant",
+          "models": [
+            "ecoPOWER"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Elektroheizung",
+      "manufacturers": [
+        {
+          "manufacturer": "Stiebel Eltron",
+          "models": [
+            "ETS",
+            "ETW"
+          ]
+        },
+        {
+          "manufacturer": "AEG",
+          "models": [
+            "WKL",
+            "WSP"
+          ]
+        },
+        {
+          "manufacturer": "Glen Dimplex",
+          "models": [
+            "Quantum"
+          ]
+        },
+        {
+          "manufacturer": "Vaillant",
+          "models": [
+            "eloSTOR"
+          ]
+        }
+      ]
+    },
+    {
+      "category": "Infrarotheizung",
+      "manufacturers": [
+        {
+          "manufacturer": "Redwell",
+          "models": []
+        },
+        {
+          "manufacturer": "Vitramo",
+          "models": []
+        },
+        {
+          "manufacturer": "Knebel",
+          "models": []
+        },
+        {
+          "manufacturer": "Elbo-therm",
+          "models": []
+        }
+      ]
+    },
+    {
+      "category": "Fernwärme-Hausstation",
+      "manufacturers": [
+        {
+          "manufacturer": "Danfoss",
+          "models": []
+        },
+        {
+          "manufacturer": "Viessmann",
+          "models": []
+        },
+        {
+          "manufacturer": "Wolf",
+          "models": [
+            "CAT-2",
+            "CAT-2-Convert"
+          ]
+        },
+        {
+          "manufacturer": "PAW",
+          "models": []
+        }
+      ]
+    }
+  ]
+}

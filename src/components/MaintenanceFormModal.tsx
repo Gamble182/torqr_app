@@ -9,6 +9,7 @@ import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { XIcon, CameraIcon, TrashIcon, Loader2Icon } from 'lucide-react';
 import { uploadMaintenancePhoto } from '@/lib/supabase';
+import { z } from 'zod';
 
 interface MaintenanceFormModalProps {
   heaterId: string;
@@ -158,8 +159,8 @@ export function MaintenanceFormModal({
       } else {
         if (result.details) {
           const apiErrors: FormErrors = {};
-          result.details.forEach((error: any) => {
-            const field = error.path[0];
+          result.details.forEach((error: z.ZodIssue) => {
+            const field = error.path[0] as string;
             apiErrors[field] = error.message;
           });
           setErrors(apiErrors);
@@ -211,6 +212,7 @@ export function MaintenanceFormModal({
                 type="date"
                 value={formData.date}
                 onChange={handleChange}
+                max={new Date().toISOString().split('T')[0]}
                 className={errors.date ? 'border-red-500' : ''}
               />
               {errors.date && (

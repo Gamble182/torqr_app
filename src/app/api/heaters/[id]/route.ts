@@ -2,17 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
-
-// Validation schema for updating a heater
-const updateHeaterSchema = z.object({
-  model: z.string().min(1, 'Modell ist erforderlich').max(100, 'Modell zu lang').optional(),
-  serialNumber: z.string().max(100, 'Seriennummer zu lang').optional().nullable(),
-  installationDate: z.string().datetime('Ungültiges Installationsdatum').optional().nullable(),
-  maintenanceInterval: z.enum(['1', '3', '6', '12', '24'], {
-    message: 'Wartungsintervall muss 1, 3, 6, 12 oder 24 Monate sein'
-  }).optional(),
-  lastMaintenance: z.string().datetime('Ungültiges Wartungsdatum').optional().nullable(),
-});
+import { heaterUpdateSchema } from '@/lib/validations';
 
 /**
  * GET /api/heaters/:id
@@ -29,13 +19,11 @@ export async function GET(
     // 2. Get heater ID from params
     const { id } = await params;
 
-    // 3. Fetch heater with customer verification
+    // 3. Fetch heater with user verification
     const heater = await prisma.heater.findFirst({
       where: {
         id: id,
-        customer: {
-          userId: userId, // Ensure user owns the customer
-        },
+        userId: userId, // Ensure user owns the heater
       },
       include: {
         customer: {
@@ -58,7 +46,7 @@ export async function GET(
     if (!heater) {
       return NextResponse.json({
         success: false,
-        error: 'Heizung nicht gefunden',
+        error: 'Heizsystem nicht gefunden',
       }, { status: 404 });
     }
 
@@ -81,7 +69,7 @@ export async function GET(
     console.error('Error fetching heater:', error);
     return NextResponse.json({
       success: false,
-      error: 'Fehler beim Laden der Heizung',
+      error: 'Fehler beim Laden des Heizsystems',
     }, { status: 500 });
   }
 }
@@ -105,22 +93,20 @@ export async function PATCH(
     const existingHeater = await prisma.heater.findFirst({
       where: {
         id: id,
-        customer: {
-          userId: userId,
-        },
+        userId: userId,
       },
     });
 
     if (!existingHeater) {
       return NextResponse.json({
         success: false,
-        error: 'Heizung nicht gefunden',
+        error: 'Heizsystem nicht gefunden',
       }, { status: 404 });
     }
 
     // 4. Parse and validate request body
     const body = await request.json();
-    const validatedData = updateHeaterSchema.parse(body);
+    const validatedData = heaterUpdateSchema.parse(body);
 
     // 5. Recalculate next maintenance if interval or lastMaintenance changed
     let nextMaintenance = existingHeater.nextMaintenance;
@@ -144,6 +130,7 @@ export async function PATCH(
         id: id,
       },
       data: {
+        ...(validatedData.customerId !== undefined && { customerId: validatedData.customerId }),
         ...(validatedData.model && { model: validatedData.model }),
         ...(validatedData.serialNumber !== undefined && { serialNumber: validatedData.serialNumber }),
         ...(validatedData.installationDate !== undefined && {
@@ -155,6 +142,24 @@ export async function PATCH(
         ...(validatedData.lastMaintenance !== undefined && {
           lastMaintenance: validatedData.lastMaintenance ? new Date(validatedData.lastMaintenance) : null
         }),
+        ...(validatedData.requiredParts !== undefined && { requiredParts: validatedData.requiredParts }),
+
+        // Heating System Information
+        ...(validatedData.heaterType !== undefined && { heaterType: validatedData.heaterType }),
+        ...(validatedData.manufacturer !== undefined && { manufacturer: validatedData.manufacturer }),
+
+        // Heat Storage
+        ...(validatedData.hasStorage !== undefined && { hasStorage: validatedData.hasStorage }),
+        ...(validatedData.storageManufacturer !== undefined && { storageManufacturer: validatedData.storageManufacturer }),
+        ...(validatedData.storageModel !== undefined && { storageModel: validatedData.storageModel }),
+        ...(validatedData.storageCapacity !== undefined && { storageCapacity: validatedData.storageCapacity }),
+
+        // Battery
+        ...(validatedData.hasBattery !== undefined && { hasBattery: validatedData.hasBattery }),
+        ...(validatedData.batteryManufacturer !== undefined && { batteryManufacturer: validatedData.batteryManufacturer }),
+        ...(validatedData.batteryModel !== undefined && { batteryModel: validatedData.batteryModel }),
+        ...(validatedData.batteryCapacity !== undefined && { batteryCapacity: validatedData.batteryCapacity }),
+
         nextMaintenance: nextMaintenance,
       },
     });
@@ -187,7 +192,7 @@ export async function PATCH(
     console.error('Error updating heater:', error);
     return NextResponse.json({
       success: false,
-      error: 'Fehler beim Aktualisieren der Heizung',
+      error: 'Fehler beim Aktualisieren des Heizsystems',
     }, { status: 500 });
   }
 }
@@ -211,16 +216,14 @@ export async function DELETE(
     const existingHeater = await prisma.heater.findFirst({
       where: {
         id: id,
-        customer: {
-          userId: userId,
-        },
+        userId: userId,
       },
     });
 
     if (!existingHeater) {
       return NextResponse.json({
         success: false,
-        error: 'Heizung nicht gefunden',
+        error: 'Heizsystem nicht gefunden',
       }, { status: 404 });
     }
 
@@ -234,7 +237,7 @@ export async function DELETE(
     // 5. Return success
     return NextResponse.json({
       success: true,
-      message: 'Heizung erfolgreich gelöscht',
+      message: 'Heizsystem erfolgreich gelöscht',
     });
 
   } catch (error) {
@@ -250,7 +253,7 @@ export async function DELETE(
     console.error('Error deleting heater:', error);
     return NextResponse.json({
       success: false,
-      error: 'Fehler beim Löschen der Heizung',
+      error: 'Fehler beim Löschen des Heizsystems',
     }, { status: 500 });
   }
 }
