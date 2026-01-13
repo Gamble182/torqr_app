@@ -12,15 +12,19 @@ import {
   MapPinIcon,
   PhoneIcon,
   ClockIcon,
-  WrenchIcon
+  WrenchIcon,
+  CheckCircle2Icon
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { useDashboardStats } from '@/hooks/useDashboard';
+import { MaintenanceFormModal } from '@/components/MaintenanceFormModal';
+import { Button } from '@/components/ui/button';
 
 export default function DashboardPage() {
   const [timeRange, setTimeRange] = useState(30);
-  const { data: stats, isLoading, error } = useDashboardStats(timeRange);
+  const { data: stats, isLoading, error, refetch } = useDashboardStats(timeRange);
+  const [selectedHeater, setSelectedHeater] = useState<{ id: string; model: string } | null>(null);
 
   if (isLoading) {
     return (
@@ -214,13 +218,15 @@ export default function DashboardPage() {
               {stats.upcomingMaintenancesList.map((maintenance) => {
                 const urgency = getMaintenanceUrgency(maintenance.nextMaintenance);
                 return (
-                  <Link
+                  <div
                     key={maintenance.id}
-                    href={`/dashboard/customers/${maintenance.customer.id}`}
-                    className={`block p-4 rounded-lg border-2 transition-all hover:shadow-md ${getUrgencyStyles(urgency)}`}
+                    className={`p-4 rounded-lg border-2 transition-all ${getUrgencyStyles(urgency)}`}
                   >
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
+                    <div className="flex items-start justify-between gap-4">
+                      <Link
+                        href={`/dashboard/customers/${maintenance.customer.id}`}
+                        className="flex-1 min-w-0 hover:opacity-80 transition-opacity"
+                      >
                         <div className="flex items-center gap-3 mb-2">
                           <h3 className="font-semibold text-foreground">
                             {maintenance.customer.name}
@@ -247,17 +253,30 @@ export default function DashboardPage() {
                             </a>
                           </div>
                         </div>
-                      </div>
-                      <div className="text-right ml-4">
-                        <div className="text-sm font-medium text-foreground">
-                          {format(new Date(maintenance.nextMaintenance), 'dd. MMM yyyy', { locale: de })}
+                      </Link>
+                      <div className="shrink-0 flex flex-col items-end gap-2">
+                        <div className="text-right">
+                          <div className="text-sm font-medium text-foreground">
+                            {format(new Date(maintenance.nextMaintenance), 'dd. MMM yyyy', { locale: de })}
+                          </div>
+                          <div className="text-xs text-muted-foreground mt-1">
+                            {format(new Date(maintenance.nextMaintenance), 'EEEE', { locale: de })}
+                          </div>
                         </div>
-                        <div className="text-xs text-muted-foreground mt-1">
-                          {format(new Date(maintenance.nextMaintenance), 'EEEE', { locale: de })}
-                        </div>
+                        <Button
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedHeater({ id: maintenance.id, model: maintenance.model });
+                          }}
+                          className="bg-green-600 hover:bg-green-700 text-white whitespace-nowrap"
+                        >
+                          <CheckCircle2Icon className="h-4 w-4 mr-2" />
+                          Erledigt
+                        </Button>
                       </div>
                     </div>
-                  </Link>
+                  </div>
                 );
               })}
             </div>
@@ -327,6 +346,19 @@ export default function DashboardPage() {
           )}
         </div>
       </div>
+
+      {/* Quick Maintenance Form Modal */}
+      {selectedHeater && (
+        <MaintenanceFormModal
+          heaterId={selectedHeater.id}
+          heaterModel={selectedHeater.model}
+          onClose={() => setSelectedHeater(null)}
+          onSuccess={() => {
+            setSelectedHeater(null);
+            refetch();
+          }}
+        />
+      )}
     </div>
   );
 }
