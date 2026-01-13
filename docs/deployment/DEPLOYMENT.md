@@ -55,7 +55,7 @@ git push -u origin main
    DATABASE_URL=your_production_database_url
    DIRECT_URL=your_direct_database_url
 
-   # Supabase
+   # Supabase (REQUIRED for build to succeed!)
    NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
    SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
@@ -64,12 +64,20 @@ git push -u origin main
    NEXTAUTH_SECRET=generate_with_openssl_rand_base64_32
    NEXTAUTH_URL=https://your-app.vercel.app
 
+   # JWT Secret (same as NEXTAUTH_SECRET or generate separately)
+   JWT_SECRET=generate_with_openssl_rand_base64_32
+
+   # Cron Secret (for scheduled jobs)
+   CRON_SECRET=generate_with_openssl_rand_base64_32
+
    # Sentry (Optional)
    NEXT_PUBLIC_SENTRY_DSN=your_sentry_dsn
    SENTRY_AUTH_TOKEN=your_sentry_token
    ```
 
-   **Generate NEXTAUTH_SECRET:**
+   **IMPORTANT**: Supabase environment variables MUST be set before deployment, otherwise the build will fail with "supabaseUrl is required" error.
+
+   **Generate Secrets:**
    ```bash
    openssl rand -base64 32
    ```
