@@ -24,10 +24,11 @@
         {
           "manufacturer": "Buderus",
           "models": [
+            "Buderus GB172",
+            "Logamax plus GB192i",
             "Logamax plus GB272",
             "Logano plus KB372",
-            "Logano plus SB745",
-            "Logamax plus GB192i"
+            "Logano plus SB745"
           ]
         },
         {

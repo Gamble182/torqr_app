@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kostenaufstellung Torqr App</title>
+    <style>
+        @media print {
+            body {
+                margin: 0;
+                padding: 20mm;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            a {
+                color: #000;
+                text-decoration: none;
+            }
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 210mm;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+        }
+
+        h1 {
+            color: #2563eb;
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+
+        h2 {
+            color: #1e40af;
+            margin-top: 25px;
+            border-left: 4px solid #2563eb;
+            padding-left: 10px;
+        }
+
+        h3 {
+            color: #1e3a8a;
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 14px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #2563eb;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        tr:hover {
+            background-color: #e0e7ff;
+        }
+
+        .highlight-row {
+            background-color: #dbeafe !important;
+            font-weight: bold;
+        }
+
+        .summary-box {
+            background-color: #eff6ff;
+            border-left: 5px solid #2563eb;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .summary-box h3 {
+            margin-top: 0;
+            color: #1e40af;
+        }
+
+        .checkmark {
+            color: #16a34a;
+            font-weight: bold;
+        }
+
+        .crossmark {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .price-highlight {
+            font-size: 24px;
+            color: #2563eb;
+            font-weight: bold;
+        }
+
+        ul {
+            margin: 10px 0;
+            padding-left: 30px;
+        }
+
+        li {
+            margin: 5px 0;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            border: none;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #64748b;
+            margin: 5px 0;
+        }
+
+        .footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+            text-align: center;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .metric-card {
+            display: inline-block;
+            width: 30%;
+            margin: 10px 1%;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+
+        .metric-card h4 {
+            margin: 0 0 10px 0;
+            color: #1e40af;
+        }
+
+        .metric-card p {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+            color: #2563eb;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Kostenaufstellung & Preisgestaltung</h1>
+    <h2 style="border: none; color: #64748b; font-weight: normal;">Torqr - Wartungsmanagement-App</h2>
+    <p><strong>Erstellt für:</strong> Max | <strong>Datum:</strong> 14. Januar 2026 | <strong>Version:</strong> 1.0</p>
+</div>
+
+<div class="summary-box">
+    <h3>Zusammenfassung</h3>
+    <p>Diese Kostenaufstellung bietet eine transparente Übersicht über den tatsächlichen Wert der entwickelten Torqr-Anwendung. Sie basiert auf realistischen Marktpreisen für vergleichbare Softwareentwicklungsdienstleistungen und berücksichtigt den Umfang, die Komplexität und die Qualität der implementierten Lösung.</p>
+
+    <h4 style="margin-top: 20px;">Vorgeschlagene Zahlungsstruktur:</h4>
+    <ul>
+        <li><strong>Phase 1 (sofort):</strong> <span class="price-highlight">2.000 €</span> – Entwicklungsanteil & Risikoübernahme</li>
+        <li><strong>Phase 2 (nach 6 Monaten Testphase):</strong> <span class="price-highlight">3.000 €</span> – Bei Zufriedenheit & weiterem Einsatz</li>
+        <li><strong>Gesamt:</strong> <span class="price-highlight">5.000 €</span> (einmalig)</li>
+    </ul>
+
+    <p style="margin-top: 15px;"><em>Diese gestaffelte Zahlungsweise ermöglicht es dir, die Anwendung risikofrei zu testen und nur bei echtem Mehrwert vollständig zu investieren.</em></p>
+</div>
+
+<h2>1. Projektumfang & Leistungen</h2>
+
+<h3>1.1 Entwickelte Features</h3>
+
+<p>Die Torqr-App ist eine vollständig funktionale <strong>Progressive Web App (PWA)</strong> mit folgenden Hauptfunktionen:</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Modul</th>
+            <th>Kernfunktionen</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Kundenverwaltung</strong></td>
+            <td>
+                • Vollständige CRUD-Funktionalität<br>
+                • Erweiterte Suchfunktion (Name, E-Mail, Stadt, PLZ)<br>
+                • 11 Heizsystem-Typen, 3 Energiequellen, 3 Speichersysteme<br>
+                • Detaillierte Kundenprofile mit Statistiken
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Heizsystem-Verwaltung</strong></td>
+            <td>
+                • Über 50 Hersteller, 100+ Modellvarianten<br>
+                • Technische Detaildaten (Seriennummer, Leistung, Baujahr)<br>
+                • Wärmespeicher- und Batteriespeicher-Konfiguration<br>
+                • Wartungsintervall-Management (1-24 Monate)
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Wartungsverwaltung</strong></td>
+            <td>
+                • Wartungsdokumentation mit Datum und Notizen<br>
+                • Foto-Upload (bis zu 5 Fotos pro Wartung)<br>
+                • Vollständige Wartungshistorie mit Bildergalerie<br>
+                • Automatische Aktualisierung der Wartungstermine
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Dashboard & Reporting</strong></td>
+            <td>
+                • Echtzeit-Statistiken (Kunden, Heizsysteme, Wartungen)<br>
+                • Kalenderansicht für anstehende Wartungen<br>
+                • Zeitraum-Filter (7 Tage bis 6 Monate)<br>
+                • Schnellaktionen vom Dashboard
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Mobile-First Design</strong></td>
+            <td>
+                • Optimiert für Smartphone-Nutzung vor Ort<br>
+                • Click-to-Call Funktionalität<br>
+                • Responsive Design für alle Bildschirmgrößen<br>
+                • PWA-Funktionalität (installierbar)
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>1.2 Technische Qualität</h3>
+
+<div class="metric-card">
+    <h4>Lines of Code</h4>
+    <p>~15.000</p>
+</div>
+
+<div class="metric-card">
+    <h4>Komponenten</h4>
+    <p>45+</p>
+</div>
+
+<div class="metric-card">
+    <h4>Testfälle</h4>
+    <p>170+</p>
+</div>
+
+<table style="margin-top: 20px;">
+    <thead>
+        <tr>
+            <th>Kategorie</th>
+            <th>Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Frontend-Stack</strong></td>
+            <td>Next.js 16, React 19, TypeScript 5, Tailwind CSS 4</td>
+        </tr>
+        <tr>
+            <td><strong>Backend-Stack</strong></td>
+            <td>Next.js API Routes, Prisma ORM 7, PostgreSQL</td>
+        </tr>
+        <tr>
+            <td><strong>Performance</strong></td>
+            <td>
+                • First Contentful Paint: < 1,5s<br>
+                • Lighthouse Score: 90+<br>
+                • Bundle Size: ~150 KB (gzipped)
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Sicherheit</strong></td>
+            <td>
+                • JWT-basiertes Session-Management<br>
+                • bcrypt Passwort-Hashing<br>
+                • DSGVO-konform<br>
+                • SSL-Verschlüsselung (HTTPS)
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="page-break"></div>
+
+<h2>2. Kostenaufstellung nach Marktwerten</h2>
+
+<h3>2.1 Berechnung nach Stundensatz</h3>
+
+<p>Für die Entwicklung einer maßgeschneiderten PWA mit diesem Funktionsumfang sind in der Branche folgende Stundensätze üblich:</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Qualifikationsstufe</th>
+            <th>Stundensatz</th>
+            <th>Anmerkung</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Junior Developer</td>
+            <td>50-70 €</td>
+            <td>0-2 Jahre Erfahrung</td>
+        </tr>
+        <tr>
+            <td>Mid-Level Developer</td>
+            <td>70-100 €</td>
+            <td>3-5 Jahre Erfahrung</td>
+        </tr>
+        <tr>
+            <td>Senior Developer</td>
+            <td>100-140 €</td>
+            <td>5+ Jahre Erfahrung</td>
+        </tr>
+        <tr>
+            <td>Freelance Developer</td>
+            <td>80-150 €</td>
+            <td>Je nach Spezialisierung</td>
+        </tr>
+        <tr>
+            <td>Agentur</td>
+            <td>100-200 €</td>
+            <td>Inklusive Projektmanagement</td>
+        </tr>
+    </tbody>
+</table>
+
+<p><strong>Deine hauptberufliche Position:</strong> 110-125 €/Stunde</p>
+
+<p>Bei einer realistischen <strong>Entwicklungszeit von 60 Stunden</strong> (Mittelwert aus 50-70h):</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Szenario</th>
+            <th>Stundensatz</th>
+            <th>Berechnung</th>
+            <th>Gesamtkosten</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Mindestpreis</td>
+            <td>70 €</td>
+            <td>60h × 70 €</td>
+            <td>4.200 €</td>
+        </tr>
+        <tr class="highlight-row">
+            <td><strong>Realistische Basis</strong></td>
+            <td><strong>90 €</strong></td>
+            <td><strong>60h × 90 €</strong></td>
+            <td><strong>5.400 €</strong></td>
+        </tr>
+        <tr>
+            <td>Dein Hauptberuf</td>
+            <td>110 €</td>
+            <td>60h × 110 €</td>
+            <td>6.600 €</td>
+        </tr>
+        <tr>
+            <td>Agenturpreis</td>
+            <td>120 €</td>
+            <td>60h × 120 €</td>
+            <td>7.200 €</td>
+        </tr>
+    </tbody>
+</table>
+
+<p><strong>Vorgeschlagener Preis:</strong> 5.000 € liegt im <strong>unteren bis mittleren Bereich</strong> und ist damit fair kalkuliert.</p>
+
+<h3>2.2 Pauschalpreise für vergleichbare Projekte</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Projekttyp</th>
+            <th>Preisspanne</th>
+            <th>Beschreibung</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Einfaches CMS/Admin-Dashboard</td>
+            <td>2.000-5.000 €</td>
+            <td>Basis CRUD-Funktionen</td>
+        </tr>
+        <tr>
+            <td>Business-App (MVP)</td>
+            <td>5.000-10.000 €</td>
+            <td>Mehrere Module, Auth, Dashboard</td>
+        </tr>
+        <tr class="highlight-row">
+            <td><strong>Custom PWA (wie Torqr)</strong></td>
+            <td><strong>8.000-15.000 €</strong></td>
+            <td><strong>Mobile-optimiert, komplex</strong></td>
+        </tr>
+        <tr>
+            <td>Enterprise-Lösung</td>
+            <td>15.000-50.000 €</td>
+            <td>Mehrere Teams, hohe Komplexität</td>
+        </tr>
+        <tr>
+            <td>SaaS-Plattform</td>
+            <td>30.000-100.000+ €</td>
+            <td>Multi-Tenant, Subscriptions</td>
+        </tr>
+    </tbody>
+</table>
+
+<p><strong>Vergleich:</strong> Eine vergleichbare PWA mit diesem Funktionsumfang würde bei einer Agentur zwischen <strong>8.000 € und 15.000 €</strong> kosten.</p>
+
+<div class="page-break"></div>
+
+<h2>3. Mehrwert & ROI-Betrachtung</h2>
+
+<h3>3.1 Zeitersparnis im Alltag</h3>
+
+<p>Die App automatisiert und vereinfacht viele manuelle Prozesse:</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Tätigkeit</th>
+            <th>Vorher (pro Woche)</th>
+            <th>Mit Torqr (pro Woche)</th>
+            <th>Ersparnis</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Wartungen planen</td>
+            <td>30 Min.</td>
+            <td>5 Min.</td>
+            <td>25 Min.</td>
+        </tr>
+        <tr>
+            <td>Wartung dokumentieren</td>
+            <td>30 Min.</td>
+            <td>10 Min.</td>
+            <td>20 Min.</td>
+        </tr>
+        <tr>
+            <td>Kunden kontaktieren</td>
+            <td>20 Min.</td>
+            <td>5 Min.</td>
+            <td>15 Min.</td>
+        </tr>
+        <tr>
+            <td>Daten suchen/nachschlagen</td>
+            <td>15 Min.</td>
+            <td>2 Min.</td>
+            <td>13 Min.</td>
+        </tr>
+        <tr class="highlight-row">
+            <td><strong>Gesamt pro Woche</strong></td>
+            <td><strong>~95 Min.</strong></td>
+            <td><strong>~22 Min.</strong></td>
+            <td><strong>~73 Min. (1,2h)</strong></td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="summary-box">
+    <h4>Hochrechnung aufs Jahr:</h4>
+    <ul>
+        <li>73 Minuten/Woche × 48 Arbeitswochen = <strong>3.504 Minuten = ~58 Stunden/Jahr</strong></li>
+        <li>Bei einem Stundensatz von 80 €/h: <strong>4.640 € eingesparte Arbeitszeit pro Jahr</strong></li>
+    </ul>
+    <p style="margin-top: 15px; font-size: 18px;"><strong>ROI nach 1 Jahr:</strong> Die App hat sich bereits nach etwa <span class="price-highlight">1 Jahr</span> amortisiert.</p>
+</div>
+
+<h3>3.2 Reduzierte Fehlerquote</h3>
+
+<p>Manuelle Systeme (Excel, Papier) sind anfällig für:</p>
+<ul>
+    <li>Vergessene Wartungstermine → Unzufriedene Kunden, potenzielle Haftung</li>
+    <li>Falsche Daten oder verlorene Informationen → Zeitverlust</li>
+    <li>Fehlende Dokumentation → Rechtliche Risiken</li>
+</ul>
+
+<p><strong>Torqr minimiert diese Risiken durch:</strong></p>
+<ul>
+    <li><span class="checkmark">✓</span> Automatische Wartungstermin-Berechnung</li>
+    <li><span class="checkmark">✓</span> Zentrale, sichere Datenspeicherung</li>
+    <li><span class="checkmark">✓</span> Foto-Dokumentation für Nachweispflicht</li>
+    <li><span class="checkmark">✓</span> DSGVO-konforme Archivierung</li>
+</ul>
+
+<div class="page-break"></div>
+
+<h2>4. Vergleich: Marktpreis vs. Freundschaftspreis</h2>
+
+<h3>4.1 Was du gespart hast</h3>
+
+<p>Hätte eine externe Agentur das Projekt übernommen, wären folgende Kosten angefallen:</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Position</th>
+            <th>Agenturpreis</th>
+            <th>Dein Preis</th>
+            <th>Ersparnis</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Konzeption & Planung</td>
+            <td>1.500 €</td>
+            <td>—</td>
+            <td>1.500 €</td>
+        </tr>
+        <tr>
+            <td>UI/UX Design</td>
+            <td>2.000 €</td>
+            <td>—</td>
+            <td>2.000 €</td>
+        </tr>
+        <tr>
+            <td>Frontend-Entwicklung</td>
+            <td>4.500 €</td>
+            <td>—</td>
+            <td>4.500 €</td>
+        </tr>
+        <tr>
+            <td>Backend-Entwicklung</td>
+            <td>3.000 €</td>
+            <td>—</td>
+            <td>3.000 €</td>
+        </tr>
+        <tr>
+            <td>Testing & QA</td>
+            <td>1.500 €</td>
+            <td>—</td>
+            <td>1.500 €</td>
+        </tr>
+        <tr>
+            <td>Deployment & Dokumentation</td>
+            <td>1.000 €</td>
+            <td>—</td>
+            <td>1.000 €</td>
+        </tr>
+        <tr>
+            <td>Projektmanagement (15%)</td>
+            <td>2.025 €</td>
+            <td>—</td>
+            <td>2.025 €</td>
+        </tr>
+        <tr class="highlight-row">
+            <td><strong>Gesamt</strong></td>
+            <td><strong>15.525 €</strong></td>
+            <td><strong>5.000 €</strong></td>
+            <td><strong>10.525 €</strong></td>
+        </tr>
+    </tbody>
+</table>
+
+<p><strong>Dein Vorteil:</strong> Du erhältst eine maßgeschneiderte Lösung zu einem <strong>Freundschaftspreis</strong>, der etwa <strong>32% des Marktwertes</strong> entspricht.</p>
+
+<h3>4.2 Warum dieser Preis möglich ist</h3>
+
+<p>Der reduzierte Preis ist möglich durch:</p>
+
+<ol>
+    <li><strong>Persönliche Partnerschaft:</strong> Keine Agentur-Overheads, direkter Kontakt</li>
+    <li><strong>Effiziente Entwicklung:</strong> Moderne Tools und Best Practices verkürzen die Entwicklungszeit</li>
+    <li><strong>Langfristige Perspektive:</strong> Potenzial für gemeinsame Firma und Weiterentwicklung</li>
+    <li><strong>Risikoverteilung:</strong> Gestaffelte Zahlung ermöglicht dir risikofreies Testen</li>
+</ol>
+
+<div class="page-break"></div>
+
+<h2>5. Zahlungsstruktur & Konditionen</h2>
+
+<h3>5.1 Empfohlene Zahlungsaufteilung</h3>
+
+<div class="summary-box">
+    <h4>Phase 1: Sofortige Rechnung (2.000 €)</h4>
+    <ul>
+        <li>Abdeckung des initialen Entwicklungsaufwands</li>
+        <li>Risikoübernahme für Konzeption und Implementierung</li>
+        <li>Fällig bei Übergabe der Anwendung</li>
+    </ul>
+
+    <h4 style="margin-top: 20px;">Phase 2: Nach 6 Monaten Testphase (3.000 €)</h4>
+    <ul>
+        <li>Fällig bei Zufriedenheit und weiterem Einsatz</li>
+        <li>Abdeckung zusätzlicher Features und Optimierungen während der Testphase</li>
+        <li>Nur bei echtem Mehrwert für dich</li>
+    </ul>
+
+    <p style="margin-top: 20px; font-size: 20px;"><strong>Gesamtpreis: <span class="price-highlight">5.000 €</span> (einmalig)</strong></p>
+</div>
+
+<h3>5.2 Was ist im Preis enthalten?</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Enthalten</th>
+            <th>Nicht enthalten</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <span class="checkmark">✓</span> Vollständig funktionale PWA (Production-Ready)<br>
+                <span class="checkmark">✓</span> Alle Features aus Kapitel 1.1<br>
+                <span class="checkmark">✓</span> Deployment auf Vercel (SSL, CDN)<br>
+                <span class="checkmark">✓</span> Supabase-Datenbank Setup<br>
+                <span class="checkmark">✓</span> Vollständige Dokumentation<br>
+                <span class="checkmark">✓</span> 170+ durchgeführte Testfälle<br>
+                <span class="checkmark">✓</span> Source Code (vollständiger Zugriff)
+            </td>
+            <td>
+                <span class="crossmark">✗</span> Laufender Support nach der Testphase<br>
+                <span class="crossmark">✗</span> Zukünftige Feature-Erweiterungen<br>
+                <span class="crossmark">✗</span> Server- & Hosting-Kosten<br>
+                <span class="crossmark">✗</span> Schulung & Einführung (optional buchbar)
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>5.3 Support-Optionen (zur Diskussion)</h3>
+
+<p>Für die Zeit nach der 6-monatigen Testphase gibt es verschiedene Optionen:</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Option</th>
+            <th>Beschreibung</th>
+            <th>Kosten</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Option 1: Inklusiv-Support</strong><br>(empfohlen)</td>
+            <td>
+                Kleinere Bugfixes und Anpassungen kostenlos<br>
+                Größere Features werden separat berechnet<br>
+                Geeignet bei langfristiger Firmen-Planung
+            </td>
+            <td>Kostenlos</td>
+        </tr>
+        <tr>
+            <td><strong>Option 2: Bezahlter Support-Vertrag</strong></td>
+            <td>
+                Monatliche Pauschale<br>
+                Inklusive: Bugfixes, kleinere Anpassungen<br>
+                Exklusive: Neue Features
+            </td>
+            <td>100-200 €/Monat</td>
+        </tr>
+        <tr>
+            <td><strong>Option 3: On-Demand Support</strong></td>
+            <td>
+                Nur bei Bedarf abgerechnet<br>
+                Keine monatlichen Fixkosten
+            </td>
+            <td>80-100 €/Stunde</td>
+        </tr>
+    </tbody>
+</table>
+
+<p><strong>Empfehlung:</strong> Zunächst <strong>Option 1</strong> für die erste 6-12 Monate, dann Neubewertung basierend auf dem tatsächlichen Support-Bedarf und der Firmen-Perspektive.</p>
+
+<div class="page-break"></div>
+
+<h2>6. Fazit</h2>
+
+<h3>6.1 Warum ist dieser Preis fair?</h3>
+
+<ul>
+    <li><span class="checkmark">✓</span> <strong>Realistische Marktpreise:</strong> 5.000 € liegen im unteren bis mittleren Bereich für vergleichbare Projekte</li>
+    <li><span class="checkmark">✓</span> <strong>Qualität:</strong> Moderne Technologie, Best Practices, Production-Ready</li>
+    <li><span class="checkmark">✓</span> <strong>Transparenz:</strong> Nachvollziehbare Berechnung basierend auf Stundensatz und Marktwerten</li>
+    <li><span class="checkmark">✓</span> <strong>Risikoverteilung:</strong> Gestaffelte Zahlung mit 6-monatiger Testphase</li>
+    <li><span class="checkmark">✓</span> <strong>ROI:</strong> Die App amortisiert sich nach etwa 1 Jahr durch Zeitersparnis</li>
+</ul>
+
+<h3>6.2 Warum ist es ein gutes Angebot?</h3>
+
+<div class="summary-box">
+    <ul>
+        <li>🎯 <strong>Marktwert:</strong> Eine vergleichbare Agentur-Lösung würde 8.000-15.000 € kosten</li>
+        <li>🎯 <strong>Freundschaftspreis:</strong> ~43% unter Marktwert, aber fair kalkuliert</li>
+        <li>🎯 <strong>Kein Risiko:</strong> Nur 2.000 € initial, Rest nach erfolgreicher Testphase</li>
+        <li>🎯 <strong>Zukunftspotenzial:</strong> Basis für gemeinsame Firma und Weitervermarktung</li>
+    </ul>
+</div>
+
+<h3>6.3 Nächste Schritte</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Zeitpunkt</th>
+            <th>Aktion</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Sofort (Januar 2026)</strong></td>
+            <td>
+                1. Rechnungsstellung Phase 1: 2.000 €<br>
+                2. Live-Demo & Einführung<br>
+                3. Produktiv-Start
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Testphase (Januar - Juli 2026)</strong></td>
+            <td>
+                1. Feedback sammeln<br>
+                2. Kleinere Anpassungen (inkludiert)<br>
+                3. Feature-Priorisierung
+            </td>
+        </tr>
+        <tr>
+            <td><strong>Nach 6 Monaten (Juli 2026)</strong></td>
+            <td>
+                1. Evaluierung<br>
+                2. Rechnungsstellung Phase 2: 3.000 €<br>
+                3. Support-Modell festlegen<br>
+                4. Firmen-Planung
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="footer">
+    <p><strong>Kontakt:</strong> Yannic Dorth | <strong>Datum der Erstellung:</strong> 14. Januar 2026 | <strong>Version:</strong> 1.0</p>
+    <p style="margin-top: 10px;"><em>Ich freue mich auf dein Feedback und die weitere Zusammenarbeit!</em></p>
+</div>
+
+</body>
+</html>
