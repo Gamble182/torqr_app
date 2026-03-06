@@ -11,6 +11,7 @@ interface PaginationProps {
   itemsPerPage?: number;
 }
 
+
 export function Pagination({
   currentPage,
   totalPages,
