@@ -231,3 +231,23 @@ enum CronStatus {
   SUCCESS
   FAILED
 }
+
+// ============================================================================
+// LOGIN ACTIVITY LOG
+// ============================================================================
+
+model LoginLog {
+  id         String   @id @default(uuid())
+  email      String
+  userId     String?  // null if login failed (user not found)
+  success    Boolean
+  reason     String?  // "invalid_password", "user_not_found", "validation_error"
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@index([email])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("login_logs")
+}

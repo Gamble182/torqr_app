@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "postinstall": "prisma generate",
-    "migrate:deploy": "prisma migrate deploy --config=config/prisma.config.ts"
+    "migrate:deploy": "prisma migrate deploy --config=config/prisma.config.ts",
+    "logs": "npx tsx --env-file=.env scripts/login-logs.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

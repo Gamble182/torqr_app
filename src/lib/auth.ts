@@ -1,10 +1,9 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { z } from 'zod';
+import { headers } from 'next/headers';
 import { prisma } from './prisma';
 import { verifyPassword } from './password';
-// Type imports for future use
-// import type { User as PrismaUser } from '@prisma/client';
 
 // Validation schema for login credentials
 const loginSchema = z.object({
@@ -31,38 +30,58 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials) {
+      async authorize(credentials, request) {
+        const headersList = await headers();
+        const ip = headersList.get('x-forwarded-for')?.split(',')[0].trim()
+          ?? headersList.get('x-real-ip')
+          ?? null;
+        const ua = headersList.get('user-agent') ?? null;
+
+        const log = (args: {
+          email: string;
+          userId?: string;
+          success: boolean;
+          reason?: string;
+        }) =>
+          prisma.loginLog
+            .create({
+              data: {
+                email: args.email,
+                userId: args.userId ?? null,
+                success: args.success,
+                reason: args.reason ?? null,
+                ipAddress: ip,
+                userAgent: ua,
+              },
+            })
+            .catch((e) => console.error('LoginLog write failed:', e));
+
+        let email = '';
         try {
-          // Validate credentials using Zod
           const validatedData = loginSchema.parse(credentials);
+          email = validatedData.email;
+          const { password } = validatedData;
 
-          const { email, password } = validatedData;
-
-          // Find user by email
-          const user = await prisma.user.findUnique({
-            where: { email },
-          });
+          const user = await prisma.user.findUnique({ where: { email } });
 
           if (!user) {
+            await log({ email, success: false, reason: 'user_not_found' });
             return null;
           }
 
-          // Verify password
           const isValidPassword = await verifyPassword(password, user.passwordHash);
 
           if (!isValidPassword) {
+            await log({ email, userId: user.id, success: false, reason: 'invalid_password' });
             return null;
           }
 
-          // Return user object (will be available in JWT callback)
-          return {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-          };
+          await log({ email, userId: user.id, success: true });
+
+          return { id: user.id, email: user.email, name: user.name };
         } catch (error) {
-          // Handle validation errors
           console.error('Login error:', error);
+          await log({ email, success: false, reason: 'validation_error' });
           return null;
         }
       },
