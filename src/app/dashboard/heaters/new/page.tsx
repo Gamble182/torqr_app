@@ -307,8 +307,8 @@ export default function NewHeaterPage() {
           </Button>
         </Link>
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Neues Heizsystem</h1>
-          <p className="mt-2 text-muted-foreground">
+          <h1 className="text-2xl font-semibold text-foreground">Neues Heizsystem</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
             Erstellen Sie ein neues Heizsystem
           </p>
         </div>
@@ -317,7 +317,7 @@ export default function NewHeaterPage() {
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Information */}
-        <div className="bg-card rounded-lg border border-border p-6 space-y-4">
+        <div className="bg-card rounded-xl border border-border p-6 space-y-4">
           <h2 className="text-lg font-semibold text-foreground">Grundinformationen</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -488,7 +488,7 @@ export default function NewHeaterPage() {
         </div>
 
         {/* Maintenance Information */}
-        <div className="bg-card rounded-lg border border-border p-6 space-y-4">
+        <div className="bg-card rounded-xl border border-border p-6 space-y-4">
           <h2 className="text-lg font-semibold text-foreground">Wartungsinformationen</h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -543,7 +543,7 @@ export default function NewHeaterPage() {
         </div>
 
         {/* Heat Storage */}
-        <div className="bg-card rounded-lg border border-border p-6 space-y-4">
+        <div className="bg-card rounded-xl border border-border p-6 space-y-4">
           <div className="flex items-center gap-3">
             <input
               type="checkbox"
@@ -603,7 +603,7 @@ export default function NewHeaterPage() {
         </div>
 
         {/* Battery */}
-        <div className="bg-card rounded-lg border border-border p-6 space-y-4">
+        <div className="bg-card rounded-xl border border-border p-6 space-y-4">
           <div className="flex items-center gap-3">
             <input
               type="checkbox"
@@ -688,18 +688,15 @@ export default function NewHeaterPage() {
 
       {/* Add Entry Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-card rounded-lg border border-border p-6 max-w-md w-full mx-4">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-card rounded-xl border border-border p-6 max-w-sm w-full mx-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-foreground">
                 {getModalTitle()}
               </h3>
-              <button
-                onClick={() => setShowAddModal(false)}
-                className="text-muted-foreground hover:text-foreground"
-              >
-                <XIcon className="h-5 w-5" />
-              </button>
+              <Button variant="ghost" size="icon-sm" onClick={() => setShowAddModal(false)}>
+                <XIcon className="h-4 w-4" />
+              </Button>
             </div>
 
             <div className="space-y-4">

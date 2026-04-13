@@ -167,7 +167,7 @@ export default function MaintenanceDetailPage() {
             Zurück
           </Button>
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Wartungsdetails</h1>
+            <h1 className="text-2xl font-semibold text-foreground">Wartungsdetails</h1>
             <p className="text-sm text-muted-foreground mt-1">
               {format(new Date(maintenance.date), 'dd. MMMM yyyy', { locale: de })}
             </p>
@@ -227,7 +227,7 @@ export default function MaintenanceDetailPage() {
         {/* Main Content */}
         <div className="lg:col-span-2 space-y-6">
           {/* Maintenance Info */}
-          <div className="bg-card shadow-sm rounded-lg border border-border p-6">
+          <div className="bg-card rounded-xl border border-border p-6">
             <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
               <CalendarIcon className="h-5 w-5 text-primary" />
               Wartungsinformationen
@@ -274,7 +274,7 @@ export default function MaintenanceDetailPage() {
 
           {/* Photos */}
           {maintenance.photos && maintenance.photos.length > 0 && (
-            <div className="bg-card shadow-sm rounded-lg border border-border p-6">
+            <div className="bg-card rounded-xl border border-border p-6">
               <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                 <ImageIcon className="h-5 w-5 text-primary" />
                 Fotos ({maintenance.photos.length})
@@ -303,7 +303,7 @@ export default function MaintenanceDetailPage() {
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Heater Info */}
-          <div className="bg-card shadow-sm rounded-lg border border-border p-6">
+          <div className="bg-card rounded-xl border border-border p-6">
             <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
               <FlameIcon className="h-5 w-5 text-primary" />
               Heizsystem
@@ -317,7 +317,7 @@ export default function MaintenanceDetailPage() {
           </div>
 
           {/* Customer Info */}
-          <div className="bg-card shadow-sm rounded-lg border border-border p-6">
+          <div className="bg-card rounded-xl border border-border p-6">
             <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
               <UserIcon className="h-5 w-5 text-primary" />
               Kunde

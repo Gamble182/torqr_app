@@ -22,7 +22,7 @@ export function BatteryFields({
   onBatteryCapacityChange,
 }: BatteryFieldsProps) {
   return (
-    <div className="bg-card rounded-lg border border-border p-6 space-y-4">
+    <div className="bg-card rounded-xl border border-border p-6 space-y-4">
       <div className="flex items-center gap-2">
         <input
           type="checkbox"

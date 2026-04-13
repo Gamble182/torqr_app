@@ -195,7 +195,7 @@ export function HeaterFormModal({
         <div className="p-6">
           {/* Header */}
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-900">
+            <h2 className="text-xl font-semibold text-foreground">
               {heater ? 'Heizsystem bearbeiten' : 'Neues Heizsystem hinzufügen'}
             </h2>
             <Button
@@ -213,7 +213,7 @@ export function HeaterFormModal({
             {/* Model */}
             <div>
               <Label htmlFor="model" className="mb-2 block">
-                Modell <span className="text-red-500">*</span>
+                Modell <span className="text-destructive">*</span>
               </Label>
               <Input
                 id="model"
@@ -221,11 +221,11 @@ export function HeaterFormModal({
                 type="text"
                 value={formData.model}
                 onChange={handleChange}
-                className={errors.model ? 'border-red-500' : ''}
+                className={errors.model ? 'border-destructive' : ''}
                 placeholder="z.B. Viessmann Vitodens 200-W"
               />
               {errors.model && (
-                <p className="mt-1 text-sm text-red-600">{errors.model}</p>
+                <p className="mt-1 text-sm text-destructive">{errors.model}</p>
               )}
             </div>
 
@@ -247,7 +247,7 @@ export function HeaterFormModal({
             {/* Maintenance Interval */}
             <div>
               <Label htmlFor="maintenanceInterval" className="mb-2 block">
-                Wartungsintervall <span className="text-red-500">*</span>
+                Wartungsintervall <span className="text-destructive">*</span>
               </Label>
               <Select
                 value={formData.maintenanceInterval}
@@ -262,7 +262,7 @@ export function HeaterFormModal({
                   }
                 }}
               >
-                <SelectTrigger className={errors.maintenanceInterval ? 'border-red-500' : ''}>
+                <SelectTrigger className={errors.maintenanceInterval ? 'border-destructive' : ''}>
                   <SelectValue placeholder="Bitte wählen..." />
                 </SelectTrigger>
                 <SelectContent>
@@ -274,7 +274,7 @@ export function HeaterFormModal({
                 </SelectContent>
               </Select>
               {errors.maintenanceInterval && (
-                <p className="mt-1 text-sm text-red-600">{errors.maintenanceInterval}</p>
+                <p className="mt-1 text-sm text-destructive">{errors.maintenanceInterval}</p>
               )}
             </div>
 
@@ -307,7 +307,7 @@ export function HeaterFormModal({
                 max={new Date().toISOString().split('T')[0]}
                 min={formData.installationDate || undefined}
               />
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-xs text-muted-foreground">
                 Wenn leer, wird heute als Datum verwendet
               </p>
             </div>

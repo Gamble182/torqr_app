@@ -430,7 +430,7 @@ export default function HeaterDetailPage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold text-foreground">{heater.model}</h1>
+            <h1 className="text-2xl font-semibold text-foreground">{heater.model}</h1>
             {heater.serialNumber && (
               <p className="mt-1 text-muted-foreground">SN: {heater.serialNumber}</p>
             )}
@@ -480,7 +480,7 @@ export default function HeaterDetailPage() {
         /* EDIT MODE */
         <div className="space-y-6">
           {/* Basic Information */}
-          <div className="bg-card rounded-lg border border-border p-6 space-y-4">
+          <div className="bg-card rounded-xl border border-border p-6 space-y-4">
             <h2 className="text-lg font-semibold text-foreground">Grundinformationen</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -643,7 +643,7 @@ export default function HeaterDetailPage() {
           </div>
 
           {/* Maintenance Information */}
-          <div className="bg-card rounded-lg border border-border p-6 space-y-4">
+          <div className="bg-card rounded-xl border border-border p-6 space-y-4">
             <h2 className="text-lg font-semibold text-foreground">Wartungsinformationen</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -694,7 +694,7 @@ export default function HeaterDetailPage() {
           </div>
 
           {/* Heat Storage */}
-          <div className="bg-card rounded-lg border border-border p-6 space-y-4">
+          <div className="bg-card rounded-xl border border-border p-6 space-y-4">
             <div className="flex items-center gap-3">
               <input
                 type="checkbox"
@@ -754,7 +754,7 @@ export default function HeaterDetailPage() {
           </div>
 
           {/* Battery */}
-          <div className="bg-card rounded-lg border border-border p-6 space-y-4">
+          <div className="bg-card rounded-xl border border-border p-6 space-y-4">
             <div className="flex items-center gap-3">
               <input
                 type="checkbox"
@@ -819,67 +819,69 @@ export default function HeaterDetailPage() {
         <div className="space-y-6">
           {/* Customer Info */}
           {heater.customer && (
-            <div className="bg-card rounded-lg border border-border p-6">
+            <div className="bg-card rounded-xl border border-border p-6">
               <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                 <UserIcon className="h-5 w-5 text-primary" />
                 Kunde
               </h2>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <Link
                   href={`/dashboard/customers/${heater.customer.id}`}
-                  className="text-primary hover:underline font-medium"
+                  className="text-sm font-medium text-primary hover:underline"
                 >
                   {heater.customer.name}
                 </Link>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <MapPinIcon className="h-4 w-4" />
-                  <span>
-                    {heater.customer.street}, {heater.customer.zipCode} {heater.customer.city}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <PhoneIcon className="h-4 w-4" />
-                  <a href={`tel:${heater.customer.phone}`} className="hover:text-accent">
-                    {heater.customer.phone}
-                  </a>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="bg-muted/50 rounded-lg p-3 flex items-center gap-2 text-sm text-muted-foreground">
+                    <MapPinIcon className="h-3.5 w-3.5 shrink-0" />
+                    <span className="text-foreground">
+                      {heater.customer.street}, {heater.customer.zipCode} {heater.customer.city}
+                    </span>
+                  </div>
+                  <div className="bg-muted/50 rounded-lg p-3 flex items-center gap-2 text-sm">
+                    <PhoneIcon className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                    <a href={`tel:${heater.customer.phone}`} className="text-foreground hover:text-primary transition-colors">
+                      {heater.customer.phone}
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>
           )}
 
           {/* Heater Details */}
-          <div className="bg-card rounded-lg border border-border p-6">
+          <div className="bg-card rounded-xl border border-border p-6">
             <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
               <FlameIcon className="h-5 w-5 text-primary" />
               Heizsysteminformationen
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {heater.heaterType && (
-                <div>
-                  <div className="text-sm text-muted-foreground">Kategorie</div>
-                  <div className="font-medium">{heater.heaterType}</div>
+                <div className="bg-muted/50 rounded-lg p-3">
+                  <div className="text-xs text-muted-foreground mb-0.5">Kategorie</div>
+                  <div className="text-sm font-medium text-foreground">{heater.heaterType}</div>
                 </div>
               )}
               {heater.manufacturer && (
-                <div>
-                  <div className="text-sm text-muted-foreground">Hersteller</div>
-                  <div className="font-medium">{heater.manufacturer}</div>
+                <div className="bg-muted/50 rounded-lg p-3">
+                  <div className="text-xs text-muted-foreground mb-0.5">Hersteller</div>
+                  <div className="text-sm font-medium text-foreground">{heater.manufacturer}</div>
                 </div>
               )}
-              <div>
-                <div className="text-sm text-muted-foreground">Modell</div>
-                <div className="font-medium">{heater.model}</div>
+              <div className="bg-muted/50 rounded-lg p-3">
+                <div className="text-xs text-muted-foreground mb-0.5">Modell</div>
+                <div className="text-sm font-medium text-foreground">{heater.model}</div>
               </div>
               {heater.serialNumber && (
-                <div>
-                  <div className="text-sm text-muted-foreground">Seriennummer</div>
-                  <div className="font-medium">{heater.serialNumber}</div>
+                <div className="bg-muted/50 rounded-lg p-3">
+                  <div className="text-xs text-muted-foreground mb-0.5">Seriennummer</div>
+                  <div className="text-sm font-medium text-foreground">{heater.serialNumber}</div>
                 </div>
               )}
               {heater.installationDate && (
-                <div>
-                  <div className="text-sm text-muted-foreground">Installationsdatum</div>
-                  <div className="font-medium">
+                <div className="bg-muted/50 rounded-lg p-3">
+                  <div className="text-xs text-muted-foreground mb-0.5">Installationsdatum</div>
+                  <div className="text-sm font-medium text-foreground">
                     {format(new Date(heater.installationDate), 'dd. MMMM yyyy', { locale: de })}
                   </div>
                 </div>
@@ -889,27 +891,27 @@ export default function HeaterDetailPage() {
 
           {/* Storage Info */}
           {heater.hasStorage && (
-            <div className="bg-card rounded-lg border border-border p-6">
+            <div className="bg-card rounded-xl border border-border p-6">
               <h2 className="text-lg font-semibold text-foreground mb-4">
                 Wärmespeicher
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {heater.storageManufacturer && (
-                  <div>
-                    <div className="text-sm text-muted-foreground">Hersteller</div>
-                    <div className="font-medium">{heater.storageManufacturer}</div>
+                  <div className="bg-muted/50 rounded-lg p-3">
+                    <div className="text-xs text-muted-foreground mb-0.5">Hersteller</div>
+                    <div className="text-sm font-medium text-foreground">{heater.storageManufacturer}</div>
                   </div>
                 )}
                 {heater.storageModel && (
-                  <div>
-                    <div className="text-sm text-muted-foreground">Modell</div>
-                    <div className="font-medium">{heater.storageModel}</div>
+                  <div className="bg-muted/50 rounded-lg p-3">
+                    <div className="text-xs text-muted-foreground mb-0.5">Modell</div>
+                    <div className="text-sm font-medium text-foreground">{heater.storageModel}</div>
                   </div>
                 )}
                 {heater.storageCapacity && (
-                  <div>
-                    <div className="text-sm text-muted-foreground">Kapazität</div>
-                    <div className="font-medium">{heater.storageCapacity} Liter</div>
+                  <div className="bg-muted/50 rounded-lg p-3">
+                    <div className="text-xs text-muted-foreground mb-0.5">Kapazität</div>
+                    <div className="text-sm font-medium text-foreground">{heater.storageCapacity} Liter</div>
                   </div>
                 )}
               </div>
@@ -918,27 +920,27 @@ export default function HeaterDetailPage() {
 
           {/* Battery Info */}
           {heater.hasBattery && (
-            <div className="bg-card rounded-lg border border-border p-6">
+            <div className="bg-card rounded-xl border border-border p-6">
               <h2 className="text-lg font-semibold text-foreground mb-4">
                 Batteriespeicher
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 {heater.batteryManufacturer && (
-                  <div>
-                    <div className="text-sm text-muted-foreground">Hersteller</div>
-                    <div className="font-medium">{heater.batteryManufacturer}</div>
+                  <div className="bg-muted/50 rounded-lg p-3">
+                    <div className="text-xs text-muted-foreground mb-0.5">Hersteller</div>
+                    <div className="text-sm font-medium text-foreground">{heater.batteryManufacturer}</div>
                   </div>
                 )}
                 {heater.batteryModel && (
-                  <div>
-                    <div className="text-sm text-muted-foreground">Modell</div>
-                    <div className="font-medium">{heater.batteryModel}</div>
+                  <div className="bg-muted/50 rounded-lg p-3">
+                    <div className="text-xs text-muted-foreground mb-0.5">Modell</div>
+                    <div className="text-sm font-medium text-foreground">{heater.batteryModel}</div>
                   </div>
                 )}
                 {heater.batteryCapacity && (
-                  <div>
-                    <div className="text-sm text-muted-foreground">Kapazität</div>
-                    <div className="font-medium">{heater.batteryCapacity} kWh</div>
+                  <div className="bg-muted/50 rounded-lg p-3">
+                    <div className="text-xs text-muted-foreground mb-0.5">Kapazität</div>
+                    <div className="text-sm font-medium text-foreground">{heater.batteryCapacity} kWh</div>
                   </div>
                 )}
               </div>
@@ -946,41 +948,41 @@ export default function HeaterDetailPage() {
           )}
 
           {/* Maintenance Info */}
-          <div className="bg-card rounded-lg border border-border p-6">
+          <div className="bg-card rounded-xl border border-border p-6">
             <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
               <WrenchIcon className="h-5 w-5 text-primary" />
               Wartungsinformationen
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <div className="text-sm text-muted-foreground">Wartungsintervall</div>
-                <div className="font-medium">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="bg-muted/50 rounded-lg p-3">
+                <div className="text-xs text-muted-foreground mb-0.5">Wartungsintervall</div>
+                <div className="text-sm font-medium text-foreground">
                   {heater.maintenanceInterval} {heater.maintenanceInterval === 1 ? 'Monat' : 'Monate'}
                 </div>
               </div>
               {heater.lastMaintenance && (
-                <div>
-                  <div className="text-sm text-muted-foreground">Letzte Wartung</div>
-                  <div className="font-medium">
+                <div className="bg-muted/50 rounded-lg p-3">
+                  <div className="text-xs text-muted-foreground mb-0.5">Letzte Wartung</div>
+                  <div className="text-sm font-medium text-foreground">
                     {format(new Date(heater.lastMaintenance), 'dd. MMMM yyyy', { locale: de })}
                   </div>
                 </div>
               )}
               {heater.nextMaintenance && (
-                <div>
-                  <div className="text-sm text-muted-foreground">Nächste Wartung</div>
-                  <div className="font-medium">
+                <div className="bg-muted/50 rounded-lg p-3">
+                  <div className="text-xs text-muted-foreground mb-0.5">Nächste Wartung</div>
+                  <div className="text-sm font-medium text-foreground">
                     {format(new Date(heater.nextMaintenance), 'dd. MMMM yyyy', { locale: de })}
                   </div>
                 </div>
               )}
               {heater.requiredParts && (
-                <div className="md:col-span-2">
-                  <div className="text-sm text-muted-foreground mb-1 flex items-center gap-2">
-                    <PackageIcon className="h-4 w-4" />
+                <div className="md:col-span-2 bg-muted/50 rounded-lg p-3">
+                  <div className="text-xs text-muted-foreground mb-1 flex items-center gap-1.5">
+                    <PackageIcon className="h-3.5 w-3.5" />
                     Benötigte Ersatzteile
                   </div>
-                  <div className="font-medium whitespace-pre-wrap">{heater.requiredParts}</div>
+                  <div className="text-sm font-medium text-foreground whitespace-pre-wrap">{heater.requiredParts}</div>
                 </div>
               )}
             </div>
@@ -988,7 +990,7 @@ export default function HeaterDetailPage() {
 
           {/* Maintenance History */}
           {heater.maintenances.length > 0 && (
-            <div className="bg-card rounded-lg border border-border p-6">
+            <div className="bg-card rounded-xl border border-border p-6">
               <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                 <CalendarIcon className="h-5 w-5 text-primary" />
                 Wartungshistorie
@@ -998,7 +1000,7 @@ export default function HeaterDetailPage() {
                   <Link
                     key={maintenance.id}
                     href={`/dashboard/maintenances/${maintenance.id}`}
-                    className="block p-4 bg-muted/30 rounded-lg hover:bg-muted/50 transition-colors"
+                    className="block p-3.5 bg-muted/40 rounded-xl hover:bg-muted/60 transition-colors border border-transparent hover:border-border"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -1025,18 +1027,15 @@ export default function HeaterDetailPage() {
 
       {/* Add Entry Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-card rounded-lg border border-border p-6 max-w-md w-full mx-4">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-card rounded-xl border border-border p-6 max-w-sm w-full mx-4">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-foreground">
                 {getModalTitle()}
               </h3>
-              <button
-                onClick={() => setShowAddModal(false)}
-                className="text-muted-foreground hover:text-foreground"
-              >
-                <XIcon className="h-5 w-5" />
-              </button>
+              <Button variant="ghost" size="icon-sm" onClick={() => setShowAddModal(false)}>
+                <XIcon className="h-4 w-4" />
+              </Button>
             </div>
 
             <div className="space-y-4">

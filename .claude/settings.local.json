@@ -42,7 +42,22 @@
       "Bash(del prisma.config.ts)",
       "Bash(del \"c:\\\\Users\\\\y.dorth\\\\Documents\\\\torqr_app\\\\torqr_app\\\\src\\\\config\\\\heater-types.json\")",
       "Bash(git tag:*)",
-      "Bash(where pandoc)"
+      "Bash(where pandoc)",
+      "Bash(claude --version)",
+      "Bash(npx @anthropic-ai/claude-code --version)",
+      "Bash(npm show:*)",
+      "Bash(where claude:*)",
+      "Read(//c/Users/y.dorth/AppData/Roaming/npm/**)",
+      "mcp__vercel__list_teams",
+      "mcp__supabase__execute_sql",
+      "mcp__supabase__apply_migration",
+      "mcp__vercel__list_projects",
+      "mcp__vercel__list_deployments",
+      "mcp__vercel__get_project"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "supabase",
+    "vercel"
+  ]
 }

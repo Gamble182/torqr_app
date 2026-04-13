@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/select';
 import { MultiSelect } from '@/components/ui/multi-select';
 import { toast } from 'sonner';
-import { ArrowLeftIcon } from 'lucide-react';
+import { ArrowLeftIcon, Loader2Icon } from 'lucide-react';
 import { z } from 'zod';
 
 interface FormData {
@@ -36,7 +36,6 @@ interface FormErrors {
   [key: string]: string;
 }
 
-// Heating type options with German labels
 const HEATING_TYPES = [
   { value: 'GAS', label: 'Gasheizung' },
   { value: 'OIL', label: 'Ölheizung' },
@@ -51,14 +50,12 @@ const HEATING_TYPES = [
   { value: 'CHP', label: 'Blockheizkraftwerk (BHKW)' },
 ];
 
-// Additional energy source options with German labels (multiselect)
 const ADDITIONAL_ENERGY_SOURCES = [
   { value: 'PHOTOVOLTAIC', label: 'Photovoltaik' },
   { value: 'SOLAR_THERMAL', label: 'Solarthermie' },
   { value: 'SMALL_WIND', label: 'Windkraft (Kleinwindanlage)' },
 ];
 
-// Energy storage system options with German labels (multiselect)
 const ENERGY_STORAGE_SYSTEMS = [
   { value: 'BATTERY_STORAGE', label: 'Stromspeicher/Batterie' },
   { value: 'HEAT_STORAGE', label: 'Wärmespeicher (Pufferspeicher)' },
@@ -69,91 +66,43 @@ export default function NewCustomerPage() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [formData, setFormData] = useState<FormData>({
-    name: '',
-    street: '',
-    zipCode: '',
-    city: '',
-    phone: '',
-    email: '',
-    heatingType: '',
-    additionalEnergySources: [],
-    energyStorageSystems: [],
-    notes: '',
+    name: '', street: '', zipCode: '', city: '', phone: '', email: '',
+    heatingType: '', additionalEnergySources: [], energyStorageSystems: [], notes: '',
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-
-    // Clear error for this field when user types
     if (errors[name]) {
-      setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors[name];
-        return newErrors;
-      });
+      setErrors((prev) => { const n = { ...prev }; delete n[name]; return n; });
     }
   };
 
   const validateForm = (): boolean => {
     const newErrors: FormErrors = {};
-
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name ist erforderlich';
-    }
-
-    if (!formData.street.trim()) {
-      newErrors.street = 'Straße ist erforderlich';
-    }
-
-    if (!formData.zipCode.trim()) {
-      newErrors.zipCode = 'PLZ ist erforderlich';
-    } else if (formData.zipCode.length < 4) {
-      newErrors.zipCode = 'PLZ muss mindestens 4 Zeichen lang sein';
-    }
-
-    if (!formData.city.trim()) {
-      newErrors.city = 'Ort ist erforderlich';
-    }
-
-    if (!formData.phone.trim()) {
-      newErrors.phone = 'Telefon ist erforderlich';
-    }
-
-    if (formData.email && !formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
-      newErrors.email = 'Ungültige E-Mail-Adresse';
-    }
-
-    if (!formData.heatingType) {
-      newErrors.heatingType = 'Art der Heizung ist erforderlich';
-    }
-
+    if (!formData.name.trim()) newErrors.name = 'Name ist erforderlich';
+    if (!formData.street.trim()) newErrors.street = 'Straße ist erforderlich';
+    if (!formData.zipCode.trim()) newErrors.zipCode = 'PLZ ist erforderlich';
+    else if (formData.zipCode.length < 4) newErrors.zipCode = 'PLZ muss mindestens 4 Zeichen lang sein';
+    if (!formData.city.trim()) newErrors.city = 'Ort ist erforderlich';
+    if (!formData.phone.trim()) newErrors.phone = 'Telefon ist erforderlich';
+    if (formData.email && !formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) newErrors.email = 'Ungültige E-Mail-Adresse';
+    if (!formData.heatingType) newErrors.heatingType = 'Art der Heizung ist erforderlich';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
-
+    if (!validateForm()) return;
     setLoading(true);
-
     try {
       const response = await fetch('/api/customers', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-
       const result = await response.json();
-
       if (result.success) {
         toast.success('Kunde erfolgreich erstellt!');
         router.push('/dashboard/customers');
@@ -184,16 +133,16 @@ export default function NewCustomerPage() {
       <div className="mb-6">
         <Link
           href="/dashboard/customers"
-          className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
-          <ArrowLeftIcon className="mr-2 h-4 w-4" />
+          <ArrowLeftIcon className="h-3.5 w-3.5" />
           Zurück zur Kundenliste
         </Link>
       </div>
 
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Neuer Kunde</h1>
-        <p className="mt-2 text-sm text-gray-600">
+        <h1 className="text-2xl font-bold text-foreground">Neuer Kunde</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
           Fügen Sie einen neuen Kunden zu Ihrer Datenbank hinzu
         </p>
       </div>
@@ -202,178 +151,119 @@ export default function NewCustomerPage() {
         <form onSubmit={handleSubmit} className="p-6 md:p-8">
           {/* Section 1: Kontaktdaten */}
           <div className="mb-8">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
+            <h2 className="text-base font-semibold text-foreground mb-4 pb-2 border-b border-border">
               Kontaktdaten
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Name - Full Width */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="md:col-span-2">
-                <Label htmlFor="name" className="mb-2 block">
-                  Name <span className="text-red-500">*</span>
+                <Label htmlFor="name" className="mb-1.5 block text-sm">
+                  Name <span className="text-destructive">*</span>
                 </Label>
                 <Input
-                  id="name"
-                  name="name"
-                  type="text"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className={errors.name ? 'border-red-500' : ''}
+                  id="name" name="name" type="text" value={formData.name}
+                  onChange={handleChange} className={errors.name ? 'border-destructive' : ''}
                   placeholder="Max Mustermann"
                 />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-red-600">{errors.name}</p>
-                )}
+                {errors.name && <p className="mt-1 text-xs text-destructive">{errors.name}</p>}
               </div>
-
-              {/* Phone */}
               <div>
-                <Label htmlFor="phone" className="mb-2 block">
-                  Telefon <span className="text-red-500">*</span>
+                <Label htmlFor="phone" className="mb-1.5 block text-sm">
+                  Telefon <span className="text-destructive">*</span>
                 </Label>
                 <Input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  className={errors.phone ? 'border-red-500' : ''}
+                  id="phone" name="phone" type="tel" value={formData.phone}
+                  onChange={handleChange} className={errors.phone ? 'border-destructive' : ''}
                   placeholder="030 12345678"
                 />
-                {errors.phone && (
-                  <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
-                )}
+                {errors.phone && <p className="mt-1 text-xs text-destructive">{errors.phone}</p>}
               </div>
-
-              {/* Email */}
               <div>
-                <Label htmlFor="email" className="mb-2 block">E-Mail (optional)</Label>
+                <Label htmlFor="email" className="mb-1.5 block text-sm">E-Mail (optional)</Label>
                 <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  className={errors.email ? 'border-red-500' : ''}
+                  id="email" name="email" type="email" value={formData.email}
+                  onChange={handleChange} className={errors.email ? 'border-destructive' : ''}
                   placeholder="max@beispiel.de"
                 />
-                {errors.email && (
-                  <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-                )}
-                <p className="mt-1 text-xs text-gray-500">
-                  Für automatische Wartungserinnerungen
-                </p>
+                {errors.email && <p className="mt-1 text-xs text-destructive">{errors.email}</p>}
+                <p className="mt-1 text-xs text-muted-foreground">Für automatische Wartungserinnerungen</p>
               </div>
             </div>
           </div>
 
           {/* Section 2: Adresse */}
           <div className="mb-8">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
+            <h2 className="text-base font-semibold text-foreground mb-4 pb-2 border-b border-border">
               Adresse
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Street - Full Width */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               <div className="md:col-span-3">
-                <Label htmlFor="street" className="mb-2 block">
-                  Straße und Hausnummer <span className="text-red-500">*</span>
+                <Label htmlFor="street" className="mb-1.5 block text-sm">
+                  Straße und Hausnummer <span className="text-destructive">*</span>
                 </Label>
                 <Input
-                  id="street"
-                  name="street"
-                  type="text"
-                  value={formData.street}
-                  onChange={handleChange}
-                  className={errors.street ? 'border-red-500' : ''}
+                  id="street" name="street" type="text" value={formData.street}
+                  onChange={handleChange} className={errors.street ? 'border-destructive' : ''}
                   placeholder="Musterstraße 123"
                 />
-                {errors.street && (
-                  <p className="mt-1 text-sm text-red-600">{errors.street}</p>
-                )}
+                {errors.street && <p className="mt-1 text-xs text-destructive">{errors.street}</p>}
               </div>
-
-              {/* ZIP Code */}
               <div>
-                <Label htmlFor="zipCode" className="mb-2 block">
-                  PLZ <span className="text-red-500">*</span>
+                <Label htmlFor="zipCode" className="mb-1.5 block text-sm">
+                  PLZ <span className="text-destructive">*</span>
                 </Label>
                 <Input
-                  id="zipCode"
-                  name="zipCode"
-                  type="text"
-                  value={formData.zipCode}
-                  onChange={handleChange}
-                  className={errors.zipCode ? 'border-red-500' : ''}
+                  id="zipCode" name="zipCode" type="text" value={formData.zipCode}
+                  onChange={handleChange} className={errors.zipCode ? 'border-destructive' : ''}
                   placeholder="12345"
                 />
-                {errors.zipCode && (
-                  <p className="mt-1 text-sm text-red-600">{errors.zipCode}</p>
-                )}
+                {errors.zipCode && <p className="mt-1 text-xs text-destructive">{errors.zipCode}</p>}
               </div>
-
-              {/* City */}
               <div className="md:col-span-2">
-                <Label htmlFor="city" className="mb-2 block">
-                  Ort <span className="text-red-500">*</span>
+                <Label htmlFor="city" className="mb-1.5 block text-sm">
+                  Ort <span className="text-destructive">*</span>
                 </Label>
                 <Input
-                  id="city"
-                  name="city"
-                  type="text"
-                  value={formData.city}
-                  onChange={handleChange}
-                  className={errors.city ? 'border-red-500' : ''}
+                  id="city" name="city" type="text" value={formData.city}
+                  onChange={handleChange} className={errors.city ? 'border-destructive' : ''}
                   placeholder="Berlin"
                 />
-                {errors.city && (
-                  <p className="mt-1 text-sm text-red-600">{errors.city}</p>
-                )}
+                {errors.city && <p className="mt-1 text-xs text-destructive">{errors.city}</p>}
               </div>
             </div>
           </div>
 
           {/* Section 3: Heizsystem */}
           <div className="mb-8">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
+            <h2 className="text-base font-semibold text-foreground mb-4 pb-2 border-b border-border">
               Heizsystem
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Heating Type */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="md:col-span-2">
-                <Label htmlFor="heatingType" className="mb-2 block">
-                  Art der Heizung <span className="text-red-500">*</span>
+                <Label htmlFor="heatingType" className="mb-1.5 block text-sm">
+                  Art der Heizung <span className="text-destructive">*</span>
                 </Label>
                 <Select
                   value={formData.heatingType}
                   onValueChange={(value) => {
                     setFormData((prev) => ({ ...prev, heatingType: value }));
                     if (errors.heatingType) {
-                      setErrors((prev) => {
-                        const newErrors = { ...prev };
-                        delete newErrors.heatingType;
-                        return newErrors;
-                      });
+                      setErrors((prev) => { const n = { ...prev }; delete n.heatingType; return n; });
                     }
                   }}
                 >
-                  <SelectTrigger className={errors.heatingType ? 'border-red-500' : ''}>
+                  <SelectTrigger className={errors.heatingType ? 'border-destructive' : ''}>
                     <SelectValue placeholder="Bitte wählen..." />
                   </SelectTrigger>
                   <SelectContent>
                     {HEATING_TYPES.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label}
-                      </SelectItem>
+                      <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                {errors.heatingType && (
-                  <p className="mt-1 text-sm text-red-600">{errors.heatingType}</p>
-                )}
+                {errors.heatingType && <p className="mt-1 text-xs text-destructive">{errors.heatingType}</p>}
               </div>
-
-              {/* Additional Energy Sources - Multiselect */}
               <div>
-                <Label htmlFor="additionalEnergySources" className="mb-2 block">
+                <Label htmlFor="additionalEnergySources" className="mb-1.5 block text-sm">
                   Zusätzliche Energiequellen (optional)
                 </Label>
                 <MultiSelect
@@ -382,14 +272,10 @@ export default function NewCustomerPage() {
                   onChange={(value) => setFormData((prev) => ({ ...prev, additionalEnergySources: value }))}
                   placeholder="Auswählen..."
                 />
-                <p className="mt-1 text-xs text-gray-500">
-                  z.B. Photovoltaik, Solarthermie
-                </p>
+                <p className="mt-1 text-xs text-muted-foreground">z.B. Photovoltaik, Solarthermie</p>
               </div>
-
-              {/* Energy Storage Systems - Multiselect */}
               <div>
-                <Label htmlFor="energyStorageSystems" className="mb-2 block">
+                <Label htmlFor="energyStorageSystems" className="mb-1.5 block text-sm">
                   Energiespeichersysteme (optional)
                 </Label>
                 <MultiSelect
@@ -398,51 +284,34 @@ export default function NewCustomerPage() {
                   onChange={(value) => setFormData((prev) => ({ ...prev, energyStorageSystems: value }))}
                   placeholder="Auswählen..."
                 />
-                <p className="mt-1 text-xs text-gray-500">
-                  Batterie- oder Wärmespeicher
-                </p>
+                <p className="mt-1 text-xs text-muted-foreground">Batterie- oder Wärmespeicher</p>
               </div>
             </div>
           </div>
 
           {/* Section 4: Notizen */}
           <div className="mb-8">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
+            <h2 className="text-base font-semibold text-foreground mb-4 pb-2 border-b border-border">
               Zusätzliche Informationen
             </h2>
             <div>
-              <Label htmlFor="notes" className="mb-2 block">Notizen (optional)</Label>
+              <Label htmlFor="notes" className="mb-1.5 block text-sm">Notizen (optional)</Label>
               <textarea
-                id="notes"
-                name="notes"
-                rows={4}
-                value={formData.notes}
-                onChange={handleChange}
-                className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                id="notes" name="notes" rows={4} value={formData.notes} onChange={handleChange}
+                className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                 placeholder="Besondere Hinweise zum Kunden..."
               />
-              {errors.notes && (
-                <p className="mt-1 text-sm text-red-600">{errors.notes}</p>
-              )}
             </div>
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-4 pt-6 border-t">
+          <div className="flex items-center justify-end gap-3 pt-6 border-t border-border">
             <Link href="/dashboard/customers">
-              <Button type="button" variant="outline" disabled={loading}>
-                Abbrechen
-              </Button>
+              <Button type="button" variant="outline" disabled={loading}>Abbrechen</Button>
             </Link>
             <Button type="submit" disabled={loading}>
-              {loading ? (
-                <>
-                  <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-                  Wird erstellt...
-                </>
-              ) : (
-                'Kunde erstellen'
-              )}
+              {loading && <Loader2Icon className="h-4 w-4 animate-spin" />}
+              {loading ? 'Wird erstellt...' : 'Kunde erstellen'}
             </Button>
           </div>
         </form>

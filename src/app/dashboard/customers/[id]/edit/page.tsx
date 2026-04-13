@@ -226,8 +226,8 @@ export default function EditCustomerPage() {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
-          <p className="mt-2 text-sm text-gray-600">Laden...</p>
+          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-primary border-r-transparent"></div>
+          <p className="mt-2 text-sm text-muted-foreground">Laden...</p>
         </div>
       </div>
     );
@@ -239,7 +239,7 @@ export default function EditCustomerPage() {
       <div className="mb-6">
         <Link
           href="/dashboard/customers"
-          className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900"
+          className="inline-flex items-center text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeftIcon className="mr-2 h-4 w-4" />
           Zurück zur Kundenliste
@@ -247,8 +247,8 @@ export default function EditCustomerPage() {
       </div>
 
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Kunde bearbeiten</h1>
-        <p className="mt-2 text-sm text-gray-600">
+        <h1 className="text-2xl font-bold text-foreground">Kunde bearbeiten</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
           Aktualisieren Sie die Kundendaten
         </p>
       </div>
@@ -257,14 +257,14 @@ export default function EditCustomerPage() {
         <form onSubmit={handleSubmit} className="p-6 md:p-8">
           {/* Section 1: Kontaktdaten */}
           <div className="mb-8">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
+            <h2 className="text-lg font-semibold text-foreground mb-4 pb-2 border-b">
               Kontaktdaten
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Name - Full Width */}
               <div className="md:col-span-2">
                 <Label htmlFor="name" className="mb-2 block">
-                  Name <span className="text-red-500">*</span>
+                  Name <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="name"
@@ -272,18 +272,18 @@ export default function EditCustomerPage() {
                   type="text"
                   value={formData.name}
                   onChange={handleChange}
-                  className={errors.name ? 'border-red-500' : ''}
+                  className={errors.name ? 'border-destructive' : ''}
                   placeholder="Max Mustermann"
                 />
                 {errors.name && (
-                  <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+                  <p className="mt-1 text-sm text-destructive">{errors.name}</p>
                 )}
               </div>
 
               {/* Phone */}
               <div>
                 <Label htmlFor="phone" className="mb-2 block">
-                  Telefon <span className="text-red-500">*</span>
+                  Telefon <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="phone"
@@ -291,11 +291,11 @@ export default function EditCustomerPage() {
                   type="tel"
                   value={formData.phone}
                   onChange={handleChange}
-                  className={errors.phone ? 'border-red-500' : ''}
+                  className={errors.phone ? 'border-destructive' : ''}
                   placeholder="030 12345678"
                 />
                 {errors.phone && (
-                  <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
+                  <p className="mt-1 text-sm text-destructive">{errors.phone}</p>
                 )}
               </div>
 
@@ -308,13 +308,13 @@ export default function EditCustomerPage() {
                   type="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className={errors.email ? 'border-red-500' : ''}
+                  className={errors.email ? 'border-destructive' : ''}
                   placeholder="max@beispiel.de"
                 />
                 {errors.email && (
-                  <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                  <p className="mt-1 text-sm text-destructive">{errors.email}</p>
                 )}
-                <p className="mt-1 text-xs text-gray-500">
+                <p className="mt-1 text-xs text-muted-foreground">
                   Für automatische Wartungserinnerungen
                 </p>
               </div>
@@ -323,14 +323,14 @@ export default function EditCustomerPage() {
 
           {/* Section 2: Adresse */}
           <div className="mb-8">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
+            <h2 className="text-lg font-semibold text-foreground mb-4 pb-2 border-b">
               Adresse
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Street - Full Width */}
               <div className="md:col-span-3">
                 <Label htmlFor="street" className="mb-2 block">
-                  Straße und Hausnummer <span className="text-red-500">*</span>
+                  Straße und Hausnummer <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="street"
@@ -338,18 +338,18 @@ export default function EditCustomerPage() {
                   type="text"
                   value={formData.street}
                   onChange={handleChange}
-                  className={errors.street ? 'border-red-500' : ''}
+                  className={errors.street ? 'border-destructive' : ''}
                   placeholder="Musterstraße 123"
                 />
                 {errors.street && (
-                  <p className="mt-1 text-sm text-red-600">{errors.street}</p>
+                  <p className="mt-1 text-sm text-destructive">{errors.street}</p>
                 )}
               </div>
 
               {/* ZIP Code */}
               <div>
                 <Label htmlFor="zipCode" className="mb-2 block">
-                  PLZ <span className="text-red-500">*</span>
+                  PLZ <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="zipCode"
@@ -357,18 +357,18 @@ export default function EditCustomerPage() {
                   type="text"
                   value={formData.zipCode}
                   onChange={handleChange}
-                  className={errors.zipCode ? 'border-red-500' : ''}
+                  className={errors.zipCode ? 'border-destructive' : ''}
                   placeholder="12345"
                 />
                 {errors.zipCode && (
-                  <p className="mt-1 text-sm text-red-600">{errors.zipCode}</p>
+                  <p className="mt-1 text-sm text-destructive">{errors.zipCode}</p>
                 )}
               </div>
 
               {/* City */}
               <div className="md:col-span-2">
                 <Label htmlFor="city" className="mb-2 block">
-                  Ort <span className="text-red-500">*</span>
+                  Ort <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="city"
@@ -376,11 +376,11 @@ export default function EditCustomerPage() {
                   type="text"
                   value={formData.city}
                   onChange={handleChange}
-                  className={errors.city ? 'border-red-500' : ''}
+                  className={errors.city ? 'border-destructive' : ''}
                   placeholder="Berlin"
                 />
                 {errors.city && (
-                  <p className="mt-1 text-sm text-red-600">{errors.city}</p>
+                  <p className="mt-1 text-sm text-destructive">{errors.city}</p>
                 )}
               </div>
             </div>
@@ -388,14 +388,14 @@ export default function EditCustomerPage() {
 
           {/* Section 3: Heizsystem */}
           <div className="mb-8">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
+            <h2 className="text-lg font-semibold text-foreground mb-4 pb-2 border-b">
               Heizsystem
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {/* Heating Type */}
               <div className="md:col-span-2">
                 <Label htmlFor="heatingType" className="mb-2 block">
-                  Art der Heizung <span className="text-red-500">*</span>
+                  Art der Heizung <span className="text-destructive">*</span>
                 </Label>
                 <Select
                   value={formData.heatingType}
@@ -410,7 +410,7 @@ export default function EditCustomerPage() {
                     }
                   }}
                 >
-                  <SelectTrigger className={errors.heatingType ? 'border-red-500' : ''}>
+                  <SelectTrigger className={errors.heatingType ? 'border-destructive' : ''}>
                     <SelectValue placeholder="Bitte wählen..." />
                   </SelectTrigger>
                   <SelectContent>
@@ -422,7 +422,7 @@ export default function EditCustomerPage() {
                   </SelectContent>
                 </Select>
                 {errors.heatingType && (
-                  <p className="mt-1 text-sm text-red-600">{errors.heatingType}</p>
+                  <p className="mt-1 text-sm text-destructive">{errors.heatingType}</p>
                 )}
               </div>
 
@@ -437,7 +437,7 @@ export default function EditCustomerPage() {
                   onChange={(value) => setFormData((prev) => ({ ...prev, additionalEnergySources: value }))}
                   placeholder="Auswählen..."
                 />
-                <p className="mt-1 text-xs text-gray-500">
+                <p className="mt-1 text-xs text-muted-foreground">
                   z.B. Photovoltaik, Solarthermie
                 </p>
               </div>
@@ -453,7 +453,7 @@ export default function EditCustomerPage() {
                   onChange={(value) => setFormData((prev) => ({ ...prev, energyStorageSystems: value }))}
                   placeholder="Auswählen..."
                 />
-                <p className="mt-1 text-xs text-gray-500">
+                <p className="mt-1 text-xs text-muted-foreground">
                   Batterie- oder Wärmespeicher
                 </p>
               </div>
@@ -462,7 +462,7 @@ export default function EditCustomerPage() {
 
           {/* Section 4: Notizen */}
           <div className="mb-8">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
+            <h2 className="text-lg font-semibold text-foreground mb-4 pb-2 border-b">
               Zusätzliche Informationen
             </h2>
             <div>
@@ -477,7 +477,7 @@ export default function EditCustomerPage() {
                 placeholder="Besondere Hinweise zum Kunden..."
               />
               {errors.notes && (
-                <p className="mt-1 text-sm text-red-600">{errors.notes}</p>
+                <p className="mt-1 text-sm text-destructive">{errors.notes}</p>
               )}
             </div>
           </div>

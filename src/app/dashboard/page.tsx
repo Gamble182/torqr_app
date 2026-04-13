@@ -5,15 +5,16 @@ import Link from 'next/link';
 import {
   Loader2Icon,
   UsersIcon,
-  BoltIcon,
+  FlameIcon,
   AlertTriangleIcon,
   CalendarIcon,
-  FlameIcon,
   MapPinIcon,
   PhoneIcon,
   ClockIcon,
   WrenchIcon,
-  CheckCircle2Icon
+  CheckCircle2Icon,
+  ArrowRightIcon,
+  TrendingUpIcon,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -29,7 +30,7 @@ export default function DashboardPage() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2Icon className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Loader2Icon className="h-6 w-6 animate-spin text-muted-foreground" />
       </div>
     );
   }
@@ -38,7 +39,7 @@ export default function DashboardPage() {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-center">
-          <p className="text-destructive mb-2">Fehler beim Laden der Statistiken</p>
+          <p className="text-destructive font-medium mb-1">Fehler beim Laden</p>
           <p className="text-sm text-muted-foreground">{error.message}</p>
         </div>
       </div>
@@ -49,7 +50,6 @@ export default function DashboardPage() {
     const date = new Date(dateString);
     const now = new Date();
     const diffDays = Math.ceil((date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-
     if (diffDays < 0) return 'overdue';
     if (diffDays <= 7) return 'urgent';
     if (diffDays <= 14) return 'soon';
@@ -59,222 +59,189 @@ export default function DashboardPage() {
   const getUrgencyStyles = (urgency: string) => {
     switch (urgency) {
       case 'overdue':
-        return 'bg-destructive/10 border-destructive';
+        return 'border-l-destructive bg-destructive/5';
       case 'urgent':
-        return 'bg-warning/10 border-warning';
+        return 'border-l-warning bg-warning/5';
       case 'soon':
-        return 'bg-accent/10 border-accent';
+        return 'border-l-secondary bg-secondary/5';
       default:
-        return 'bg-muted/30 border-border';
+        return 'border-l-border bg-card';
     }
   };
 
   const getUrgencyBadge = (urgency: string) => {
-    switch (urgency) {
-      case 'overdue':
-        return <span className="text-xs font-semibold px-2 py-1 rounded-full bg-destructive text-destructive-foreground">Überfällig</span>;
-      case 'urgent':
-        return <span className="text-xs font-semibold px-2 py-1 rounded-full bg-warning text-warning-foreground">Diese Woche</span>;
-      case 'soon':
-        return <span className="text-xs font-semibold px-2 py-1 rounded-full bg-accent text-accent-foreground">Bald fällig</span>;
-      default:
-        return <span className="text-xs font-semibold px-2 py-1 rounded-full bg-muted text-muted-foreground">Geplant</span>;
-    }
+    const styles: Record<string, string> = {
+      overdue: 'bg-destructive/10 text-destructive border-destructive/20',
+      urgent: 'bg-warning/10 text-warning-foreground border-warning/20',
+      soon: 'bg-secondary/10 text-secondary border-secondary/20',
+      upcoming: 'bg-muted text-muted-foreground border-border',
+    };
+    const labels: Record<string, string> = {
+      overdue: 'Überfällig',
+      urgent: 'Diese Woche',
+      soon: 'Bald fällig',
+      upcoming: 'Geplant',
+    };
+    return (
+      <span className={`text-xs font-medium px-2 py-0.5 rounded-md border ${styles[urgency]}`}>
+        {labels[urgency]}
+      </span>
+    );
   };
 
   return (
     <div className="space-y-8">
+      {/* Header */}
       <div>
-        <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
-        <p className="mt-2 text-muted-foreground">
+        <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
           Übersicht über Ihre Kunden und anstehende Wartungen
         </p>
       </div>
 
-      <div className="mt-8">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Total Customers */}
-          <Link href="/dashboard/customers" className="block bg-card overflow-hidden shadow-sm rounded-lg border border-border hover:shadow-md transition-shadow cursor-pointer">
-            <div className="p-5">
-              <div className="flex items-center">
-                <div className="shrink-0">
-                  <div className="rounded-lg bg-primary p-3">
-                    <UsersIcon className="h-6 w-6 text-primary-foreground" />
-                  </div>
-                </div>
-                <div className="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt className="text-sm font-medium text-muted-foreground truncate">
-                      Kunden gesamt
-                    </dt>
-                    <dd className="text-3xl font-bold text-foreground">
-                      {stats?.totalCustomers || 0}
-                    </dd>
-                  </dl>
-                </div>
-              </div>
+      {/* Stats Grid */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <Link
+          href="/dashboard/customers"
+          className="group bg-card rounded-xl border border-border p-5 hover:shadow-md hover:border-primary/20 transition-all"
+        >
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-primary/10">
+              <UsersIcon className="h-4.5 w-4.5 text-primary" />
             </div>
-          </Link>
-
-          {/* Total Heaters */}
-          <Link href="/dashboard/heaters" className="block bg-card overflow-hidden shadow-sm rounded-lg border border-border hover:shadow-md transition-shadow cursor-pointer">
-            <div className="p-5">
-              <div className="flex items-center">
-                <div className="shrink-0">
-                  <div className="rounded-lg bg-secondary p-3">
-                    <BoltIcon className="h-6 w-6 text-secondary-foreground" />
-                  </div>
-                </div>
-                <div className="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt className="text-sm font-medium text-muted-foreground truncate">
-                      Heizsysteme gesamt
-                    </dt>
-                    <dd className="text-3xl font-bold text-foreground">
-                      {stats?.totalHeaters || 0}
-                    </dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-          </Link>
-
-          {/* Overdue Maintenances - Clickable */}
-          <Link href="/dashboard/wartungen?status=overdue" className={`block bg-card overflow-hidden shadow-sm rounded-lg border hover:shadow-md transition-shadow cursor-pointer ${(stats?.overdueMaintenances || 0) > 0 ? 'border-destructive' : 'border-border'}`}>
-            <div className="p-5">
-              <div className="flex items-center">
-                <div className="shrink-0">
-                  <div className="rounded-lg bg-destructive p-3">
-                    <AlertTriangleIcon className="h-6 w-6 text-destructive-foreground" />
-                  </div>
-                </div>
-                <div className="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt className="text-sm font-medium text-muted-foreground truncate">
-                      Überfällige Wartungen
-                    </dt>
-                    <dd className="text-3xl font-bold text-destructive">
-                      {stats?.overdueMaintenances || 0}
-                    </dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-          </Link>
-
-          {/* Upcoming Maintenances */}
-          <div className="bg-card overflow-hidden shadow-sm rounded-lg border border-border hover:shadow-md transition-shadow">
-            <div className="p-5">
-              <div className="flex items-center">
-                <div className="shrink-0">
-                  <div className="rounded-lg bg-warning p-3">
-                    <CalendarIcon className="h-6 w-6 text-warning-foreground" />
-                  </div>
-                </div>
-                <div className="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt className="text-sm font-medium text-muted-foreground truncate">
-                      Nächste 30 Tage
-                    </dt>
-                    <dd className="text-3xl font-bold text-foreground">
-                      {stats?.upcomingMaintenances || 0}
-                    </dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
+            <ArrowRightIcon className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
+          <p className="text-2xl font-bold text-foreground">{stats?.totalCustomers || 0}</p>
+          <p className="text-xs text-muted-foreground mt-0.5">Kunden gesamt</p>
+        </Link>
+
+        <Link
+          href="/dashboard/heaters"
+          className="group bg-card rounded-xl border border-border p-5 hover:shadow-md hover:border-secondary/20 transition-all"
+        >
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-secondary/10">
+              <FlameIcon className="h-4.5 w-4.5 text-secondary" />
+            </div>
+            <ArrowRightIcon className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+          </div>
+          <p className="text-2xl font-bold text-foreground">{stats?.totalHeaters || 0}</p>
+          <p className="text-xs text-muted-foreground mt-0.5">Heizsysteme</p>
+        </Link>
+
+        <Link
+          href="/dashboard/wartungen?status=overdue"
+          className={`group bg-card rounded-xl border p-5 hover:shadow-md transition-all ${
+            (stats?.overdueMaintenances || 0) > 0
+              ? 'border-destructive/30 hover:border-destructive/50'
+              : 'border-border hover:border-destructive/20'
+          }`}
+        >
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-destructive/10">
+              <AlertTriangleIcon className="h-4.5 w-4.5 text-destructive" />
+            </div>
+            <ArrowRightIcon className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+          </div>
+          <p className={`text-2xl font-bold ${(stats?.overdueMaintenances || 0) > 0 ? 'text-destructive' : 'text-foreground'}`}>
+            {stats?.overdueMaintenances || 0}
+          </p>
+          <p className="text-xs text-muted-foreground mt-0.5">Überfällig</p>
+        </Link>
+
+        <div className="bg-card rounded-xl border border-border p-5">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-warning/10">
+              <CalendarIcon className="h-4.5 w-4.5 text-warning" />
+            </div>
+            <TrendingUpIcon className="h-4 w-4 text-muted-foreground/40" />
+          </div>
+          <p className="text-2xl font-bold text-foreground">{stats?.upcomingMaintenances || 0}</p>
+          <p className="text-xs text-muted-foreground mt-0.5">Nächste 30 Tage</p>
         </div>
       </div>
 
-      {/* Upcoming Maintenances Calendar */}
-      <div className="bg-card shadow-sm rounded-lg border border-border">
-        <div className="px-6 py-4 border-b border-border">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
-                <CalendarIcon className="h-5 w-5 text-primary" />
-                Anstehende Wartungen
-              </h2>
-              <p className="text-sm text-muted-foreground mt-1">
-                Wartungen in den nächsten {timeRange} Tagen
-              </p>
-            </div>
-            <select
-              value={timeRange}
-              onChange={(e) => setTimeRange(parseInt(e.target.value))}
-              className="px-3 py-1.5 bg-background border border-border rounded-md text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-            >
-              <option value="7">7 Tage</option>
-              <option value="30">30 Tage</option>
-              <option value="90">3 Monate</option>
-              <option value="180">6 Monate</option>
-            </select>
+      {/* Upcoming Maintenances */}
+      <div className="bg-card rounded-xl border border-border">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+          <div>
+            <h2 className="text-base font-semibold text-foreground">Anstehende Wartungen</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Nächste {timeRange} Tage
+            </p>
           </div>
+          <select
+            value={timeRange}
+            onChange={(e) => setTimeRange(parseInt(e.target.value))}
+            className="px-3 py-1.5 bg-muted border-0 rounded-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          >
+            <option value="7">7 Tage</option>
+            <option value="30">30 Tage</option>
+            <option value="90">3 Monate</option>
+            <option value="180">6 Monate</option>
+          </select>
         </div>
-        <div className="p-6">
+        <div className="p-4">
           {stats?.upcomingMaintenancesList && stats.upcomingMaintenancesList.length > 0 ? (
-            <div className="space-y-3">
+            <div className="space-y-2">
               {stats.upcomingMaintenancesList.map((maintenance) => {
                 const urgency = getMaintenanceUrgency(maintenance.nextMaintenance);
                 return (
                   <div
                     key={maintenance.id}
-                    className={`p-4 rounded-lg border-2 transition-all ${getUrgencyStyles(urgency)}`}
+                    className={`flex items-center gap-4 p-4 rounded-lg border-l-[3px] border border-border transition-all hover:shadow-sm ${getUrgencyStyles(urgency)}`}
                   >
-                    <div className="flex items-start justify-between gap-4">
-                      <Link
-                        href={`/dashboard/customers/${maintenance.customer.id}`}
-                        className="flex-1 min-w-0 hover:opacity-80 transition-opacity"
-                      >
-                        <div className="flex items-center gap-3 mb-2">
-                          <h3 className="font-semibold text-foreground">
-                            {maintenance.customer.name}
-                          </h3>
-                          {getUrgencyBadge(urgency)}
-                        </div>
-                        <div className="space-y-1 text-sm">
-                          <div className="flex items-center gap-2 text-muted-foreground">
-                            <FlameIcon className="h-4 w-4" />
-                            <span>{maintenance.model}</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-muted-foreground">
-                            <MapPinIcon className="h-4 w-4" />
-                            <span>{maintenance.customer.city}</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-muted-foreground">
-                            <PhoneIcon className="h-4 w-4" />
-                            <a
-                              href={`tel:${maintenance.customer.phone}`}
-                              className="hover:text-accent"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              {maintenance.customer.phone}
-                            </a>
-                          </div>
-                        </div>
-                      </Link>
-                      <div className="shrink-0 flex flex-col items-end gap-2">
-                        <div className="text-right">
-                          <div className="text-sm font-medium text-foreground">
-                            {format(new Date(maintenance.nextMaintenance), 'dd. MMM yyyy', { locale: de })}
-                          </div>
-                          <div className="text-xs text-muted-foreground mt-1">
-                            {format(new Date(maintenance.nextMaintenance), 'EEEE', { locale: de })}
-                          </div>
-                        </div>
-                        <Button
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedHeater({ id: maintenance.id, model: maintenance.model });
-                          }}
-                          className="bg-green-600 hover:bg-green-700 text-white whitespace-nowrap"
-                        >
-                          <CheckCircle2Icon className="h-4 w-4 mr-2" />
-                          Erledigt
-                        </Button>
+                    <Link
+                      href={`/dashboard/customers/${maintenance.customer.id}`}
+                      className="flex-1 min-w-0 hover:opacity-80 transition-opacity"
+                    >
+                      <div className="flex items-center gap-2 mb-1.5">
+                        <h3 className="font-semibold text-sm text-foreground truncate">
+                          {maintenance.customer.name}
+                        </h3>
+                        {getUrgencyBadge(urgency)}
                       </div>
+                      <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1.5">
+                          <FlameIcon className="h-3 w-3" />
+                          {maintenance.model}
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <MapPinIcon className="h-3 w-3" />
+                          {maintenance.customer.city}
+                        </span>
+                        <span className="flex items-center gap-1.5">
+                          <PhoneIcon className="h-3 w-3" />
+                          <a
+                            href={`tel:${maintenance.customer.phone}`}
+                            className="hover:text-secondary"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            {maintenance.customer.phone}
+                          </a>
+                        </span>
+                      </div>
+                    </Link>
+                    <div className="shrink-0 flex items-center gap-3">
+                      <div className="text-right hidden sm:block">
+                        <p className="text-sm font-medium text-foreground">
+                          {format(new Date(maintenance.nextMaintenance), 'dd. MMM yyyy', { locale: de })}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {format(new Date(maintenance.nextMaintenance), 'EEEE', { locale: de })}
+                        </p>
+                      </div>
+                      <Button
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedHeater({ id: maintenance.id, model: maintenance.model });
+                        }}
+                        className="bg-success hover:bg-success/90 text-success-foreground shrink-0"
+                      >
+                        <CheckCircle2Icon className="h-3.5 w-3.5" />
+                        <span className="hidden sm:inline">Erledigt</span>
+                      </Button>
                     </div>
                   </div>
                 );
@@ -282,53 +249,44 @@ export default function DashboardPage() {
             </div>
           ) : (
             <div className="text-center py-12">
-              <CalendarIcon className="h-12 w-12 text-muted-foreground mx-auto mb-4 opacity-50" />
-              <p className="text-muted-foreground">Keine anstehenden Wartungen in den nächsten 30 Tagen</p>
+              <CalendarIcon className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
+              <p className="text-sm text-muted-foreground">Keine anstehenden Wartungen</p>
             </div>
           )}
         </div>
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-card shadow-sm rounded-lg border border-border">
+      <div className="bg-card rounded-xl border border-border">
         <div className="px-6 py-4 border-b border-border">
-          <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
-            <ClockIcon className="h-5 w-5 text-primary" />
-            Letzte Wartungen
-          </h2>
-          <p className="text-sm text-muted-foreground mt-1">
-            Kürzlich durchgeführte Wartungsarbeiten
+          <h2 className="text-base font-semibold text-foreground">Letzte Wartungen</h2>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Kürzlich durchgeführte Arbeiten
           </p>
         </div>
-        <div className="p-6">
+        <div className="p-4">
           {stats?.recentMaintenances && stats.recentMaintenances.length > 0 ? (
-            <div className="space-y-4">
+            <div className="space-y-1">
               {stats.recentMaintenances.map((maintenance) => (
                 <Link
                   key={maintenance.id}
                   href={`/dashboard/maintenances/${maintenance.id}`}
-                  className="flex items-start gap-4 p-4 bg-muted/30 rounded-lg border border-border hover:bg-muted/50 hover:shadow-sm transition-all cursor-pointer"
+                  className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 transition-colors"
                 >
-                  <div className="shrink-0">
-                    <div className="rounded-lg bg-secondary/20 p-2">
-                      <WrenchIcon className="h-5 w-5 text-secondary" />
-                    </div>
+                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-secondary/10 shrink-0">
+                    <WrenchIcon className="h-4 w-4 text-secondary" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-medium text-foreground">
+                    <p className="text-sm font-medium text-foreground truncate">
                       {maintenance.heater.customer.name}
                     </p>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-xs text-muted-foreground truncate">
                       {maintenance.heater.model}
+                      {maintenance.notes && ` — ${maintenance.notes}`}
                     </p>
-                    {maintenance.notes && (
-                      <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                        {maintenance.notes}
-                      </p>
-                    )}
                   </div>
                   <div className="shrink-0 text-right">
-                    <p className="text-sm font-medium text-foreground">
+                    <p className="text-xs font-medium text-foreground">
                       {format(new Date(maintenance.date), 'dd. MMM', { locale: de })}
                     </p>
                     <p className="text-xs text-muted-foreground">
@@ -340,14 +298,13 @@ export default function DashboardPage() {
             </div>
           ) : (
             <div className="text-center py-12">
-              <WrenchIcon className="h-12 w-12 text-muted-foreground mx-auto mb-4 opacity-50" />
-              <p className="text-muted-foreground">Noch keine Wartungen durchgeführt</p>
+              <WrenchIcon className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
+              <p className="text-sm text-muted-foreground">Noch keine Wartungen durchgeführt</p>
             </div>
           )}
         </div>
       </div>
 
-      {/* Quick Maintenance Form Modal */}
       {selectedHeater && (
         <MaintenanceFormModal
           heaterId={selectedHeater.id}
