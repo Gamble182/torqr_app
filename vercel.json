@@ -2,5 +2,15 @@
   "buildCommand": "next build",
   "env": {
     "SKIP_ENV_VALIDATION": "true"
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/cron/daily-reminders",
+      "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/cron/weekly-summary",
+      "schedule": "0 7 * * 1"
+    }
+  ]
 }
