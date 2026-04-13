@@ -8,7 +8,7 @@
 ## Current Sprint: Sprint 4 — Email Automation
 
 **Started:** 2026-04-13
-**Status:** 🟡 Planning complete — implementation not started
+**Status:** ✅ Implementation complete — pending env var setup in Vercel
 
 ---
 
@@ -20,31 +20,32 @@ Customers self-book via Cal.com link. Max receives a weekly summary.
 [`docs/superpowers/specs/2026-04-13-email-automation-design.md`](docs/superpowers/specs/2026-04-13-email-automation-design.md)
 
 ### Implementation Plan
-> To be generated — invoke `writing-plans` skill next session or continue current session.
+[`docs/superpowers/plans/2026-04-13-email-automation.md`](docs/superpowers/plans/2026-04-13-email-automation.md) — 11 tasks, ready to execute
 
 ---
 
 ### Task Breakdown
 
 #### Backend / Email Module
-- [ ] `src/lib/email/client.ts` — Resend singleton
-- [ ] `src/lib/email/opt-in.ts` — confirmOptIn(), suppressOptIn()
-- [ ] `src/lib/email/service.ts` — sendReminder(), sendWeeklySummary()
-- [ ] `src/lib/email/templates/ReminderEmail.tsx` — customer reminder template
-- [ ] `src/lib/email/templates/WeeklySummaryEmail.tsx` — weekly summary template
+- [x] `src/lib/email/client.ts` — Resend singleton
+- [x] `src/lib/email/opt-in.ts` — computeOptInData() with unit tests
+- [x] `src/lib/email/service.tsx` — sendReminder(), sendWeeklySummary()
+- [x] `src/lib/email/templates/ReminderEmail.tsx` — customer reminder template
+- [x] `src/lib/email/templates/WeeklySummaryEmail.tsx` — weekly summary template
+- [x] `src/lib/email/unsubscribe-token.ts` — HMAC token utility with unit tests
 
 #### API Routes
-- [ ] `src/app/api/cron/daily-reminders/route.ts`
-- [ ] `src/app/api/cron/weekly-summary/route.ts`
-- [ ] `src/app/api/email/unsubscribe/[token]/route.ts`
+- [x] `src/app/api/cron/daily-reminders/route.ts`
+- [x] `src/app/api/cron/weekly-summary/route.ts`
+- [x] `src/app/api/email/unsubscribe/[token]/route.ts`
 
 #### UI
-- [ ] `src/app/unsubscribe/[token]/page.tsx` — public unsubscribe page
-- [ ] Customer form: add "Keine E-Mail-Erinnerungen" toggle near email field
+- [x] `src/app/unsubscribe/[token]/page.tsx` — public unsubscribe page
+- [x] Customer form: "Keine E-Mail-Erinnerungen" toggle + status badge
 
 #### Config
-- [ ] `vercel.json` — add cron schedule entries
-- [ ] Env vars: `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `CRON_SECRET`, `UNSUBSCRIBE_SECRET`, `CAL_COM_URL`, `SUMMARY_RECIPIENT_EMAIL`
+- [x] `vercel.json` — cron schedules added (daily 06:00 UTC, weekly Mon 07:00 UTC)
+- [ ] Env vars in Vercel Dashboard (manual): `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `CRON_SECRET`, `UNSUBSCRIBE_SECRET`, `CAL_COM_URL`, `SUMMARY_RECIPIENT_EMAIL`
 
 ---
 
@@ -76,3 +77,4 @@ Customers self-book via Cal.com link. Max receives a weekly summary.
 | 2026-04-13 | HMAC-SHA256 stateless unsubscribe tokens — no extra DB column |
 | 2026-04-13 | Weekly summary: stat blocks with icons (no JS charts — email client limits) |
 | 2026-04-13 | Architecture B: layered `src/lib/email/` module |
+| 2026-04-13 | Sprint 4 implementation complete — 16 tests passing, 0 TS errors, 9 commits |
