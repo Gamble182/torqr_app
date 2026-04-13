@@ -26,6 +26,8 @@ interface FormData {
   city: string;
   phone: string;
   email: string;
+  suppressEmail: boolean;
+  emailOptIn: string;
   heatingType: string;
   additionalEnergySources: string[];
   energyStorageSystems: string[];
@@ -79,6 +81,8 @@ export default function EditCustomerPage() {
     city: '',
     phone: '',
     email: '',
+    suppressEmail: false,
+    emailOptIn: 'NONE',
     heatingType: '',
     additionalEnergySources: [],
     energyStorageSystems: [],
@@ -103,6 +107,8 @@ export default function EditCustomerPage() {
             city: customer.city || '',
             phone: customer.phone || '',
             email: customer.email || '',
+            suppressEmail: customer.emailOptIn === 'NONE' && !!customer.email,
+            emailOptIn: customer.emailOptIn || 'NONE',
             heatingType: customer.heatingType || '',
             additionalEnergySources: customer.additionalEnergySources || [],
             energyStorageSystems: customer.energyStorageSystems || [],
@@ -317,6 +323,29 @@ export default function EditCustomerPage() {
                 <p className="mt-1 text-xs text-muted-foreground">
                   Für automatische Wartungserinnerungen
                 </p>
+                {formData.email && formData.emailOptIn === 'CONFIRMED' && (
+                  <p className="mt-1.5 text-xs text-green-600">✓ E-Mail-Erinnerungen aktiv</p>
+                )}
+                {formData.email && formData.emailOptIn === 'UNSUBSCRIBED' && (
+                  <p className="mt-1.5 text-xs text-amber-600">
+                    ⚠️ Kunde hat sich abgemeldet. Wird nur bei neuer E-Mail zurückgesetzt.
+                  </p>
+                )}
+                {formData.email && formData.emailOptIn !== 'UNSUBSCRIBED' && (
+                  <label className="mt-2 flex items-center gap-2 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={formData.suppressEmail}
+                      onChange={(e) =>
+                        setFormData((prev) => ({ ...prev, suppressEmail: e.target.checked }))
+                      }
+                      className="h-4 w-4 rounded border-input"
+                    />
+                    <span className="text-xs text-muted-foreground">
+                      Keine E-Mail-Erinnerungen senden
+                    </span>
+                  </label>
+                )}
               </div>
             </div>
           </div>

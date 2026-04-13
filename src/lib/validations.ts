@@ -134,6 +134,7 @@ export const customerCreateSchema = z.object({
   city: z.string().min(1, 'Stadt ist erforderlich').max(100, 'Stadt zu lang'),
   phone: z.string().min(1, 'Telefon ist erforderlich').max(20, 'Telefon zu lang'),
   email: z.string().email('Ungültige E-Mail').optional().or(z.literal('')),
+  suppressEmail: z.boolean().optional().default(false),
   heatingType: HeatingTypeEnum,
   additionalEnergySources: z.array(AdditionalEnergySourceEnum).optional().default([]),
   energyStorageSystems: z.array(EnergyStorageSystemEnum).optional().default([]),

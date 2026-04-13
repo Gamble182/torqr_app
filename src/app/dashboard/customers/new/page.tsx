@@ -26,6 +26,7 @@ interface FormData {
   city: string;
   phone: string;
   email: string;
+  suppressEmail: boolean;
   heatingType: string;
   additionalEnergySources: string[];
   energyStorageSystems: string[];
@@ -67,6 +68,7 @@ export default function NewCustomerPage() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [formData, setFormData] = useState<FormData>({
     name: '', street: '', zipCode: '', city: '', phone: '', email: '',
+    suppressEmail: false,
     heatingType: '', additionalEnergySources: [], energyStorageSystems: [], notes: '',
   });
 
@@ -186,6 +188,21 @@ export default function NewCustomerPage() {
                 />
                 {errors.email && <p className="mt-1 text-xs text-destructive">{errors.email}</p>}
                 <p className="mt-1 text-xs text-muted-foreground">Für automatische Wartungserinnerungen</p>
+                {formData.email && (
+                  <label className="mt-2 flex items-center gap-2 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      checked={formData.suppressEmail}
+                      onChange={(e) =>
+                        setFormData((prev) => ({ ...prev, suppressEmail: e.target.checked }))
+                      }
+                      className="h-4 w-4 rounded border-input"
+                    />
+                    <span className="text-xs text-muted-foreground">
+                      Keine E-Mail-Erinnerungen senden
+                    </span>
+                  </label>
+                )}
               </div>
             </div>
           </div>

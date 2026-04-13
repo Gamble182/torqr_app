@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { customerCreateSchema } from '@/lib/validations';
 import { rateLimitByUser, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
+import { computeOptInData } from '@/lib/email/opt-in';
 
 /**
  * POST /api/customers
@@ -24,10 +25,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = customerCreateSchema.parse(body);
 
-    // 3. Convert empty email string to null
-    const email = validatedData.email && validatedData.email.trim() !== ''
-      ? validatedData.email
-      : null;
+    // 3. Convert empty email string to null and compute opt-in status
+    const email = validatedData.email?.trim() || null;
+    const optInData = computeOptInData(email, validatedData.suppressEmail ?? false);
 
     // 4. Create customer in database
     const customer = await prisma.customer.create({
@@ -37,7 +37,9 @@ export async function POST(request: NextRequest) {
         zipCode: validatedData.zipCode,
         city: validatedData.city,
         phone: validatedData.phone,
-        email: email,
+        email,
+        emailOptIn: optInData.emailOptIn,
+        optInConfirmedAt: optInData.optInConfirmedAt,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         heatingType: validatedData.heatingType as any, // REQUIRED field
         additionalEnergySources: validatedData.additionalEnergySources || [],

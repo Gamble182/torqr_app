@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { customerUpdateSchema } from '@/lib/validations';
 import { rateLimitByUser, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
+import { computeOptInData } from '@/lib/email/opt-in';
 
 /**
  * GET /api/customers/:id
@@ -115,10 +116,15 @@ export async function PATCH(
     const body = await request.json();
     const validatedData = customerUpdateSchema.parse(body);
 
-    // 5. Convert empty email string to null
-    const email = validatedData.email && validatedData.email.trim() !== ''
-      ? validatedData.email
-      : null;
+    // 5. Compute opt-in — preserve UNSUBSCRIBED unless email changes
+    const email = validatedData.email?.trim() || null;
+    const emailChanged = email !== null && email !== existingCustomer.email;
+    const preserveUnsubscribed =
+      existingCustomer.emailOptIn === 'UNSUBSCRIBED' && !emailChanged;
+
+    const optInData = preserveUnsubscribed
+      ? { emailOptIn: 'UNSUBSCRIBED' as const, optInConfirmedAt: existingCustomer.optInConfirmedAt }
+      : computeOptInData(email, validatedData.suppressEmail ?? false);
 
     // 6. Update customer
     const updatedCustomer = await prisma.customer.update({
@@ -131,7 +137,9 @@ export async function PATCH(
         ...(validatedData.zipCode && { zipCode: validatedData.zipCode }),
         ...(validatedData.city && { city: validatedData.city }),
         ...(validatedData.phone && { phone: validatedData.phone }),
-        ...(email !== undefined && { email: email }),
+        email,
+        emailOptIn: optInData.emailOptIn,
+        optInConfirmedAt: optInData.optInConfirmedAt,
         ...(validatedData.heatingType && { heatingType: validatedData.heatingType as any }),
         ...(validatedData.additionalEnergySources !== undefined && { additionalEnergySources: validatedData.additionalEnergySources || [] }),
         ...(validatedData.energyStorageSystems !== undefined && { energyStorageSystems: validatedData.energyStorageSystems || [] }),
