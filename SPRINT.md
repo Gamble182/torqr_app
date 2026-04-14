@@ -5,10 +5,18 @@
 
 ---
 
-## Current Sprint: Sprint 4 — Email Automation
+## Current Sprint: Sprint 5 — Cal.com Webhook + Testing
+
+**Started:** 2026-04-14
+**Status:** 🔄 Planning — Sprint 4 fully complete, production live on torqr.de
+
+---
+
+## Completed: Sprint 4 — Email Automation
 
 **Started:** 2026-04-13
-**Status:** ✅ Implementation complete — pending env var setup in Vercel
+**Completed:** 2026-04-14
+**Status:** ✅ Complete — deployed and live on torqr.de with Cloudflare + custom domain
 
 ---
 
@@ -45,7 +53,7 @@ Customers self-book via Cal.com link. Max receives a weekly summary.
 
 #### Config
 - [x] `vercel.json` — cron schedules added (daily 06:00 UTC, weekly Mon 07:00 UTC)
-- [ ] Env vars in Vercel Dashboard (manual): `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `CRON_SECRET`, `UNSUBSCRIBE_SECRET`, `CAL_COM_URL`, `SUMMARY_RECIPIENT_EMAIL`
+- [x] Env vars in Vercel Dashboard (manual): `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `CRON_SECRET`, `UNSUBSCRIBE_SECRET`, `CAL_COM_URL`, `SUMMARY_RECIPIENT_EMAIL`
 
 ---
 
@@ -61,10 +69,21 @@ Customers self-book via Cal.com link. Max receives a weekly summary.
 
 ---
 
-### Upcoming: Sprint 5 — Cal.com Webhook + Testing
-- Cal.com webhook → auto-update `nextMaintenance` in Torqr on booking confirmed
-- Resend open/click tracking webhooks
-- Automated test suite (separate spec: `2026-04-13-testing-design.md` — not yet written)
+---
+
+### Sprint 5 — Cal.com Webhook + Testing
+
+#### Goal
+Wire Cal.com booking confirmations back into Torqr to auto-update `nextMaintenance`.
+Add Resend open/click webhook tracking. Build automated test suite.
+
+#### Task Breakdown (to be refined)
+- [ ] Cal.com webhook endpoint: `POST /api/webhooks/cal` — parse booking event, update customer `nextMaintenance`
+- [ ] Cal.com webhook secret verification (HMAC)
+- [ ] Resend open/click tracking webhook: `POST /api/webhooks/resend` — update EmailLog
+- [ ] E2E test: cron → email dispatch → EmailLog written
+- [ ] Integration test: Cal.com webhook → DB update
+- [ ] Testing design spec: `docs/superpowers/specs/2026-04-14-testing-design.md`
 
 ---
 
@@ -78,3 +97,5 @@ Customers self-book via Cal.com link. Max receives a weekly summary.
 | 2026-04-13 | Weekly summary: stat blocks with icons (no JS charts — email client limits) |
 | 2026-04-13 | Architecture B: layered `src/lib/email/` module |
 | 2026-04-13 | Sprint 4 implementation complete — 16 tests passing, 0 TS errors, 9 commits |
+| 2026-04-14 | Production live on torqr.de — Cloudflare + custom domain configured, Vercel env vars set |
+| 2026-04-14 | Sprint 5 starts — Cal.com webhook, Resend tracking, automated test suite |

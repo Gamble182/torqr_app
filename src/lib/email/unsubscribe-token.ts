@@ -40,6 +40,6 @@ export function parseUnsubscribePath(
 }
 
 export function buildUnsubscribeUrl(customerId: string): string {
-  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+  const baseUrl = process.env.APP_URL || process.env.NEXTAUTH_URL || 'http://localhost:3000';
   return `${baseUrl}/unsubscribe/${buildUnsubscribePath(customerId)}`;
 }
