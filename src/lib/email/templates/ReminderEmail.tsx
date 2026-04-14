@@ -13,13 +13,15 @@ import {
 
 export interface ReminderEmailProps {
   customerName: string;
-  maintenanceDate: string; // formatted: DD.MM.YYYY
+  maintenanceDate: string;
   heaterManufacturer: string | null;
   heaterModel: string;
   heaterSerialNumber: string | null;
   weeksUntil: 4 | 1;
   calComUrl: string;
   maxPhone: string;
+  maxEmail: string;
+  maxName: string;
   unsubscribeUrl: string;
 }
 
@@ -32,6 +34,8 @@ export function ReminderEmail({
   weeksUntil,
   calComUrl,
   maxPhone,
+  maxEmail,
+  maxName,
   unsubscribeUrl,
 }: ReminderEmailProps) {
   const heaterInfo = [heaterManufacturer, heaterModel].filter(Boolean).join(' ');
@@ -40,13 +44,7 @@ export function ReminderEmail({
   return (
     <Html lang="de">
       <Head />
-      <Body
-        style={{
-          fontFamily: 'sans-serif',
-          backgroundColor: '#f9fafb',
-          padding: '20px',
-        }}
-      >
+      <Body style={{ fontFamily: 'sans-serif', backgroundColor: '#f9fafb', padding: '20px' }}>
         <Container
           style={{
             maxWidth: '560px',
@@ -63,14 +61,16 @@ export function ReminderEmail({
           <Text style={{ color: '#374151', margin: '0 0 8px' }}>
             Guten Tag {customerName},
           </Text>
+          <Text style={{ color: '#374151', margin: '0 0 8px' }}>
+            Ihr nächster Wartungstermin für Ihre Heizungsanlage rückt näher — in{' '}
+            <strong>{weeksUntil} {weekWord}</strong> ist es soweit.
+          </Text>
           <Text style={{ color: '#374151', margin: '0 0 24px' }}>
-            der Wartungstermin für Ihre Heizungsanlage steht in{' '}
-            <strong>
-              {weeksUntil} {weekWord}
-            </strong>{' '}
-            an.
+            Regelmäßige Wartungen sorgen für einen sicheren und effizienten Betrieb Ihrer
+            Anlage — und können teure Reparaturen im Winter verhindern.
           </Text>
 
+          {/* Heater card */}
           <Section
             style={{
               backgroundColor: '#f3f4f6',
@@ -85,9 +85,10 @@ export function ReminderEmail({
                 color: '#6b7280',
                 fontSize: '12px',
                 textTransform: 'uppercase',
+                letterSpacing: '0.05em',
               }}
             >
-              Anlage
+              Ihre Anlage
             </Text>
             <Text style={{ margin: '0 0 4px', fontWeight: 'bold', color: '#111827' }}>
               {heaterInfo}
@@ -98,7 +99,7 @@ export function ReminderEmail({
               </Text>
             )}
             <Text style={{ margin: '0', color: '#374151' }}>
-              Termindatum: <strong>{maintenanceDate}</strong>
+              Wartungstermin: <strong>{maintenanceDate}</strong>
             </Text>
           </Section>
 
@@ -122,18 +123,45 @@ export function ReminderEmail({
 
           <Hr style={{ margin: '32px 0 16px', borderColor: '#e5e7eb' }} />
 
+          {/* Contact section */}
+          <Text style={{ color: '#374151', fontSize: '14px', margin: '0 0 8px' }}>
+            Bei Fragen erreichen Sie mich direkt:
+          </Text>
+          {maxPhone && (
+            <Text style={{ color: '#374151', fontSize: '14px', margin: '0 0 4px' }}>
+              📞{' '}
+              <Link href={`tel:${maxPhone}`} style={{ color: '#2563eb' }}>
+                {maxPhone}
+              </Link>
+            </Text>
+          )}
+          {maxEmail && (
+            <Text style={{ color: '#374151', fontSize: '14px', margin: '0 0 16px' }}>
+              ✉️{' '}
+              <Link href={`mailto:${maxEmail}`} style={{ color: '#2563eb' }}>
+                {maxEmail}
+              </Link>
+            </Text>
+          )}
+
+          {/* Sign-off */}
           <Text style={{ color: '#374151', fontSize: '14px', margin: '0' }}>
-            Bei Fragen erreichen Sie uns unter: <strong>{maxPhone}</strong>
+            Mit freundlichen Grüßen,
+          </Text>
+          <Text style={{ color: '#111827', fontSize: '14px', fontWeight: '600', margin: '4px 0 0' }}>
+            {maxName}
           </Text>
 
-          <Hr style={{ margin: '16px 0', borderColor: '#e5e7eb' }} />
+          <Hr style={{ margin: '24px 0 16px', borderColor: '#e5e7eb' }} />
 
           <Text style={{ color: '#9ca3af', fontSize: '11px', margin: '0' }}>
-            Sie erhalten diese E-Mail, weil Ihre Kontaktdaten bei uns für
-            Wartungserinnerungen hinterlegt sind.{' '}
+            Sie erhalten diese E-Mail, weil Ihre Kontaktdaten bei uns für Wartungserinnerungen
+            hinterlegt sind. Wenn Sie keine weiteren Erinnerungen erhalten möchten, können Sie
+            sich{' '}
             <Link href={unsubscribeUrl} style={{ color: '#9ca3af' }}>
-              Abmelden
+              hier abmelden
             </Link>
+            .
           </Text>
         </Container>
       </Body>

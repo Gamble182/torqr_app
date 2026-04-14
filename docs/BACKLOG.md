@@ -24,6 +24,10 @@
 | 5 | Feature / Sprint | Account page — user can change password, update personal info, manage account settings. Bottom-left avatar/user chip should link to it | Medium | 2026-04-14 |
 | 6 | UX / Sprint | Full mobile responsiveness — all pages must feel native on mobile. Audit and rework layouts, touch targets, typography, spacing across entire app | High | 2026-04-14 |
 | 7 | Feature / Sprint | Admin panel — `/admin` route (same project), role-based access (`User.role: USER\|ADMIN`). Views: all users, EmailLog, CronRun, user CRUD. No separate app needed. | Medium | 2026-04-14 |
+| 8 | Feature / Sprint | Account/Profile page — user can update name, phone, email, password, and add company name. Phone + company name appear in reminder email footer. Link from bottom-left avatar chip. | High | 2026-04-14 |
+| 9 | Email | Add `companyName` field to User model — needed for reminder email sign-off ("Mit freundlichen Grüßen, [Name] / [Firma]"). Part of account page sprint. | Medium | 2026-04-14 |
+| 10 | Feature / Sprint | Booking feed / news section — when Cal.com webhook fires on booking, store appointment in DB and show in dashboard or customer detail as "Gebuchte Termine". Gives visibility into Cal.com activity without leaving the app. | Medium | 2026-04-14 |
+| 11 | Decision | Calendar integration — recommendation: do NOT build own calendar. Use Cal.com for scheduling, let users sync to Google/Outlook via Cal.com. If needed later: embed Cal.com iframe or link. | Low | 2026-04-14 |
 
 ---
 

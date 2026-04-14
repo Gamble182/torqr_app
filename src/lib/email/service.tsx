@@ -21,7 +21,7 @@ export async function sendReminder(
     where: { id: heaterId },
     include: {
       customer: true,
-      user: { select: { phone: true } },
+      user: { select: { name: true, email: true, phone: true } },
     },
   });
 
@@ -45,6 +45,8 @@ export async function sendReminder(
       weeksUntil,
       calComUrl: CAL_COM_URL,
       maxPhone: user?.phone ?? '',
+      maxEmail: user?.email ?? '',
+      maxName: user?.name ?? '',
       unsubscribeUrl: buildUnsubscribeUrl(customer.id),
     })
   );
@@ -55,7 +57,7 @@ export async function sendReminder(
   const { data, error } = await resend.emails.send({
     from: FROM_EMAIL,
     to: customer.email as string,
-    subject: `Wartungserinnerung: Termin in ${weeksUntil} ${weekWord} – ${heaterLabel}`,
+    subject: `Wartungserinnerung – Ihre Heizungsanlage: Termin in ${weeksUntil} ${weekWord}`,
     html,
   });
 
