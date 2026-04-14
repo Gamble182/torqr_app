@@ -30,6 +30,7 @@ model User {
   heaters       Heater[]
   maintenances  Maintenance[]
   sessions      Session[]
+  bookings      Booking[]
 
   @@map("users")
 }
@@ -78,6 +79,7 @@ model Customer {
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   heaters    Heater[]
   emailLogs  EmailLog[]
+  bookings   Booking[]
 
   @@index([userId])
   @@index([email])
@@ -250,4 +252,39 @@ model LoginLog {
   @@index([userId])
   @@index([createdAt])
   @@map("login_logs")
+}
+
+// ============================================================================
+// CAL.COM BOOKINGS
+// ============================================================================
+
+model Booking {
+  id             String        @id @default(uuid())
+  calBookingUid  String        @unique // Cal.com booking UID — prevents duplicates
+  triggerEvent   String        // BOOKING_CREATED, BOOKING_CANCELLED, etc.
+  startTime      DateTime
+  endTime        DateTime?
+  title          String?
+  attendeeName   String?
+  attendeeEmail  String?
+  status         BookingStatus @default(CONFIRMED)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  // Relations
+  userId     String
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([customerId])
+  @@index([startTime])
+  @@map("bookings")
+}
+
+enum BookingStatus {
+  CONFIRMED
+  CANCELLED
+  RESCHEDULED
 }
