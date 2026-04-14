@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { useCustomer, useDeleteCustomer } from '@/hooks/useCustomers';
 import { useHeaters, useDeleteHeater } from '@/hooks/useHeaters';
+import { useBookings } from '@/hooks/useBookings';
 import {
   ArrowLeftIcon,
   PencilIcon,
@@ -30,6 +31,8 @@ import {
   WrenchIcon,
   InfoIcon,
   BellOffIcon,
+  CalendarCheckIcon,
+  XCircleIcon,
 } from 'lucide-react';
 import { HeaterFormModal } from '@/components/HeaterFormModal';
 import { MaintenanceFormModal } from '@/components/MaintenanceFormModal';
@@ -102,6 +105,7 @@ export default function CustomerDetailPage() {
 
   const { data: customer, isLoading, error, refetch } = useCustomer(customerId);
   const { data: heaters, refetch: refetchHeaters } = useHeaters({ customerId });
+  const { data: bookings } = useBookings(customerId);
   const deleteCustomer = useDeleteCustomer();
   const deleteHeater = useDeleteHeater();
 
@@ -495,6 +499,96 @@ export default function CustomerDetailPage() {
                               {formatDate(heater.nextMaintenance)}
                             </p>
                           </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </Card>
+          {/* Cal.com Bookings */}
+          <Card className="p-6">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="text-base font-semibold text-foreground flex items-center gap-2">
+                <CalendarCheckIcon className="h-4 w-4 text-muted-foreground" />
+                Gebuchte Termine ({bookings?.length || 0})
+              </h2>
+            </div>
+
+            {(!bookings || bookings.length === 0) ? (
+              <div className="text-center py-10 border-2 border-dashed border-border rounded-xl bg-muted/20">
+                <CalendarCheckIcon className="h-8 w-8 text-muted-foreground/40 mx-auto mb-3" />
+                <p className="text-sm font-semibold text-foreground mb-1">Keine Termine gebucht</p>
+                <p className="text-xs text-muted-foreground">
+                  Termine erscheinen hier automatisch, sobald der Kunde über Cal.com bucht.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {bookings.map((booking) => {
+                  const isPast = new Date(booking.startTime) < new Date();
+                  const isCancelled = booking.status === 'CANCELLED';
+                  return (
+                    <div
+                      key={booking.id}
+                      className={`flex items-start gap-4 p-4 rounded-xl border transition-all ${
+                        isCancelled
+                          ? 'border-border bg-muted/30 opacity-60'
+                          : isPast
+                          ? 'border-border bg-muted/20'
+                          : 'border-primary/20 bg-primary/5'
+                      }`}
+                    >
+                      <div className={`flex items-center justify-center w-9 h-9 rounded-lg shrink-0 ${
+                        isCancelled ? 'bg-muted' : isPast ? 'bg-muted' : 'bg-primary/10'
+                      }`}>
+                        {isCancelled
+                          ? <XCircleIcon className="h-4 w-4 text-muted-foreground" />
+                          : <CalendarCheckIcon className={`h-4 w-4 ${isPast ? 'text-muted-foreground' : 'text-primary'}`} />
+                        }
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                          <p className="text-sm font-semibold text-foreground">
+                            {booking.title || 'Termin'}
+                          </p>
+                          {isCancelled && (
+                            <span className="text-xs px-1.5 py-0.5 rounded bg-muted text-muted-foreground border border-border">
+                              Storniert
+                            </span>
+                          )}
+                          {!isPast && !isCancelled && (
+                            <span className="text-xs px-1.5 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
+                              Bevorstehend
+                            </span>
+                          )}
+                          {isPast && !isCancelled && (
+                            <span className="text-xs px-1.5 py-0.5 rounded bg-muted text-muted-foreground border border-border">
+                              Vergangen
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          {new Date(booking.startTime).toLocaleDateString('de-DE', {
+                            weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric',
+                          })}
+                          {', '}
+                          {new Date(booking.startTime).toLocaleTimeString('de-DE', {
+                            hour: '2-digit', minute: '2-digit',
+                          })}
+                          {booking.endTime && (
+                            <> – {new Date(booking.endTime).toLocaleTimeString('de-DE', {
+                              hour: '2-digit', minute: '2-digit',
+                            })}</>
+                          )}
+                          {' Uhr'}
+                        </p>
+                        {booking.attendeeName && (
+                          <p className="text-xs text-muted-foreground mt-0.5">
+                            Gebucht von: {booking.attendeeName}
+                            {booking.attendeeEmail && ` (${booking.attendeeEmail})`}
+                          </p>
                         )}
                       </div>
                     </div>
