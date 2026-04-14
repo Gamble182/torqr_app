@@ -205,7 +205,8 @@ export default function EditCustomerPage() {
 
       if (result.success) {
         toast.success('Kunde erfolgreich aktualisiert!');
-        router.push('/dashboard/customers');
+        router.push(`/dashboard/customers/${customerId}`);
+        router.refresh();
       } else {
         // Handle validation errors from API
         if (result.details) {
