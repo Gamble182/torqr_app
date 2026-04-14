@@ -15,6 +15,7 @@ interface Customer {
   city: string;
   phone: string;
   email: string | null;
+  emailOptIn: 'NONE' | 'CONFIRMED' | 'UNSUBSCRIBED';
   heatingType: string;
   additionalEnergySources: string[];
   energyStorageSystems: string[];

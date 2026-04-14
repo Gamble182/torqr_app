@@ -29,6 +29,7 @@ import {
   ClockIcon,
   WrenchIcon,
   InfoIcon,
+  BellOffIcon,
 } from 'lucide-react';
 import { HeaterFormModal } from '@/components/HeaterFormModal';
 import { MaintenanceFormModal } from '@/components/MaintenanceFormModal';
@@ -85,6 +86,13 @@ const getEnergyStorageLabel = (type: string): string => {
     'BATTERY_STORAGE': 'Stromspeicher/Batterie', 'HEAT_STORAGE': 'Wärmespeicher (Pufferspeicher)',
   };
   return labels[type] || type;
+};
+
+const getEmailOptInDisplay = (status: 'NONE' | 'CONFIRMED' | 'UNSUBSCRIBED', hasEmail: boolean) => {
+  if (!hasEmail) return null;
+  if (status === 'CONFIRMED') return { label: 'E-Mail-Erinnerungen aktiv', color: 'text-success', bg: 'bg-success/10 border-success/20' };
+  if (status === 'UNSUBSCRIBED') return { label: 'Abgemeldet', color: 'text-warning-foreground', bg: 'bg-warning/10 border-warning/20' };
+  return { label: 'Keine E-Mail-Erinnerungen', color: 'text-muted-foreground', bg: 'bg-muted/50 border-border' };
 };
 
 export default function CustomerDetailPage() {
@@ -278,11 +286,23 @@ export default function CustomerDetailPage() {
               {customer.email && (
                 <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
                   <MailIcon className="h-4 w-4 text-primary mt-0.5" />
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-xs text-muted-foreground uppercase tracking-wide mb-0.5">E-Mail</p>
                     <a href={`mailto:${customer.email}`} className="text-sm font-medium text-foreground hover:text-primary transition-colors break-all">
                       {customer.email}
                     </a>
+                    {(() => {
+                      const d = getEmailOptInDisplay(customer.emailOptIn, !!customer.email);
+                      if (!d) return null;
+                      return (
+                        <span className={`inline-flex items-center gap-1 mt-1.5 px-2 py-0.5 rounded-md text-xs font-medium border ${d.bg} ${d.color}`}>
+                          {customer.emailOptIn === 'CONFIRMED'
+                            ? <CheckCircle2Icon className="h-3 w-3" />
+                            : <BellOffIcon className="h-3 w-3" />}
+                          {d.label}
+                        </span>
+                      );
+                    })()}
                   </div>
                 </div>
               )}
@@ -498,10 +518,25 @@ export default function CustomerDetailPage() {
                 <span className="text-xs text-muted-foreground">Letzte Änderung</span>
                 <span className="text-xs font-semibold text-foreground">{formatDate(customer.updatedAt)}</span>
               </div>
-              <div className="flex items-center justify-between py-2">
+              <div className="flex items-center justify-between py-2 border-b border-border">
                 <span className="text-xs text-muted-foreground">Erstellt am</span>
                 <span className="text-xs font-semibold text-foreground">{formatDate(customer.createdAt)}</span>
               </div>
+              {customer.email && (() => {
+                const d = getEmailOptInDisplay(customer.emailOptIn, !!customer.email);
+                if (!d) return null;
+                return (
+                  <div className="flex items-center justify-between py-2">
+                    <span className="text-xs text-muted-foreground">E-Mail Status</span>
+                    <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-xs font-medium border ${d.bg} ${d.color}`}>
+                      {customer.emailOptIn === 'CONFIRMED'
+                        ? <CheckCircle2Icon className="h-3 w-3" />
+                        : <BellOffIcon className="h-3 w-3" />}
+                      {d.label}
+                    </span>
+                  </div>
+                );
+              })()}
             </div>
           </Card>
 
