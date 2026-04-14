@@ -43,7 +43,10 @@ export async function sendReminder(
       heaterModel: heater.model,
       heaterSerialNumber: heater.serialNumber,
       weeksUntil,
-      calComUrl: CAL_COM_URL,
+      // Embed IDs as Cal.com metadata for reliable webhook matching (no email guessing)
+      calComUrl: CAL_COM_URL
+        ? `${CAL_COM_URL}?metadata[customerId]=${customer.id}&metadata[userId]=${heater.userId}`
+        : CAL_COM_URL,
       maxPhone: user?.phone ?? '',
       maxEmail: user?.email ?? '',
       maxName: user?.name ?? '',

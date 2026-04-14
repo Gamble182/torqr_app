@@ -48,27 +48,58 @@ export async function POST(req: NextRequest) {
   const attendeeName = attendee?.name ?? null;
   const organizerEmail = (data?.organizer as { email?: string } | undefined)?.email ?? null;
 
+  // Cal.com passes ?metadata[key]=value URL params back in payload.metadata.
+  // Reminder emails embed customerId + userId directly, making this a reliable
+  // direct lookup. Falls back to email matching for direct (non-email) bookings.
+  const metadata = (data?.metadata ?? {}) as Record<string, string>;
+  const metaCustomerId = metadata.customerId ?? null;
+  const metaUserId = metadata.userId ?? null;
+
   if (!bookingUid || !startTime) {
     console.error('[cal-webhook] Missing uid or startTime', { bookingUid, startTime });
     return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
   }
 
-  // Resolve user by organizer email (the Cal.com account owner = our technician)
-  const user = organizerEmail
-    ? await prisma.user.findUnique({ where: { email: organizerEmail } })
+  // --- Resolve user ---
+  // Strategy 1: metadata userId (from reminder email link — most reliable)
+  // Strategy 2: organizer email (Cal.com account owner)
+  let user = metaUserId
+    ? await prisma.user.findUnique({ where: { id: metaUserId } })
     : null;
 
+  if (!user && organizerEmail) {
+    user = await prisma.user.findUnique({ where: { email: organizerEmail } });
+  }
+
   if (!user) {
-    console.warn(`[cal-webhook] No user for organizer: ${organizerEmail} — ignoring`);
+    console.warn(`[cal-webhook] No user resolved — metaUserId: ${metaUserId}, organizer: ${organizerEmail}`);
     return NextResponse.json({ received: true });
   }
 
-  // Match attendee email to an existing customer of this user
-  const customer = attendeeEmail
+  // --- Resolve customer ---
+  // Strategy 1: metadata customerId (from reminder email link — exact match)
+  // Strategy 2: attendee email within the resolved user's customer scope
+  let customer = metaCustomerId
     ? await prisma.customer.findFirst({
-        where: { email: attendeeEmail, userId: user.id },
+        where: { id: metaCustomerId, userId: user.id },
       })
     : null;
+
+  if (!customer && attendeeEmail) {
+    customer = await prisma.customer.findFirst({
+      where: {
+        email: { equals: attendeeEmail, mode: 'insensitive' },
+        userId: user.id,
+      },
+    });
+    if (customer) {
+      console.info(`[cal-webhook] Customer matched via email fallback: ${customer.id}`);
+    }
+  }
+
+  if (!customer) {
+    console.info(`[cal-webhook] No customer matched — booking stored without customerId`);
+  }
 
   // Upsert — idempotent if Cal.com retries
   await prisma.booking.upsert({
@@ -97,6 +128,6 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  console.info(`[cal-webhook] Booking ${bookingUid} stored — customer: ${customer?.id ?? 'unmatched'}`);
+  console.info(`[cal-webhook] Booking ${bookingUid} stored — customer: ${customer?.id ?? 'unmatched'}, strategy: ${metaCustomerId ? 'metadata' : 'email'}`);
   return NextResponse.json({ received: true });
 }
