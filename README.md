@@ -18,6 +18,7 @@ git clone <your-repo-url>
 cd torqr_app
 npm install
 ```
+redeploy
 
 ### 2. Environment Setup
 
