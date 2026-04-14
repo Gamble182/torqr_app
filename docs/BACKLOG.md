@@ -32,3 +32,5 @@
 | # | Area | Description | Resolved |
 |---|------|-------------|----------|
 | 1 | Email | Unsubscribe URL used `localhost:3000` — changed `buildUnsubscribeUrl()` to use `APP_URL` env var | 2026-04-14 |
+| 3 | UI | Edit customer redirect fixed — now returns to customer detail page, not list | 2026-04-14 |
+| 4 | UI | Dashboard nested `<a>` hydration error — replaced `<Link>` with `div` + `useRouter` | 2026-04-14 |
