@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   Loader2Icon,
   UsersIcon,
@@ -23,6 +24,7 @@ import { MaintenanceFormModal } from '@/components/MaintenanceFormModal';
 import { Button } from '@/components/ui/button';
 
 export default function DashboardPage() {
+  const router = useRouter();
   const [timeRange, setTimeRange] = useState(30);
   const { data: stats, isLoading, error, refetch } = useDashboardStats(timeRange);
   const [selectedHeater, setSelectedHeater] = useState<{ id: string; model: string } | null>(null);
@@ -189,12 +191,10 @@ export default function DashboardPage() {
                 return (
                   <div
                     key={maintenance.id}
-                    className={`flex items-center gap-4 p-4 rounded-lg border-l-[3px] border border-border transition-all hover:shadow-sm ${getUrgencyStyles(urgency)}`}
+                    className={`flex items-center gap-4 p-4 rounded-lg border-l-[3px] border border-border transition-all hover:shadow-sm cursor-pointer ${getUrgencyStyles(urgency)}`}
+                    onClick={() => router.push(`/dashboard/customers/${maintenance.customer.id}`)}
                   >
-                    <Link
-                      href={`/dashboard/customers/${maintenance.customer.id}`}
-                      className="flex-1 min-w-0 hover:opacity-80 transition-opacity"
-                    >
+                    <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1.5">
                         <h3 className="font-semibold text-sm text-foreground truncate">
                           {maintenance.customer.name}
@@ -221,7 +221,7 @@ export default function DashboardPage() {
                           </a>
                         </span>
                       </div>
-                    </Link>
+                    </div>
                     <div className="shrink-0 flex items-center gap-3">
                       <div className="text-right hidden sm:block">
                         <p className="text-sm font-medium text-foreground">
