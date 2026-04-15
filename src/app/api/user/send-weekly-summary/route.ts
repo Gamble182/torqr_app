@@ -6,7 +6,7 @@ import { sendWeeklySummary } from '@/lib/email/service';
 export async function POST() {
   try {
     const { userId } = await requireAuth();
-    const { emailsSent } = await sendWeeklySummary();
+    const { emailsSent } = await sendWeeklySummary(userId);
 
     if (emailsSent === 0) {
       return NextResponse.json({
