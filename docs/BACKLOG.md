@@ -1,7 +1,8 @@
 # Backlog — Torqr
 
-> Known issues and improvements to address in future sessions.
-> Add items here as they are discovered. Prioritize and assign to sprints as needed.
+> Single source of truth for all planned, in-progress, and completed work.
+> Open items are prioritized and assigned to sprints as needed.
+> All completed work is recorded here for traceability.
 
 ---
 
@@ -9,7 +10,8 @@
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| | | | | |
+
+Priority levels: **Critical** · **High** · **Medium** · **Low**
 
 ---
 
@@ -17,24 +19,118 @@
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| 1 | Email | Unsubscribe link used `localhost:3000` in production — fixed in code, requires `APP_URL` env var set in Vercel | ~~Fixed~~ | 2026-04-14 |
 | 2 | Email | Weekly summary and reminder emails land in GMX junk folder — new domain reputation issue, improves over time; consider adding DMARC record | Medium | 2026-04-14 |
-| 3 | UI | Edit customer page: entering a new email address does not trigger a page reload / data refresh after save | Medium | 2026-04-14 |
-| 4 | UI | Dashboard page: nested `<a>` inside `<Link>` (phone `tel:` link inside customer card link) — causes hydration error in Next.js. Fix: replace outer `<Link>` with `div` + `onClick` router push | High | 2026-04-14 |
-| 5 | Feature / Sprint | Account page — user can change password, update personal info, manage account settings. Bottom-left avatar/user chip should link to it | Medium | 2026-04-14 |
-| 6 | UX / Sprint | Full mobile responsiveness — all pages must feel native on mobile. Audit and rework layouts, touch targets, typography, spacing across entire app | High | 2026-04-14 |
-| 7 | Feature / Sprint | Admin panel — `/admin` route (same project), role-based access (`User.role: USER\|ADMIN`). Views: all users, EmailLog, CronRun, user CRUD. No separate app needed. | Medium | 2026-04-14 |
-| 8 | Feature / Sprint | Account/Profile page — user can update name, phone, email, password, and add company name. Phone + company name appear in reminder email footer. Link from bottom-left avatar chip. | High | 2026-04-14 |
-| 9 | Email | Add `companyName` field to User model — needed for reminder email sign-off ("Mit freundlichen Grüßen, [Name] / [Firma]"). Part of account page sprint. | Medium | 2026-04-14 |
-| 10 | Feature / Sprint | Booking feed / news section — when Cal.com webhook fires on booking, store appointment in DB and show in dashboard or customer detail as "Gebuchte Termine". Gives visibility into Cal.com activity without leaving the app. | Medium | 2026-04-14 |
-| 11 | Decision | Calendar integration — recommendation: do NOT build own calendar. Use Cal.com for scheduling, let users sync to Google/Outlook via Cal.com. If needed later: embed Cal.com iframe or link. | Low | 2026-04-14 |
+| 5 | Feature | Account page — user can change password, update personal info, manage account settings. Bottom-left avatar/user chip should link to it | Medium | 2026-04-14 |
+| 6 | UX | Full mobile responsiveness — all pages must feel native on mobile. Audit and rework layouts, touch targets, typography, spacing across entire app | High | 2026-04-14 |
+| 7 | Feature | Admin panel — `/admin` route (same project), role-based access (`User.role: USER\|ADMIN`). Views: all users, EmailLog, CronRun, user CRUD. No separate app needed. | Medium | 2026-04-14 |
+| 8 | Feature | Account/Profile page — user can update name, phone, email, password, and add company name. Phone + company name appear in reminder email footer. Link from bottom-left avatar chip. | High | 2026-04-14 |
+| 9 | Email | Add `companyName` field to User model — needed for reminder email sign-off. Part of account page sprint. | Medium | 2026-04-14 |
+| 10 | Feature | Booking feed / news section — when Cal.com webhook fires, show booked appointments in dashboard or customer detail as "Gebuchte Termine" | Medium | 2026-04-14 |
+| 11 | Decision | Calendar integration — recommendation: do NOT build own calendar. Use Cal.com for scheduling, let users sync to Google/Outlook via Cal.com. Embed Cal.com iframe if needed later. | Low | 2026-04-14 |
 
 ---
 
 ## Completed / Resolved
 
+### Sprint 1 — Authentication & Setup (before 2026-01-08)
+
 | # | Area | Description | Resolved |
 |---|------|-------------|----------|
-| 1 | Email | Unsubscribe URL used `localhost:3000` — changed `buildUnsubscribeUrl()` to use `APP_URL` env var | 2026-04-14 |
-| 3 | UI | Edit customer redirect fixed — now returns to customer detail page, not list | 2026-04-14 |
-| 4 | UI | Dashboard nested `<a>` hydration error — replaced `<Link>` with `div` + `useRouter` | 2026-04-14 |
+| S1-1 | Auth | NextAuth v5 integration with email/password authentication | 2026-01-08 |
+| S1-2 | Auth | Protected routes via Next.js middleware | 2026-01-08 |
+| S1-3 | Auth | User session management and auth helpers (`requireAuth()`) | 2026-01-08 |
+| S1-4 | Security | CSRF protection | 2026-01-08 |
+| S1-5 | Security | Rate limiting on API routes | 2026-01-08 |
+| S1-6 | Security | Password hashing with bcrypt | 2026-01-08 |
+| S1-7 | Auth | Login activity logging | 2026-01-08 |
+| S1-8 | DB | Prisma schema initial setup with User, Customer, Heater, Maintenance models | 2026-01-08 |
+| S1-9 | Infra | Supabase PostgreSQL connected (eu-west-1) | 2026-01-08 |
+| S1-10 | UI | Login and register pages | 2026-01-08 |
+
+### Sprint 2 — Customer Management (2026-01-08)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| S2-1 | Backend | Customer CRUD API (`/api/customers`) with Zod validation | 2026-01-08 |
+| S2-2 | Backend | `heatingType` made required field (NOT NULL migration) | 2026-01-08 |
+| S2-3 | Backend | `additionalEnergySources String[]` and `energyStorageSystems String[]` fields added to Customer | 2026-01-08 |
+| S2-4 | UI | Customer list page with search and filter | 2026-01-08 |
+| S2-5 | UI | Customer create / edit forms with German labels and validation messages | 2026-01-08 |
+| S2-6 | UI | Customer detail page with contact, heating system, and notes sections | 2026-01-08 |
+| S2-7 | UI | Custom `MultiSelect` component for energy sources and storage systems | 2026-01-08 |
+| S2-8 | UI | Toast notifications (sonner) for all CRUD operations — messages in German | 2026-01-08 |
+| S2-9 | UI | Horizontal form layout with 4 thematic sections, responsive design | 2026-01-08 |
+| S2-10 | Config | `src/config/heating-systems.json` — 9 categories, 30+ manufacturers | 2026-01-08 |
+
+### Sprint 3 — Heater & Maintenance Management (before 2026-01-13)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| S3-1 | Backend | Heater CRUD API (`/api/heaters`) with category/manufacturer/model structure | 2026-01-13 |
+| S3-2 | Backend | Maintenance CRUD API (`/api/maintenances`) with photo upload | 2026-01-13 |
+| S3-3 | Backend | Supabase Storage integration for maintenance photos | 2026-01-13 |
+| S3-4 | Backend | Dashboard stats API (`/api/dashboard/stats`) — overdue/upcoming counts | 2026-01-13 |
+| S3-5 | UI | Heater list page with search | 2026-01-13 |
+| S3-6 | UI | Heater detail page with maintenance history | 2026-01-13 |
+| S3-7 | UI | Maintenance form modal (add/edit) | 2026-01-13 |
+| S3-8 | UI | Wartungen overview page with filters | 2026-01-13 |
+| S3-9 | UI | Dashboard with stats (overdue, upcoming, total counts) | 2026-01-13 |
+| S3-10 | UI | HeatingSystemSelector — cascading category → manufacturer → model dropdowns | 2026-01-13 |
+| S3-11 | UI | StorageFields and BatteryFields split components | 2026-01-13 |
+| S3-12 | UI | AddNewEntryModal — reusable modal for adding new heating categories/manufacturers | 2026-01-13 |
+| S3-13 | UI | Pagination component | 2026-01-13 |
+
+### Sprint 3 Architecture Upgrade (2026-01-13)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| A-1 | Architecture | TanStack Query v5 (React Query) integration — global QueryClient with 5-min stale time | 2026-01-13 |
+| A-2 | Hooks | `useCustomers` hook — Customer CRUD with caching and query invalidation | 2026-01-13 |
+| A-3 | Hooks | `useHeaters` hook — Heater CRUD with search/filter support | 2026-01-13 |
+| A-4 | Hooks | `useMaintenances` hook — Maintenance CRUD operations | 2026-01-13 |
+| A-5 | Hooks | `useDashboard` hook — Dashboard stats with 5-min refetch | 2026-01-13 |
+| A-6 | TypeScript | Fixed all TS errors across API routes and pages (0 errors, clean build) | 2026-01-13 |
+| A-7 | Infra | Production deployment on Vercel — initial setup | 2026-01-13 |
+
+### Sprint 4 — Email Automation (2026-04-13 → 2026-04-14)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| S4-1 | Email | `src/lib/email/client.ts` — Resend singleton | 2026-04-13 |
+| S4-2 | Email | `src/lib/email/opt-in.ts` — `computeOptInData()` with unit tests | 2026-04-13 |
+| S4-3 | Email | `src/lib/email/service.tsx` — `sendReminder()`, `sendWeeklySummary()` | 2026-04-13 |
+| S4-4 | Email | `ReminderEmail.tsx` — customer maintenance reminder template (German) | 2026-04-13 |
+| S4-5 | Email | `WeeklySummaryEmail.tsx` — weekly summary template with stat blocks | 2026-04-13 |
+| S4-6 | Email | `unsubscribe-token.ts` — HMAC-SHA256 stateless unsubscribe tokens with unit tests | 2026-04-13 |
+| S4-7 | API | `POST /api/cron/daily-reminders` — sends reminders to customers with upcoming maintenance | 2026-04-13 |
+| S4-8 | API | `POST /api/cron/weekly-summary` — sends weekly digest to shop owner | 2026-04-13 |
+| S4-9 | API | `GET/POST /api/email/unsubscribe/[token]` — stateless unsubscribe endpoint | 2026-04-13 |
+| S4-10 | UI | Public unsubscribe page (`/unsubscribe/[token]`) | 2026-04-13 |
+| S4-11 | UI | Customer form: "Keine E-Mail-Erinnerungen" toggle + email suppression status badge | 2026-04-13 |
+| S4-12 | Config | `vercel.json` cron schedules — daily 06:00 UTC, weekly Monday 07:00 UTC | 2026-04-13 |
+| S4-13 | DB | `EmailLog`, `CronRun`, `EmailOptInStatus`, `EmailType` models added to Prisma schema | 2026-04-13 |
+| S4-14 | Infra | Production deployment live on torqr.de — Cloudflare DNS + custom domain configured | 2026-04-14 |
+| S4-15 | Email | Reminder email template redesigned — technician name, email, phone in footer; improved German copy | 2026-04-14 |
+| S4-16 | Email | Email service updated to fetch and pass technician name + email alongside phone | 2026-04-14 |
+
+### Sprint 5 — Cal.com Webhook Integration (2026-04-14)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| S5-1 | DB | `Booking` model added to Prisma schema with Cal.com fields | 2026-04-14 |
+| S5-2 | DB | Bookings table created in Supabase | 2026-04-14 |
+| S5-3 | API | `POST /api/webhooks/cal` — Cal.com webhook handler with HMAC verification | 2026-04-14 |
+| S5-4 | API | Webhook: two-strategy customer resolution (metadata `customerId` first, email fallback) | 2026-04-14 |
+| S5-5 | API | Webhook: user resolution via metadata `userId` first, organizer email fallback | 2026-04-14 |
+| S5-6 | API | `GET /api/bookings` — bookings list endpoint scoped to authenticated user | 2026-04-14 |
+| S5-7 | Hooks | `useBookings` hook — React Query hook for bookings data | 2026-04-14 |
+| S5-8 | UI | Cal.com bookings section added to customer detail page | 2026-04-14 |
+| S5-9 | Email | Reminder email Cal.com URL now embeds `?metadata[customerId]=...&metadata[userId]=...` | 2026-04-14 |
+
+### Bugfixes & Improvements (2026-04-14)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| B-1 | Email | Unsubscribe URL used `localhost:3000` in production — fixed via `APP_URL` env var | 2026-04-14 |
+| B-2 | UI | Edit customer page now redirects to customer detail page instead of list after save | 2026-04-14 |
+| B-3 | UI | Dashboard nested `<a>` hydration error — replaced `<Link>` with `div` + `useRouter` | 2026-04-14 |
