@@ -105,6 +105,41 @@ export const userUpdateSchema = z.object({
   email: emailSchema.optional(),
 });
 
+/**
+ * User profile update schema (account page — profile card)
+ */
+export const userProfileUpdateSchema = z.object({
+  name: z
+    .string()
+    .min(2, 'Name muss mindestens 2 Zeichen haben')
+    .max(100, 'Name zu lang')
+    .trim()
+    .optional(),
+  email: emailSchema.optional(),
+  phone: optionalPhoneSchema.optional(),
+  companyName: z
+    .string()
+    .max(100, 'Firmenname zu lang')
+    .trim()
+    .optional()
+    .or(z.literal('')),
+});
+
+/**
+ * Password change schema (account page — password card)
+ */
+export const userPasswordUpdateSchema = z.object({
+  currentPassword: z.string().min(1, 'Aktuelles Passwort ist erforderlich'),
+  newPassword: passwordSchema,
+});
+
+/**
+ * User preferences update schema (account page — notifications card)
+ */
+export const userPreferencesUpdateSchema = z.object({
+  emailWeeklySummary: z.boolean(),
+});
+
 // ============================================================================
 // CUSTOMER SCHEMAS
 // ============================================================================
