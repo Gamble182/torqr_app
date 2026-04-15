@@ -21,7 +21,7 @@ export async function sendReminder(
     where: { id: heaterId },
     include: {
       customer: true,
-      user: { select: { name: true, email: true, phone: true } },
+      user: { select: { name: true, email: true, phone: true, companyName: true } },
     },
   });
 
@@ -50,6 +50,7 @@ export async function sendReminder(
       maxPhone: user?.phone ?? '',
       maxEmail: user?.email ?? '',
       maxName: user?.name ?? '',
+      maxCompanyName: user?.companyName ?? null,
       unsubscribeUrl: buildUnsubscribeUrl(customer.id),
     })
   );

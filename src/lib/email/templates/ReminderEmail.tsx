@@ -22,6 +22,7 @@ export interface ReminderEmailProps {
   maxPhone: string;
   maxEmail: string;
   maxName: string;
+  maxCompanyName: string | null;
   unsubscribeUrl: string;
 }
 
@@ -36,6 +37,7 @@ export function ReminderEmail({
   maxPhone,
   maxEmail,
   maxName,
+  maxCompanyName,
   unsubscribeUrl,
 }: ReminderEmailProps) {
   const heaterInfo = [heaterManufacturer, heaterModel].filter(Boolean).join(' ');
@@ -151,6 +153,11 @@ export function ReminderEmail({
           <Text style={{ color: '#111827', fontSize: '14px', fontWeight: '600', margin: '4px 0 0' }}>
             {maxName}
           </Text>
+          {maxCompanyName && (
+            <Text style={{ color: '#6b7280', fontSize: '13px', margin: '2px 0 0' }}>
+              {maxCompanyName}
+            </Text>
+          )}
 
           <Hr style={{ margin: '24px 0 16px', borderColor: '#e5e7eb' }} />
 
