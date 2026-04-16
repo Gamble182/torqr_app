@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -67,6 +68,7 @@ export function HeaterFormModal({
   onClose,
   onSuccess,
 }: HeaterFormModalProps) {
+  const queryClient = useQueryClient();
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [formData, setFormData] = useState<FormData>({
@@ -166,6 +168,7 @@ export function HeaterFormModal({
       const result = await response.json();
 
       if (result.success) {
+        await queryClient.invalidateQueries({ queryKey: ['heaters'] });
         toast.success(heater ? 'Heizsystem aktualisiert!' : 'Heizsystem hinzugefügt!');
         onSuccess();
       } else {
