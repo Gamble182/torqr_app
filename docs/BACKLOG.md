@@ -20,17 +20,33 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
 | 2 | Email | Weekly summary and reminder emails land in GMX junk folder — new domain reputation issue, improves over time; consider adding DMARC record | Medium | 2026-04-14 |
-| 5 | Feature | Account page — user can change password, update personal info, manage account settings. Bottom-left avatar/user chip should link to it | Medium | 2026-04-14 |
 | 6 | UX | Full mobile responsiveness — all pages must feel native on mobile. Audit and rework layouts, touch targets, typography, spacing across entire app | High | 2026-04-14 |
 | 7 | Feature | Admin panel — `/admin` route (same project), role-based access (`User.role: USER\|ADMIN`). Views: all users, EmailLog, CronRun, user CRUD. No separate app needed. | Medium | 2026-04-14 |
-| 8 | Feature | Account/Profile page — user can update name, phone, email, password, and add company name. Phone + company name appear in reminder email footer. Link from bottom-left avatar chip. | High | 2026-04-14 |
-| 9 | Email | Add `companyName` field to User model — needed for reminder email sign-off. Part of account page sprint. | Medium | 2026-04-14 |
 | 10 | Feature | Booking feed / news section — when Cal.com webhook fires, show booked appointments in dashboard or customer detail as "Gebuchte Termine" | Medium | 2026-04-14 |
 | 11 | Decision | Calendar integration — recommendation: do NOT build own calendar. Use Cal.com for scheduling, let users sync to Google/Outlook via Cal.com. Embed Cal.com iframe if needed later. | Low | 2026-04-14 |
+| 12 | Feature | Manual reminder email trigger on customer detail page — button in email section sends the standard reminder email to that specific customer regardless of Wartung date. Max can use this to manually remind any customer at any time. | High | 2026-04-15 |
+| 13 | Email | Weekly summary email content refinement — review and improve copy, structure, and data shown in the weekly summary email template. To be done after account page is live. | Medium | 2026-04-15 |
+| 14 | Feature | Delete account / danger zone — allow user to delete their own account and all associated data. Requires confirmation dialog. To be added to account page settings. | Low | 2026-04-15 |
+| 15 | Architecture | Multi-tenancy decision — evaluate shared database with logical separation (per-user scoping) vs. separate databases per tenant. Coding agent should produce a recommendation based on existing architecture. | High | 2026-04-15 |
+| 16 | Bug | Customer not shown after creation — UI does not update after adding a new customer; customer only appears after manual page reload. Fix requires query invalidation or optimistic update. | High | 2026-04-15 |
+| 17 | Bug | Heater not shown after creation — after adding a heating system and navigating back, it is not displayed until the page is manually reloaded. Fix requires query invalidation. | High | 2026-04-15 |
+| 18 | Bug | Photo uploader broken — photo upload in maintenance dialog is non-functional. Needs investigation and fix. | High | 2026-04-15 |
+| 19 | Feature | Customer email field — make email required (currently optional). Add mandatory asterisk (*), validate non-empty and valid email format. | Medium | 2026-04-15 |
+| 20 | Feature | Maintenance list — show "terminiert" status badge on maintenance entries that have a linked Cal.com booking. | Medium | 2026-04-15 |
+| 21 | Feature | Maintenance "erledigt" dialog — make notes field mandatory. Add mandatory asterisk (*) and block submission if empty. | Medium | 2026-04-15 |
+| 22 | UX | Customer detail quick-actions — buttons are too tightly spaced. Improve layout with more padding/gap for better readability and touch usability. | Low | 2026-04-15 |
 
 ---
 
 ## Completed / Resolved
+
+### Sprint 6 — Account & Settings Page (2026-04-16)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 5 | Feature | Account page — user can change password, update personal info, manage account settings. Bottom-left avatar/user chip links to `/dashboard/account` | 2026-04-16 |
+| 8 | Feature | Account/Profile page — name, phone, email, password, companyName. Phone + companyName appear in reminder email footer. | 2026-04-16 |
+| 9 | Email | `companyName` field added to User model — appears in reminder email sign-off footer | 2026-04-16 |
 
 ### Sprint 1 — Authentication & Setup (before 2026-01-08)
 
