@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
+import { useCreateCustomer } from '@/hooks/useCustomers';
 import {
   Select,
   SelectContent,
@@ -15,9 +16,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { MultiSelect } from '@/components/ui/multi-select';
-import { toast } from 'sonner';
 import { ArrowLeftIcon, Loader2Icon } from 'lucide-react';
-import { z } from 'zod';
 
 interface FormData {
   name: string;
@@ -64,7 +63,7 @@ const ENERGY_STORAGE_SYSTEMS = [
 
 export default function NewCustomerPage() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const createCustomer = useCreateCustomer();
   const [errors, setErrors] = useState<FormErrors>({});
   const [formData, setFormData] = useState<FormData>({
     name: '', street: '', zipCode: '', city: '', phone: '', email: '',
@@ -94,39 +93,30 @@ export default function NewCustomerPage() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-    setLoading(true);
-    try {
-      const response = await fetch('/api/customers', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-      const result = await response.json();
-      if (result.success) {
-        toast.success('Kunde erfolgreich erstellt!');
-        router.push('/dashboard/customers');
-      } else {
-        if (result.details) {
-          const apiErrors: FormErrors = {};
-          result.details.forEach((error: z.ZodIssue) => {
-            const field = error.path[0] as string;
-            apiErrors[field] = error.message;
-          });
-          setErrors(apiErrors);
-          toast.error('Bitte überprüfen Sie Ihre Eingaben');
-        } else {
-          toast.error(`Fehler: ${result.error}`);
-        }
+
+    createCustomer.mutate(
+      {
+        name: formData.name,
+        street: formData.street,
+        zipCode: formData.zipCode,
+        city: formData.city,
+        phone: formData.phone,
+        email: formData.email || undefined,
+        suppressEmail: formData.suppressEmail,
+        heatingType: formData.heatingType,
+        additionalEnergySources: formData.additionalEnergySources,
+        energyStorageSystems: formData.energyStorageSystems,
+        notes: formData.notes || undefined,
+      },
+      {
+        onSuccess: () => {
+          router.push('/dashboard/customers');
+        },
       }
-    } catch (err) {
-      console.error('Error creating customer:', err);
-      toast.error('Fehler beim Erstellen des Kunden');
-    } finally {
-      setLoading(false);
-    }
+    );
   };
 
   return (
@@ -324,11 +314,11 @@ export default function NewCustomerPage() {
           {/* Actions */}
           <div className="flex items-center justify-end gap-3 pt-6 border-t border-border">
             <Link href="/dashboard/customers">
-              <Button type="button" variant="outline" disabled={loading}>Abbrechen</Button>
+              <Button type="button" variant="outline" disabled={createCustomer.isPending}>Abbrechen</Button>
             </Link>
-            <Button type="submit" disabled={loading}>
-              {loading && <Loader2Icon className="h-4 w-4 animate-spin" />}
-              {loading ? 'Wird erstellt...' : 'Kunde erstellen'}
+            <Button type="submit" disabled={createCustomer.isPending}>
+              {createCustomer.isPending && <Loader2Icon className="h-4 w-4 animate-spin" />}
+              {createCustomer.isPending ? 'Wird erstellt...' : 'Kunde erstellen'}
             </Button>
           </div>
         </form>
