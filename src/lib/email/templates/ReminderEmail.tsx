@@ -101,7 +101,7 @@ export function ReminderEmail({
               </Text>
             )}
             <Text style={{ margin: '0', color: '#374151' }}>
-              Wartungstermin: <strong>{maintenanceDate}</strong>
+              Geplanter Wartungstermin: <strong>{maintenanceDate}</strong>
             </Text>
           </Section>
 

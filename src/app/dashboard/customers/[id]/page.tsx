@@ -33,6 +33,7 @@ import {
   BellOffIcon,
   CalendarCheckIcon,
   XCircleIcon,
+  SendIcon,
 } from 'lucide-react';
 import { HeaterFormModal } from '@/components/HeaterFormModal';
 import { MaintenanceFormModal } from '@/components/MaintenanceFormModal';
@@ -113,19 +114,21 @@ export default function CustomerDetailPage() {
   const [editingHeater, setEditingHeater] = useState<Heater | null>(null);
   const [showMaintenanceForm, setShowMaintenanceForm] = useState(false);
   const [selectedHeater, setSelectedHeater] = useState<Heater | null>(null);
-  const [sendingReminder, setSendingReminder] = useState(false);
+  const [sendingReminder, setSendingReminder] = useState<Record<string, boolean>>({});
 
-  const handleSendReminder = async () => {
+  const handleSendReminder = async (heaterId: string, heaterModel: string) => {
     if (!customer?.email) {
       toast.error('Dieser Kunde hat keine E-Mail-Adresse hinterlegt');
       return;
     }
-    if (!confirm(`Erinnerungs-E-Mail an ${customer.email} senden?`)) return;
+    if (!confirm(`Erinnerung für "${heaterModel}" an ${customer.email} senden?`)) return;
 
-    setSendingReminder(true);
+    setSendingReminder((prev) => ({ ...prev, [heaterId]: true }));
     try {
       const res = await fetch(`/api/customers/${customerId}/send-reminder`, {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ heaterId }),
       });
       const result = await res.json();
       if (result.success) {
@@ -136,7 +139,7 @@ export default function CustomerDetailPage() {
     } catch {
       toast.error('Fehler beim Senden der E-Mail');
     } finally {
-      setSendingReminder(false);
+      setSendingReminder((prev) => ({ ...prev, [heaterId]: false }));
     }
   };
 
@@ -477,6 +480,19 @@ export default function CustomerDetailPage() {
                             <CheckCircle2Icon className="h-3.5 w-3.5" />
                             Erledigt
                           </Button>
+                          {customer.email && (
+                            <Button
+                              variant="outline" size="icon-sm"
+                              onClick={() => handleSendReminder(heater.id, heater.model)}
+                              disabled={!!sendingReminder[heater.id]}
+                              title="Erinnerung senden"
+                              className="w-9 h-9"
+                            >
+                              {sendingReminder[heater.id]
+                                ? <Loader2Icon className="h-3.5 w-3.5 animate-spin" />
+                                : <SendIcon className="h-3.5 w-3.5" />}
+                            </Button>
+                          )}
                           <Button variant="outline" size="icon-sm" onClick={() => handleEditHeater(heater)} className="w-9 h-9">
                             <PencilIcon className="h-3.5 w-3.5" />
                           </Button>
@@ -680,18 +696,6 @@ export default function CustomerDetailPage() {
                 <HomeIcon className="h-3.5 w-3.5" />
                 Heizsystem hinzufügen
               </Button>
-              {customer.email && (
-                <Button
-                  variant="outline" className="w-full justify-start py-2.5" size="sm"
-                  onClick={handleSendReminder}
-                  disabled={sendingReminder}
-                >
-                  {sendingReminder
-                    ? <Loader2Icon className="h-3.5 w-3.5 animate-spin" />
-                    : <MailIcon className="h-3.5 w-3.5" />}
-                  Erinnerung senden
-                </Button>
-              )}
             </div>
           </Card>
         </div>

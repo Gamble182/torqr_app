@@ -4,12 +4,15 @@ import { prisma } from '@/lib/prisma';
 import { sendReminder } from '@/lib/email/service';
 
 export async function POST(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await requireAuth();
     const { id: customerId } = await params;
+
+    const body = await req.json().catch(() => ({})) as { heaterId?: string };
+    const { heaterId } = body;
 
     // Verify customer belongs to this user
     const customer = await prisma.customer.findUnique({
@@ -31,16 +34,15 @@ export async function POST(
       );
     }
 
-    // Find the first heater for this customer that belongs to this user
-    const heater = await prisma.heater.findFirst({
-      where: { customerId, userId },
-      orderBy: { createdAt: 'asc' },
-    });
+    // If heaterId provided, look up that specific heater; otherwise fall back to first
+    const heater = heaterId
+      ? await prisma.heater.findFirst({ where: { id: heaterId, customerId, userId } })
+      : await prisma.heater.findFirst({ where: { customerId, userId }, orderBy: { createdAt: 'asc' } });
 
     if (!heater) {
       return NextResponse.json(
-        { success: false, error: 'Dieser Kunde hat noch keine Heizsysteme' },
-        { status: 400 }
+        { success: false, error: 'Heizsystem nicht gefunden' },
+        { status: 404 }
       );
     }
 
