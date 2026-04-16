@@ -113,6 +113,32 @@ export default function CustomerDetailPage() {
   const [editingHeater, setEditingHeater] = useState<Heater | null>(null);
   const [showMaintenanceForm, setShowMaintenanceForm] = useState(false);
   const [selectedHeater, setSelectedHeater] = useState<Heater | null>(null);
+  const [sendingReminder, setSendingReminder] = useState(false);
+
+  const handleSendReminder = async () => {
+    if (!customer?.email) {
+      toast.error('Dieser Kunde hat keine E-Mail-Adresse hinterlegt');
+      return;
+    }
+    if (!confirm(`Erinnerungs-E-Mail an ${customer.email} senden?`)) return;
+
+    setSendingReminder(true);
+    try {
+      const res = await fetch(`/api/customers/${customerId}/send-reminder`, {
+        method: 'POST',
+      });
+      const result = await res.json();
+      if (result.success) {
+        toast.success('Erinnerungs-E-Mail wurde gesendet');
+      } else {
+        toast.error(`Fehler: ${result.error}`);
+      }
+    } catch {
+      toast.error('Fehler beim Senden der E-Mail');
+    } finally {
+      setSendingReminder(false);
+    }
+  };
 
   const handleDelete = () => {
     if (!customer) return;
@@ -650,6 +676,18 @@ export default function CustomerDetailPage() {
                 <HomeIcon className="h-3.5 w-3.5" />
                 Heizsystem hinzufügen
               </Button>
+              {customer.email && (
+                <Button
+                  variant="outline" className="w-full justify-start py-2.5" size="sm"
+                  onClick={handleSendReminder}
+                  disabled={sendingReminder}
+                >
+                  {sendingReminder
+                    ? <Loader2Icon className="h-3.5 w-3.5 animate-spin" />
+                    : <MailIcon className="h-3.5 w-3.5" />}
+                  Erinnerung senden
+                </Button>
+              )}
             </div>
           </Card>
         </div>
