@@ -48,6 +48,7 @@ export function PasswordCard() {
             <Input
               id="currentPassword"
               type="password"
+              className="text-base h-11"
               {...register('currentPassword', { required: 'Aktuelles Passwort ist erforderlich' })}
             />
             {errors.currentPassword && <p className="text-sm text-destructive">{errors.currentPassword.message}</p>}
@@ -57,6 +58,7 @@ export function PasswordCard() {
             <Input
               id="newPassword"
               type="password"
+              className="text-base h-11"
               {...register('newPassword', {
                 required: 'Neues Passwort ist erforderlich',
                 minLength: { value: 8, message: 'Mindestens 8 Zeichen' },
@@ -70,6 +72,7 @@ export function PasswordCard() {
             <Input
               id="confirmPassword"
               type="password"
+              className="text-base h-11"
               {...register('confirmPassword', {
                 required: 'Bitte Passwort bestätigen',
                 validate: (value) => value === newPassword || 'Passwörter stimmen nicht überein',
@@ -79,7 +82,7 @@ export function PasswordCard() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" disabled={updatePassword.isPending}>
+          <Button type="submit" disabled={updatePassword.isPending} className="h-11 sm:h-9 w-full sm:w-auto">
             {updatePassword.isPending ? 'Wird gespeichert…' : 'Passwort ändern'}
           </Button>
         </CardFooter>

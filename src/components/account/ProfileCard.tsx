@@ -55,6 +55,7 @@ export function ProfileCard() {
               <Label htmlFor="name">Vollständiger Name</Label>
               <Input
                 id="name"
+                className="text-base h-11"
                 {...register('name', { required: 'Name ist erforderlich', minLength: { value: 2, message: 'Mindestens 2 Zeichen' } })}
               />
               {errors.name && <p className="text-sm text-destructive">{errors.name.message}</p>}
@@ -64,24 +65,25 @@ export function ProfileCard() {
               <Input
                 id="email"
                 type="email"
+                className="text-base h-11"
                 {...register('email', { required: 'E-Mail ist erforderlich' })}
               />
               {errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="phone">Telefonnummer</Label>
-              <Input id="phone" type="tel" placeholder="Optional" {...register('phone')} />
+              <Input id="phone" type="tel" placeholder="Optional" className="text-base h-11" {...register('phone')} />
               <p className="text-xs text-muted-foreground">Erscheint in Wartungserinnerungen</p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="companyName">Firmenname</Label>
-              <Input id="companyName" placeholder="Optional" {...register('companyName')} />
+              <Input id="companyName" placeholder="Optional" className="text-base h-11" {...register('companyName')} />
               <p className="text-xs text-muted-foreground">Erscheint in Wartungserinnerungen</p>
             </div>
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" disabled={!isDirty || updateProfile.isPending}>
+          <Button type="submit" disabled={!isDirty || updateProfile.isPending} className="h-11 sm:h-9 w-full sm:w-auto">
             {updateProfile.isPending ? 'Wird gespeichert…' : 'Speichern'}
           </Button>
         </CardFooter>
