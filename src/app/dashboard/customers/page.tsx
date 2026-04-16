@@ -226,7 +226,7 @@ export default function CustomersPage() {
               placeholder="Suche nach Name, Ort, Adresse oder Telefon..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-muted border-0 rounded-lg text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full pl-10 pr-4 py-2.5 bg-muted border-0 rounded-lg text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring h-11"
             />
           </div>
           <div className="flex items-center gap-1.5 shrink-0">
@@ -234,6 +234,7 @@ export default function CustomersPage() {
               variant={viewMode === 'grid' ? 'default' : 'ghost'}
               size="icon-sm"
               onClick={() => setViewMode('grid')}
+              className="w-10 h-10"
             >
               <LayoutGridIcon className="h-4 w-4" />
             </Button>
@@ -241,6 +242,7 @@ export default function CustomersPage() {
               variant={viewMode === 'list' ? 'default' : 'ghost'}
               size="icon-sm"
               onClick={() => setViewMode('list')}
+              className="w-10 h-10"
             >
               <LayoutListIcon className="h-4 w-4" />
             </Button>
@@ -264,7 +266,7 @@ export default function CustomersPage() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="px-2.5 py-1.5 bg-muted border-0 rounded-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                className="px-2.5 py-1.5 bg-muted border-0 rounded-lg text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring h-10"
               >
                 <option value="name">Name</option>
                 <option value="city">Ort</option>
@@ -277,7 +279,7 @@ export default function CustomersPage() {
               <select
                 value={filterBy}
                 onChange={(e) => setFilterBy(e.target.value as FilterOption)}
-                className="px-2.5 py-1.5 bg-muted border-0 rounded-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                className="px-2.5 py-1.5 bg-muted border-0 rounded-lg text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring h-10"
               >
                 <option value="all">Alle</option>
                 <option value="overdue">Überfällige Wartungen</option>
