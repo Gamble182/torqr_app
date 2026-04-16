@@ -16,6 +16,7 @@ interface Customer {
   phone: string;
   email: string | null;
   emailOptIn: 'NONE' | 'CONFIRMED' | 'UNSUBSCRIBED';
+  suppressEmail?: boolean;
   heatingType: string;
   additionalEnergySources: string[];
   energyStorageSystems: string[];
