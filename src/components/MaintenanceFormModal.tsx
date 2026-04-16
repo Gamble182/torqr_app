@@ -91,6 +91,9 @@ export function MaintenanceFormModal({
     if (!formData.date) {
       newErrors.date = 'Datum ist erforderlich';
     }
+    if (!formData.notes.trim()) {
+      newErrors.notes = 'Notizen sind erforderlich';
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -194,11 +197,17 @@ export function MaintenanceFormModal({
             </div>
 
             <div>
-              <Label htmlFor="notes" className="mb-1.5 block text-sm">Notizen (optional)</Label>
+              <Label htmlFor="notes" className="mb-1.5 block text-sm">
+                Notizen <span className="text-destructive">*</span>
+              </Label>
               <Textarea
                 id="notes" name="notes" value={formData.notes} onChange={handleChange}
-                rows={4} placeholder="z.B. Filter gewechselt, Druck geprüft..." className="resize-none"
+                rows={4} placeholder="z.B. Filter gewechselt, Druck geprüft..."
+                className={`resize-none${errors.notes ? ' border-destructive' : ''}`}
               />
+              {errors.notes && (
+                <p className="mt-1 text-xs text-destructive">{errors.notes}</p>
+              )}
               <p className="mt-1 text-xs text-muted-foreground">
                 Beschreiben Sie die durchgeführten Arbeiten
               </p>
