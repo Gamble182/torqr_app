@@ -171,7 +171,9 @@ export default function EditCustomerPage() {
       newErrors.phone = 'Telefon ist erforderlich';
     }
 
-    if (formData.email && !formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+    if (!formData.email.trim()) {
+      newErrors.email = 'E-Mail-Adresse ist erforderlich';
+    } else if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
       newErrors.email = 'Ungültige E-Mail-Adresse';
     }
 
@@ -308,7 +310,7 @@ export default function EditCustomerPage() {
 
               {/* Email */}
               <div>
-                <Label htmlFor="email" className="mb-2 block">E-Mail (optional)</Label>
+                <Label htmlFor="email" className="mb-2 block">E-Mail <span className="text-destructive">*</span></Label>
                 <Input
                   id="email"
                   name="email"
@@ -322,17 +324,17 @@ export default function EditCustomerPage() {
                   <p className="mt-1 text-sm text-destructive">{errors.email}</p>
                 )}
                 <p className="mt-1 text-xs text-muted-foreground">
-                  Für automatische Wartungserinnerungen
+                  Für automatische Wartungserinnerungen (erforderlich)
                 </p>
-                {formData.email && formData.emailOptIn === 'CONFIRMED' && (
+                {formData.emailOptIn === 'CONFIRMED' && (
                   <p className="mt-1.5 text-xs text-green-600">✓ E-Mail-Erinnerungen aktiv</p>
                 )}
-                {formData.email && formData.emailOptIn === 'UNSUBSCRIBED' && (
+                {formData.emailOptIn === 'UNSUBSCRIBED' && (
                   <p className="mt-1.5 text-xs text-amber-600">
                     ⚠️ Kunde hat sich abgemeldet. Wird nur bei neuer E-Mail zurückgesetzt.
                   </p>
                 )}
-                {formData.email && formData.emailOptIn !== 'UNSUBSCRIBED' && (
+                {formData.emailOptIn !== 'UNSUBSCRIBED' && (
                   <label className="mt-2 flex items-center gap-2 cursor-pointer select-none">
                     <input
                       type="checkbox"

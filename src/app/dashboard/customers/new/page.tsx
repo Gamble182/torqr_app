@@ -87,7 +87,11 @@ export default function NewCustomerPage() {
     else if (formData.zipCode.length < 4) newErrors.zipCode = 'PLZ muss mindestens 4 Zeichen lang sein';
     if (!formData.city.trim()) newErrors.city = 'Ort ist erforderlich';
     if (!formData.phone.trim()) newErrors.phone = 'Telefon ist erforderlich';
-    if (formData.email && !formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) newErrors.email = 'Ungültige E-Mail-Adresse';
+    if (!formData.email.trim()) {
+      newErrors.email = 'E-Mail-Adresse ist erforderlich';
+    } else if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      newErrors.email = 'Ungültige E-Mail-Adresse';
+    }
     if (!formData.heatingType) newErrors.heatingType = 'Art der Heizung ist erforderlich';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -170,29 +174,27 @@ export default function NewCustomerPage() {
                 {errors.phone && <p className="mt-1 text-xs text-destructive">{errors.phone}</p>}
               </div>
               <div>
-                <Label htmlFor="email" className="mb-1.5 block text-sm">E-Mail (optional)</Label>
+                <Label htmlFor="email" className="mb-1.5 block text-sm">E-Mail <span className="text-destructive">*</span></Label>
                 <Input
                   id="email" name="email" type="email" value={formData.email}
                   onChange={handleChange} className={errors.email ? 'border-destructive' : ''}
                   placeholder="max@beispiel.de"
                 />
                 {errors.email && <p className="mt-1 text-xs text-destructive">{errors.email}</p>}
-                <p className="mt-1 text-xs text-muted-foreground">Für automatische Wartungserinnerungen</p>
-                {formData.email && (
-                  <label className="mt-2 flex items-center gap-2 cursor-pointer select-none">
-                    <input
-                      type="checkbox"
-                      checked={formData.suppressEmail}
-                      onChange={(e) =>
-                        setFormData((prev) => ({ ...prev, suppressEmail: e.target.checked }))
-                      }
-                      className="h-4 w-4 rounded border-input"
-                    />
-                    <span className="text-xs text-muted-foreground">
-                      Keine E-Mail-Erinnerungen senden
-                    </span>
-                  </label>
-                )}
+                <p className="mt-1 text-xs text-muted-foreground">Für automatische Wartungserinnerungen (erforderlich)</p>
+                <label className="mt-2 flex items-center gap-2 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    checked={formData.suppressEmail}
+                    onChange={(e) =>
+                      setFormData((prev) => ({ ...prev, suppressEmail: e.target.checked }))
+                    }
+                    className="h-4 w-4 rounded border-input"
+                  />
+                  <span className="text-xs text-muted-foreground">
+                    Keine E-Mail-Erinnerungen senden
+                  </span>
+                </label>
               </div>
             </div>
           </div>
