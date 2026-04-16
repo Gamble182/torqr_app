@@ -175,7 +175,7 @@ export default function DashboardPage() {
           <select
             value={timeRange}
             onChange={(e) => setTimeRange(parseInt(e.target.value))}
-            className="px-3 py-1.5 bg-muted border-0 rounded-lg text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            className="px-3 py-1.5 bg-muted border-0 rounded-lg text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring h-10"
           >
             <option value="7">7 Tage</option>
             <option value="30">30 Tage</option>
@@ -237,7 +237,7 @@ export default function DashboardPage() {
                           e.stopPropagation();
                           setSelectedHeater({ id: maintenance.id, model: maintenance.model });
                         }}
-                        className="bg-success hover:bg-success/90 text-success-foreground shrink-0"
+                        className="bg-success hover:bg-success/90 text-success-foreground shrink-0 h-10 min-w-11"
                       >
                         <CheckCircle2Icon className="h-3.5 w-3.5" />
                         <span className="hidden sm:inline">Erledigt</span>
