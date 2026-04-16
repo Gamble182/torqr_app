@@ -5,11 +5,11 @@ import { sendReminder } from '@/lib/email/service';
 
 export async function POST(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await requireAuth();
-    const customerId = params.id;
+    const { id: customerId } = await params;
 
     // Verify customer belongs to this user
     const customer = await prisma.customer.findUnique({
