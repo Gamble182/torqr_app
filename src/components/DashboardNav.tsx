@@ -142,19 +142,25 @@ export function DashboardNav() {
         {/* User section */}
         <div className="px-3 py-3 border-t border-sidebar-border">
           <div className={`flex items-center ${collapsed ? 'justify-center' : 'gap-3'}`}>
-            <div className="flex items-center justify-center w-9 h-9 rounded-full bg-sidebar-primary/20 text-sidebar-primary text-xs font-bold shrink-0">
-              {userInitials}
-            </div>
-            {!collapsed && (
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium text-sidebar-accent-foreground truncate">
-                  {session?.user?.name}
-                </p>
-                <p className="text-xs text-sidebar-foreground truncate">
-                  {session?.user?.email}
-                </p>
+            <Link
+              href="/dashboard/account"
+              className={`flex items-center gap-3 min-w-0 flex-1 rounded-lg hover:bg-sidebar-accent/60 transition-colors ${collapsed ? 'justify-center p-1' : 'p-1'}`}
+              title="Konto & Einstellungen"
+            >
+              <div className="flex items-center justify-center w-9 h-9 rounded-full bg-sidebar-primary/20 text-sidebar-primary text-xs font-bold shrink-0">
+                {userInitials}
               </div>
-            )}
+              {!collapsed && (
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-sidebar-accent-foreground truncate">
+                    {session?.user?.name}
+                  </p>
+                  <p className="text-xs text-sidebar-foreground truncate">
+                    {session?.user?.email}
+                  </p>
+                </div>
+              )}
+            </Link>
             {!collapsed && (
               <button
                 onClick={() => signOut({ callbackUrl: '/login' })}
