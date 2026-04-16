@@ -636,15 +636,15 @@ export default function CustomerDetailPage() {
 
           <Card className="p-6">
             <h2 className="text-base font-semibold text-foreground mb-4">Schnellaktionen</h2>
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Link href={`/dashboard/customers/${customerId}/edit`} className="block">
-                <Button variant="outline" className="w-full justify-start" size="sm">
+                <Button variant="outline" className="w-full justify-start py-2.5" size="sm">
                   <PencilIcon className="h-3.5 w-3.5" />
                   Kunde bearbeiten
                 </Button>
               </Link>
               <Button
-                variant="outline" className="w-full justify-start" size="sm"
+                variant="outline" className="w-full justify-start py-2.5" size="sm"
                 onClick={() => { setEditingHeater(null); setShowHeaterForm(true); }}
               >
                 <HomeIcon className="h-3.5 w-3.5" />
