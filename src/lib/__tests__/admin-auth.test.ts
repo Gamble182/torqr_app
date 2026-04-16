@@ -2,14 +2,8 @@ import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { isAdminEmail } from '@/lib/admin-auth';
 
 describe('isAdminEmail', () => {
-  const originalEnv = process.env.ADMIN_EMAILS;
-
-  afterEach(() => {
-    if (originalEnv === undefined) {
-      delete process.env.ADMIN_EMAILS;
-    } else {
-      process.env.ADMIN_EMAILS = originalEnv;
-    }
+  beforeEach(() => {
+    delete process.env.ADMIN_EMAILS;
   });
 
   it('returns true when email is in ADMIN_EMAILS', () => {

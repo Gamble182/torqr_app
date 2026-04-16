@@ -29,8 +29,12 @@ export async function requireAdmin(): Promise<{ userId: string; email: string; n
     throw new Error('Forbidden');
   }
 
+  if (!session.user.id) {
+    throw new Error('Unauthorized');
+  }
+
   return {
-    userId: session.user.id as string,
+    userId: session.user.id,
     email: session.user.email,
     name: session.user.name ?? '',
   };
