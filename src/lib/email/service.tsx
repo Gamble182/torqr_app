@@ -43,9 +43,19 @@ export async function sendReminder(
       heaterModel: heater.model,
       heaterSerialNumber: heater.serialNumber,
       weeksUntil,
-      // Embed IDs as Cal.com metadata for reliable webhook matching (no email guessing)
+      // Embed IDs as Cal.com metadata + pre-fill name, email, and address
       calComUrl: CAL_COM_URL
-        ? `${CAL_COM_URL}?metadata[customerId]=${customer.id}&metadata[userId]=${heater.userId}`
+        ? (() => {
+            const url = new URL(CAL_COM_URL);
+            url.searchParams.set('metadata[customerId]', customer.id);
+            url.searchParams.set('metadata[userId]', heater.userId);
+            if (customer.name) url.searchParams.set('name', customer.name);
+            if (customer.email) url.searchParams.set('email', customer.email as string);
+            const address = [customer.street, `${customer.zipCode} ${customer.city}`]
+              .filter(Boolean).join(', ');
+            if (address) url.searchParams.set('location', address);
+            return url.toString();
+          })()
         : CAL_COM_URL,
       maxPhone: user?.phone ?? '',
       maxEmail: user?.email ?? '',
