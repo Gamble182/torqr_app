@@ -21,7 +21,7 @@ export async function sendReminder(
     where: { id: heaterId },
     include: {
       customer: true,
-      user: { select: { name: true, email: true, phone: true } },
+      user: { select: { name: true, email: true, phone: true, companyName: true } },
     },
   });
 
@@ -50,6 +50,7 @@ export async function sendReminder(
       maxPhone: user?.phone ?? '',
       maxEmail: user?.email ?? '',
       maxName: user?.name ?? '',
+      maxCompanyName: user?.companyName ?? null,
       unsubscribeUrl: buildUnsubscribeUrl(customer.id),
     })
   );
@@ -79,16 +80,27 @@ export async function sendReminder(
 }
 
 /**
- * Send the weekly summary email to Max.
- * Uses SUMMARY_RECIPIENT_EMAIL env var to find the user and send to them.
- * Outcome is tracked via CronRun, not EmailLog (no customerId required for summary).
+ * Send the weekly summary email to a user.
+ * If userId provided (manual trigger): looks up user by ID.
+ * If no userId (cron): falls back to SUMMARY_RECIPIENT_EMAIL env var.
+ * Respects the user's emailWeeklySummary preference — returns { emailsSent: 0 } if disabled.
  */
-export async function sendWeeklySummary(): Promise<{ emailsSent: number }> {
-  const recipientEmail = process.env.SUMMARY_RECIPIENT_EMAIL;
-  if (!recipientEmail) throw new Error('SUMMARY_RECIPIENT_EMAIL is not set');
+export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: number }> {
+  let user;
 
-  const user = await prisma.user.findUnique({ where: { email: recipientEmail } });
-  if (!user) throw new Error(`No user found for SUMMARY_RECIPIENT_EMAIL: ${recipientEmail}`);
+  if (userId) {
+    user = await prisma.user.findUnique({ where: { id: userId } });
+    if (!user) throw new Error(`No user found for userId: ${userId}`);
+  } else {
+    const recipientEmail = process.env.SUMMARY_RECIPIENT_EMAIL;
+    if (!recipientEmail) throw new Error('SUMMARY_RECIPIENT_EMAIL is not set');
+    user = await prisma.user.findUnique({ where: { email: recipientEmail } });
+    if (!user) throw new Error(`No user found for SUMMARY_RECIPIENT_EMAIL: ${recipientEmail}`);
+  }
+
+  if (!user.emailWeeklySummary) {
+    return { emailsSent: 0 };
+  }
 
   const now = new Date();
   const weekEnd = addDays(now, 7);
@@ -133,7 +145,7 @@ export async function sendWeeklySummary(): Promise<{ emailsSent: number }> {
 
   const { error } = await resend.emails.send({
     from: FROM_EMAIL,
-    to: recipientEmail,
+    to: user.email,
     subject: `Wochenübersicht ${weekLabel}`,
     html,
   });
