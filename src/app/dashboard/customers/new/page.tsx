@@ -157,7 +157,7 @@ export default function NewCustomerPage() {
                 </Label>
                 <Input
                   id="name" name="name" type="text" value={formData.name}
-                  onChange={handleChange} className={errors.name ? 'border-destructive' : ''}
+                  onChange={handleChange} className={`text-base${errors.name ? ' border-destructive' : ''}`}
                   placeholder="Max Mustermann"
                 />
                 {errors.name && <p className="mt-1 text-xs text-destructive">{errors.name}</p>}
@@ -168,7 +168,7 @@ export default function NewCustomerPage() {
                 </Label>
                 <Input
                   id="phone" name="phone" type="tel" value={formData.phone}
-                  onChange={handleChange} className={errors.phone ? 'border-destructive' : ''}
+                  onChange={handleChange} className={`text-base${errors.phone ? ' border-destructive' : ''}`}
                   placeholder="030 12345678"
                 />
                 {errors.phone && <p className="mt-1 text-xs text-destructive">{errors.phone}</p>}
@@ -177,7 +177,7 @@ export default function NewCustomerPage() {
                 <Label htmlFor="email" className="mb-1.5 block text-sm">E-Mail <span className="text-destructive">*</span></Label>
                 <Input
                   id="email" name="email" type="email" value={formData.email}
-                  onChange={handleChange} className={errors.email ? 'border-destructive' : ''}
+                  onChange={handleChange} className={`text-base${errors.email ? ' border-destructive' : ''}`}
                   placeholder="max@beispiel.de"
                 />
                 {errors.email && <p className="mt-1 text-xs text-destructive">{errors.email}</p>}
@@ -211,7 +211,7 @@ export default function NewCustomerPage() {
                 </Label>
                 <Input
                   id="street" name="street" type="text" value={formData.street}
-                  onChange={handleChange} className={errors.street ? 'border-destructive' : ''}
+                  onChange={handleChange} className={`text-base${errors.street ? ' border-destructive' : ''}`}
                   placeholder="Musterstraße 123"
                 />
                 {errors.street && <p className="mt-1 text-xs text-destructive">{errors.street}</p>}
@@ -222,7 +222,7 @@ export default function NewCustomerPage() {
                 </Label>
                 <Input
                   id="zipCode" name="zipCode" type="text" value={formData.zipCode}
-                  onChange={handleChange} className={errors.zipCode ? 'border-destructive' : ''}
+                  onChange={handleChange} className={`text-base${errors.zipCode ? ' border-destructive' : ''}`}
                   placeholder="12345"
                 />
                 {errors.zipCode && <p className="mt-1 text-xs text-destructive">{errors.zipCode}</p>}
@@ -233,7 +233,7 @@ export default function NewCustomerPage() {
                 </Label>
                 <Input
                   id="city" name="city" type="text" value={formData.city}
-                  onChange={handleChange} className={errors.city ? 'border-destructive' : ''}
+                  onChange={handleChange} className={`text-base${errors.city ? ' border-destructive' : ''}`}
                   placeholder="Berlin"
                 />
                 {errors.city && <p className="mt-1 text-xs text-destructive">{errors.city}</p>}
@@ -307,18 +307,18 @@ export default function NewCustomerPage() {
               <Label htmlFor="notes" className="mb-1.5 block text-sm">Notizen (optional)</Label>
               <textarea
                 id="notes" name="notes" rows={4} value={formData.notes} onChange={handleChange}
-                className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex w-full rounded-lg border border-input bg-transparent px-3 py-2 text-base placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
                 placeholder="Besondere Hinweise zum Kunden..."
               />
             </div>
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-3 pt-6 border-t border-border">
-            <Link href="/dashboard/customers">
-              <Button type="button" variant="outline" disabled={createCustomer.isPending}>Abbrechen</Button>
+          <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 pt-6 border-t border-border">
+            <Link href="/dashboard/customers" className="w-full sm:w-auto">
+              <Button type="button" variant="outline" disabled={createCustomer.isPending} className="w-full sm:w-auto h-11 sm:h-9">Abbrechen</Button>
             </Link>
-            <Button type="submit" disabled={createCustomer.isPending}>
+            <Button type="submit" disabled={createCustomer.isPending} className="w-full sm:w-auto h-11 sm:h-9">
               {createCustomer.isPending && <Loader2Icon className="h-4 w-4 animate-spin" />}
               {createCustomer.isPending ? 'Wird erstellt...' : 'Kunde erstellen'}
             </Button>

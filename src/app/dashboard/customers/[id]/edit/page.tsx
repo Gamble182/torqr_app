@@ -281,7 +281,7 @@ export default function EditCustomerPage() {
                   type="text"
                   value={formData.name}
                   onChange={handleChange}
-                  className={errors.name ? 'border-destructive' : ''}
+                  className={`text-base${errors.name ? ' border-destructive' : ''}`}
                   placeholder="Max Mustermann"
                 />
                 {errors.name && (
@@ -300,7 +300,7 @@ export default function EditCustomerPage() {
                   type="tel"
                   value={formData.phone}
                   onChange={handleChange}
-                  className={errors.phone ? 'border-destructive' : ''}
+                  className={`text-base${errors.phone ? ' border-destructive' : ''}`}
                   placeholder="030 12345678"
                 />
                 {errors.phone && (
@@ -317,7 +317,7 @@ export default function EditCustomerPage() {
                   type="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className={errors.email ? 'border-destructive' : ''}
+                  className={`text-base${errors.email ? ' border-destructive' : ''}`}
                   placeholder="max@beispiel.de"
                 />
                 {errors.email && (
@@ -370,7 +370,7 @@ export default function EditCustomerPage() {
                   type="text"
                   value={formData.street}
                   onChange={handleChange}
-                  className={errors.street ? 'border-destructive' : ''}
+                  className={`text-base${errors.street ? ' border-destructive' : ''}`}
                   placeholder="Musterstraße 123"
                 />
                 {errors.street && (
@@ -389,7 +389,7 @@ export default function EditCustomerPage() {
                   type="text"
                   value={formData.zipCode}
                   onChange={handleChange}
-                  className={errors.zipCode ? 'border-destructive' : ''}
+                  className={`text-base${errors.zipCode ? ' border-destructive' : ''}`}
                   placeholder="12345"
                 />
                 {errors.zipCode && (
@@ -408,7 +408,7 @@ export default function EditCustomerPage() {
                   type="text"
                   value={formData.city}
                   onChange={handleChange}
-                  className={errors.city ? 'border-destructive' : ''}
+                  className={`text-base${errors.city ? ' border-destructive' : ''}`}
                   placeholder="Berlin"
                 />
                 {errors.city && (
@@ -505,7 +505,7 @@ export default function EditCustomerPage() {
                 rows={4}
                 value={formData.notes}
                 onChange={handleChange}
-                className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-base ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 placeholder="Besondere Hinweise zum Kunden..."
               />
               {errors.notes && (
@@ -515,13 +515,13 @@ export default function EditCustomerPage() {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-4 pt-6 border-t">
-            <Link href="/dashboard/customers">
-              <Button type="button" variant="outline" disabled={loading}>
+          <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 pt-6 border-t">
+            <Link href="/dashboard/customers" className="w-full sm:w-auto">
+              <Button type="button" variant="outline" disabled={loading} className="w-full sm:w-auto h-11 sm:h-9">
                 Abbrechen
               </Button>
             </Link>
-            <Button type="submit" disabled={loading}>
+            <Button type="submit" disabled={loading} className="w-full sm:w-auto h-11 sm:h-9">
               {loading ? (
                 <>
                   <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
