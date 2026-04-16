@@ -24,21 +24,26 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 | 7 | Feature | Admin panel — `/admin` route (same project), role-based access (`User.role: USER\|ADMIN`). Views: all users, EmailLog, CronRun, user CRUD. No separate app needed. | Medium | 2026-04-14 |
 | 10 | Feature | Booking feed / news section — when Cal.com webhook fires, show booked appointments in dashboard or customer detail as "Gebuchte Termine" | Medium | 2026-04-14 |
 | 11 | Decision | Calendar integration — recommendation: do NOT build own calendar. Use Cal.com for scheduling, let users sync to Google/Outlook via Cal.com. Embed Cal.com iframe if needed later. | Low | 2026-04-14 |
-| 12 | Feature | Manual reminder email trigger on customer detail page — button in email section sends the standard reminder email to that specific customer regardless of Wartung date. Max can use this to manually remind any customer at any time. | High | 2026-04-15 |
 | 13 | Email | Weekly summary email content refinement — review and improve copy, structure, and data shown in the weekly summary email template. To be done after account page is live. | Medium | 2026-04-15 |
 | 14 | Feature | Delete account / danger zone — allow user to delete their own account and all associated data. Requires confirmation dialog. To be added to account page settings. | Low | 2026-04-15 |
 | 15 | Architecture | Multi-tenancy decision — evaluate shared database with logical separation (per-user scoping) vs. separate databases per tenant. Coding agent should produce a recommendation based on existing architecture. | High | 2026-04-15 |
-| 16 | Bug | Customer not shown after creation — UI does not update after adding a new customer; customer only appears after manual page reload. Fix requires query invalidation or optimistic update. | High | 2026-04-15 |
-| 17 | Bug | Heater not shown after creation — after adding a heating system and navigating back, it is not displayed until the page is manually reloaded. Fix requires query invalidation. | High | 2026-04-15 |
 | 18 | Bug | Photo uploader broken — photo upload in maintenance dialog is non-functional. Needs investigation and fix. | High | 2026-04-15 |
-| 19 | Feature | Customer email field — make email required (currently optional). Add mandatory asterisk (*), validate non-empty and valid email format. | Medium | 2026-04-15 |
 | 20 | Feature | Maintenance list — show "terminiert" status badge on maintenance entries that have a linked Cal.com booking. | Medium | 2026-04-15 |
-| 21 | Feature | Maintenance "erledigt" dialog — make notes field mandatory. Add mandatory asterisk (*) and block submission if empty. | Medium | 2026-04-15 |
-| 22 | UX | Customer detail quick-actions — buttons are too tightly spaced. Improve layout with more padding/gap for better readability and touch usability. | Low | 2026-04-15 |
 
 ---
 
 ## Completed / Resolved
+
+### Sprint 7 — Bugs & UX Fixes (2026-04-16)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 16 | Bug | Customer not shown after creation — fixed via useCreateCustomer hook in new/page.tsx | 2026-04-16 |
+| 17 | Bug | Heater not shown after creation — fixed by invalidating ['heaters'] cache in HeaterFormModal | 2026-04-16 |
+| 19 | Feature | Customer email field made required with asterisk and validation (new + edit page) | 2026-04-16 |
+| 21 | Feature | Maintenance notes field made required with asterisk and error message | 2026-04-16 |
+| 22 | UX | Customer quick-actions spacing improved (space-y-3, py-2.5 buttons) | 2026-04-16 |
+| 12 | Feature | Manual reminder email trigger added to customer detail page sidebar | 2026-04-16 |
 
 ### Sprint 6 — Account & Settings Page (2026-04-16)
 
