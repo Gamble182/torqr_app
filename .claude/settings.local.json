@@ -58,6 +58,8 @@
   },
   "enabledMcpjsonServers": [
     "supabase",
-    "vercel"
-  ]
+    "vercel",
+    "next-devtools"
+  ],
+  "enableAllProjectMcpServers": true
 }

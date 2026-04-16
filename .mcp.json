@@ -4,14 +4,10 @@
       "type": "http",
       "url": "https://mcp.supabase.com/mcp?project_ref=vvsmxzebaoslofigxakt"
     },
-    "vercel": {
-      "type": "http",
-      "url": "https://mcp.vercel.com"
-    },
 
     "next-devtools": {
-      "command": "npx",
-      "args": ["-y", "next-devtools-mcp@latest"]
+      "command": "cmd",
+      "args": ["/c", "npx", "-y", "next-devtools-mcp@latest"]
     }
   }
 }
