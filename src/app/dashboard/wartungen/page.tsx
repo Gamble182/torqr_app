@@ -302,7 +302,7 @@ export default function WartungenPage() {
           </p>
         </div>
         {heaters.length > 0 && (
-          <div className="flex gap-2">
+          <div className="hidden sm:flex gap-2">
             <Button variant="outline" size="sm" onClick={exportToCSV}>
               <DownloadIcon className="h-4 w-4" />
               CSV
@@ -319,7 +319,7 @@ export default function WartungenPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <button
           onClick={() => setFilterStatus('all')}
-          className={`bg-card rounded-xl border px-4 py-3 text-left hover:shadow-md transition-all cursor-pointer ${
+          className={`bg-card rounded-xl border px-4 py-3 min-h-11 text-left hover:shadow-md transition-all cursor-pointer ${
             filterStatus === 'all' ? 'ring-2 ring-primary border-primary' : 'border-border'
           }`}
         >
@@ -328,7 +328,7 @@ export default function WartungenPage() {
         </button>
         <button
           onClick={() => setFilterStatus('overdue')}
-          className={`bg-card rounded-xl border px-4 py-3 text-left hover:shadow-md transition-all cursor-pointer ${
+          className={`bg-card rounded-xl border px-4 py-3 min-h-11 text-left hover:shadow-md transition-all cursor-pointer ${
             filterStatus === 'overdue' ? 'ring-2 ring-destructive border-destructive' : stats.overdue > 0 ? 'border-destructive/30' : 'border-border'
           }`}
         >
@@ -337,7 +337,7 @@ export default function WartungenPage() {
         </button>
         <button
           onClick={() => setFilterStatus('thisWeek')}
-          className={`bg-card rounded-xl border px-4 py-3 text-left hover:shadow-md transition-all cursor-pointer ${
+          className={`bg-card rounded-xl border px-4 py-3 min-h-11 text-left hover:shadow-md transition-all cursor-pointer ${
             filterStatus === 'thisWeek' ? 'ring-2 ring-warning border-warning' : 'border-warning/30'
           }`}
         >
@@ -346,7 +346,7 @@ export default function WartungenPage() {
         </button>
         <button
           onClick={() => setFilterStatus('thisMonth')}
-          className={`bg-card rounded-xl border px-4 py-3 text-left hover:shadow-md transition-all cursor-pointer ${
+          className={`bg-card rounded-xl border px-4 py-3 min-h-11 text-left hover:shadow-md transition-all cursor-pointer ${
             filterStatus === 'thisMonth' ? 'ring-2 ring-secondary border-secondary' : 'border-secondary/30'
           }`}
         >
