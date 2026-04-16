@@ -176,7 +176,7 @@ export function MaintenanceFormModal({
               </h2>
               <p className="text-sm text-muted-foreground mt-0.5">{heaterModel}</p>
             </div>
-            <Button variant="ghost" size="icon-sm" onClick={onClose} disabled={loading}>
+            <Button variant="ghost" size="icon-sm" onClick={onClose} disabled={loading} className="w-10 h-10">
               <XIcon className="h-4 w-4" />
             </Button>
           </div>
@@ -189,7 +189,7 @@ export function MaintenanceFormModal({
               <Input
                 id="date" name="date" type="date" value={formData.date}
                 onChange={handleChange} max={new Date().toISOString().split('T')[0]}
-                className={errors.date ? 'border-destructive' : ''}
+                className={`h-11 text-base${errors.date ? ' border-destructive' : ''}`}
               />
               {errors.date && (
                 <p className="mt-1 text-xs text-destructive">{errors.date}</p>
@@ -203,7 +203,7 @@ export function MaintenanceFormModal({
               <Textarea
                 id="notes" name="notes" value={formData.notes} onChange={handleChange}
                 rows={4} placeholder="z.B. Filter gewechselt, Druck geprüft..."
-                className={`resize-none${errors.notes ? ' border-destructive' : ''}`}
+                className={`resize-none text-base min-h-[120px]${errors.notes ? ' border-destructive' : ''}`}
               />
               {errors.notes && (
                 <p className="mt-1 text-xs text-destructive">{errors.notes}</p>
@@ -223,12 +223,12 @@ export function MaintenanceFormModal({
                       <img
                         src={URL.createObjectURL(photo)}
                         alt={`Foto ${index + 1}`}
-                        className="w-full h-24 object-cover rounded-lg border border-border"
+                        className="w-full h-28 object-cover rounded-lg border border-border"
                       />
                       <Button
                         type="button" variant="outline" size="sm"
                         onClick={() => removePhoto(index)}
-                        className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity bg-destructive/10 text-destructive hover:bg-destructive/20 border-destructive/20"
+                        className="absolute top-1 right-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity bg-destructive/10 text-destructive hover:bg-destructive/20 border-destructive/20 w-8 h-8 p-0"
                       >
                         <TrashIcon className="h-3 w-3" />
                       </Button>
@@ -238,7 +238,7 @@ export function MaintenanceFormModal({
               )}
 
               {photos.length < 5 && (
-                <label className="flex items-center justify-center w-full h-24 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/40 hover:bg-primary/5 transition-colors">
+                <label className="flex items-center justify-center w-full h-16 sm:h-24 border-2 border-dashed border-border rounded-xl cursor-pointer hover:border-primary/40 hover:bg-primary/5 transition-colors">
                   <div className="flex flex-col items-center">
                     <CameraIcon className="h-5 w-5 text-muted-foreground" />
                     <span className="mt-1 text-xs text-muted-foreground">
@@ -257,11 +257,11 @@ export function MaintenanceFormModal({
               </p>
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-border">
-              <Button type="button" variant="outline" onClick={onClose} disabled={loading}>
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-4 border-t border-border">
+              <Button type="button" variant="outline" onClick={onClose} disabled={loading} className="h-11 sm:h-9">
                 Abbrechen
               </Button>
-              <Button type="submit" disabled={loading || uploadingPhotos}>
+              <Button type="submit" disabled={loading || uploadingPhotos} className="h-11 sm:h-9">
                 {uploadingPhotos ? (
                   <><Loader2Icon className="h-4 w-4 animate-spin" /> Fotos werden hochgeladen...</>
                 ) : loading ? (
