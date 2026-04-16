@@ -206,6 +206,7 @@ export function HeaterFormModal({
               size="sm"
               onClick={onClose}
               disabled={loading}
+              className="w-10 h-10 p-0"
             >
               <XIcon className="h-4 w-4" />
             </Button>
@@ -224,7 +225,7 @@ export function HeaterFormModal({
                 type="text"
                 value={formData.model}
                 onChange={handleChange}
-                className={errors.model ? 'border-destructive' : ''}
+                className={`text-base h-11${errors.model ? ' border-destructive' : ''}`}
                 placeholder="z.B. Viessmann Vitodens 200-W"
               />
               {errors.model && (
@@ -243,6 +244,7 @@ export function HeaterFormModal({
                 type="text"
                 value={formData.serialNumber}
                 onChange={handleChange}
+                className="text-base h-11"
                 placeholder="z.B. 7654321098"
               />
             </div>
@@ -265,7 +267,7 @@ export function HeaterFormModal({
                   }
                 }}
               >
-                <SelectTrigger className={errors.maintenanceInterval ? 'border-destructive' : ''}>
+                <SelectTrigger className={`h-11${errors.maintenanceInterval ? ' border-destructive' : ''}`}>
                   <SelectValue placeholder="Bitte wählen..." />
                 </SelectTrigger>
                 <SelectContent>
@@ -293,6 +295,7 @@ export function HeaterFormModal({
                 value={formData.installationDate}
                 onChange={handleChange}
                 max={new Date().toISOString().split('T')[0]}
+                className="text-base h-11"
               />
             </div>
 
@@ -316,16 +319,17 @@ export function HeaterFormModal({
             </div>
 
             {/* Actions */}
-            <div className="flex items-center justify-end gap-3 pt-4 border-t">
+            <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-4 border-t">
               <Button
                 type="button"
                 variant="outline"
                 onClick={onClose}
                 disabled={loading}
+                className="h-11 sm:h-9"
               >
                 Abbrechen
               </Button>
-              <Button type="submit" disabled={loading}>
+              <Button type="submit" disabled={loading} className="h-11 sm:h-9">
                 {loading ? (
                   <>
                     <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
