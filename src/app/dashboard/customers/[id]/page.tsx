@@ -225,9 +225,9 @@ export default function CustomerDetailPage() {
               Kunde seit {formatDate(customer.createdAt)}
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Link href={`/dashboard/customers/${customerId}/edit`}>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="h-9 min-w-11">
                 <PencilIcon className="h-3.5 w-3.5" />
                 Bearbeiten
               </Button>
@@ -237,7 +237,7 @@ export default function CustomerDetailPage() {
               size="sm"
               onClick={handleDelete}
               disabled={deleteCustomer.isPending}
-              className="text-destructive hover:bg-destructive/10 hover:border-destructive/30"
+              className="h-9 min-w-11 text-destructive hover:bg-destructive/10 hover:border-destructive/30"
             >
               {deleteCustomer.isPending ? <Loader2Icon className="h-3.5 w-3.5 animate-spin" /> : <TrashIcon className="h-3.5 w-3.5" />}
               Löschen
@@ -468,23 +468,23 @@ export default function CustomerDetailPage() {
                             <p className="text-xs text-muted-foreground">SN: {heater.serialNumber}</p>
                           )}
                         </div>
-                        <div className="flex gap-1.5 shrink-0">
+                        <div className="flex flex-wrap gap-1.5 shrink-0">
                           <Button
                             size="sm"
                             onClick={() => { setSelectedHeater(heater); setShowMaintenanceForm(true); }}
-                            className="bg-success hover:bg-success/90 text-success-foreground"
+                            className="bg-success hover:bg-success/90 text-success-foreground h-9 min-w-11"
                           >
                             <CheckCircle2Icon className="h-3.5 w-3.5" />
                             Erledigt
                           </Button>
-                          <Button variant="outline" size="icon-sm" onClick={() => handleEditHeater(heater)}>
+                          <Button variant="outline" size="icon-sm" onClick={() => handleEditHeater(heater)} className="w-9 h-9">
                             <PencilIcon className="h-3.5 w-3.5" />
                           </Button>
                           <Button
                             variant="outline" size="icon-sm"
                             onClick={() => handleDeleteHeater(heater.id, heater.model)}
                             disabled={deleteHeater.isPending}
-                            className="text-destructive hover:bg-destructive/10 hover:border-destructive/30"
+                            className="w-9 h-9 text-destructive hover:bg-destructive/10 hover:border-destructive/30"
                           >
                             {deleteHeater.isPending ? <Loader2Icon className="h-3.5 w-3.5 animate-spin" /> : <TrashIcon className="h-3.5 w-3.5" />}
                           </Button>
@@ -596,13 +596,17 @@ export default function CustomerDetailPage() {
                           )}
                         </div>
                         <p className="text-xs text-muted-foreground">
-                          {new Date(booking.startTime).toLocaleDateString('de-DE', {
-                            weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric',
-                          })}
-                          {', '}
-                          {new Date(booking.startTime).toLocaleTimeString('de-DE', {
-                            hour: '2-digit', minute: '2-digit',
-                          })}
+                          <span className="block sm:inline">
+                            {new Date(booking.startTime).toLocaleDateString('de-DE', {
+                              weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric',
+                            })}
+                          </span>
+                          <span className="sm:inline">{', '}</span>
+                          <span className="block sm:inline">
+                            {new Date(booking.startTime).toLocaleTimeString('de-DE', {
+                              hour: '2-digit', minute: '2-digit',
+                            })}
+                          </span>
                           {booking.endTime && (
                             <> – {new Date(booking.endTime).toLocaleTimeString('de-DE', {
                               hour: '2-digit', minute: '2-digit',
