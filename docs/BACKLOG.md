@@ -20,7 +20,6 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
 | 2 | Email | Weekly summary and reminder emails land in GMX junk folder — new domain reputation issue, improves over time; consider adding DMARC record | Medium | 2026-04-14 |
-| 6 | UX | Full mobile responsiveness — all pages must feel native on mobile. Audit and rework layouts, touch targets, typography, spacing across entire app | High | 2026-04-14 |
 | 7 | Feature | Admin panel — `/admin` route (same project), role-based access (`User.role: USER\|ADMIN`). Views: all users, EmailLog, CronRun, user CRUD. No separate app needed. | Medium | 2026-04-14 |
 | 10 | Feature | Booking feed / news section — when Cal.com webhook fires, show booked appointments in dashboard or customer detail as "Gebuchte Termine" | Medium | 2026-04-14 |
 | 11 | Decision | Calendar integration — recommendation: do NOT build own calendar. Use Cal.com for scheduling, let users sync to Google/Outlook via Cal.com. Embed Cal.com iframe if needed later. | Low | 2026-04-14 |
@@ -33,6 +32,12 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 ---
 
 ## Completed / Resolved
+
+### Sprint 8 — Mobile Responsiveness (2026-04-16)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 6 | UX | Full mobile responsiveness — all pages, modals, forms. iOS auto-zoom fix (text-base on all inputs), 44px touch targets, responsive button rows (flex-col-reverse sm:flex-row), export buttons hidden on mobile. | 2026-04-16 |
 
 ### Sprint 7 — Bugs & UX Fixes (2026-04-16)
 
