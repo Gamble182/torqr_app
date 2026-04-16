@@ -330,7 +330,7 @@ export default function NewHeaterPage() {
                 value={customerId}
                 onChange={(e) => setCustomerId(e.target.value)}
                 disabled={loadingCustomers}
-                className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                className="w-full px-3 py-2 bg-background border border-border rounded-md text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               >
                 <option value="">Kein Kunde zugeordnet</option>
                 {customers.map((customer) => (
@@ -350,7 +350,7 @@ export default function NewHeaterPage() {
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="flex-1 px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="flex-1 px-3 py-2 bg-background border border-border rounded-md text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                 >
                   <option value="">Bitte wählen...</option>
                   {heatingConfig?.heating_categories.map((cat) => (
@@ -419,7 +419,7 @@ export default function NewHeaterPage() {
                     required
                     value={model}
                     onChange={(e) => setModel(e.target.value)}
-                    className="flex-1 px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    className="flex-1 px-3 py-2 bg-background border border-border rounded-md text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                   >
                     <option value="">Bitte wählen...</option>
                     {availableModels.map((mdl) => (
@@ -434,7 +434,7 @@ export default function NewHeaterPage() {
                     required
                     value={model}
                     onChange={(e) => setModel(e.target.value)}
-                    className="flex-1 px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                    className="flex-1 px-3 py-2 bg-background border border-border rounded-md text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                     placeholder="z.B. Vitocal 200-S"
                   />
                 )}
@@ -466,7 +466,7 @@ export default function NewHeaterPage() {
                 type="text"
                 value={serialNumber}
                 onChange={(e) => setSerialNumber(e.target.value)}
-                className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                className="w-full px-3 py-2 bg-background border border-border rounded-md text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                 placeholder="z.B. 1234567890"
               />
             </div>
@@ -481,7 +481,7 @@ export default function NewHeaterPage() {
                 value={installationDate}
                 onChange={(e) => setInstallationDate(e.target.value)}
                 max={new Date().toISOString().split('T')[0]}
-                className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                className="w-full px-3 py-2 bg-background border border-border rounded-md text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
           </div>
@@ -501,7 +501,7 @@ export default function NewHeaterPage() {
                 required
                 value={maintenanceInterval}
                 onChange={(e) => setMaintenanceInterval(e.target.value)}
-                className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                className="w-full px-3 py-2 bg-background border border-border rounded-md text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               >
                 <option value="1">1 Monat</option>
                 <option value="3">3 Monate</option>
@@ -522,7 +522,7 @@ export default function NewHeaterPage() {
                 onChange={(e) => setLastMaintenance(e.target.value)}
                 max={new Date().toISOString().split('T')[0]}
                 min={installationDate || undefined}
-                className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                className="w-full px-3 py-2 bg-background border border-border rounded-md text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
               />
             </div>
 
@@ -535,7 +535,7 @@ export default function NewHeaterPage() {
                 value={requiredParts}
                 onChange={(e) => setRequiredParts(e.target.value)}
                 rows={3}
-                className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                className="w-full px-3 py-2 bg-background border border-border rounded-md text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                 placeholder="z.B. Filter, Dichtungen, etc."
               />
             </div>
@@ -567,7 +567,7 @@ export default function NewHeaterPage() {
                   type="text"
                   value={storageManufacturer}
                   onChange={(e) => setStorageManufacturer(e.target.value)}
-                  className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="w-full px-3 py-2 bg-background border border-border rounded-md text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                   placeholder="z.B. Viessmann"
                 />
               </div>
@@ -580,7 +580,7 @@ export default function NewHeaterPage() {
                   type="text"
                   value={storageModel}
                   onChange={(e) => setStorageModel(e.target.value)}
-                  className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="w-full px-3 py-2 bg-background border border-border rounded-md text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                   placeholder="z.B. Vitocell 100-V"
                 />
               </div>
@@ -593,7 +593,7 @@ export default function NewHeaterPage() {
                   type="number"
                   value={storageCapacity}
                   onChange={(e) => setStorageCapacity(e.target.value)}
-                  className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="w-full px-3 py-2 bg-background border border-border rounded-md text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                   placeholder="z.B. 300"
                   min="0"
                 />
@@ -627,7 +627,7 @@ export default function NewHeaterPage() {
                   type="text"
                   value={batteryManufacturer}
                   onChange={(e) => setBatteryManufacturer(e.target.value)}
-                  className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="w-full px-3 py-2 bg-background border border-border rounded-md text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                   placeholder="z.B. Tesla"
                 />
               </div>
@@ -640,7 +640,7 @@ export default function NewHeaterPage() {
                   type="text"
                   value={batteryModel}
                   onChange={(e) => setBatteryModel(e.target.value)}
-                  className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="w-full px-3 py-2 bg-background border border-border rounded-md text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                   placeholder="z.B. Powerwall 2"
                 />
               </div>
@@ -654,7 +654,7 @@ export default function NewHeaterPage() {
                   step="0.1"
                   value={batteryCapacity}
                   onChange={(e) => setBatteryCapacity(e.target.value)}
-                  className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="w-full px-3 py-2 bg-background border border-border rounded-md text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                   placeholder="z.B. 13.5"
                   min="0"
                 />
@@ -664,8 +664,13 @@ export default function NewHeaterPage() {
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3">
-          <Button type="submit" disabled={loading} className="flex-1">
+        <div className="flex flex-col-reverse sm:flex-row gap-3">
+          <Link href="/dashboard/heaters" className="w-full sm:w-auto">
+            <Button type="button" variant="outline" className="w-full sm:w-auto h-11 sm:h-9">
+              Abbrechen
+            </Button>
+          </Link>
+          <Button type="submit" disabled={loading} className="flex-1 h-11 sm:h-9">
             {loading ? (
               <>
                 <Loader2Icon className="h-4 w-4 mr-2 animate-spin" />
@@ -678,11 +683,6 @@ export default function NewHeaterPage() {
               </>
             )}
           </Button>
-          <Link href="/dashboard/heaters" className="flex-1">
-            <Button type="button" variant="outline" className="w-full">
-              Abbrechen
-            </Button>
-          </Link>
         </div>
       </form>
 
@@ -727,7 +727,7 @@ export default function NewHeaterPage() {
                       handleAddNewEntry();
                     }
                   }}
-                  className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="w-full px-3 py-2 bg-background border border-border rounded-md text-base text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
                   placeholder={getModalPlaceholder()}
                   autoFocus
                 />
