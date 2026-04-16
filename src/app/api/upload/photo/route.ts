@@ -1,0 +1,72 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { requireAuth } from '@/lib/auth-helpers';
+import { getSupabaseAdmin } from '@/lib/supabase';
+
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+
+export async function POST(req: NextRequest) {
+  try {
+    await requireAuth();
+
+    const formData = await req.formData();
+    const file = formData.get('file') as File | null;
+    const maintenanceId = formData.get('maintenanceId') as string | null;
+
+    if (!file || !maintenanceId) {
+      return NextResponse.json(
+        { success: false, error: 'Datei oder maintenanceId fehlt' },
+        { status: 400 }
+      );
+    }
+
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      return NextResponse.json(
+        { success: false, error: 'Nur JPEG, PNG und WebP erlaubt' },
+        { status: 400 }
+      );
+    }
+
+    if (file.size > MAX_SIZE) {
+      return NextResponse.json(
+        { success: false, error: 'Datei zu groß (max. 5MB)' },
+        { status: 400 }
+      );
+    }
+
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${maintenanceId}-${Date.now()}.${fileExt}`;
+    const filePath = `maintenances/${fileName}`;
+
+    const buffer = Buffer.from(await file.arrayBuffer());
+
+    const supabase = getSupabaseAdmin();
+    const { error } = await supabase.storage
+      .from('maintenance-photos')
+      .upload(filePath, buffer, {
+        contentType: file.type,
+        cacheControl: '3600',
+        upsert: false,
+      });
+
+    if (error) {
+      console.error('[upload-photo] Supabase error:', error);
+      return NextResponse.json(
+        { success: false, error: `Upload fehlgeschlagen: ${error.message}` },
+        { status: 500 }
+      );
+    }
+
+    const { data: publicData } = supabase.storage
+      .from('maintenance-photos')
+      .getPublicUrl(filePath);
+
+    return NextResponse.json({ success: true, url: publicData.publicUrl });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : 'Unbekannter Fehler';
+    if (message === 'Unauthorized') {
+      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    }
+    return NextResponse.json({ success: false, error: message }, { status: 500 });
+  }
+}

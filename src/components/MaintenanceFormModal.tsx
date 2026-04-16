@@ -8,7 +8,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { XIcon, CameraIcon, TrashIcon, Loader2Icon } from 'lucide-react';
-import { uploadMaintenancePhoto } from '@/lib/supabase';
 import { z } from 'zod';
 
 interface MaintenanceFormModalProps {
@@ -110,16 +109,24 @@ export function MaintenanceFormModal({
       if (photos.length > 0) {
         setUploadingPhotos(true);
         const tempMaintenanceId = `temp-${Date.now()}`;
-        const uploadPromises = photos.map((photo) =>
-          uploadMaintenancePhoto(photo, tempMaintenanceId)
-        );
 
         try {
-          uploadedUrls = await Promise.all(uploadPromises);
+          const uploadResults = await Promise.all(
+            photos.map(async (photo) => {
+              const fd = new FormData();
+              fd.append('file', photo);
+              fd.append('maintenanceId', tempMaintenanceId);
+              const res = await fetch('/api/upload/photo', { method: 'POST', body: fd });
+              const data = await res.json();
+              if (!data.success) throw new Error(data.error ?? 'Upload fehlgeschlagen');
+              return data.url as string;
+            })
+          );
+          uploadedUrls = uploadResults;
           toast.success(`${uploadedUrls.length} Foto(s) hochgeladen`);
         } catch (uploadError) {
           console.error('Photo upload error:', uploadError);
-          toast.error('Fehler beim Hochladen der Fotos');
+          toast.error(uploadError instanceof Error ? uploadError.message : 'Fehler beim Hochladen der Fotos');
           setLoading(false);
           setUploadingPhotos(false);
           return;

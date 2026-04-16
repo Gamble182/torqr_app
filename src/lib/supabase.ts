@@ -1,6 +1,7 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 let supabaseInstance: SupabaseClient | null = null;
+let supabaseAdminInstance: SupabaseClient | null = null;
 
 function getSupabaseClient(): SupabaseClient {
   if (!supabaseInstance) {
@@ -15,6 +16,22 @@ function getSupabaseClient(): SupabaseClient {
   }
 
   return supabaseInstance;
+}
+
+// Server-side only — uses service role key to bypass RLS
+export function getSupabaseAdmin(): SupabaseClient {
+  if (!supabaseAdminInstance) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl || !serviceRoleKey) {
+      throw new Error('SUPABASE_SERVICE_ROLE_KEY is not configured');
+    }
+
+    supabaseAdminInstance = createClient(supabaseUrl, serviceRoleKey);
+  }
+
+  return supabaseAdminInstance;
 }
 
 export const supabase = {
