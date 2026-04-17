@@ -22,16 +22,53 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 | 2 | Email | Weekly summary and reminder emails land in GMX junk folder — new domain reputation issue, improves over time; consider adding DMARC record | Medium | 2026-04-14 |
 | 7 | Feature | Admin panel — `/admin` route (same project), role-based access (`User.role: USER\|ADMIN`). Views: all users, EmailLog, CronRun, user CRUD. No separate app needed. | Medium | 2026-04-14 |
 | 10 | Feature | Booking feed / news section — when Cal.com webhook fires, show booked appointments in dashboard or customer detail as "Gebuchte Termine" | Medium | 2026-04-14 |
+| 23 | Feature | Link Cal.com booking to specific heater — pass `heaterId` in email Cal.com URL metadata, store on Booking model, resolve in webhook handler. Enables showing booked appointment time on the heater card instead of calculated nextMaintenance date. | High | 2026-04-16 |
+| 24 | UX | Show booked appointment time on heater card — once booking↔heater link exists, replace or augment "Nächste Wartung" date with actual booked slot (date + time) when a future booking is linked. | Medium | 2026-04-16 |
 | 11 | Decision | Calendar integration — recommendation: do NOT build own calendar. Use Cal.com for scheduling, let users sync to Google/Outlook via Cal.com. Embed Cal.com iframe if needed later. | Low | 2026-04-14 |
 | 13 | Email | Weekly summary email content refinement — review and improve copy, structure, and data shown in the weekly summary email template. To be done after account page is live. | Medium | 2026-04-15 |
 | 14 | Feature | Delete account / danger zone — allow user to delete their own account and all associated data. Requires confirmation dialog. To be added to account page settings. | Low | 2026-04-15 |
 | 15 | Architecture | Multi-tenancy decision — evaluate shared database with logical separation (per-user scoping) vs. separate databases per tenant. Coding agent should produce a recommendation based on existing architecture. | High | 2026-04-15 |
-| 18 | Bug | Photo uploader broken — photo upload in maintenance dialog is non-functional. Needs investigation and fix. | High | 2026-04-15 |
 | 20 | Feature | Maintenance list — show "terminiert" status badge on maintenance entries that have a linked Cal.com booking. | Medium | 2026-04-15 |
+| 25 | Feature | CSV/Excel customer import — allow importing customers from external tools (e.g. Tooltime export). Map columns to Customer model fields. | Medium | 2026-04-16 |
+| 26 | Feature | Employee management — new "Mitarbeiter" tab in list view. Create/delete employees. Show weekly maintenance count per employee and historical workload over time. | Medium | 2026-04-16 |
+| 27 | Feature | Follow-up jobs (Nachfolgeaufträge) — dedicated section/tab for tasks discovered during maintenance (e.g. "Wasserfilter erneuern", "Angebot Klimaanlage"). Items can be checked off. Photos can be attached (e.g. installation situation for quoting). | Medium | 2026-04-16 |
+| 28 | Decision | Heater model: global device catalog vs. per-customer — **Option A:** heaters are created globally once and assigned to customers (shared catalog). **Option B:** each heater is created directly on the customer (current approach). Decision pending discussion with pilot customer. Both options to be architected before committing. | High | 2026-04-16 |
+| 29 | Feature | System type selection — rename "Heizsysteme" to "Zu wartende Systeme". Add top-level type selector: Heizung / Klimaanlage / Wasseraufbereitung. Subsequent fields adapt based on selection. | High | 2026-04-16 |
+| 30 | Feature | Climate system subtypes — when type = Klimaanlage, add subtype field: Singlesplit / Multisplit (2er, 3er, 4er, 5er Split). Relevant for scheduling and time slot management. | Medium | 2026-04-16 |
+| 31 | Feature | Energy storage subtypes — when type = Energiespeicher, add subtype: Boiler / Pufferspeicher, with Litergröße (liters) as required field. | Medium | 2026-04-16 |
+| 32 | Feature | Installation date = maintenance date checkbox — when assigning a system to a customer, a checkbox "Installationsdatum als Wartungsdatum übernehmen" sets the first maintenance interval automatically to installation date + 1 year. | Medium | 2026-04-16 |
+| 33 | Feature | Multi-system booking checkbox — if a customer has multiple systems with the same maintenance interval, allow selecting all of them together for a single appointment booking. | Medium | 2026-04-16 |
+| 34 | Feature | Photos per system in customer file — allow attaching up to 5 photos per heater/system directly in the customer detail view. | Medium | 2026-04-16 |
+| 35 | Feature | Digital maintenance checklist — technicians can fill out a checklist in the app during a maintenance visit. Checklist is defined per system type, checked off on mobile, and signed digitally at the end (acts as digital Arbeitsbericht). | High | 2026-04-16 |
+| 36 | Feature | Email log in customer file — show a list of all sent emails per customer with timestamps, directly in the customer detail view. | Medium | 2026-04-16 |
+| 37 | Feature | Technician calendar view — overview of which technician has appointments when. Admin can enter vacation and sick days. When a sick day is entered, affected customers receive an automated email to rebook. | Medium | 2026-04-16 |
+| 38 | Feature | Office-side appointment booking — allow office staff to book a maintenance appointment on behalf of a customer (for customers without email, e.g. elderly customers). | High | 2026-04-16 |
+| 39 | Email | Rephrase maintenance reminder email — current wording implies appointment is in one week. Correct meaning: "In one week it will have been a year — please book your next maintenance appointment." Copy must be updated. | High | 2026-04-16 |
+| 40 | Feature | Editable email templates — allow users to customize the reminder email text directly in app settings. Reference: Tooltime template provided by pilot customer. | Medium | 2026-04-16 |
+| 41 | Feature | Cal.com business hours configuration — configurable booking availability (e.g. Mon–Thu 08:00–17:00). Should be manageable in app settings or Cal.com settings. | Medium | 2026-04-16 |
+| 42 | Feature | Cal.com time slots per system type — different appointment durations per system type (Wärmepumpe, Gas, Öl, Enthärtungsanlage, Wasserfilter). Configurable in Cal.com or app settings. | Medium | 2026-04-16 |
+| 43 | UX | Cal.com booking location — currently shows "Online Call". Should show technician name or physical address. To be configured in Cal.com event settings. | Low | 2026-04-16 |
+| 44 | Config | Cal.com target email — booking confirmation email should go to business address (servicehaustechnik-gath.de), not personal. To be configured in Cal.com. | Low | 2026-04-16 |
+| 45 | Feature | Cal.com cancellation flow — customer should be able to cancel appointment directly from calendar entry. Verify Cal.com cancellation link is included in confirmation email. | Low | 2026-04-16 |
+| 46 | DB | Remove PV systems and bathroom water heaters — pilot customer confirmed these are not needed. Remove from heating system config and any related UI selectors. | Low | 2026-04-16 |
 
 ---
 
 ## Completed / Resolved
+
+### Bug Fixes (2026-04-16)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 18 | Bug | Photo uploader fixed — client-side anon key uploads rejected by Supabase RLS (no Supabase session via NextAuth). Moved to server-side POST /api/upload/photo using SUPABASE_SERVICE_ROLE_KEY. | 2026-04-16 |
+
+### Cal.com / Email E2E Improvements (2026-04-16)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 21a | Email | "Wartungstermin" label renamed to "Geplanter Wartungstermin" in reminder email template | 2026-04-16 |
+| 21b | UX | Per-heater reminder send button — mail icon added to each heater row on customer detail page; sends reminder for that specific heater. Sidebar generic button removed. | 2026-04-16 |
+| 21c | Feature | Cal.com booking URL pre-fills customer name, email, and address (`location` param) so customer doesn't need to type them manually. | 2026-04-16 |
 
 ### Sprint 8 — Mobile Responsiveness (2026-04-16)
 

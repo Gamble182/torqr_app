@@ -3,10 +3,13 @@
     "allow": [
       "Bash(git -C \"c:/Users/y.dorth/Documents/torqr_app/torqr_app/.worktrees/feature/account-page\" show fd857dd --stat)",
       "Bash(npx shadcn@latest add switch --yes)",
-      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); deps={**d.get\\('dependencies',{}\\),**d.get\\('devDependencies',{}\\)}; print\\('\\\\n'.join\\(k for k in deps if 'radix' in k or 'switch' in k.lower\\(\\)\\)\\)\")"
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); deps={**d.get\\('dependencies',{}\\),**d.get\\('devDependencies',{}\\)}; print\\('\\\\n'.join\\(k for k in deps if 'radix' in k or 'switch' in k.lower\\(\\)\\)\\)\")",
+      "Read(//c/Users/y.dorth/.claude/plugins/cache/claude-plugins-official/superpowers/5.0.7/skills/subagent-driven-development/**)"
     ],
     "additionalDirectories": [
-      "c:\\Users\\y.dorth\\Documents\\torqr_app\\torqr_app\\src\\app\\api\\customers\\[id]"
+      "c:\\Users\\y.dorth\\Documents\\torqr_app\\torqr_app\\src\\app\\api\\customers\\[id]",
+      "C:\\Users\\y.dorth\\Documents\\torqr_app\\torqr_app\\src\\app\\api\\admin\\users",
+      "C:\\Users\\y.dorth\\Documents\\torqr_app\\torqr_app\\src\\app\\admin\\users"
     ]
   },
   "enableAllProjectMcpServers": true,
