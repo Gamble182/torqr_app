@@ -20,7 +20,6 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
 | 2 | Email | Weekly summary and reminder emails land in GMX junk folder — new domain reputation issue, improves over time; consider adding DMARC record | Medium | 2026-04-14 |
-| 7 | Feature | Admin panel — `/admin` route (same project), role-based access (`User.role: USER\|ADMIN`). Views: all users, EmailLog, CronRun, user CRUD. No separate app needed. | Medium | 2026-04-14 |
 | 10 | Feature | Booking feed / news section — when Cal.com webhook fires, show booked appointments in dashboard or customer detail as "Gebuchte Termine" | Medium | 2026-04-14 |
 | 23 | Feature | Link Cal.com booking to specific heater — pass `heaterId` in email Cal.com URL metadata, store on Booking model, resolve in webhook handler. Enables showing booked appointment time on the heater card instead of calculated nextMaintenance date. | High | 2026-04-16 |
 | 24 | UX | Show booked appointment time on heater card — once booking↔heater link exists, replace or augment "Nächste Wartung" date with actual booked slot (date + time) when a future booking is linked. | Medium | 2026-04-16 |
@@ -55,6 +54,12 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 ---
 
 ## Completed / Resolved
+
+### Admin Panel (2026-04-17)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 7 | Feature | Platform admin panel at `/admin` — gated by `ADMIN_EMAILS` env var. Read-only. Overview stats, paginated user list with search + last login, user detail drill-down (profile, customers, email log), email log with type filter, cron run monitor. `requireAdmin()` helper with unit tests. Admin button in account page visible only to admin users. | 2026-04-17 |
 
 ### Bug Fixes (2026-04-16)
 
