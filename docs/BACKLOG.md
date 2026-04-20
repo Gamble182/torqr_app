@@ -17,19 +17,12 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 
 ## Open Items
 
-### System Model Overhaul
-
-The current "Heizsysteme" model only covers heating. The pilot customer needs Klimaanlagen, Wasseraufbereitung, and Energiespeicher. These items form a single feature block — the architecture decision (#28) must be resolved before implementation.
+### System Model — Follow-up
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| 28 | Decision | Heater model: global device catalog vs. per-customer — **Option A:** heaters are created globally once and assigned to customers (shared catalog). **Option B:** each heater is created directly on the customer (current approach). Decision pending discussion with pilot customer. Must be resolved before #29. | High | 2026-04-16 |
-| 29 | Feature | Rename "Heizsysteme" → "Zu wartende Systeme". Add top-level type selector: Heizung / Klimaanlage / Wasseraufbereitung / Energiespeicher. Subsequent fields adapt based on selection. Depends on #28. | High | 2026-04-16 |
-| 30 | Feature | Climate system subtypes — when type = Klimaanlage, add subtype: Singlesplit / Multisplit (2er–5er Split). Relevant for scheduling and time slot duration. Part of #29. | Medium | 2026-04-16 |
-| 31 | Feature | Energy storage subtypes — when type = Energiespeicher, add subtype: Boiler / Pufferspeicher with Litergröße (liters) as required field. Part of #29. | Medium | 2026-04-16 |
-| 46 | Cleanup | Remove PV systems and bathroom water heaters from heating system config and UI selectors — pilot customer confirmed not needed. | Low | 2026-04-16 |
 | 32 | Feature | Installation date = maintenance date checkbox — when assigning a system, checkbox "Installationsdatum als Wartungsdatum übernehmen" sets first maintenance interval to installation date + 1 year. | Medium | 2026-04-16 |
-| 34 | Feature | Photos per system — allow attaching up to 5 photos per heater/system directly in customer detail view (e.g. installation photos for quoting). | Medium | 2026-04-16 |
+| 34 | Feature | Photos per system — allow attaching up to 5 photos per system directly in system detail view (e.g. installation photos for quoting). | Medium | 2026-04-16 |
 
 ### Cal.com Booking Integration
 
@@ -37,9 +30,9 @@ Booking is functional (webhook + customer resolution), but not yet linked to spe
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| 23 | Feature | Link booking to specific heater — pass `heaterId` in Cal.com URL metadata, store on Booking model, resolve in webhook handler. Prerequisite for #24 and #20. | High | 2026-04-16 |
-| 24 | UX | Show booked appointment on heater card — once booking↔heater link exists (#23), replace or augment "Nächste Wartung" date with actual booked slot (date + time). | Medium | 2026-04-16 |
-| 20 | Feature | "Terminiert" status badge — show on maintenance entries / heater cards that have a linked future Cal.com booking. Depends on #23. | Medium | 2026-04-15 |
+| 23 | Feature | Link booking to specific system — pass `systemId` in Cal.com URL metadata, store on Booking model, resolve in webhook handler. Prerequisite for #24 and #20. | High | 2026-04-16 |
+| 24 | UX | Show booked appointment on system card — once booking↔system link exists (#23), replace or augment "Nächste Wartung" date with actual booked slot (date + time). | Medium | 2026-04-16 |
+| 20 | Feature | "Terminiert" status badge — show on system cards that have a linked future Cal.com booking. Depends on #23. | Medium | 2026-04-15 |
 | 33 | Feature | Multi-system booking — if a customer has multiple systems with the same maintenance interval, allow selecting all for a single appointment. | Medium | 2026-04-16 |
 | 38 | Feature | Office-side appointment booking — allow office staff to book on behalf of a customer (for customers without email, e.g. elderly). Bypass email-based Cal.com flow. | High | 2026-04-16 |
 
@@ -108,6 +101,16 @@ Relevant once multiple employees are on the platform.
 ## Completed / Resolved
 
 Items are grouped by sprint / work session, ordered newest first.
+
+### Sprint 11 — System Model Overhaul (2026-04-20)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 28 | Decision | Heater model: chose **Option A** — global `SystemCatalog` + per-tenant `CustomerSystem` instances. Catalog is shared across users; customer assignment is per-tenant with `userId` scoping. | 2026-04-20 |
+| 29 | Feature | Renamed "Heizsysteme" → "Systeme". New `SystemCatalog` (global) + `CustomerSystem` (per-tenant) models. Top-level type selector: Heizung / Klimaanlage / Wasseraufbereitung / Energiespeicher. `SystemAssignmentModal` with `SystemTypeSelector` + `CatalogPicker` (search, grouped by manufacturer, inline add). Catalog seeded with 224 heating entries. New `/dashboard/systems` list page + `/dashboard/systems/[id]` detail page. | 2026-04-20 |
+| 30 | Feature | AC subtypes — `AcSubtype` enum (SINGLE_SPLIT, MULTI_SPLIT_2/3/4/5) added to schema and `catalogCreateSchema`. | 2026-04-20 |
+| 31 | Feature | Energy storage subtypes — `StorageSubtype` enum (BOILER, BUFFER_TANK) and `storageCapacityLiters` field added to `CustomerSystem`. | 2026-04-20 |
+| 46 | Cleanup | Old `heatingType` / `additionalEnergySources` / `energyStorageSystems` fields removed from `Customer` model and all forms. Old `Heater` model, `useHeaters` hook, `HeaterFormModal`, `heater-form/` components, `api/heaters/`, `api/heating-systems/`, `dashboard/heaters/` all deleted. | 2026-04-20 |
 
 ### Sprint 10 — Admin Panel (2026-04-17)
 
