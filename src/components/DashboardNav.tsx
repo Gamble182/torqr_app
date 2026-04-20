@@ -8,7 +8,6 @@ import { useState, useEffect } from 'react';
 import {
   LayoutDashboardIcon,
   UsersIcon,
-  FlameIcon,
   WrenchIcon,
   LogOutIcon,
   MenuIcon,
@@ -21,7 +20,7 @@ import {
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboardIcon },
   { name: 'Kunden', href: '/dashboard/customers', icon: UsersIcon },
-  { name: 'Heizsysteme', href: '/dashboard/heaters', icon: FlameIcon },
+  { name: 'Systeme', href: '/dashboard/systems', icon: WrenchIcon },
   { name: 'Wartungen', href: '/dashboard/wartungen', icon: WrenchIcon },
 ];
 
