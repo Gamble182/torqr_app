@@ -10,36 +10,28 @@ function verifyCronSecret(request: NextRequest): boolean {
   return auth === `Bearer ${process.env.CRON_SECRET}`;
 }
 
-/**
- * Returns heater IDs eligible for a reminder of the given type today.
- * Window: ±1 day around target (28 or 7 days from now).
- * Dedup: skips customers who already received this type within the last 30 days.
- */
-async function getEligibleHeaterIds(type: ReminderType): Promise<string[]> {
+async function getEligibleSystemIds(type: ReminderType): Promise<string[]> {
   const now = new Date();
   const targetDays = type === 'REMINDER_4_WEEKS' ? 28 : 7;
   const windowStart = addDays(now, targetDays - 1);
   const windowEnd = addDays(now, targetDays + 1);
   const dedupeFrom = addDays(now, -30);
 
-  const heaters = await prisma.heater.findMany({
+  const systems = await prisma.customerSystem.findMany({
     where: {
       nextMaintenance: { gte: windowStart, lte: windowEnd },
       customer: {
         emailOptIn: 'CONFIRMED',
         email: { not: null },
         emailLogs: {
-          none: {
-            type,
-            sentAt: { gte: dedupeFrom },
-          },
+          none: { type, sentAt: { gte: dedupeFrom } },
         },
       },
     },
     select: { id: true },
   });
 
-  return heaters.map((h) => h.id);
+  return systems.map((s) => s.id);
 }
 
 export async function GET(request: NextRequest) {
@@ -55,16 +47,16 @@ export async function GET(request: NextRequest) {
   let emailsSent = 0;
 
   for (const type of ['REMINDER_4_WEEKS', 'REMINDER_1_WEEK'] as ReminderType[]) {
-    const heaterIds = await getEligibleHeaterIds(type);
+    const systemIds = await getEligibleSystemIds(type);
 
-    for (const heaterId of heaterIds) {
+    for (const systemId of systemIds) {
       try {
-        await sendReminder(heaterId, type);
+        await sendReminder(systemId, type);
         emailsSent++;
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
-        errors.push(`${heaterId}: ${msg}`);
-        console.error(`[daily-reminders] Failed for heater ${heaterId}:`, err);
+        errors.push(`${systemId}: ${msg}`);
+        console.error(`[daily-reminders] Failed for system ${systemId}:`, err);
       }
     }
   }

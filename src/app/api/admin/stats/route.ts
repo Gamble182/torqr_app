@@ -12,7 +12,7 @@ export async function GET() {
     const [
       totalUsers,
       totalCustomers,
-      totalHeaters,
+      totalSystems,
       totalMaintenances,
       emailsLast7Days,
       lastCronRuns,
@@ -21,11 +21,9 @@ export async function GET() {
     ] = await Promise.all([
       prisma.user.count(),
       prisma.customer.count(),
-      prisma.heater.count(),
+      prisma.customerSystem.count(),
       prisma.maintenance.count(),
-      prisma.emailLog.count({
-        where: { sentAt: { gte: sevenDaysAgo } },
-      }),
+      prisma.emailLog.count({ where: { sentAt: { gte: sevenDaysAgo } } }),
       prisma.cronRun.findMany({
         orderBy: { startedAt: 'desc' },
         take: 10,
@@ -49,7 +47,7 @@ export async function GET() {
       data: {
         totalUsers,
         totalCustomers,
-        totalHeaters,
+        totalSystems,
         totalMaintenances,
         emailsLast7Days,
         lastCronRuns,

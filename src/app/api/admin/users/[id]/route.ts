@@ -21,7 +21,7 @@ export async function GET(
         createdAt: true,
         updatedAt: true,
         _count: {
-          select: { customers: true, heaters: true, maintenances: true, bookings: true },
+          select: { customers: true, customerSystems: true, maintenances: true, bookings: true },
         },
         customers: {
           select: {
@@ -30,7 +30,7 @@ export async function GET(
             city: true,
             createdAt: true,
             emailOptIn: true,
-            _count: { select: { heaters: true } },
+            _count: { select: { customerSystems: true } },
           },
           orderBy: { createdAt: 'desc' },
           take: 20,
@@ -59,10 +59,7 @@ export async function GET(
       }),
     ]);
 
-    return NextResponse.json({
-      success: true,
-      data: { ...user, emailLogs, lastLogin },
-    });
+    return NextResponse.json({ success: true, data: { ...user, emailLogs, lastLogin } });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error';
     if (message === 'Unauthorized') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

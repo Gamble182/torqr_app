@@ -11,20 +11,16 @@ export async function POST(
     const { userId } = await requireAuth();
     const { id: customerId } = await params;
 
-    const body = await req.json().catch(() => ({})) as { heaterId?: string };
-    const { heaterId } = body;
+    const body = await req.json().catch(() => ({})) as { systemId?: string };
+    const { systemId } = body;
 
-    // Verify customer belongs to this user
     const customer = await prisma.customer.findUnique({
       where: { id: customerId },
       select: { id: true, userId: true, email: true, name: true },
     });
 
     if (!customer || customer.userId !== userId) {
-      return NextResponse.json(
-        { success: false, error: 'Kunde nicht gefunden' },
-        { status: 404 }
-      );
+      return NextResponse.json({ success: false, error: 'Kunde nicht gefunden' }, { status: 404 });
     }
 
     if (!customer.email) {
@@ -34,19 +30,15 @@ export async function POST(
       );
     }
 
-    // If heaterId provided, look up that specific heater; otherwise fall back to first
-    const heater = heaterId
-      ? await prisma.heater.findFirst({ where: { id: heaterId, customerId, userId } })
-      : await prisma.heater.findFirst({ where: { customerId, userId }, orderBy: { createdAt: 'asc' } });
+    const system = systemId
+      ? await prisma.customerSystem.findFirst({ where: { id: systemId, customerId, userId } })
+      : await prisma.customerSystem.findFirst({ where: { customerId, userId }, orderBy: { createdAt: 'asc' } });
 
-    if (!heater) {
-      return NextResponse.json(
-        { success: false, error: 'Heizsystem nicht gefunden' },
-        { status: 404 }
-      );
+    if (!system) {
+      return NextResponse.json({ success: false, error: 'System nicht gefunden' }, { status: 404 });
     }
 
-    await sendReminder(heater.id, 'REMINDER_1_WEEK');
+    await sendReminder(system.id, 'REMINDER_1_WEEK');
 
     return NextResponse.json({ success: true });
   } catch (error) {
