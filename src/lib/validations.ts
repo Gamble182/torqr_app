@@ -144,21 +144,6 @@ export const userPreferencesUpdateSchema = z.object({
 // CUSTOMER SCHEMAS
 // ============================================================================
 
-// Enum values for validation
-const HeatingTypeEnum = z.enum([
-  'GAS', 'OIL', 'DISTRICT_HEATING', 'HEAT_PUMP_AIR', 'HEAT_PUMP_GROUND',
-  'HEAT_PUMP_WATER', 'PELLET_BIOMASS', 'NIGHT_STORAGE', 'ELECTRIC_DIRECT',
-  'HYBRID', 'CHP'
-]);
-
-const AdditionalEnergySourceEnum = z.enum([
-  'PHOTOVOLTAIC', 'SOLAR_THERMAL', 'SMALL_WIND'
-]);
-
-const EnergyStorageSystemEnum = z.enum([
-  'BATTERY_STORAGE', 'HEAT_STORAGE'
-]);
-
 /**
  * Customer creation schema
  */
@@ -170,9 +155,6 @@ export const customerCreateSchema = z.object({
   phone: z.string().min(1, 'Telefon ist erforderlich').max(20, 'Telefon zu lang'),
   email: z.string().email('Ungültige E-Mail').optional().or(z.literal('')),
   suppressEmail: z.boolean().optional().default(false),
-  heatingType: HeatingTypeEnum,
-  additionalEnergySources: z.array(AdditionalEnergySourceEnum).optional().default([]),
-  energyStorageSystems: z.array(EnergyStorageSystemEnum).optional().default([]),
   notes: z.string().max(1000, 'Notizen zu lang').optional(),
 });
 
@@ -197,111 +179,65 @@ export const emailOptInConfirmSchema = z.object({
 });
 
 // ============================================================================
-// HEATER SCHEMAS
+// SYSTEM CATALOG SCHEMAS
 // ============================================================================
 
-/**
- * Heater creation schema
- */
-export const heaterCreateSchema = z.object({
-  customerId: z.string().uuid('Ungültige Kunden-ID').optional().nullable(),
-  model: z.string().min(1, 'Modell ist erforderlich').max(100, 'Modell zu lang'),
-  serialNumber: z.string().max(100, 'Seriennummer zu lang').optional().nullable(),
-  installationDate: z.string().datetime('Ungültiges Installationsdatum').optional().nullable(),
+const SystemTypeEnum = z.enum(['HEATING', 'AC', 'WATER_TREATMENT', 'ENERGY_STORAGE']);
+const AcSubtypeEnum = z.enum(['SINGLE_SPLIT', 'MULTI_SPLIT_2', 'MULTI_SPLIT_3', 'MULTI_SPLIT_4', 'MULTI_SPLIT_5']);
+const StorageSubtypeEnum = z.enum(['BOILER', 'BUFFER_TANK']);
+
+export const catalogCreateSchema = z
+  .object({
+    systemType: SystemTypeEnum,
+    manufacturer: z.string().min(1, 'Hersteller ist erforderlich').max(100),
+    name: z.string().min(1, 'Name ist erforderlich').max(100),
+    acSubtype: AcSubtypeEnum.optional(),
+    storageSubtype: StorageSubtypeEnum.optional(),
+  })
+  .refine(
+    (data) => data.systemType !== 'AC' || data.acSubtype !== undefined,
+    { message: 'AC-Subtyp ist für Klimaanlagen erforderlich', path: ['acSubtype'] }
+  );
+
+// ============================================================================
+// CUSTOMER SYSTEM SCHEMAS
+// ============================================================================
+
+export const customerSystemCreateSchema = z.object({
+  catalogId: uuidSchema,
+  customerId: uuidSchema,
+  serialNumber: z.string().max(100).optional().nullable(),
+  installationDate: z.string().datetime().optional().nullable(),
   maintenanceInterval: z.enum(['1', '3', '6', '12', '24'], {
-    message: 'Wartungsintervall muss 1, 3, 6, 12 oder 24 Monate sein'
+    message: 'Wartungsintervall muss 1, 3, 6, 12 oder 24 Monate sein',
   }),
-  lastMaintenance: z.string().datetime('Ungültiges Wartungsdatum').optional().nullable(),
-
-  // Heating System Information
-  heaterType: z.string().optional().nullable(),
-  manufacturer: z.string().optional().nullable(),
-
-  // Heat Storage
-  hasStorage: z.boolean().optional(),
-  storageManufacturer: z.string().optional().nullable(),
-  storageModel: z.string().optional().nullable(),
-  storageCapacity: z.number().int().positive().optional().nullable(),
-
-  // Battery
-  hasBattery: z.boolean().optional(),
-  batteryManufacturer: z.string().optional().nullable(),
-  batteryModel: z.string().optional().nullable(),
-  batteryCapacity: z.number().positive().optional().nullable(),
-
+  lastMaintenance: z.string().datetime().optional().nullable(),
+  storageCapacityLiters: z.number().int().positive().optional().nullable(),
   requiredParts: z.string().optional().nullable(),
 });
 
-/**
- * Heater update schema (all fields optional)
- */
-export const heaterUpdateSchema = z.object({
-  customerId: z.string().uuid('Ungültige Kunden-ID').optional().nullable(),
-  model: z.string().min(1, 'Modell ist erforderlich').max(100, 'Modell zu lang').optional(),
-  serialNumber: z.string().max(100, 'Seriennummer zu lang').optional().nullable(),
-  installationDate: z.string().datetime('Ungültiges Installationsdatum').optional().nullable(),
-  maintenanceInterval: z.enum(['1', '3', '6', '12', '24'], {
-    message: 'Wartungsintervall muss 1, 3, 6, 12 oder 24 Monate sein'
-  }).optional(),
-  lastMaintenance: z.string().datetime('Ungültiges Wartungsdatum').optional().nullable(),
-
-  // Heating System Information
-  heaterType: z.string().optional().nullable(),
-  manufacturer: z.string().optional().nullable(),
-
-  // Heat Storage
-  hasStorage: z.boolean().optional(),
-  storageManufacturer: z.string().optional().nullable(),
-  storageModel: z.string().optional().nullable(),
-  storageCapacity: z.number().int().positive().optional().nullable(),
-
-  // Battery
-  hasBattery: z.boolean().optional(),
-  batteryManufacturer: z.string().optional().nullable(),
-  batteryModel: z.string().optional().nullable(),
-  batteryCapacity: z.number().positive().optional().nullable(),
-
+export const customerSystemUpdateSchema = z.object({
+  catalogId: uuidSchema.optional(),
+  customerId: uuidSchema.optional(),
+  serialNumber: z.string().max(100).optional().nullable(),
+  installationDate: z.string().datetime().optional().nullable(),
+  maintenanceInterval: z
+    .enum(['1', '3', '6', '12', '24'], {
+      message: 'Wartungsintervall muss 1, 3, 6, 12 oder 24 Monate sein',
+    })
+    .optional(),
+  lastMaintenance: z.string().datetime().optional().nullable(),
+  storageCapacityLiters: z.number().int().positive().optional().nullable(),
   requiredParts: z.string().optional().nullable(),
-});
-
-// ============================================================================
-// HEATING SYSTEMS SCHEMAS (Categories, Manufacturers, Models)
-// ============================================================================
-
-/**
- * Add category schema
- */
-export const addCategorySchema = z.object({
-  category: z.string().min(1, 'Kategorie ist erforderlich'),
-});
-
-/**
- * Add manufacturer schema
- */
-export const addManufacturerSchema = z.object({
-  category: z.string().min(1, 'Kategorie ist erforderlich'),
-  manufacturer: z.string().min(1, 'Hersteller ist erforderlich'),
-});
-
-/**
- * Add model schema
- */
-export const addModelSchema = z.object({
-  category: z.string().min(1, 'Kategorie ist erforderlich'),
-  manufacturer: z.string().min(1, 'Hersteller ist erforderlich'),
-  model: z.string().min(1, 'Modell ist erforderlich'),
 });
 
 // ============================================================================
 // MAINTENANCE SCHEMAS
 // ============================================================================
 
-/**
- * Maintenance creation schema
- */
 export const maintenanceCreateSchema = z.object({
-  heaterId: uuidSchema,
-  date: dateStringSchema.optional(), // defaults to now if not provided
+  systemId: uuidSchema,
+  date: dateStringSchema.optional(),
   notes: z
     .string()
     .max(2000, 'Notes must be less than 2000 characters')
