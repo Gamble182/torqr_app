@@ -208,8 +208,8 @@ export const customerSystemCreateSchema = z.object({
   customerId: uuidSchema,
   serialNumber: z.string().max(100).optional().nullable(),
   installationDate: z.string().datetime().optional().nullable(),
-  maintenanceInterval: z.enum(['1', '3', '6', '12', '24'], {
-    message: 'Wartungsintervall muss 1, 3, 6, 12 oder 24 Monate sein',
+  maintenanceInterval: z.number().int().positive({
+    message: 'Wartungsintervall muss eine positive Zahl sein',
   }),
   lastMaintenance: z.string().datetime().optional().nullable(),
   storageCapacityLiters: z.number().int().positive().optional().nullable(),
@@ -221,11 +221,9 @@ export const customerSystemUpdateSchema = z.object({
   customerId: uuidSchema.optional(),
   serialNumber: z.string().max(100).optional().nullable(),
   installationDate: z.string().datetime().optional().nullable(),
-  maintenanceInterval: z
-    .enum(['1', '3', '6', '12', '24'], {
-      message: 'Wartungsintervall muss 1, 3, 6, 12 oder 24 Monate sein',
-    })
-    .optional(),
+  maintenanceInterval: z.number().int().positive({
+    message: 'Wartungsintervall muss eine positive Zahl sein',
+  }).optional(),
   lastMaintenance: z.string().datetime().optional().nullable(),
   storageCapacityLiters: z.number().int().positive().optional().nullable(),
   requiredParts: z.string().optional().nullable(),

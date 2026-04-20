@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Katalogeintrag nicht gefunden' }, { status: 404 });
     }
 
-    const interval = parseInt(validated.maintenanceInterval);
+    const interval = validated.maintenanceInterval;
     const lastMaintenance = validated.lastMaintenance
       ? new Date(validated.lastMaintenance)
       : new Date();

@@ -59,9 +59,7 @@ export async function PATCH(
 
     let nextMaintenance = existing.nextMaintenance;
     if (validated.maintenanceInterval || validated.lastMaintenance) {
-      const interval = validated.maintenanceInterval
-        ? parseInt(validated.maintenanceInterval)
-        : existing.maintenanceInterval;
+      const interval = validated.maintenanceInterval ?? existing.maintenanceInterval;
       const lastMaintenance = validated.lastMaintenance
         ? new Date(validated.lastMaintenance)
         : existing.lastMaintenance ?? new Date();
@@ -78,7 +76,7 @@ export async function PATCH(
         ...(validated.installationDate !== undefined && {
           installationDate: validated.installationDate ? new Date(validated.installationDate) : null,
         }),
-        ...(validated.maintenanceInterval && { maintenanceInterval: parseInt(validated.maintenanceInterval) }),
+        ...(validated.maintenanceInterval !== undefined && { maintenanceInterval: validated.maintenanceInterval }),
         ...(validated.lastMaintenance !== undefined && {
           lastMaintenance: validated.lastMaintenance ? new Date(validated.lastMaintenance) : null,
         }),

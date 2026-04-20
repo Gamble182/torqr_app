@@ -64,7 +64,7 @@ export function SystemAssignmentModal({
       customerId,
       serialNumber: serialNumber || null,
       installationDate: installationDate ? new Date(installationDate).toISOString() : null,
-      maintenanceInterval: maintenanceInterval,
+      maintenanceInterval: Number(maintenanceInterval),
       lastMaintenance: lastMaintenance ? new Date(lastMaintenance).toISOString() : null,
     };
 
