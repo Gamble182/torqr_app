@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 generator client {
   provider = "prisma-client-js"
 }
@@ -16,33 +11,32 @@ datasource db {
 // ============================================================================
 
 model User {
-  id            String    @id @default(uuid())
-  email         String    @unique
-  passwordHash  String
-  name          String
-  phone         String?
-  companyName   String?
-  emailWeeklySummary Boolean @default(true)
-  emailVerified DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                 String    @id @default(uuid())
+  email              String    @unique
+  passwordHash       String
+  name               String
+  phone              String?
+  companyName        String?
+  emailWeeklySummary Boolean   @default(true)
+  emailVerified      DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 
-  // Relations
-  customers     Customer[]
-  heaters       Heater[]
-  maintenances  Maintenance[]
-  sessions      Session[]
-  bookings      Booking[]
+  customers       Customer[]
+  customerSystems CustomerSystem[]
+  maintenances    Maintenance[]
+  sessions        Session[]
+  bookings        Booking[]
 
   @@map("users")
 }
 
 model Session {
-  id           String   @id @default(uuid())
-  userId       String
-  token        String   @unique
-  expiresAt    DateTime
-  createdAt    DateTime @default(now())
+  id        String   @id @default(uuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -52,36 +46,32 @@ model Session {
 }
 
 // ============================================================================
-// CUSTOMERS & HEATERS
+// CUSTOMERS
 // ============================================================================
 
 model Customer {
-  id         String   @id @default(uuid())
-  name       String
-  street     String
-  zipCode    String
-  city       String
-  phone      String
-  email      String?
-  emailOptIn EmailOptInStatus @default(NONE)
-  optInToken String?  @unique // for double opt-in confirmation
-  optInTokenExpires DateTime? // token expiry (48 hours)
-  optInConfirmedAt DateTime? // when customer confirmed
-  optInIpAddress String? // for GDPR proof
-  unsubscribedAt DateTime? // if customer unsubscribed
-  heatingType HeatingType // primary heating system type (REQUIRED)
-  additionalEnergySources String[] @default([]) // additional energy sources (array, can select multiple)
-  energyStorageSystems String[] @default([]) // energy storage systems (array, can select multiple)
-  notes      String?
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id                String           @id @default(uuid())
+  name              String
+  street            String
+  zipCode           String
+  city              String
+  phone             String
+  email             String?
+  emailOptIn        EmailOptInStatus @default(NONE)
+  optInToken        String?          @unique
+  optInTokenExpires DateTime?
+  optInConfirmedAt  DateTime?
+  optInIpAddress    String?
+  unsubscribedAt    DateTime?
+  notes             String?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
 
-  // Relations
-  userId     String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  heaters    Heater[]
-  emailLogs  EmailLog[]
-  bookings   Booking[]
+  userId          String
+  user            User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  customerSystems CustomerSystem[]
+  emailLogs       EmailLog[]
+  bookings        Booking[]
 
   @@index([userId])
   @@index([email])
@@ -90,71 +80,84 @@ model Customer {
 }
 
 enum EmailOptInStatus {
-  NONE       // no email provided or not opted in
-  PENDING    // confirmation email sent, awaiting click
-  CONFIRMED  // customer clicked confirmation link
-  UNSUBSCRIBED // customer unsubscribed
+  NONE
+  PENDING
+  CONFIRMED
+  UNSUBSCRIBED
 }
 
-enum HeatingType {
-  GAS                 // Gasheizung
-  OIL                 // Ölheizung
-  DISTRICT_HEATING    // Fernwärme
-  HEAT_PUMP_AIR       // Wärmepumpe (Luft)
-  HEAT_PUMP_GROUND    // Wärmepumpe (Erde)
-  HEAT_PUMP_WATER     // Wärmepumpe (Wasser)
-  PELLET_BIOMASS      // Pelletheizung / Biomasse
-  NIGHT_STORAGE       // Nachtspeicherheizung (Strom)
-  ELECTRIC_DIRECT     // Elektro-Direktheizung (Infrarot, Heizlüfter etc.)
-  HYBRID              // Hybridheizungen (z. B. Gas + Wärmepumpe)
-  CHP                 // Blockheizkraftwerk (BHKW - Combined Heat and Power)
+// ============================================================================
+// SYSTEM CATALOG (global, shared across all users)
+// ============================================================================
+
+enum SystemType {
+  HEATING
+  AC
+  WATER_TREATMENT
+  ENERGY_STORAGE
 }
 
-// Note: AdditionalEnergy and EnergyStorage are now stored as String arrays
-// Valid values for additionalEnergySources: PHOTOVOLTAIC, SOLAR_THERMAL, SMALL_WIND
-// Valid values for energyStorageSystems: BATTERY_STORAGE, HEAT_STORAGE
+enum AcSubtype {
+  SINGLE_SPLIT
+  MULTI_SPLIT_2
+  MULTI_SPLIT_3
+  MULTI_SPLIT_4
+  MULTI_SPLIT_5
+}
 
-model Heater {
-  id                  String   @id @default(uuid())
-  model               String
-  serialNumber        String?
-  installationDate    DateTime?
-  maintenanceInterval Int      // in months (1, 3, 6, 12, 24)
-  lastMaintenance     DateTime?
-  nextMaintenance     DateTime? // auto-calculated
-  requiredParts       String?  // JSON array stored as text
+enum StorageSubtype {
+  BOILER
+  BUFFER_TANK
+}
 
-  // Heating System Information
-  heaterType          String?  // Type of heating system (from config)
-  manufacturer        String?  // Manufacturer/Brand (from config)
+model SystemCatalog {
+  id              String          @id @default(uuid())
+  systemType      SystemType
+  manufacturer    String
+  name            String
+  acSubtype       AcSubtype?
+  storageSubtype  StorageSubtype?
+  createdByUserId String?
+  createdAt       DateTime        @default(now())
 
-  // Heat Storage
-  hasStorage          Boolean  @default(false)
-  storageManufacturer String?
-  storageModel        String?
-  storageCapacity     Int?     // in liters
+  customerSystems CustomerSystem[]
 
-  // Battery
-  hasBattery          Boolean  @default(false)
-  batteryManufacturer String?
-  batteryModel        String?
-  batteryCapacity     Float?   // in kWh
+  @@unique([systemType, manufacturer, name])
+  @@index([systemType])
+  @@index([manufacturer])
+  @@map("system_catalog")
+}
 
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+// ============================================================================
+// CUSTOMER SYSTEMS (per-installation instances)
+// ============================================================================
 
-  // Relations
-  userId      String   // Owner of the heater (required for heaters without customer)
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+model CustomerSystem {
+  id                    String    @id @default(uuid())
+  serialNumber          String?
+  installationDate      DateTime?
+  maintenanceInterval   Int
+  lastMaintenance       DateTime?
+  nextMaintenance       DateTime?
+  storageCapacityLiters Int?
+  requiredParts         String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
-  customerId  String?  // Made optional - heater can exist without customer initially
-  customer    Customer?    @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  catalogId  String
+  catalog    SystemCatalog @relation(fields: [catalogId], references: [id])
+  customerId String
+  customer   Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  userId     String
+  user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   maintenances Maintenance[]
 
   @@index([userId])
   @@index([customerId])
-  @@index([nextMaintenance]) // for querying upcoming maintenances
-  @@map("heaters")
+  @@index([catalogId])
+  @@index([nextMaintenance])
+  @@map("customer_systems")
 }
 
 // ============================================================================
@@ -162,20 +165,19 @@ model Heater {
 // ============================================================================
 
 model Maintenance {
-  id        String   @id @default(uuid())
-  date      DateTime @default(now())
+  id        String    @id @default(uuid())
+  date      DateTime  @default(now())
   notes     String?
-  photos    String[] @default([]) // array of file URLs
-  syncedAt  DateTime? // when synced from offline (null = created online)
-  createdAt DateTime @default(now())
+  photos    String[]  @default([])
+  syncedAt  DateTime?
+  createdAt DateTime  @default(now())
 
-  // Relations
-  heaterId String
-  heater   Heater @relation(fields: [heaterId], references: [id], onDelete: Cascade)
+  systemId String
+  system   CustomerSystem @relation(fields: [systemId], references: [id], onDelete: Cascade)
   userId   String
-  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@index([heaterId])
+  @@index([systemId])
   @@index([userId])
   @@index([date])
   @@map("maintenances")
@@ -186,16 +188,16 @@ model Maintenance {
 // ============================================================================
 
 model EmailLog {
-  id           String   @id @default(uuid())
-  customerId   String
-  type         EmailType
-  sentAt       DateTime @default(now())
-  opened       Boolean  @default(false)
-  openedAt     DateTime?
-  clicked      Boolean  @default(false)
-  clickedAt    DateTime?
-  resendId     String?  // Resend email ID for tracking
-  error        String?  // if send failed
+  id         String    @id @default(uuid())
+  customerId String
+  type       EmailType
+  sentAt     DateTime  @default(now())
+  opened     Boolean   @default(false)
+  openedAt   DateTime?
+  clicked    Boolean   @default(false)
+  clickedAt  DateTime?
+  resendId   String?
+  error      String?
 
   customer Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
 
@@ -206,10 +208,10 @@ model EmailLog {
 }
 
 enum EmailType {
-  OPT_IN_CONFIRMATION  // double opt-in confirmation
-  REMINDER_4_WEEKS     // 4 weeks before maintenance
-  REMINDER_1_WEEK      // 1 week before maintenance
-  WEEKLY_SUMMARY       // weekly summary to Max (sent to user, not customer)
+  OPT_IN_CONFIRMATION
+  REMINDER_4_WEEKS
+  REMINDER_1_WEEK
+  WEEKLY_SUMMARY
 }
 
 // ============================================================================
@@ -217,13 +219,13 @@ enum EmailType {
 // ============================================================================
 
 model CronRun {
-  id          String   @id @default(uuid())
-  jobType     String   // "daily_reminders", "weekly_summary"
-  startedAt   DateTime @default(now())
+  id          String     @id @default(uuid())
+  jobType     String
+  startedAt   DateTime   @default(now())
   completedAt DateTime?
   status      CronStatus @default(RUNNING)
-  emailsSent  Int      @default(0)
-  errors      String?  // JSON array of errors
+  emailsSent  Int        @default(0)
+  errors      String?
 
   @@index([jobType])
   @@index([startedAt])
@@ -241,14 +243,14 @@ enum CronStatus {
 // ============================================================================
 
 model LoginLog {
-  id         String   @id @default(uuid())
-  email      String
-  userId     String?  // null if login failed (user not found)
-  success    Boolean
-  reason     String?  // "invalid_password", "user_not_found", "validation_error"
-  ipAddress  String?
-  userAgent  String?
-  createdAt  DateTime @default(now())
+  id        String   @id @default(uuid())
+  email     String
+  userId    String?
+  success   Boolean
+  reason    String?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
 
   @@index([email])
   @@index([userId])
@@ -261,19 +263,18 @@ model LoginLog {
 // ============================================================================
 
 model Booking {
-  id             String        @id @default(uuid())
-  calBookingUid  String        @unique // Cal.com booking UID — prevents duplicates
-  triggerEvent   String        // BOOKING_CREATED, BOOKING_CANCELLED, etc.
-  startTime      DateTime
-  endTime        DateTime?
-  title          String?
-  attendeeName   String?
-  attendeeEmail  String?
-  status         BookingStatus @default(CONFIRMED)
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
+  id            String        @id @default(uuid())
+  calBookingUid String        @unique
+  triggerEvent  String
+  startTime     DateTime
+  endTime       DateTime?
+  title         String?
+  attendeeName  String?
+  attendeeEmail String?
+  status        BookingStatus @default(CONFIRMED)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 
-  // Relations
   userId     String
   user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   customerId String?

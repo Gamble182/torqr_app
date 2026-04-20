@@ -2,10 +2,22 @@
 CREATE TYPE "EmailOptInStatus" AS ENUM ('NONE', 'PENDING', 'CONFIRMED', 'UNSUBSCRIBED');
 
 -- CreateEnum
+CREATE TYPE "SystemType" AS ENUM ('HEATING', 'AC', 'WATER_TREATMENT', 'ENERGY_STORAGE');
+
+-- CreateEnum
+CREATE TYPE "AcSubtype" AS ENUM ('SINGLE_SPLIT', 'MULTI_SPLIT_2', 'MULTI_SPLIT_3', 'MULTI_SPLIT_4', 'MULTI_SPLIT_5');
+
+-- CreateEnum
+CREATE TYPE "StorageSubtype" AS ENUM ('BOILER', 'BUFFER_TANK');
+
+-- CreateEnum
 CREATE TYPE "EmailType" AS ENUM ('OPT_IN_CONFIRMATION', 'REMINDER_4_WEEKS', 'REMINDER_1_WEEK', 'WEEKLY_SUMMARY');
 
 -- CreateEnum
 CREATE TYPE "CronStatus" AS ENUM ('RUNNING', 'SUCCESS', 'FAILED');
+
+-- CreateEnum
+CREATE TYPE "BookingStatus" AS ENUM ('CONFIRMED', 'CANCELLED', 'RESCHEDULED');
 
 -- CreateTable
 CREATE TABLE "users" (
@@ -14,6 +26,8 @@ CREATE TABLE "users" (
     "passwordHash" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "phone" TEXT,
+    "companyName" TEXT,
+    "emailWeeklySummary" BOOLEAN NOT NULL DEFAULT true,
     "emailVerified" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -56,20 +70,36 @@ CREATE TABLE "customers" (
 );
 
 -- CreateTable
-CREATE TABLE "heaters" (
+CREATE TABLE "system_catalog" (
     "id" TEXT NOT NULL,
-    "model" TEXT NOT NULL,
+    "systemType" "SystemType" NOT NULL,
+    "manufacturer" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
+    "acSubtype" "AcSubtype",
+    "storageSubtype" "StorageSubtype",
+    "createdByUserId" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "system_catalog_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "customer_systems" (
+    "id" TEXT NOT NULL,
     "serialNumber" TEXT,
     "installationDate" TIMESTAMP(3),
     "maintenanceInterval" INTEGER NOT NULL,
     "lastMaintenance" TIMESTAMP(3),
     "nextMaintenance" TIMESTAMP(3),
+    "storageCapacityLiters" INTEGER,
     "requiredParts" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
+    "catalogId" TEXT NOT NULL,
     "customerId" TEXT NOT NULL,
+    "userId" TEXT NOT NULL,
 
-    CONSTRAINT "heaters_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "customer_systems_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -80,7 +110,7 @@ CREATE TABLE "maintenances" (
     "photos" TEXT[] DEFAULT ARRAY[]::TEXT[],
     "syncedAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "heaterId" TEXT NOT NULL,
+    "systemId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
 
     CONSTRAINT "maintenances_pkey" PRIMARY KEY ("id")
@@ -115,6 +145,39 @@ CREATE TABLE "cron_runs" (
     CONSTRAINT "cron_runs_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "login_logs" (
+    "id" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "userId" TEXT,
+    "success" BOOLEAN NOT NULL,
+    "reason" TEXT,
+    "ipAddress" TEXT,
+    "userAgent" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT "login_logs_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "bookings" (
+    "id" TEXT NOT NULL,
+    "calBookingUid" TEXT NOT NULL,
+    "triggerEvent" TEXT NOT NULL,
+    "startTime" TIMESTAMP(3) NOT NULL,
+    "endTime" TIMESTAMP(3),
+    "title" TEXT,
+    "attendeeName" TEXT,
+    "attendeeEmail" TEXT,
+    "status" "BookingStatus" NOT NULL DEFAULT 'CONFIRMED',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "userId" TEXT NOT NULL,
+    "customerId" TEXT,
+
+    CONSTRAINT "bookings_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
@@ -140,13 +203,28 @@ CREATE INDEX "customers_email_idx" ON "customers"("email");
 CREATE INDEX "customers_emailOptIn_idx" ON "customers"("emailOptIn");
 
 -- CreateIndex
-CREATE INDEX "heaters_customerId_idx" ON "heaters"("customerId");
+CREATE INDEX "system_catalog_systemType_idx" ON "system_catalog"("systemType");
 
 -- CreateIndex
-CREATE INDEX "heaters_nextMaintenance_idx" ON "heaters"("nextMaintenance");
+CREATE INDEX "system_catalog_manufacturer_idx" ON "system_catalog"("manufacturer");
 
 -- CreateIndex
-CREATE INDEX "maintenances_heaterId_idx" ON "maintenances"("heaterId");
+CREATE UNIQUE INDEX "system_catalog_systemType_manufacturer_name_key" ON "system_catalog"("systemType", "manufacturer", "name");
+
+-- CreateIndex
+CREATE INDEX "customer_systems_userId_idx" ON "customer_systems"("userId");
+
+-- CreateIndex
+CREATE INDEX "customer_systems_customerId_idx" ON "customer_systems"("customerId");
+
+-- CreateIndex
+CREATE INDEX "customer_systems_catalogId_idx" ON "customer_systems"("catalogId");
+
+-- CreateIndex
+CREATE INDEX "customer_systems_nextMaintenance_idx" ON "customer_systems"("nextMaintenance");
+
+-- CreateIndex
+CREATE INDEX "maintenances_systemId_idx" ON "maintenances"("systemId");
 
 -- CreateIndex
 CREATE INDEX "maintenances_userId_idx" ON "maintenances"("userId");
@@ -169,6 +247,27 @@ CREATE INDEX "cron_runs_jobType_idx" ON "cron_runs"("jobType");
 -- CreateIndex
 CREATE INDEX "cron_runs_startedAt_idx" ON "cron_runs"("startedAt");
 
+-- CreateIndex
+CREATE INDEX "login_logs_email_idx" ON "login_logs"("email");
+
+-- CreateIndex
+CREATE INDEX "login_logs_userId_idx" ON "login_logs"("userId");
+
+-- CreateIndex
+CREATE INDEX "login_logs_createdAt_idx" ON "login_logs"("createdAt");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "bookings_calBookingUid_key" ON "bookings"("calBookingUid");
+
+-- CreateIndex
+CREATE INDEX "bookings_userId_idx" ON "bookings"("userId");
+
+-- CreateIndex
+CREATE INDEX "bookings_customerId_idx" ON "bookings"("customerId");
+
+-- CreateIndex
+CREATE INDEX "bookings_startTime_idx" ON "bookings"("startTime");
+
 -- AddForeignKey
 ALTER TABLE "sessions" ADD CONSTRAINT "sessions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
@@ -176,13 +275,25 @@ ALTER TABLE "sessions" ADD CONSTRAINT "sessions_userId_fkey" FOREIGN KEY ("userI
 ALTER TABLE "customers" ADD CONSTRAINT "customers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "heaters" ADD CONSTRAINT "heaters_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "customers"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "customer_systems" ADD CONSTRAINT "customer_systems_catalogId_fkey" FOREIGN KEY ("catalogId") REFERENCES "system_catalog"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "maintenances" ADD CONSTRAINT "maintenances_heaterId_fkey" FOREIGN KEY ("heaterId") REFERENCES "heaters"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "customer_systems" ADD CONSTRAINT "customer_systems_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "customers"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "customer_systems" ADD CONSTRAINT "customer_systems_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "maintenances" ADD CONSTRAINT "maintenances_systemId_fkey" FOREIGN KEY ("systemId") REFERENCES "customer_systems"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "maintenances" ADD CONSTRAINT "maintenances_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "email_logs" ADD CONSTRAINT "email_logs_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "customers"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "bookings" ADD CONSTRAINT "bookings_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "bookings" ADD CONSTRAINT "bookings_customerId_fkey" FOREIGN KEY ("customerId") REFERENCES "customers"("id") ON DELETE SET NULL ON UPDATE CASCADE;
