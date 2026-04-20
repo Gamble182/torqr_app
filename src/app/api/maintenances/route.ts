@@ -7,184 +7,100 @@ import { rateLimitByUser, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 
 /**
  * POST /api/maintenances
- * Create a new maintenance record and update heater dates
  */
 export async function POST(request: NextRequest) {
   try {
-    // 1. Authenticate user
     const { userId } = await requireAuth();
 
-    // 2. Rate limiting
     const rateLimitResponse = rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER);
-    if (rateLimitResponse) {
-      return rateLimitResponse;
-    }
+    if (rateLimitResponse) return rateLimitResponse;
 
-    // 3. Parse and validate request body
     const body = await request.json();
     const validatedData = maintenanceCreateSchema.parse(body);
 
-    // 3. Verify heater belongs to user
-    const heater = await prisma.heater.findFirst({
-      where: {
-        id: validatedData.heaterId,
-        customer: {
-          userId: userId,
-        },
-      },
+    const system = await prisma.customerSystem.findFirst({
+      where: { id: validatedData.systemId, userId },
     });
 
-    if (!heater) {
-      return NextResponse.json({
-        success: false,
-        error: 'Heizsystem nicht gefunden',
-      }, { status: 404 });
+    if (!system) {
+      return NextResponse.json({ success: false, error: 'System nicht gefunden' }, { status: 404 });
     }
 
-    // 4. Calculate next maintenance date
     const maintenanceDate = validatedData.date ? new Date(validatedData.date) : new Date();
     const nextMaintenance = new Date(maintenanceDate);
-    nextMaintenance.setMonth(nextMaintenance.getMonth() + heater.maintenanceInterval);
+    nextMaintenance.setMonth(nextMaintenance.getMonth() + system.maintenanceInterval);
 
-    // 5. Create maintenance record and update heater in a transaction
-    const result = await prisma.$transaction(async (tx: Omit<typeof prisma, '$connect' | '$disconnect' | '$on' | '$transaction' | '$extends'>) => {
-      // Create maintenance record with photos
+    const result = await prisma.$transaction(async (tx) => {
       const maintenance = await tx.maintenance.create({
         data: {
-          heaterId: validatedData.heaterId,
-          userId: userId,
+          systemId: validatedData.systemId,
+          userId,
           date: maintenanceDate,
           notes: validatedData.notes || null,
           photos: validatedData.photos || [],
         },
         include: {
-          heater: {
+          system: {
             include: {
-              customer: {
-                select: {
-                  id: true,
-                  name: true,
-                },
-              },
+              catalog: true,
+              customer: { select: { id: true, name: true } },
             },
           },
         },
       });
 
-      // Update heater dates
-      await tx.heater.update({
-        where: {
-          id: validatedData.heaterId,
-        },
-        data: {
-          lastMaintenance: maintenanceDate,
-          nextMaintenance: nextMaintenance,
-        },
+      await tx.customerSystem.update({
+        where: { id: validatedData.systemId },
+        data: { lastMaintenance: maintenanceDate, nextMaintenance },
       });
 
       return maintenance;
     });
 
-    // 6. Return created maintenance
-    return NextResponse.json({
-      success: true,
-      data: result,
-    }, { status: 201 });
-
+    return NextResponse.json({ success: true, data: result }, { status: 201 });
   } catch (error) {
-    // Handle validation errors
     if (error instanceof z.ZodError) {
-      return NextResponse.json({
-        success: false,
-        error: 'Validierungsfehler',
-        details: error.issues,
-      }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Validierungsfehler', details: error.issues }, { status: 400 });
     }
-
-    // Handle authentication errors
     if (error instanceof Error && error.message === 'Unauthorized') {
-      return NextResponse.json({
-        success: false,
-        error: 'Nicht autorisiert',
-      }, { status: 401 });
+      return NextResponse.json({ success: false, error: 'Nicht autorisiert' }, { status: 401 });
     }
-
-    // Handle other errors
     console.error('Error creating maintenance:', error);
-    return NextResponse.json({
-      success: false,
-      error: 'Fehler beim Erstellen der Wartung',
-    }, { status: 500 });
+    return NextResponse.json({ success: false, error: 'Fehler beim Erstellen der Wartung' }, { status: 500 });
   }
 }
 
 /**
- * GET /api/maintenances?heaterId=xxx
- * Get all maintenance records for a heater
+ * GET /api/maintenances?systemId=xxx
  */
 export async function GET(request: NextRequest) {
   try {
-    // 1. Authenticate user
     const { userId } = await requireAuth();
 
-    // 2. Get heater ID from query params
-    const searchParams = request.nextUrl.searchParams;
-    const heaterId = searchParams.get('heaterId');
-
-    if (!heaterId) {
-      return NextResponse.json({
-        success: false,
-        error: 'Heizungs-ID fehlt',
-      }, { status: 400 });
+    const systemId = request.nextUrl.searchParams.get('systemId');
+    if (!systemId) {
+      return NextResponse.json({ success: false, error: 'System-ID fehlt' }, { status: 400 });
     }
 
-    // 3. Verify heater belongs to user
-    const heater = await prisma.heater.findFirst({
-      where: {
-        id: heaterId,
-        customer: {
-          userId: userId,
-        },
-      },
+    const system = await prisma.customerSystem.findFirst({
+      where: { id: systemId, userId },
     });
 
-    if (!heater) {
-      return NextResponse.json({
-        success: false,
-        error: 'Heizsystem nicht gefunden',
-      }, { status: 404 });
+    if (!system) {
+      return NextResponse.json({ success: false, error: 'System nicht gefunden' }, { status: 404 });
     }
 
-    // 4. Fetch maintenances
     const maintenances = await prisma.maintenance.findMany({
-      where: {
-        heaterId: heaterId,
-      },
-      orderBy: {
-        date: 'desc', // Most recent first
-      },
+      where: { systemId },
+      orderBy: { date: 'desc' },
     });
 
-    // 5. Return maintenances
-    return NextResponse.json({
-      success: true,
-      data: maintenances,
-    });
-
+    return NextResponse.json({ success: true, data: maintenances });
   } catch (error) {
-    // Handle authentication errors
     if (error instanceof Error && error.message === 'Unauthorized') {
-      return NextResponse.json({
-        success: false,
-        error: 'Nicht autorisiert',
-      }, { status: 401 });
+      return NextResponse.json({ success: false, error: 'Nicht autorisiert' }, { status: 401 });
     }
-
-    // Handle other errors
     console.error('Error fetching maintenances:', error);
-    return NextResponse.json({
-      success: false,
-      error: 'Fehler beim Laden der Wartungen',
-    }, { status: 500 });
+    return NextResponse.json({ success: false, error: 'Fehler beim Laden der Wartungen' }, { status: 500 });
   }
 }

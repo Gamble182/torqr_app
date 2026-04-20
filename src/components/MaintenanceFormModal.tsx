@@ -11,8 +11,8 @@ import { XIcon, CameraIcon, TrashIcon, Loader2Icon } from 'lucide-react';
 import { z } from 'zod';
 
 interface MaintenanceFormModalProps {
-  heaterId: string;
-  heaterModel: string;
+  systemId: string;
+  systemLabel: string;
   onClose: () => void;
   onSuccess: () => void;
 }
@@ -27,8 +27,8 @@ interface FormErrors {
 }
 
 export function MaintenanceFormModal({
-  heaterId,
-  heaterModel,
+  systemId,
+  systemLabel,
   onClose,
   onSuccess,
 }: MaintenanceFormModalProps) {
@@ -139,7 +139,7 @@ export function MaintenanceFormModal({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          heaterId: heaterId,
+          systemId: systemId,
           date: new Date(formData.date).toISOString(),
           notes: formData.notes || null,
           photos: uploadedUrls,
@@ -181,7 +181,7 @@ export function MaintenanceFormModal({
               <h2 className="text-lg font-semibold text-foreground">
                 Wartung erledigt
               </h2>
-              <p className="text-sm text-muted-foreground mt-0.5">{heaterModel}</p>
+              <p className="text-sm text-muted-foreground mt-0.5">{systemLabel}</p>
             </div>
             <Button variant="ghost" size="icon-sm" onClick={onClose} disabled={loading} className="w-10 h-10">
               <XIcon className="h-4 w-4" />
