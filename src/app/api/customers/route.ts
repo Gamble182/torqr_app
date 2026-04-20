@@ -40,10 +40,6 @@ export async function POST(request: NextRequest) {
         email,
         emailOptIn: optInData.emailOptIn,
         optInConfirmedAt: optInData.optInConfirmedAt,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        heatingType: validatedData.heatingType as any, // REQUIRED field
-        additionalEnergySources: validatedData.additionalEnergySources || [],
-        energyStorageSystems: validatedData.energyStorageSystems || [],
         notes: validatedData.notes || null,
         userId: userId,
       },
@@ -113,18 +109,6 @@ export async function GET(request: NextRequest) {
     // 4. Fetch customers with their heaters
     const customers = await prisma.customer.findMany({
       where: whereClause,
-      include: {
-        heaters: {
-          select: {
-            id: true,
-            model: true,
-            nextMaintenance: true,
-          },
-          orderBy: {
-            nextMaintenance: 'asc',
-          },
-        },
-      },
       orderBy: {
         [sortBy]: sortOrder,
       },

@@ -21,26 +21,11 @@ export async function GET(
     // 2. Get customer ID from params
     const { id } = await params;
 
-    // 3. Fetch customer with heaters
+    // 3. Fetch customer
     const customer = await prisma.customer.findUnique({
       where: {
         id: id,
-        userId: userId, // Ensure user can only access their own customers
-      },
-      include: {
-        heaters: {
-          include: {
-            maintenances: {
-              orderBy: {
-                date: 'desc',
-              },
-              take: 5, // Last 5 maintenances per heater
-            },
-          },
-          orderBy: {
-            nextMaintenance: 'asc',
-          },
-        },
+        userId: userId,
       },
     });
 
@@ -140,9 +125,6 @@ export async function PATCH(
         email,
         emailOptIn: optInData.emailOptIn,
         optInConfirmedAt: optInData.optInConfirmedAt,
-        ...(validatedData.heatingType && { heatingType: validatedData.heatingType as any }),
-        ...(validatedData.additionalEnergySources !== undefined && { additionalEnergySources: validatedData.additionalEnergySources || [] }),
-        ...(validatedData.energyStorageSystems !== undefined && { energyStorageSystems: validatedData.energyStorageSystems || [] }),
         ...(validatedData.notes !== undefined && { notes: validatedData.notes }),
       },
     });

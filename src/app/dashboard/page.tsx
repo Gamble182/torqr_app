@@ -6,13 +6,12 @@ import { useRouter } from 'next/navigation';
 import {
   Loader2Icon,
   UsersIcon,
-  FlameIcon,
+  WrenchIcon,
   AlertTriangleIcon,
   CalendarIcon,
   MapPinIcon,
   PhoneIcon,
   ClockIcon,
-  WrenchIcon,
   CheckCircle2Icon,
   ArrowRightIcon,
   TrendingUpIcon,
@@ -27,7 +26,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const [timeRange, setTimeRange] = useState(30);
   const { data: stats, isLoading, error, refetch } = useDashboardStats(timeRange);
-  const [selectedHeater, setSelectedHeater] = useState<{ id: string; model: string } | null>(null);
+  const [selectedSystem, setSelectedSystem] = useState<{ id: string; label: string } | null>(null);
 
   if (isLoading) {
     return (
@@ -60,14 +59,10 @@ export default function DashboardPage() {
 
   const getUrgencyStyles = (urgency: string) => {
     switch (urgency) {
-      case 'overdue':
-        return 'border-l-destructive bg-destructive/5';
-      case 'urgent':
-        return 'border-l-warning bg-warning/5';
-      case 'soon':
-        return 'border-l-secondary bg-secondary/5';
-      default:
-        return 'border-l-border bg-card';
+      case 'overdue': return 'border-l-destructive bg-destructive/5';
+      case 'urgent': return 'border-l-warning bg-warning/5';
+      case 'soon': return 'border-l-secondary bg-secondary/5';
+      default: return 'border-l-border bg-card';
     }
   };
 
@@ -118,17 +113,17 @@ export default function DashboardPage() {
         </Link>
 
         <Link
-          href="/dashboard/heaters"
+          href="/dashboard/systems"
           className="group bg-card rounded-xl border border-border p-5 hover:shadow-md hover:border-secondary/20 transition-all"
         >
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-secondary/10">
-              <FlameIcon className="h-4.5 w-4.5 text-secondary" />
+              <WrenchIcon className="h-4.5 w-4.5 text-secondary" />
             </div>
             <ArrowRightIcon className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
-          <p className="text-2xl font-bold text-foreground">{stats?.totalHeaters || 0}</p>
-          <p className="text-xs text-muted-foreground mt-0.5">Heizsysteme</p>
+          <p className="text-2xl font-bold text-foreground">{stats?.totalSystems || 0}</p>
+          <p className="text-xs text-muted-foreground mt-0.5">Systeme</p>
         </Link>
 
         <Link
@@ -184,40 +179,41 @@ export default function DashboardPage() {
           </select>
         </div>
         <div className="p-4">
-          {stats?.upcomingMaintenancesList && stats.upcomingMaintenancesList.length > 0 ? (
+          {stats?.upcomingSystemsList && stats.upcomingSystemsList.length > 0 ? (
             <div className="space-y-2">
-              {stats.upcomingMaintenancesList.map((maintenance) => {
-                const urgency = getMaintenanceUrgency(maintenance.nextMaintenance);
+              {stats.upcomingSystemsList.map((system) => {
+                const urgency = getMaintenanceUrgency(system.nextMaintenance);
+                const systemLabel = `${system.catalog.manufacturer} ${system.catalog.name}`;
                 return (
                   <div
-                    key={maintenance.id}
+                    key={system.id}
                     className={`flex items-center gap-4 p-4 rounded-lg border-l-[3px] border border-border transition-all hover:shadow-sm cursor-pointer ${getUrgencyStyles(urgency)}`}
-                    onClick={() => router.push(`/dashboard/customers/${maintenance.customer.id}`)}
+                    onClick={() => router.push(`/dashboard/customers/${system.customer.id}`)}
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1.5">
                         <h3 className="font-semibold text-sm text-foreground truncate">
-                          {maintenance.customer.name}
+                          {system.customer.name}
                         </h3>
                         {getUrgencyBadge(urgency)}
                       </div>
                       <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1.5">
-                          <FlameIcon className="h-3 w-3" />
-                          {maintenance.model}
+                          <WrenchIcon className="h-3 w-3" />
+                          {systemLabel}
                         </span>
                         <span className="flex items-center gap-1.5">
                           <MapPinIcon className="h-3 w-3" />
-                          {maintenance.customer.city}
+                          {system.customer.city}
                         </span>
                         <span className="flex items-center gap-1.5">
                           <PhoneIcon className="h-3 w-3" />
                           <a
-                            href={`tel:${maintenance.customer.phone}`}
+                            href={`tel:${system.customer.phone}`}
                             className="hover:text-secondary"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            {maintenance.customer.phone}
+                            {system.customer.phone}
                           </a>
                         </span>
                       </div>
@@ -225,17 +221,17 @@ export default function DashboardPage() {
                     <div className="shrink-0 flex items-center gap-3">
                       <div className="text-right hidden sm:block">
                         <p className="text-sm font-medium text-foreground">
-                          {format(new Date(maintenance.nextMaintenance), 'dd. MMM yyyy', { locale: de })}
+                          {format(new Date(system.nextMaintenance), 'dd. MMM yyyy', { locale: de })}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          {format(new Date(maintenance.nextMaintenance), 'EEEE', { locale: de })}
+                          {format(new Date(system.nextMaintenance), 'EEEE', { locale: de })}
                         </p>
                       </div>
                       <Button
                         size="sm"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setSelectedHeater({ id: maintenance.id, model: maintenance.model });
+                          setSelectedSystem({ id: system.id, label: systemLabel });
                         }}
                         className="bg-success hover:bg-success/90 text-success-foreground shrink-0 h-10 min-w-11"
                       >
@@ -270,7 +266,7 @@ export default function DashboardPage() {
               {stats.recentMaintenances.map((maintenance) => (
                 <Link
                   key={maintenance.id}
-                  href={`/dashboard/maintenances/${maintenance.id}`}
+                  href={`/dashboard/systems/${maintenance.system.catalog.id ?? ''}`}
                   className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 transition-colors"
                 >
                   <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-secondary/10 shrink-0">
@@ -278,10 +274,10 @@ export default function DashboardPage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-foreground truncate">
-                      {maintenance.heater.customer.name}
+                      {maintenance.system.customer.name}
                     </p>
                     <p className="text-xs text-muted-foreground truncate">
-                      {maintenance.heater.model}
+                      {maintenance.system.catalog.manufacturer} {maintenance.system.catalog.name}
                       {maintenance.notes && ` — ${maintenance.notes}`}
                     </p>
                   </div>
@@ -305,13 +301,13 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {selectedHeater && (
+      {selectedSystem && (
         <MaintenanceFormModal
-          heaterId={selectedHeater.id}
-          heaterModel={selectedHeater.model}
-          onClose={() => setSelectedHeater(null)}
+          systemId={selectedSystem.id}
+          systemLabel={selectedSystem.label}
+          onClose={() => setSelectedSystem(null)}
           onSuccess={() => {
-            setSelectedHeater(null);
+            setSelectedSystem(null);
             refetch();
           }}
         />

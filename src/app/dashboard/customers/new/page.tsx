@@ -8,14 +8,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card } from '@/components/ui/card';
 import { useCreateCustomer } from '@/hooks/useCustomers';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { MultiSelect } from '@/components/ui/multi-select';
 import { ArrowLeftIcon, Loader2Icon } from 'lucide-react';
 
 interface FormData {
@@ -26,40 +18,12 @@ interface FormData {
   phone: string;
   email: string;
   suppressEmail: boolean;
-  heatingType: string;
-  additionalEnergySources: string[];
-  energyStorageSystems: string[];
   notes: string;
 }
 
 interface FormErrors {
   [key: string]: string;
 }
-
-const HEATING_TYPES = [
-  { value: 'GAS', label: 'Gasheizung' },
-  { value: 'OIL', label: 'Ölheizung' },
-  { value: 'DISTRICT_HEATING', label: 'Fernwärme' },
-  { value: 'HEAT_PUMP_AIR', label: 'Wärmepumpe (Luft)' },
-  { value: 'HEAT_PUMP_GROUND', label: 'Wärmepumpe (Erde)' },
-  { value: 'HEAT_PUMP_WATER', label: 'Wärmepumpe (Wasser)' },
-  { value: 'PELLET_BIOMASS', label: 'Pelletheizung / Biomasse' },
-  { value: 'NIGHT_STORAGE', label: 'Nachtspeicherheizung (Strom)' },
-  { value: 'ELECTRIC_DIRECT', label: 'Elektro-Direktheizung (Infrarot, Heizlüfter etc.)' },
-  { value: 'HYBRID', label: 'Hybridheizung (z. B. Gas + Wärmepumpe)' },
-  { value: 'CHP', label: 'Blockheizkraftwerk (BHKW)' },
-];
-
-const ADDITIONAL_ENERGY_SOURCES = [
-  { value: 'PHOTOVOLTAIC', label: 'Photovoltaik' },
-  { value: 'SOLAR_THERMAL', label: 'Solarthermie' },
-  { value: 'SMALL_WIND', label: 'Windkraft (Kleinwindanlage)' },
-];
-
-const ENERGY_STORAGE_SYSTEMS = [
-  { value: 'BATTERY_STORAGE', label: 'Stromspeicher/Batterie' },
-  { value: 'HEAT_STORAGE', label: 'Wärmespeicher (Pufferspeicher)' },
-];
 
 export default function NewCustomerPage() {
   const router = useRouter();
@@ -68,7 +32,7 @@ export default function NewCustomerPage() {
   const [formData, setFormData] = useState<FormData>({
     name: '', street: '', zipCode: '', city: '', phone: '', email: '',
     suppressEmail: false,
-    heatingType: '', additionalEnergySources: [], energyStorageSystems: [], notes: '',
+    notes: '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -92,7 +56,6 @@ export default function NewCustomerPage() {
     } else if (!formData.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
       newErrors.email = 'Ungültige E-Mail-Adresse';
     }
-    if (!formData.heatingType) newErrors.heatingType = 'Art der Heizung ist erforderlich';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -110,9 +73,6 @@ export default function NewCustomerPage() {
         phone: formData.phone,
         email: formData.email || undefined,
         suppressEmail: formData.suppressEmail,
-        heatingType: formData.heatingType,
-        additionalEnergySources: formData.additionalEnergySources,
-        energyStorageSystems: formData.energyStorageSystems,
         notes: formData.notes || undefined,
       },
       {
@@ -241,64 +201,7 @@ export default function NewCustomerPage() {
             </div>
           </div>
 
-          {/* Section 3: Heizsystem */}
-          <div className="mb-8">
-            <h2 className="text-base font-semibold text-foreground mb-4 pb-2 border-b border-border">
-              Heizsystem
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div className="md:col-span-2">
-                <Label htmlFor="heatingType" className="mb-1.5 block text-sm">
-                  Art der Heizung <span className="text-destructive">*</span>
-                </Label>
-                <Select
-                  value={formData.heatingType}
-                  onValueChange={(value) => {
-                    setFormData((prev) => ({ ...prev, heatingType: value }));
-                    if (errors.heatingType) {
-                      setErrors((prev) => { const n = { ...prev }; delete n.heatingType; return n; });
-                    }
-                  }}
-                >
-                  <SelectTrigger className={errors.heatingType ? 'border-destructive' : ''}>
-                    <SelectValue placeholder="Bitte wählen..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {HEATING_TYPES.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>{type.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                {errors.heatingType && <p className="mt-1 text-xs text-destructive">{errors.heatingType}</p>}
-              </div>
-              <div>
-                <Label htmlFor="additionalEnergySources" className="mb-1.5 block text-sm">
-                  Zusätzliche Energiequellen (optional)
-                </Label>
-                <MultiSelect
-                  options={ADDITIONAL_ENERGY_SOURCES}
-                  value={formData.additionalEnergySources}
-                  onChange={(value) => setFormData((prev) => ({ ...prev, additionalEnergySources: value }))}
-                  placeholder="Auswählen..."
-                />
-                <p className="mt-1 text-xs text-muted-foreground">z.B. Photovoltaik, Solarthermie</p>
-              </div>
-              <div>
-                <Label htmlFor="energyStorageSystems" className="mb-1.5 block text-sm">
-                  Energiespeichersysteme (optional)
-                </Label>
-                <MultiSelect
-                  options={ENERGY_STORAGE_SYSTEMS}
-                  value={formData.energyStorageSystems}
-                  onChange={(value) => setFormData((prev) => ({ ...prev, energyStorageSystems: value }))}
-                  placeholder="Auswählen..."
-                />
-                <p className="mt-1 text-xs text-muted-foreground">Batterie- oder Wärmespeicher</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Section 4: Notizen */}
+          {/* Section 3: Notizen */}
           <div className="mb-8">
             <h2 className="text-base font-semibold text-foreground mb-4 pb-2 border-b border-border">
               Zusätzliche Informationen

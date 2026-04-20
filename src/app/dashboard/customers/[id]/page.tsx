@@ -5,10 +5,10 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import { useCustomer, useDeleteCustomer } from '@/hooks/useCustomers';
-import { useHeaters, useDeleteHeater } from '@/hooks/useHeaters';
+import { useCustomerSystems, useDeleteCustomerSystem } from '@/hooks/useCustomerSystems';
+import type { CustomerSystem } from '@/hooks/useCustomerSystems';
 import { useBookings } from '@/hooks/useBookings';
 import {
   ArrowLeftIcon,
@@ -17,14 +17,9 @@ import {
   PhoneIcon,
   MailIcon,
   MapPinIcon,
-  HomeIcon,
-  FlameIcon,
-  BatteryChargingIcon,
   CalendarIcon,
   PlusIcon,
   Loader2Icon,
-  SunIcon,
-  ZapIcon,
   AlertCircleIcon,
   CheckCircle2Icon,
   ClockIcon,
@@ -35,61 +30,14 @@ import {
   XCircleIcon,
   SendIcon,
 } from 'lucide-react';
-import { HeaterFormModal } from '@/components/HeaterFormModal';
+import { SystemAssignmentModal } from '@/components/system-form/SystemAssignmentModal';
 import { MaintenanceFormModal } from '@/components/MaintenanceFormModal';
-import { MaintenanceHistory } from '@/components/MaintenanceHistory';
 
-interface Maintenance {
-  id: string;
-  date: string;
-  notes: string | null;
-  photos: string[];
-}
-
-interface Heater {
-  id: string;
-  model: string;
-  serialNumber: string | null;
-  installationDate: string | null;
-  maintenanceInterval: number;
-  lastMaintenance: string | null;
-  nextMaintenance: string | null;
-  maintenances?: Maintenance[];
-}
-
-const getHeatingTypeLabel = (type: string): string => {
-  const labels: Record<string, string> = {
-    'GAS': 'Gasheizung', 'OIL': 'Ölheizung', 'DISTRICT_HEATING': 'Fernwärme',
-    'HEAT_PUMP_AIR': 'Wärmepumpe (Luft)', 'HEAT_PUMP_GROUND': 'Wärmepumpe (Erde)',
-    'HEAT_PUMP_WATER': 'Wärmepumpe (Wasser)', 'PELLET_BIOMASS': 'Pelletheizung/Biomasse',
-    'NIGHT_STORAGE': 'Nachtspeicher', 'ELECTRIC_DIRECT': 'Elektro-Direktheizung',
-    'HYBRID': 'Hybridheizung', 'CHP': 'Blockheizkraftwerk',
-  };
-  return labels[type] || type;
-};
-
-const getHeatingTypeIcon = (type: string) => {
-  const map: Record<string, any> = {
-    'GAS': FlameIcon, 'OIL': FlameIcon, 'DISTRICT_HEATING': HomeIcon,
-    'HEAT_PUMP_AIR': ZapIcon, 'HEAT_PUMP_GROUND': ZapIcon, 'HEAT_PUMP_WATER': ZapIcon,
-    'PELLET_BIOMASS': FlameIcon, 'NIGHT_STORAGE': BatteryChargingIcon,
-    'ELECTRIC_DIRECT': ZapIcon, 'HYBRID': FlameIcon, 'CHP': ZapIcon,
-  };
-  return map[type] || FlameIcon;
-};
-
-const getAdditionalEnergyLabel = (type: string): string => {
-  const labels: Record<string, string> = {
-    'PHOTOVOLTAIC': 'Photovoltaik', 'SOLAR_THERMAL': 'Solarthermie', 'SMALL_WIND': 'Kleinwindanlage',
-  };
-  return labels[type] || type;
-};
-
-const getEnergyStorageLabel = (type: string): string => {
-  const labels: Record<string, string> = {
-    'BATTERY_STORAGE': 'Stromspeicher/Batterie', 'HEAT_STORAGE': 'Wärmespeicher (Pufferspeicher)',
-  };
-  return labels[type] || type;
+const SYSTEM_TYPE_LABELS: Record<string, string> = {
+  HEATING: 'Heizung',
+  AC: 'Klimaanlage',
+  WATER_TREATMENT: 'Wasseraufbereitung',
+  ENERGY_STORAGE: 'Energiespeicher',
 };
 
 const getEmailOptInDisplay = (status: 'NONE' | 'CONFIRMED' | 'UNSUBSCRIBED', hasEmail: boolean) => {
@@ -105,30 +53,30 @@ export default function CustomerDetailPage() {
   const customerId = params.id as string;
 
   const { data: customer, isLoading, error, refetch } = useCustomer(customerId);
-  const { data: heaters, refetch: refetchHeaters } = useHeaters({ customerId });
+  const { data: systems = [], refetch: refetchSystems } = useCustomerSystems({ customerId });
   const { data: bookings } = useBookings(customerId);
   const deleteCustomer = useDeleteCustomer();
-  const deleteHeater = useDeleteHeater();
+  const deleteSystem = useDeleteCustomerSystem();
 
-  const [showHeaterForm, setShowHeaterForm] = useState(false);
-  const [editingHeater, setEditingHeater] = useState<Heater | null>(null);
+  const [showSystemForm, setShowSystemForm] = useState(false);
+  const [editingSystem, setEditingSystem] = useState<CustomerSystem | null>(null);
   const [showMaintenanceForm, setShowMaintenanceForm] = useState(false);
-  const [selectedHeater, setSelectedHeater] = useState<Heater | null>(null);
+  const [selectedSystem, setSelectedSystem] = useState<CustomerSystem | null>(null);
   const [sendingReminder, setSendingReminder] = useState<Record<string, boolean>>({});
 
-  const handleSendReminder = async (heaterId: string, heaterModel: string) => {
+  const handleSendReminder = async (systemId: string, systemLabel: string) => {
     if (!customer?.email) {
       toast.error('Dieser Kunde hat keine E-Mail-Adresse hinterlegt');
       return;
     }
-    if (!confirm(`Erinnerung für "${heaterModel}" an ${customer.email} senden?`)) return;
+    if (!confirm(`Erinnerung für "${systemLabel}" an ${customer.email} senden?`)) return;
 
-    setSendingReminder((prev) => ({ ...prev, [heaterId]: true }));
+    setSendingReminder((prev) => ({ ...prev, [systemId]: true }));
     try {
       const res = await fetch(`/api/customers/${customerId}/send-reminder`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ heaterId }),
+        body: JSON.stringify({ systemId }),
       });
       const result = await res.json();
       if (result.success) {
@@ -139,7 +87,7 @@ export default function CustomerDetailPage() {
     } catch {
       toast.error('Fehler beim Senden der E-Mail');
     } finally {
-      setSendingReminder((prev) => ({ ...prev, [heaterId]: false }));
+      setSendingReminder((prev) => ({ ...prev, [systemId]: false }));
     }
   };
 
@@ -165,25 +113,25 @@ export default function CustomerDetailPage() {
     return 'ok';
   };
 
-  const handleEditHeater = (heater: Heater) => {
-    setEditingHeater(heater);
-    setShowHeaterForm(true);
+  const handleEditSystem = (system: CustomerSystem) => {
+    setEditingSystem(system);
+    setShowSystemForm(true);
   };
 
-  const handleDeleteHeater = (id: string, model: string) => {
-    if (!confirm(`Möchten Sie das Heizsystem "${model}" wirklich löschen?`)) return;
-    deleteHeater.mutate(id, {
-      onSuccess: () => { refetch(); refetchHeaters(); },
+  const handleDeleteSystem = (id: string, label: string) => {
+    if (!confirm(`Möchten Sie das System "${label}" wirklich löschen?`)) return;
+    deleteSystem.mutate(id, {
+      onSuccess: () => { refetch(); refetchSystems(); },
     });
   };
 
   const maintenanceStats = useMemo(() => {
-    if (!heaters || heaters.length === 0) return { overdue: 0, upcoming: 0, ok: 0 };
-    return heaters.reduce((acc, heater) => {
-      const status = getMaintenanceStatus(heater.nextMaintenance);
+    if (systems.length === 0) return { overdue: 0, upcoming: 0, ok: 0 };
+    return systems.reduce((acc, system) => {
+      const status = getMaintenanceStatus(system.nextMaintenance);
       return { ...acc, [status]: acc[status] + 1 };
     }, { overdue: 0, upcoming: 0, ok: 0 });
-  }, [heaters]);
+  }, [systems]);
 
   if (isLoading) {
     return (
@@ -205,8 +153,6 @@ export default function CustomerDetailPage() {
   }
 
   if (!customer) return null;
-
-  const HeatingTypeIcon = getHeatingTypeIcon(customer.heatingType);
 
   return (
     <div className="space-y-6">
@@ -254,11 +200,11 @@ export default function CustomerDetailPage() {
         <Card className="p-4">
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-primary/10">
-              <HomeIcon className="h-4 w-4 text-primary" />
+              <WrenchIcon className="h-4 w-4 text-primary" />
             </div>
             <div>
-              <p className="text-xs text-muted-foreground">Heizsysteme</p>
-              <p className="text-xl font-bold text-foreground">{heaters?.length || 0}</p>
+              <p className="text-xs text-muted-foreground">Systeme</p>
+              <p className="text-xl font-bold text-foreground">{systems.length}</p>
             </div>
           </div>
         </Card>
@@ -350,53 +296,6 @@ export default function CustomerDetailPage() {
             </div>
           </Card>
 
-          {/* Heating System */}
-          <Card className="p-6">
-            <h2 className="text-base font-semibold text-foreground mb-4 flex items-center gap-2">
-              <HeatingTypeIcon className="h-4 w-4 text-muted-foreground" />
-              Energiesystem
-            </h2>
-            <div className="space-y-4">
-              <div className="p-4 rounded-lg bg-primary/5 border border-primary/10">
-                <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1.5">Hauptheizsystem</p>
-                <div className="flex items-center gap-2">
-                  <HeatingTypeIcon className="h-4 w-4 text-primary" />
-                  <span className="text-sm font-semibold text-foreground">
-                    {getHeatingTypeLabel(customer.heatingType)}
-                  </span>
-                </div>
-              </div>
-
-              {customer.additionalEnergySources.length > 0 && (
-                <div>
-                  <p className="text-xs text-muted-foreground uppercase tracking-wide mb-2">Zusätzliche Energiequellen</p>
-                  <div className="flex flex-wrap gap-2">
-                    {customer.additionalEnergySources.map((source) => (
-                      <Badge key={source} variant="outline" className="px-2.5 py-1 bg-success/10 border-success/20 text-success">
-                        <SunIcon className="h-3 w-3 mr-1" />
-                        {getAdditionalEnergyLabel(source)}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {customer.energyStorageSystems.length > 0 && (
-                <div>
-                  <p className="text-xs text-muted-foreground uppercase tracking-wide mb-2">Energiespeichersysteme</p>
-                  <div className="flex flex-wrap gap-2">
-                    {customer.energyStorageSystems.map((system) => (
-                      <Badge key={system} variant="outline" className="px-2.5 py-1 bg-warning/10 border-warning/20 text-warning-foreground">
-                        <BatteryChargingIcon className="h-3 w-3 mr-1" />
-                        {getEnergyStorageLabel(system)}
-                      </Badge>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </Card>
-
           {/* Notes */}
           {customer.notes && (
             <Card className="p-6">
@@ -410,15 +309,15 @@ export default function CustomerDetailPage() {
             </Card>
           )}
 
-          {/* Heaters Section */}
+          {/* Systems Section */}
           <Card className="p-6">
             <div className="flex items-center justify-between mb-5">
               <h2 className="text-base font-semibold text-foreground flex items-center gap-2">
                 <WrenchIcon className="h-4 w-4 text-muted-foreground" />
-                Heizsysteme ({heaters?.length || 0})
+                Systeme ({systems.length})
               </h2>
               <Button
-                onClick={() => { setEditingHeater(null); setShowHeaterForm(true); }}
+                onClick={() => { setEditingSystem(null); setShowSystemForm(true); }}
                 size="sm"
               >
                 <PlusIcon className="h-3.5 w-3.5" />
@@ -426,28 +325,32 @@ export default function CustomerDetailPage() {
               </Button>
             </div>
 
-            {(!heaters || heaters.length === 0) ? (
+            {systems.length === 0 ? (
               <div className="text-center py-10 border-2 border-dashed border-border rounded-xl bg-muted/20">
-                <HomeIcon className="h-8 w-8 text-muted-foreground/40 mx-auto mb-3" />
-                <h3 className="text-sm font-semibold text-foreground mb-1">Noch keine Heizsysteme</h3>
+                <WrenchIcon className="h-8 w-8 text-muted-foreground/40 mx-auto mb-3" />
+                <h3 className="text-sm font-semibold text-foreground mb-1">Noch keine Systeme</h3>
                 <p className="text-xs text-muted-foreground mb-4">
-                  Fügen Sie das erste Heizsystem für diesen Kunden hinzu
+                  Fügen Sie das erste System für diesen Kunden hinzu
                 </p>
-                <Button onClick={() => setShowHeaterForm(true)} size="sm">
+                <Button onClick={() => setShowSystemForm(true)} size="sm">
                   <PlusIcon className="h-3.5 w-3.5" />
-                  Erstes Heizsystem hinzufügen
+                  Erstes System hinzufügen
                 </Button>
               </div>
             ) : (
               <div className="space-y-3">
-                {heaters.map((heater) => {
-                  const maintenanceStatus = getMaintenanceStatus(heater.nextMaintenance);
+                {systems.map((system) => {
+                  const maintenanceStatus = getMaintenanceStatus(system.nextMaintenance);
+                  const systemLabel = `${system.catalog.manufacturer} ${system.catalog.name}`;
                   return (
-                    <div key={heater.id} className="border border-border rounded-xl p-4 hover:shadow-md transition-all">
+                    <div key={system.id} className="border border-border rounded-xl p-4 hover:shadow-md transition-all">
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-semibold text-foreground">{heater.model}</h3>
+                          <div className="flex items-center gap-2 mb-1 flex-wrap">
+                            <h3 className="font-semibold text-foreground">{systemLabel}</h3>
+                            <span className="text-xs text-muted-foreground px-1.5 py-0.5 rounded bg-muted/50 border border-border">
+                              {SYSTEM_TYPE_LABELS[system.catalog.systemType] ?? system.catalog.systemType}
+                            </span>
                             {maintenanceStatus === 'overdue' && (
                               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-destructive/10 text-destructive border border-destructive/20">
                                 <AlertCircleIcon className="h-3 w-3" />
@@ -460,21 +363,21 @@ export default function CustomerDetailPage() {
                                 Bald fällig
                               </span>
                             )}
-                            {maintenanceStatus === 'ok' && heater.nextMaintenance && (
+                            {maintenanceStatus === 'ok' && system.nextMaintenance && (
                               <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-success/10 text-success border border-success/20">
                                 <CheckCircle2Icon className="h-3 w-3" />
                                 OK
                               </span>
                             )}
                           </div>
-                          {heater.serialNumber && (
-                            <p className="text-xs text-muted-foreground">SN: {heater.serialNumber}</p>
+                          {system.serialNumber && (
+                            <p className="text-xs text-muted-foreground">SN: {system.serialNumber}</p>
                           )}
                         </div>
                         <div className="flex flex-wrap gap-1.5 shrink-0">
                           <Button
                             size="sm"
-                            onClick={() => { setSelectedHeater(heater); setShowMaintenanceForm(true); }}
+                            onClick={() => { setSelectedSystem(system); setShowMaintenanceForm(true); }}
                             className="bg-success hover:bg-success/90 text-success-foreground h-9 min-w-11"
                           >
                             <CheckCircle2Icon className="h-3.5 w-3.5" />
@@ -483,50 +386,50 @@ export default function CustomerDetailPage() {
                           {customer.email && (
                             <Button
                               variant="outline" size="icon-sm"
-                              onClick={() => handleSendReminder(heater.id, heater.model)}
-                              disabled={!!sendingReminder[heater.id]}
+                              onClick={() => handleSendReminder(system.id, systemLabel)}
+                              disabled={!!sendingReminder[system.id]}
                               title="Erinnerung senden"
                               className="w-9 h-9"
                             >
-                              {sendingReminder[heater.id]
+                              {sendingReminder[system.id]
                                 ? <Loader2Icon className="h-3.5 w-3.5 animate-spin" />
                                 : <SendIcon className="h-3.5 w-3.5" />}
                             </Button>
                           )}
-                          <Button variant="outline" size="icon-sm" onClick={() => handleEditHeater(heater)} className="w-9 h-9">
+                          <Button variant="outline" size="icon-sm" onClick={() => handleEditSystem(system)} className="w-9 h-9">
                             <PencilIcon className="h-3.5 w-3.5" />
                           </Button>
                           <Button
                             variant="outline" size="icon-sm"
-                            onClick={() => handleDeleteHeater(heater.id, heater.model)}
-                            disabled={deleteHeater.isPending}
+                            onClick={() => handleDeleteSystem(system.id, systemLabel)}
+                            disabled={deleteSystem.isPending}
                             className="w-9 h-9 text-destructive hover:bg-destructive/10 hover:border-destructive/30"
                           >
-                            {deleteHeater.isPending ? <Loader2Icon className="h-3.5 w-3.5 animate-spin" /> : <TrashIcon className="h-3.5 w-3.5" />}
+                            {deleteSystem.isPending ? <Loader2Icon className="h-3.5 w-3.5 animate-spin" /> : <TrashIcon className="h-3.5 w-3.5" />}
                           </Button>
                         </div>
                       </div>
 
                       <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-                        {heater.installationDate && (
+                        {system.installationDate && (
                           <div className="p-2.5 rounded-lg bg-muted/50">
                             <p className="text-xs text-muted-foreground mb-0.5">Installiert</p>
-                            <p className="text-xs font-semibold text-foreground">{formatDate(heater.installationDate)}</p>
+                            <p className="text-xs font-semibold text-foreground">{formatDate(system.installationDate)}</p>
                           </div>
                         )}
                         <div className="p-2.5 rounded-lg bg-muted/50">
                           <p className="text-xs text-muted-foreground mb-0.5">Intervall</p>
                           <p className="text-xs font-semibold text-foreground">
-                            {heater.maintenanceInterval} Monat{heater.maintenanceInterval > 1 ? 'e' : ''}
+                            {system.maintenanceInterval} Monat{system.maintenanceInterval > 1 ? 'e' : ''}
                           </p>
                         </div>
-                        {heater.lastMaintenance && (
+                        {system.lastMaintenance && (
                           <div className="p-2.5 rounded-lg bg-muted/50">
                             <p className="text-xs text-muted-foreground mb-0.5">Letzte Wartung</p>
-                            <p className="text-xs font-semibold text-foreground">{formatDate(heater.lastMaintenance)}</p>
+                            <p className="text-xs font-semibold text-foreground">{formatDate(system.lastMaintenance)}</p>
                           </div>
                         )}
-                        {heater.nextMaintenance && (
+                        {system.nextMaintenance && (
                           <div className={`p-2.5 rounded-lg ${
                             maintenanceStatus === 'overdue' ? 'bg-destructive/10'
                               : maintenanceStatus === 'upcoming' ? 'bg-warning/10'
@@ -538,7 +441,7 @@ export default function CustomerDetailPage() {
                                 : maintenanceStatus === 'upcoming' ? 'text-warning-foreground'
                                 : 'text-foreground'
                             }`}>
-                              {formatDate(heater.nextMaintenance)}
+                              {formatDate(system.nextMaintenance)}
                             </p>
                           </div>
                         )}
@@ -549,6 +452,7 @@ export default function CustomerDetailPage() {
               </div>
             )}
           </Card>
+
           {/* Cal.com Bookings */}
           <Card className="p-6">
             <div className="flex items-center justify-between mb-5">
@@ -651,8 +555,8 @@ export default function CustomerDetailPage() {
             <h2 className="text-base font-semibold text-foreground mb-4">Übersicht</h2>
             <div className="space-y-3">
               <div className="flex items-center justify-between py-2 border-b border-border">
-                <span className="text-xs text-muted-foreground">Heizsysteme</span>
-                <span className="text-sm font-bold text-foreground">{heaters?.length || 0}</span>
+                <span className="text-xs text-muted-foreground">Systeme</span>
+                <span className="text-sm font-bold text-foreground">{systems.length}</span>
               </div>
               <div className="flex items-center justify-between py-2 border-b border-border">
                 <span className="text-xs text-muted-foreground">Letzte Änderung</span>
@@ -691,29 +595,31 @@ export default function CustomerDetailPage() {
               </Link>
               <Button
                 variant="outline" className="w-full justify-start py-2.5" size="sm"
-                onClick={() => { setEditingHeater(null); setShowHeaterForm(true); }}
+                onClick={() => { setEditingSystem(null); setShowSystemForm(true); }}
               >
-                <HomeIcon className="h-3.5 w-3.5" />
-                Heizsystem hinzufügen
+                <WrenchIcon className="h-3.5 w-3.5" />
+                System hinzufügen
               </Button>
             </div>
           </Card>
         </div>
       </div>
 
-      {showHeaterForm && (
-        <HeaterFormModal
-          customerId={customer.id} heater={editingHeater}
-          onClose={() => { setShowHeaterForm(false); setEditingHeater(null); }}
-          onSuccess={() => { setShowHeaterForm(false); setEditingHeater(null); refetch(); refetchHeaters(); }}
+      {showSystemForm && (
+        <SystemAssignmentModal
+          customerId={customerId}
+          system={editingSystem}
+          onClose={() => { setShowSystemForm(false); setEditingSystem(null); }}
+          onSuccess={() => { setShowSystemForm(false); setEditingSystem(null); refetch(); refetchSystems(); }}
         />
       )}
 
-      {showMaintenanceForm && selectedHeater && (
+      {showMaintenanceForm && selectedSystem && (
         <MaintenanceFormModal
-          heaterId={selectedHeater.id} heaterModel={selectedHeater.model}
-          onClose={() => { setShowMaintenanceForm(false); setSelectedHeater(null); }}
-          onSuccess={() => { setShowMaintenanceForm(false); setSelectedHeater(null); refetch(); refetchHeaters(); }}
+          systemId={selectedSystem.id}
+          systemLabel={`${selectedSystem.catalog.manufacturer} ${selectedSystem.catalog.name}`}
+          onClose={() => { setShowMaintenanceForm(false); setSelectedSystem(null); }}
+          onSuccess={() => { setShowMaintenanceForm(false); setSelectedSystem(null); refetch(); refetchSystems(); }}
         />
       )}
     </div>

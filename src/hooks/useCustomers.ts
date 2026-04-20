@@ -1,12 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
-interface Heater {
-  id: string;
-  model: string;
-  nextMaintenance: string | null;
-}
-
 interface Customer {
   id: string;
   name: string;
@@ -17,11 +11,7 @@ interface Customer {
   email: string | null;
   emailOptIn: 'NONE' | 'CONFIRMED' | 'UNSUBSCRIBED';
   suppressEmail?: boolean;
-  heatingType: string;
-  additionalEnergySources: string[];
-  energyStorageSystems: string[];
   notes: string | null;
-  heaters: Heater[];
   createdAt: string;
   updatedAt: string;
 }

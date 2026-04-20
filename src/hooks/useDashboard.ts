@@ -1,5 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 
+interface CatalogEntry {
+  id: string;
+  systemType: string;
+  manufacturer: string;
+  name: string;
+}
+
 interface Customer {
   id: string;
   name: string;
@@ -7,19 +14,19 @@ interface Customer {
   phone: string;
 }
 
-interface UpcomingMaintenance {
+interface UpcomingSystem {
   id: string;
-  model: string;
   nextMaintenance: string;
+  catalog: CatalogEntry;
   customer: Customer;
 }
 
-interface Maintenance {
+interface RecentMaintenance {
   id: string;
   date: string;
   notes: string | null;
-  heater: {
-    model: string;
+  system: {
+    catalog: CatalogEntry;
     customer: {
       id: string;
       name: string;
@@ -29,11 +36,11 @@ interface Maintenance {
 
 interface DashboardStats {
   totalCustomers: number;
-  totalHeaters: number;
+  totalSystems: number;
   overdueMaintenances: number;
   upcomingMaintenances: number;
-  upcomingMaintenancesList: UpcomingMaintenance[];
-  recentMaintenances: Maintenance[];
+  upcomingSystemsList: UpcomingSystem[];
+  recentMaintenances: RecentMaintenance[];
 }
 
 interface ApiResponse<T> {
@@ -42,9 +49,6 @@ interface ApiResponse<T> {
   error?: string;
 }
 
-/**
- * Fetch dashboard statistics
- */
 export function useDashboardStats(days: number = 30) {
   return useQuery<DashboardStats>({
     queryKey: ['dashboard-stats', days],
@@ -58,9 +62,7 @@ export function useDashboardStats(days: number = 30) {
 
       return result.data;
     },
-    // Refetch every 5 minutes for dashboard
     staleTime: 1000 * 60 * 5,
-    // Refetch on window focus for dashboard
     refetchOnWindowFocus: true,
   });
 }

@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
           companyName: true,
           createdAt: true,
           _count: {
-            select: { customers: true, heaters: true, maintenances: true },
+            select: { customers: true, customerSystems: true, maintenances: true },
           },
         },
         orderBy: { createdAt: 'desc' },
