@@ -14,41 +14,41 @@ type ReminderType = 'REMINDER_4_WEEKS' | 'REMINDER_1_WEEK';
  * Logs the send to EmailLog. Throws on Resend error.
  */
 export async function sendReminder(
-  heaterId: string,
+  systemId: string,
   type: ReminderType
 ): Promise<void> {
-  const heater = await prisma.heater.findUnique({
-    where: { id: heaterId },
+  const system = await prisma.customerSystem.findUnique({
+    where: { id: systemId },
     include: {
+      catalog: true,
       customer: true,
       user: { select: { name: true, email: true, phone: true, companyName: true } },
     },
   });
 
-  if (!heater?.customer?.email) {
-    throw new Error(`Heater ${heaterId}: no customer or no email`);
+  if (!system?.customer?.email) {
+    throw new Error(`System ${systemId}: no customer or no email`);
   }
 
-  const { customer, user } = heater;
+  const { catalog, customer, user } = system;
   const weeksUntil = type === 'REMINDER_4_WEEKS' ? 4 : 1;
-  const maintenanceDate = heater.nextMaintenance
-    ? format(heater.nextMaintenance, 'dd.MM.yyyy', { locale: de })
+  const maintenanceDate = system.nextMaintenance
+    ? format(system.nextMaintenance, 'dd.MM.yyyy', { locale: de })
     : 'Unbekannt';
 
   const html = await render(
     React.createElement(ReminderEmail, {
       customerName: customer.name,
       maintenanceDate,
-      heaterManufacturer: heater.manufacturer,
-      heaterModel: heater.model,
-      heaterSerialNumber: heater.serialNumber,
+      heaterManufacturer: catalog.manufacturer,
+      heaterModel: catalog.name,
+      heaterSerialNumber: system.serialNumber,
       weeksUntil,
-      // Embed IDs as Cal.com metadata + pre-fill name, email, and address
       calComUrl: CAL_COM_URL
         ? (() => {
             const url = new URL(CAL_COM_URL);
             url.searchParams.set('metadata[customerId]', customer.id);
-            url.searchParams.set('metadata[userId]', heater.userId);
+            url.searchParams.set('metadata[userId]', system.userId);
             if (customer.name) url.searchParams.set('name', customer.name);
             if (customer.email) url.searchParams.set('email', customer.email as string);
             const address = [customer.street, `${customer.zipCode} ${customer.city}`]
@@ -65,13 +65,13 @@ export async function sendReminder(
     })
   );
 
-  const heaterLabel = [heater.manufacturer, heater.model].filter(Boolean).join(' ');
+  const systemLabel = [catalog.manufacturer, catalog.name].filter(Boolean).join(' ');
   const weekWord = weeksUntil === 1 ? 'Woche' : 'Wochen';
 
   const { data, error } = await resend.emails.send({
     from: FROM_EMAIL,
     to: customer.email as string,
-    subject: `Wartungserinnerung – Ihre Heizungsanlage: Termin in ${weeksUntil} ${weekWord}`,
+    subject: `Wartungserinnerung – Ihre Anlage: Termin in ${weeksUntil} ${weekWord}`,
     html,
   });
 
@@ -85,7 +85,7 @@ export async function sendReminder(
   });
 
   if (error) {
-    throw new Error(`Resend error for heater ${heaterId}: ${JSON.stringify(error)}`);
+    throw new Error(`Resend error for system ${systemId}: ${JSON.stringify(error)}`);
   }
 }
 
@@ -116,15 +116,15 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
   const weekEnd = addDays(now, 7);
   const weekAgo = subDays(now, 7);
 
-  const [upcomingHeaters, overdueHeaters, completedMaintenances] = await Promise.all([
-    prisma.heater.findMany({
+  const [upcomingSystems, overdueSystems, completedMaintenances] = await Promise.all([
+    prisma.customerSystem.findMany({
       where: { userId: user.id, nextMaintenance: { gte: now, lte: weekEnd } },
-      include: { customer: { select: { name: true } } },
+      include: { catalog: true, customer: { select: { name: true } } },
       orderBy: { nextMaintenance: 'asc' },
     }),
-    prisma.heater.findMany({
+    prisma.customerSystem.findMany({
       where: { userId: user.id, nextMaintenance: { lt: now } },
-      include: { customer: { select: { name: true } } },
+      include: { catalog: true, customer: { select: { name: true } } },
       orderBy: { nextMaintenance: 'asc' },
     }),
     prisma.maintenance.findMany({
@@ -137,18 +137,18 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
   const html = await render(
     React.createElement(WeeklySummaryEmail, {
       weekLabel,
-      upcomingCount: upcomingHeaters.length,
-      overdueCount: overdueHeaters.length,
+      upcomingCount: upcomingSystems.length,
+      overdueCount: overdueSystems.length,
       completedCount: completedMaintenances.length,
-      upcomingList: upcomingHeaters.map((h) => ({
-        customerName: h.customer?.name ?? 'Unbekannt',
-        date: h.nextMaintenance ? format(h.nextMaintenance, 'dd.MM.yyyy') : '–',
-        heaterInfo: [h.manufacturer, h.model].filter(Boolean).join(' '),
+      upcomingList: upcomingSystems.map((s) => ({
+        customerName: s.customer?.name ?? 'Unbekannt',
+        date: s.nextMaintenance ? format(s.nextMaintenance, 'dd.MM.yyyy') : '–',
+        heaterInfo: [s.catalog.manufacturer, s.catalog.name].filter(Boolean).join(' '),
       })),
-      overdueList: overdueHeaters.map((h) => ({
-        customerName: h.customer?.name ?? 'Unbekannt',
-        daysOverdue: h.nextMaintenance ? differenceInDays(now, h.nextMaintenance) : 0,
-        heaterInfo: [h.manufacturer, h.model].filter(Boolean).join(' '),
+      overdueList: overdueSystems.map((s) => ({
+        customerName: s.customer?.name ?? 'Unbekannt',
+        daysOverdue: s.nextMaintenance ? differenceInDays(now, s.nextMaintenance) : 0,
+        heaterInfo: [s.catalog.manufacturer, s.catalog.name].filter(Boolean).join(' '),
       })),
     })
   );
