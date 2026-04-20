@@ -64,12 +64,12 @@ export function ReminderEmail({
             Guten Tag {customerName},
           </Text>
           <Text style={{ color: '#374151', margin: '0 0 8px' }}>
-            Ihr nächster Wartungstermin für Ihre Heizungsanlage rückt näher — in{' '}
-            <strong>{weeksUntil} {weekWord}</strong> ist es soweit.
+            die letzte Wartung Ihrer Heizungsanlage liegt in{' '}
+            <strong>{weeksUntil} {weekWord}</strong> genau ein Jahr zurück.
           </Text>
           <Text style={{ color: '#374151', margin: '0 0 24px' }}>
-            Regelmäßige Wartungen sorgen für einen sicheren und effizienten Betrieb Ihrer
-            Anlage — und können teure Reparaturen im Winter verhindern.
+            Wir empfehlen, jetzt rechtzeitig einen neuen Wartungstermin zu buchen — regelmäßige
+            Wartungen sichern den effizienten Betrieb Ihrer Anlage und beugen teuren Reparaturen vor.
           </Text>
 
           {/* Heater card */}
@@ -101,7 +101,7 @@ export function ReminderEmail({
               </Text>
             )}
             <Text style={{ margin: '0', color: '#374151' }}>
-              Geplanter Wartungstermin: <strong>{maintenanceDate}</strong>
+              Wartung fällig ab: <strong>{maintenanceDate}</strong>
             </Text>
           </Section>
 
