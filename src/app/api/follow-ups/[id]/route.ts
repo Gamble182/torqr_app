@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
+import type { Prisma } from '@prisma/client';
 import { z } from 'zod';
 import { followUpJobUpdateSchema } from '@/lib/validations';
 import { rateLimitByUser, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
@@ -35,7 +36,7 @@ export async function PATCH(
     const validated = followUpJobUpdateSchema.parse(body);
 
     // Handle completedAt based on completed flag change
-    const data: Record<string, unknown> = { ...validated };
+    const data: Prisma.FollowUpJobUpdateInput = { ...validated };
     if (validated.completed !== undefined) {
       if (validated.completed && !existing.completed) {
         data.completedAt = new Date();

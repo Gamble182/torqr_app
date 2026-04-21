@@ -75,6 +75,19 @@ export async function POST(
     const body = await req.json();
     const validated = followUpJobCreateSchema.parse(body);
 
+    if (validated.maintenanceId) {
+      const maintenance = await prisma.maintenance.findFirst({
+        where: { id: validated.maintenanceId, userId },
+        select: { id: true },
+      });
+      if (!maintenance) {
+        return NextResponse.json(
+          { success: false, error: 'Wartung nicht gefunden' },
+          { status: 404 }
+        );
+      }
+    }
+
     const followUp = await prisma.followUpJob.create({
       data: {
         label: validated.label,

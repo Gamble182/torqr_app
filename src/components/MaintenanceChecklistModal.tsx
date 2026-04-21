@@ -2,6 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
@@ -46,6 +47,7 @@ export function MaintenanceChecklistModal({
   onClose,
   onSuccess,
 }: MaintenanceChecklistModalProps) {
+  const queryClient = useQueryClient();
   const today = new Date().toISOString().split('T')[0];
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -192,6 +194,8 @@ export function MaintenanceChecklistModal({
                 })
               )
             );
+            queryClient.invalidateQueries({ queryKey: ['follow-up-jobs', systemId] });
+            queryClient.invalidateQueries({ queryKey: ['customer-systems'] });
           } catch {
             toast.error('Wartung gespeichert, aber Fehler beim Erstellen der Nachfolgeaufträge');
           }
