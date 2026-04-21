@@ -31,7 +31,6 @@ Booking is functional (webhook + customer resolution), but not yet linked to spe
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
 | 33 | Feature | Multi-system booking — if a customer has multiple systems with the same maintenance interval, allow selecting all for a single appointment. | Medium | 2026-04-16 |
-| 38 | Feature | Office-side appointment booking — allow office staff to book on behalf of a customer (for customers without email, e.g. elderly). Bypass email-based Cal.com flow. | High | 2026-04-16 |
 
 ### Cal.com Configuration
 
@@ -97,6 +96,12 @@ Relevant once multiple employees are on the platform.
 ## Completed / Resolved
 
 Items are grouped by sprint / work session, ordered newest first.
+
+### Sprint 15 — Office-Side Booking (2026-04-21)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 38 | Feature | Office-side booking via BookingFormModal on system detail page. POST /api/bookings creates Booking with BOOKING_MANUAL trigger, auto-links customer. Sends BookingConfirmationEmail (German) if customer has email; fire-and-forget, non-blocking. | 2026-04-21 |
 
 ### Sprint 14 — Terminiert Badge + Booked Slot Display (2026-04-21)
 
