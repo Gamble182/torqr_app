@@ -110,6 +110,14 @@ Ideas worth keeping in mind but not planned for current sprints. No implementati
 
 Items are grouped by sprint / work session, ordered newest first.
 
+### Feature Branch: maintenance-checklist — Task 1 (2026-04-21)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| TDD-1 | Foundation | Created `src/types/checklist.ts` with `ChecklistItemSnapshot` and `ChecklistSnapshot` types — snapshot structure supports item labels, checked state, custom flag, and ISO 8601 confirmation timestamp. | 2026-04-21 |
+| TDD-2 | Foundation | Created `src/lib/checklist-defaults.ts` with `CHECKLIST_DEFAULTS` record — provides default checklist items (German) for all 4 system types: HEATING (10 items), AC (7 items), WATER_TREATMENT (6 items), ENERGY_STORAGE (6 items). | 2026-04-21 |
+| TDD-3 | Testing | Created `src/lib/checklist-defaults.test.ts` with 4 Vitest tests — verifies all system types have entries, minimum 5 items per type, no empty strings, and unknown type fallback. All tests passing. | 2026-04-21 |
+
 ### Sprint 17 — Quick Wins: Security, Dashboard Bookings, Email Log (2026-04-21)
 
 | # | Area | Description | Resolved |
