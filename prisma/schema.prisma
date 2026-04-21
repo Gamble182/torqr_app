@@ -18,6 +18,8 @@ model User {
   phone              String?
   companyName        String?
   emailWeeklySummary Boolean   @default(true)
+  reminderGreeting   String?
+  reminderBody       String?
   emailVerified      DateTime?
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
