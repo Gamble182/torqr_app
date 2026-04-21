@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
+import { TorqrIcon, TorqrWordmark } from '@/components/brand/TorqrIcon';
 import {
   LayoutDashboardIcon,
   UsersIcon,
@@ -73,13 +74,10 @@ export function DashboardNav() {
       {/* Logo */}
       <div className="flex items-center justify-between px-5 h-16 shrink-0">
         <Link href="/dashboard" className="flex items-center gap-2.5">
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-sidebar-primary text-sidebar-primary-foreground font-bold text-sm">
-            T
-          </div>
-          {!collapsed && (
-            <span className="text-lg font-bold tracking-tight text-sidebar-accent-foreground">
-              Torqr
-            </span>
+          {collapsed ? (
+            <TorqrIcon size="sm" variant="ghost" />
+          ) : (
+            <TorqrWordmark size="sm" theme="green" showTagline={false} />
           )}
         </Link>
         {/* Desktop collapse toggle */}
@@ -195,12 +193,7 @@ export function DashboardNav() {
           <MenuIcon className="h-5 w-5" />
         </button>
         <Link href="/dashboard" className="flex items-center gap-2">
-          <div className="flex items-center justify-center w-7 h-7 rounded-md bg-primary text-primary-foreground font-bold text-xs">
-            T
-          </div>
-          <span className="text-base font-bold tracking-tight text-foreground">
-            Torqr
-          </span>
+          <TorqrWordmark size="sm" theme="light" showTagline={false} />
         </Link>
         <div className="w-9" />
       </div>

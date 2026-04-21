@@ -56,7 +56,7 @@ export default function AdminUserDetailPage() {
         {counts.map((c) => (
           <Card key={c.label} className="p-4">
             <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-primary/10">
+              <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-brand-50">
                 <c.icon className="h-4 w-4 text-primary" />
               </div>
               <div>

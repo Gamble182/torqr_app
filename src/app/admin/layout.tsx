@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { TorqrIcon } from '@/components/brand/TorqrIcon';
 import {
   LayoutDashboardIcon,
   UsersIcon,
@@ -51,11 +52,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <aside className="w-56 shrink-0 bg-sidebar flex flex-col fixed top-0 left-0 h-screen z-30">
         {/* Logo */}
         <div className="flex items-center gap-2.5 px-5 h-16 border-b border-sidebar-border">
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-destructive text-destructive-foreground font-bold text-sm">
-            <ShieldIcon className="h-4 w-4" />
-          </div>
+          <TorqrIcon size="sm" variant="dark" />
           <div>
-            <span className="text-sm font-bold text-sidebar-accent-foreground">Torqr Admin</span>
+            <span className="text-sm font-bold text-sidebar-accent-foreground">torqr Admin</span>
             <p className="text-xs text-sidebar-foreground">Platform</p>
           </div>
         </div>
@@ -74,7 +73,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     : 'text-sidebar-foreground hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground'
                 }`}
               >
-                <item.icon className="h-4 w-4 shrink-0" />
+                <item.icon className={`h-4 w-4 shrink-0 ${active ? 'text-sidebar-primary' : ''}`} />
                 {item.name}
               </Link>
             );
@@ -84,7 +83,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Footer */}
         <div className="px-3 py-4 border-t border-sidebar-border">
           <div className="flex items-center gap-2 px-3 py-2 mb-1">
-            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-destructive/20 text-destructive text-xs font-bold shrink-0">
+            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-sidebar-primary/20 text-sidebar-primary text-xs font-bold shrink-0">
               {session.user?.name?.charAt(0).toUpperCase() ?? '?'}
             </div>
             <div className="flex-1 min-w-0">

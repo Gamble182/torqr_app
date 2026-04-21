@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>torqr – Wartungsbenachrichtigung</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background-color: #F7F7F7;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 14px;
+      color: #1A1A1A;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrapper {
+      max-width: 600px;
+      margin: 32px auto;
+      background: #FFFFFF;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #E0E0E0;
+    }
+
+    /* Header */
+    .header {
+      background-color: #008000;
+      padding: 20px 28px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-icon {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+    .header-brand { color: white; }
+    .header-brand .name {
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      line-height: 1;
+    }
+    .header-brand .sub {
+      font-size: 11px;
+      color: rgba(255,255,255,0.65);
+      letter-spacing: 1px;
+      margin-top: 2px;
+      text-transform: uppercase;
+    }
+
+    /* Body */
+    .body { padding: 28px; }
+    .body h1 {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1A1A1A;
+      margin-bottom: 12px;
+      letter-spacing: -0.3px;
+    }
+    .body p {
+      font-size: 14px;
+      color: #5C5C5C;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    /* Info-Box */
+    .info-box {
+      background: #E6F2E6;
+      border-left: 3px solid #008000;
+      border-radius: 6px;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+    }
+    .info-box p {
+      font-size: 13px;
+      color: #006600;
+      margin: 0;
+      line-height: 1.5;
+    }
+    .info-box strong { font-weight: 600; }
+
+    /* CTA Button */
+    .cta-wrap { margin-bottom: 20px; }
+    .cta {
+      display: inline-block;
+      background-color: #008000;
+      color: #FFFFFF;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      letter-spacing: 0.2px;
+    }
+    .cta:hover { background-color: #006600; }
+
+    /* Status Chips */
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+    .chip {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .chip-due      { background: #FAEEDA; color: #633806; }
+    .chip-ok       { background: #E6F2E6; color: #006600; }
+    .chip-overdue  { background: #FAECE7; color: #712B13; }
+    .chip-info     { background: #E6F1FB; color: #0C447C; }
+
+    /* Techniker-Info */
+    .tech-info {
+      padding-top: 16px;
+      border-top: 1px solid #E0E0E0;
+      font-size: 13px;
+      color: #9A9A9A;
+    }
+    .tech-info strong { color: #5C5C5C; font-weight: 600; }
+
+    /* Footer */
+    .footer {
+      background: #F7F7F7;
+      border-top: 1px solid #E0E0E0;
+      padding: 14px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: #9A9A9A;
+    }
+    .footer a { color: #9A9A9A; text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <!-- Header -->
+  <div class="header">
+    <svg class="header-icon" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="96" height="96" rx="22" fill="rgba(255,255,255,0.18)"/>
+      <polyline points="12,48 26,48 32,22 40,74 48,36 54,58 60,48 84,48"
+        stroke="white" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="54" cy="58" r="7" fill="#EF9F27"/>
+    </svg>
+    <div class="header-brand">
+      <div class="name">torqr</div>
+      <div class="sub">Wartungsmanagement</div>
+    </div>
+  </div>
+
+  <!-- Body -->
+  <div class="body">
+
+    <h1>Ihre Heizung ist wartungsfällig</h1>
+
+    <p>
+      Sehr geehrte {{KUNDE_ANREDE}} {{KUNDE_NAME}},<br>
+      laut unserem System steht die jährliche Wartung Ihrer Heizungsanlage an.
+      Regelmäßige Wartung sichert die Effizienz und Betriebssicherheit Ihrer Anlage.
+    </p>
+
+    <div class="info-box">
+      <p>
+        <strong>Anlage:</strong> {{ANLAGE_TYP}}<br>
+        <strong>Baujahr:</strong> {{ANLAGE_BAUJAHR}}<br>
+        <strong>Letzte Wartung:</strong> {{LETZTE_WARTUNG}}<br>
+        <strong>Standort:</strong> {{ANLAGE_STANDORT}}
+      </p>
+    </div>
+
+    <div class="cta-wrap">
+      <a href="{{TERMIN_URL}}" class="cta">Termin vereinbaren</a>
+    </div>
+
+    <div class="chips">
+      <!-- Status-Chip: je nach Zustand einblenden -->
+      <!-- <span class="chip chip-ok">Gewartet</span> -->
+      <span class="chip chip-due">Wartung fällig</span>
+      <!-- <span class="chip chip-overdue">Überfällig</span> -->
+      <span class="chip chip-info">Empfohlen bis {{EMPFOHLEN_BIS}}</span>
+    </div>
+
+    <div class="tech-info">
+      <strong>{{TECHNIKER_NAME}}</strong> · {{TECHNIKER_FIRMA}}<br>
+      {{TECHNIKER_TELEFON}} · <a href="mailto:{{TECHNIKER_EMAIL}}" style="color:#008000">{{TECHNIKER_EMAIL}}</a>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span>Automatisch versendet via torqr</span>
+    <a href="{{ABMELDEN_URL}}">Abmelden</a>
+  </div>
+
+</div>
+
+</body>
+</html>

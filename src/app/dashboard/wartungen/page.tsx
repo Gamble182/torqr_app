@@ -117,22 +117,22 @@ export default function WartungenPage() {
     const config: Record<string, { label: string; style: string; icon: React.ReactNode }> = {
       overdue: {
         label: 'Überfällig',
-        style: 'bg-destructive/10 text-destructive border-destructive/20',
+        style: 'bg-status-overdue-bg text-status-overdue-text border-status-overdue-border',
         icon: <AlertTriangleIcon className="h-3 w-3" />,
       },
       urgent: {
         label: 'Diese Woche',
-        style: 'bg-warning/10 text-warning-foreground border-warning/20',
+        style: 'bg-status-due-bg text-status-due-text border-status-due-border',
         icon: <CalendarIcon className="h-3 w-3" />,
       },
       soon: {
         label: 'Bald fällig',
-        style: 'bg-secondary/10 text-secondary border-secondary/20',
+        style: 'bg-status-info-bg text-status-info-text border-status-info-border',
         icon: <ClockIcon className="h-3 w-3" />,
       },
       upcoming: {
         label: 'Geplant',
-        style: 'bg-success/10 text-success border-success/20',
+        style: 'bg-status-ok-bg text-status-ok-text border-status-ok-border',
         icon: <CheckCircleIcon className="h-3 w-3" />,
       },
     };
@@ -214,27 +214,27 @@ export default function WartungenPage() {
           <meta charset="UTF-8">
           <title>Wartungsübersicht</title>
           <style>
-            body { font-family: Arial, sans-serif; padding: 20px; color: #1a1a2e; }
-            h1 { color: #1e3a5f; margin-bottom: 10px; }
+            body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; padding: 20px; color: #1A1A1A; }
+            h1 { color: #008000; margin-bottom: 10px; }
             .meta { color: #666; margin-bottom: 20px; font-size: 14px; }
             .stats { display: flex; gap: 20px; margin-bottom: 30px; }
             .stat-card { border: 1px solid #e2e8f0; padding: 15px; border-radius: 12px; flex: 1; }
             .stat-card h3 { margin: 0 0 5px 0; font-size: 14px; color: #666; }
             .stat-card .value { font-size: 24px; font-weight: bold; }
-            .overdue { color: #dc2626; border-color: #fecaca; }
-            .warning { color: #d97706; }
-            .accent { color: #0891b2; }
+            .overdue { color: #712B13; border-color: #F5C4B3; }
+            .warning { color: #633806; }
+            .accent { color: #008000; }
             table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-            th { background-color: #1e3a5f; color: white; padding: 12px; text-align: left; font-size: 12px; border-radius: 0; }
+            th { background-color: #008000; color: white; padding: 12px; text-align: left; font-size: 12px; border-radius: 0; }
             th:first-child { border-radius: 8px 0 0 0; }
             th:last-child { border-radius: 0 8px 0 0; }
             td { padding: 10px; border-bottom: 1px solid #e2e8f0; font-size: 11px; }
             tr:hover { background-color: #f8fafc; }
             .badge { display: inline-block; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 600; }
-            .badge-overdue { background-color: #fef2f2; color: #dc2626; }
-            .badge-urgent { background-color: #fffbeb; color: #d97706; }
-            .badge-soon { background-color: #ecfeff; color: #0891b2; }
-            .badge-scheduled { background-color: #f0fdf4; color: #16a34a; }
+            .badge-overdue { background-color: #FAECE7; color: #712B13; }
+            .badge-urgent { background-color: #FAEEDA; color: #633806; }
+            .badge-soon { background-color: #E6F1FB; color: #0C447C; }
+            .badge-scheduled { background-color: #E6F2E6; color: #006600; }
           </style>
         </head>
         <body>
@@ -347,7 +347,7 @@ export default function WartungenPage() {
         <button
           onClick={() => setFilterStatus('thisMonth')}
           className={`bg-card rounded-xl border px-4 py-3 min-h-11 text-left hover:shadow-md transition-all cursor-pointer ${
-            filterStatus === 'thisMonth' ? 'ring-2 ring-secondary border-secondary' : 'border-secondary/30'
+            filterStatus === 'thisMonth' ? 'ring-2 ring-primary border-primary' : 'border-brand-200'
           }`}
         >
           <p className="text-xs text-muted-foreground">Dieser Monat</p>
@@ -497,7 +497,7 @@ export default function WartungenPage() {
                         <div className="space-y-1 text-muted-foreground">
                           <div className="flex items-center gap-1.5">
                             <UserIcon className="h-3 w-3" />
-                            <Link href={`/dashboard/customers/${heater.customer.id}`} className="hover:text-secondary transition-colors">
+                            <Link href={`/dashboard/customers/${heater.customer.id}`} className="hover:text-primary transition-colors">
                               {heater.customer.name}
                             </Link>
                           </div>
@@ -507,7 +507,7 @@ export default function WartungenPage() {
                           </div>
                           <div className="flex items-center gap-1.5">
                             <PhoneIcon className="h-3 w-3" />
-                            <a href={`tel:${heater.customer.phone}`} className="hover:text-secondary transition-colors">
+                            <a href={`tel:${heater.customer.phone}`} className="hover:text-primary transition-colors">
                               {heater.customer.phone}
                             </a>
                           </div>
