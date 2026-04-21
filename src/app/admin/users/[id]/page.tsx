@@ -12,13 +12,7 @@ import {
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
-
-const EMAIL_TYPE_LABELS: Record<string, string> = {
-  REMINDER_1_WEEK: '1 Woche',
-  REMINDER_4_WEEKS: '4 Wochen',
-  WEEKLY_SUMMARY: 'Wochenübersicht',
-  OPT_IN_CONFIRMATION: 'Opt-in',
-};
+import { EMAIL_TYPE_LABELS } from '@/lib/constants';
 
 export default function AdminUserDetailPage() {
   const params = useParams();

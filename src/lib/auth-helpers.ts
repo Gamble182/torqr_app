@@ -18,21 +18,3 @@ export async function requireAuth() {
   };
 }
 
-/**
- * Middleware for API routes that require authentication
- * Returns user info or null if not authenticated
- */
-export async function getAuthUser() {
-  const session = await auth();
-  return session?.user || null;
-}
-
-/**
- * Check if user owns a resource
- * @param userId - Current user's ID
- * @param resourceUserId - Resource owner's ID
- * @returns true if user owns resource
- */
-export function checkOwnership(userId: string, resourceUserId: string): boolean {
-  return userId === resourceUserId;
-}

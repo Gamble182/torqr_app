@@ -35,13 +35,7 @@ import {
 import { SystemAssignmentModal } from '@/components/system-form/SystemAssignmentModal';
 import { MaintenanceChecklistModal } from '@/components/MaintenanceChecklistModal';
 import { SystemChecklistManager } from '@/components/SystemChecklistManager';
-
-const SYSTEM_TYPE_LABELS: Record<string, string> = {
-  HEATING: 'Heizung',
-  AC: 'Klimaanlage',
-  WATER_TREATMENT: 'Wasseraufbereitung',
-  ENERGY_STORAGE: 'Energiespeicher',
-};
+import { SYSTEM_TYPE_LABELS } from '@/lib/constants';
 
 const getEmailOptInDisplay = (status: 'NONE' | 'CONFIRMED' | 'UNSUBSCRIBED', hasEmail: boolean) => {
   if (!hasEmail) return null;

@@ -1,17 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
+import { EMAIL_TYPE_LABELS } from '@/lib/constants';
 
 export interface EmailLog {
   id: string;
-  type: 'REMINDER' | 'WEEKLY_SUMMARY' | 'BOOKING_CONFIRMATION';
+  type: 'OPT_IN_CONFIRMATION' | 'REMINDER_1_WEEK' | 'REMINDER_4_WEEKS' | 'WEEKLY_SUMMARY' | 'BOOKING_CONFIRMATION';
   sentAt: string;
   error: string | null;
 }
-
-const EMAIL_TYPE_LABELS: Record<string, string> = {
-  REMINDER: 'Erinnerung',
-  WEEKLY_SUMMARY: 'Wochenübersicht',
-  BOOKING_CONFIRMATION: 'Terminbestätigung',
-};
 
 export function getEmailTypeLabel(type: string): string {
   return EMAIL_TYPE_LABELS[type] ?? type;
