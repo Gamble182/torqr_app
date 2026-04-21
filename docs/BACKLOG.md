@@ -30,7 +30,7 @@ _(no open items)_
 
 ### Cal.com Booking Integration
 
-Booking is functional (webhook + customer resolution), but not yet linked to specific heaters. This group closes the loop: booking → heater → status badge → calendar.
+Booking is functional (webhook + customer resolution + system link + Terminiert badge). One follow-up remains.
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
@@ -55,7 +55,7 @@ _(no open items)_
 
 ### Field Service & Mobile
 
-Features for technicians working on-site. The digital checklist (#35) is a key differentiator.
+Features for technicians working on-site. Digital checklist (#35) is live.
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
