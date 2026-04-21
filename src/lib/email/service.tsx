@@ -23,7 +23,7 @@ export async function sendReminder(
     include: {
       catalog: true,
       customer: true,
-      user: { select: { name: true, email: true, phone: true, companyName: true } },
+      user: { select: { name: true, email: true, phone: true, companyName: true, reminderGreeting: true, reminderBody: true } },
     },
   });
 
@@ -36,6 +36,13 @@ export async function sendReminder(
   const maintenanceDate = system.nextMaintenance
     ? format(system.nextMaintenance, 'dd.MM.yyyy', { locale: de })
     : 'Unbekannt';
+
+  const customGreeting = user?.reminderGreeting
+    ? user.reminderGreeting.replace('{customerName}', customer.name)
+    : undefined;
+  const customBody = user?.reminderBody
+    ? user.reminderBody.replace('{customerName}', customer.name)
+    : undefined;
 
   const html = await render(
     React.createElement(ReminderEmail, {
@@ -64,6 +71,8 @@ export async function sendReminder(
       maxName: user?.name ?? '',
       maxCompanyName: user?.companyName ?? null,
       unsubscribeUrl: buildUnsubscribeUrl(customer.id),
+      customGreeting,
+      customBody,
     })
   );
 
