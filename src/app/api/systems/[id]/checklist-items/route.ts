@@ -18,11 +18,11 @@ async function verifySystemOwnership(systemId: string, userId: string) {
  */
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await requireAuth();
-    const { id: systemId } = params;
+    const { id: systemId } = await params;
 
     const system = await verifySystemOwnership(systemId, userId);
     if (!system) {
@@ -52,7 +52,7 @@ export async function GET(
  */
 export async function POST(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await requireAuth();
@@ -60,7 +60,7 @@ export async function POST(
     const rateLimitResponse = rateLimitByUser(req, userId, RATE_LIMIT_PRESETS.API_USER);
     if (rateLimitResponse) return rateLimitResponse;
 
-    const { id: systemId } = params;
+    const { id: systemId } = await params;
 
     const system = await verifySystemOwnership(systemId, userId);
     if (!system) {

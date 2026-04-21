@@ -9,7 +9,7 @@ import { rateLimitByUser, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
  */
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string; itemId: string } }
+  { params }: { params: Promise<{ id: string; itemId: string }> }
 ) {
   try {
     const { userId } = await requireAuth();
@@ -17,7 +17,7 @@ export async function DELETE(
     const rateLimitResponse = rateLimitByUser(req, userId, RATE_LIMIT_PRESETS.API_USER);
     if (rateLimitResponse) return rateLimitResponse;
 
-    const { id: systemId, itemId } = params;
+    const { id: systemId, itemId } = await params;
 
     // Ownership check: item must belong to a system that belongs to this user
     const item = await prisma.customerSystemChecklistItem.findFirst({
