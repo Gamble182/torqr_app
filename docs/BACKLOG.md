@@ -25,7 +25,6 @@ _(no open items)_
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| 32 | Feature | Installation date = maintenance date checkbox — when assigning a system, checkbox "Installationsdatum als Wartungsdatum übernehmen" sets first maintenance interval to installation date + 1 year. | Medium | 2026-04-16 |
 | 34 | Feature | Photos per system — allow attaching up to 5 photos per system directly in system detail view (e.g. installation photos for quoting). | Medium | 2026-04-16 |
 
 ### Cal.com Booking Integration
@@ -55,11 +54,9 @@ _(no open items)_
 
 ### Field Service & Mobile
 
-Features for technicians working on-site. Digital checklist (#35) is live.
+Features for technicians working on-site. Digital checklist (#35) is live. Follow-up jobs (#27) are live.
 
-| # | Area | Description | Priority | Found |
-|---|------|-------------|----------|-------|
-| 27 | Feature | Follow-up jobs (Nachfolgeaufträge) — section/tab for tasks discovered during maintenance (e.g. "Wasserfilter erneuern", "Angebot Klimaanlage"). Checkable items, photo attachments for quoting. | Medium | 2026-04-16 |
+_(no open items)_
 
 ### Workforce & Scheduling
 
@@ -104,6 +101,13 @@ Ideas worth keeping in mind but not planned for current sprints. No implementati
 ## Completed / Resolved
 
 Items are grouped by sprint / work session, ordered newest first.
+
+### Sprint 20 — Follow-Up Jobs + Installation Date Checkbox (2026-04-21)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 27 | Feature | Follow-up jobs (Nachfolgeaufträge) — `FollowUpJob` model tied to `CustomerSystem` with optional `Maintenance` back-reference. CRUD API routes, React Query hook. `FollowUpSection` on system detail page with inline add + toggle complete + delete. Follow-up creation in `MaintenanceChecklistModal` Step 2. Amber badge with open count on customer detail page system cards. | 2026-04-21 |
+| 32 | Feature | Installation date = maintenance date checkbox — checkbox in `SystemAssignmentModal` copies installation date to last maintenance date field. Syncs on date change, disables field when active, restores on uncheck. Pure client-side logic. | 2026-04-21 |
 
 ### Sprint 19 — Email Rework: Weekly Summary + Editable Templates (2026-04-21)
 
