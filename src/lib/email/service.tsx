@@ -190,40 +190,122 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
   const weekEnd = addDays(now, 7);
   const weekAgo = subDays(now, 7);
 
-  const [upcomingSystems, overdueSystems, completedMaintenances] = await Promise.all([
+  const LIST_LIMIT = 10;
+
+  const [
+    bookingsRaw,
+    dueSystemsRaw,
+    overdueRaw,
+    completedMaintenances,
+    reminderLogs,
+    customerCount,
+    systemCount,
+  ] = await Promise.all([
+    prisma.booking.findMany({
+      where: {
+        userId: user.id,
+        status: 'CONFIRMED',
+        startTime: { gte: now, lte: weekEnd },
+      },
+      include: {
+        customer: { select: { name: true } },
+        system: { include: { catalog: true } },
+      },
+      orderBy: { startTime: 'asc' },
+    }),
     prisma.customerSystem.findMany({
-      where: { userId: user.id, nextMaintenance: { gte: now, lte: weekEnd } },
-      include: { catalog: true, customer: { select: { name: true } } },
+      where: {
+        userId: user.id,
+        nextMaintenance: { gte: now, lte: weekEnd },
+      },
+      include: {
+        catalog: true,
+        customer: { select: { name: true } },
+        bookings: {
+          where: { status: 'CONFIRMED', startTime: { gte: now } },
+          select: { id: true },
+          take: 1,
+        },
+      },
       orderBy: { nextMaintenance: 'asc' },
     }),
     prisma.customerSystem.findMany({
-      where: { userId: user.id, nextMaintenance: { lt: now } },
-      include: { catalog: true, customer: { select: { name: true } } },
+      where: {
+        userId: user.id,
+        nextMaintenance: { lt: now },
+      },
+      include: {
+        catalog: true,
+        customer: { select: { name: true } },
+      },
       orderBy: { nextMaintenance: 'asc' },
     }),
     prisma.maintenance.findMany({
       where: { userId: user.id, date: { gte: weekAgo, lte: now } },
+      select: { id: true },
     }),
+    prisma.emailLog.count({
+      where: {
+        sentAt: { gte: weekAgo, lte: now },
+        type: { in: ['REMINDER_4_WEEKS', 'REMINDER_1_WEEK'] },
+        customer: { userId: user.id },
+      },
+    }),
+    prisma.customer.count({ where: { userId: user.id } }),
+    prisma.customerSystem.count({ where: { userId: user.id } }),
   ]);
+
+  const bookingsAttendedLastWeek = await prisma.booking.count({
+    where: {
+      userId: user.id,
+      status: 'CONFIRMED',
+      startTime: { gte: weekAgo, lte: now },
+    },
+  });
+
+  const dueUnbookedAll = dueSystemsRaw.filter((s) => s.bookings.length === 0);
+
+  const bookingsThisWeek = bookingsRaw.slice(0, LIST_LIMIT).map((b) => ({
+    customerName: b.customer?.name ?? 'Unbekannt',
+    systemInfo: b.system
+      ? [b.system.catalog.manufacturer, b.system.catalog.name].filter(Boolean).join(' ')
+      : '–',
+    dateTime: `${format(b.startTime, 'EE, dd.MM.', { locale: de })} · ${format(b.startTime, "HH:mm 'Uhr'", { locale: de })}`,
+  }));
+
+  const dueUnbooked = dueUnbookedAll.slice(0, LIST_LIMIT).map((s) => ({
+    customerName: s.customer?.name ?? 'Unbekannt',
+    systemInfo: [s.catalog.manufacturer, s.catalog.name].filter(Boolean).join(' '),
+    dueDate: s.nextMaintenance ? format(s.nextMaintenance, 'dd.MM.yyyy') : '–',
+  }));
+
+  const overdue = overdueRaw.slice(0, LIST_LIMIT).map((s) => ({
+    customerName: s.customer?.name ?? 'Unbekannt',
+    systemInfo: [s.catalog.manufacturer, s.catalog.name].filter(Boolean).join(' '),
+    daysOverdue: s.nextMaintenance ? differenceInDays(now, s.nextMaintenance) : 0,
+  }));
 
   const weekLabel = `${format(now, 'dd.MM.')} – ${format(weekEnd, 'dd.MM.yyyy')}`;
 
   const html = await render(
     React.createElement(WeeklySummaryEmail, {
+      userName: user.name,
       weekLabel,
-      upcomingCount: upcomingSystems.length,
-      overdueCount: overdueSystems.length,
-      completedCount: completedMaintenances.length,
-      upcomingList: upcomingSystems.map((s) => ({
-        customerName: s.customer?.name ?? 'Unbekannt',
-        date: s.nextMaintenance ? format(s.nextMaintenance, 'dd.MM.yyyy') : '–',
-        heaterInfo: [s.catalog.manufacturer, s.catalog.name].filter(Boolean).join(' '),
-      })),
-      overdueList: overdueSystems.map((s) => ({
-        customerName: s.customer?.name ?? 'Unbekannt',
-        daysOverdue: s.nextMaintenance ? differenceInDays(now, s.nextMaintenance) : 0,
-        heaterInfo: [s.catalog.manufacturer, s.catalog.name].filter(Boolean).join(' '),
-      })),
+      bookingsThisWeek,
+      bookingsThisWeekMore: bookingsRaw.length > LIST_LIMIT ? bookingsRaw.length - LIST_LIMIT : undefined,
+      dueUnbooked,
+      dueUnbookedMore: dueUnbookedAll.length > LIST_LIMIT ? dueUnbookedAll.length - LIST_LIMIT : undefined,
+      overdue,
+      overdueMore: overdueRaw.length > LIST_LIMIT ? overdueRaw.length - LIST_LIMIT : undefined,
+      retro: {
+        maintenancesCompleted: completedMaintenances.length,
+        bookingsAttended: bookingsAttendedLastWeek,
+        remindersSent: reminderLogs,
+      },
+      totals: {
+        customers: customerCount,
+        systems: systemCount,
+      },
     })
   );
 
