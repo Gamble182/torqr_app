@@ -54,6 +54,7 @@ export async function POST(req: NextRequest) {
   const metadata = (data?.metadata ?? {}) as Record<string, string>;
   const metaCustomerId = metadata.customerId ?? null;
   const metaUserId = metadata.userId ?? null;
+  const metaSystemId = metadata.systemId ?? null;
 
   if (!bookingUid || !startTime) {
     console.error('[cal-webhook] Missing uid or startTime', { bookingUid, startTime });
@@ -101,6 +102,18 @@ export async function POST(req: NextRequest) {
     console.info(`[cal-webhook] No customer matched — booking stored without customerId`);
   }
 
+  // --- Resolve system ---
+  // Validate that the systemId from metadata belongs to the resolved user (scope check)
+  let system = null;
+  if (metaSystemId) {
+    system = await prisma.customerSystem.findFirst({
+      where: { id: metaSystemId, userId: user.id },
+    });
+    if (!system) {
+      console.warn(`[cal-webhook] systemId ${metaSystemId} not found for user ${user.id} — ignored`);
+    }
+  }
+
   // Upsert — idempotent if Cal.com retries
   await prisma.booking.upsert({
     where: { calBookingUid: bookingUid },
@@ -113,6 +126,7 @@ export async function POST(req: NextRequest) {
       attendeeEmail,
       status: 'CONFIRMED',
       customerId: customer?.id ?? null,
+      systemId: system?.id ?? null,
     },
     create: {
       calBookingUid: bookingUid,
@@ -125,9 +139,10 @@ export async function POST(req: NextRequest) {
       status: 'CONFIRMED',
       userId: user.id,
       customerId: customer?.id ?? null,
+      systemId: system?.id ?? null,
     },
   });
 
-  console.info(`[cal-webhook] Booking ${bookingUid} stored — customer: ${customer?.id ?? 'unmatched'}, strategy: ${metaCustomerId ? 'metadata' : 'email'}`);
+  console.info(`[cal-webhook] Booking ${bookingUid} stored — customer: ${customer?.id ?? 'unmatched'}, system: ${system?.id ?? 'unmatched'}, strategy: ${metaCustomerId ? 'metadata' : 'email'}`);
   return NextResponse.json({ received: true });
 }

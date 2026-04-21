@@ -21,6 +21,7 @@ export async function GET(request: NextRequest) {
       },
       include: {
         customer: { select: { id: true, name: true } },
+        system: { select: { id: true, catalog: { select: { manufacturer: true, name: true } } } },
       },
       orderBy: { startTime: 'asc' },
     });

@@ -152,6 +152,7 @@ model CustomerSystem {
   user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   maintenances Maintenance[]
+  bookings     Booking[]
 
   @@index([userId])
   @@index([customerId])
@@ -276,12 +277,15 @@ model Booking {
   updatedAt     DateTime      @updatedAt
 
   userId     String
-  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   customerId String?
-  customer   Customer? @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  customer   Customer?       @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  systemId   String?
+  system     CustomerSystem? @relation(fields: [systemId], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([customerId])
+  @@index([systemId])
   @@index([startTime])
   @@map("bookings")
 }

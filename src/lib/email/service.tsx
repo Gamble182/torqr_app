@@ -49,6 +49,7 @@ export async function sendReminder(
             const url = new URL(CAL_COM_URL);
             url.searchParams.set('metadata[customerId]', customer.id);
             url.searchParams.set('metadata[userId]', system.userId);
+            url.searchParams.set('metadata[systemId]', system.id);
             if (customer.name) url.searchParams.set('name', customer.name);
             if (customer.email) url.searchParams.set('email', customer.email as string);
             const address = [customer.street, `${customer.zipCode} ${customer.city}`]
