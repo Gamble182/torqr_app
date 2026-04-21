@@ -151,8 +151,9 @@ model CustomerSystem {
   userId     String
   user       User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  maintenances Maintenance[]
-  bookings     Booking[]
+  maintenances   Maintenance[]
+  bookings       Booking[]
+  checklistItems CustomerSystemChecklistItem[]
 
   @@index([userId])
   @@index([customerId])
@@ -166,12 +167,13 @@ model CustomerSystem {
 // ============================================================================
 
 model Maintenance {
-  id        String    @id @default(uuid())
-  date      DateTime  @default(now())
-  notes     String?
-  photos    String[]  @default([])
-  syncedAt  DateTime?
-  createdAt DateTime  @default(now())
+  id            String    @id @default(uuid())
+  date          DateTime  @default(now())
+  notes         String?
+  photos        String[]  @default([])
+  syncedAt      DateTime?
+  checklistData Json?
+  createdAt     DateTime  @default(now())
 
   systemId String
   system   CustomerSystem @relation(fields: [systemId], references: [id], onDelete: Cascade)
@@ -182,6 +184,22 @@ model Maintenance {
   @@index([userId])
   @@index([date])
   @@map("maintenances")
+}
+
+// ============================================================================
+// MAINTENANCE CHECKLIST ITEMS (custom per CustomerSystem)
+// ============================================================================
+
+model CustomerSystemChecklistItem {
+  id               String         @id @default(uuid())
+  customerSystemId String
+  customerSystem   CustomerSystem @relation(fields: [customerSystemId], references: [id], onDelete: Cascade)
+  label            String
+  sortOrder        Int            @default(0)
+  createdAt        DateTime       @default(now())
+
+  @@index([customerSystemId])
+  @@map("customer_system_checklist_items")
 }
 
 // ============================================================================
