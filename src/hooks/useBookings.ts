@@ -13,6 +13,7 @@ export interface Booking {
   createdAt: string;
   customerId: string | null;
   customer: { id: string; name: string } | null;
+  system: { id: string; catalog: { manufacturer: string; name: string } } | null;
 }
 
 interface ApiResponse<T> {

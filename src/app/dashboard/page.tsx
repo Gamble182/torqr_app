@@ -19,6 +19,7 @@ import {
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { useDashboardStats } from '@/hooks/useDashboard';
+import { useBookings } from '@/hooks/useBookings';
 import { MaintenanceFormModal } from '@/components/MaintenanceFormModal';
 import { Button } from '@/components/ui/button';
 
@@ -26,6 +27,10 @@ export default function DashboardPage() {
   const router = useRouter();
   const [timeRange, setTimeRange] = useState(30);
   const { data: stats, isLoading, error, refetch } = useDashboardStats(timeRange);
+  const { data: allBookings } = useBookings();
+  const upcomingBookings = (allBookings ?? [])
+    .filter((b) => b.status === 'CONFIRMED' && new Date(b.startTime) >= new Date())
+    .slice(0, 8);
   const [selectedSystem, setSelectedSystem] = useState<{ id: string; label: string } | null>(null);
 
   if (isLoading) {
@@ -296,6 +301,56 @@ export default function DashboardPage() {
             <div className="text-center py-12">
               <WrenchIcon className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
               <p className="text-sm text-muted-foreground">Noch keine Wartungen durchgeführt</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Upcoming Bookings */}
+      <div className="bg-card rounded-xl border border-border">
+        <div className="px-6 py-4 border-b border-border">
+          <h2 className="text-base font-semibold text-foreground">Gebuchte Termine</h2>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            Bestätigte bevorstehende Termine
+          </p>
+        </div>
+        <div className="p-4">
+          {upcomingBookings.length > 0 ? (
+            <div className="space-y-2">
+              {upcomingBookings.map((booking) => (
+                <div
+                  key={booking.id}
+                  className="flex items-center gap-4 p-4 rounded-lg border border-green-500/20 bg-green-500/5 cursor-pointer hover:shadow-sm transition-all"
+                  onClick={() => booking.customer && router.push(`/dashboard/customers/${booking.customer.id}`)}
+                >
+                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-green-500/10 shrink-0">
+                    <CalendarIcon className="h-4 w-4 text-green-700" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-foreground truncate">
+                      {booking.customer?.name ?? '—'}
+                    </p>
+                    {booking.system && (
+                      <p className="text-xs text-muted-foreground truncate">
+                        {booking.system.catalog.manufacturer} {booking.system.catalog.name}
+                      </p>
+                    )}
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <p className="text-sm font-medium text-foreground">
+                      {format(new Date(booking.startTime), 'dd. MMM yyyy', { locale: de })}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {format(new Date(booking.startTime), 'HH:mm', { locale: de })} Uhr
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <CalendarIcon className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
+              <p className="text-sm text-muted-foreground">Keine bevorstehenden Termine</p>
             </div>
           )}
         </div>

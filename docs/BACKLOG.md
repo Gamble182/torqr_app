@@ -19,9 +19,7 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 
 ### Architecture & Security
 
-| # | Area | Description | Priority | Found |
-|---|------|-------------|----------|-------|
-| 47 | Security | Photo upload storage path is not userId-scoped — `POST /api/upload/photo` is auth-gated but stores files at `maintenances/{maintenanceId}-{timestamp}.ext`. Any authenticated user could upload to another tenant's maintenance path if they know the `maintenanceId`. Fix: scope path to `{userId}/maintenances/{maintenanceId}-{timestamp}.ext` and verify `maintenanceId` ownership before accepting the upload. | Medium | 2026-04-21 |
+_(no open items)_
 
 ### System Model — Follow-up
 
@@ -58,7 +56,6 @@ These are mostly Cal.com dashboard settings, not code changes. Can be done in on
 | 2 | Email | Email deliverability — weekly summary and reminders land in GMX junk. Domain reputation improves over time; consider adding DMARC record to accelerate. | Medium | 2026-04-14 |
 | 13 | Email | Weekly summary content refinement — review copy, structure, and data shown. Account page is now live, so this is unblocked. | Medium | 2026-04-15 |
 | 40 | Feature | Editable email templates — allow users to customize reminder email text in app settings. Reference: Tooltime template from pilot customer. | Medium | 2026-04-16 |
-| 36 | Feature | Email log in customer file — show list of all sent emails per customer with timestamps, directly in customer detail view. | Medium | 2026-04-16 |
 
 ### Field Service & Mobile
 
@@ -94,13 +91,20 @@ Relevant once multiple employees are on the platform.
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| 10 | Feature | Booking feed / news section — show booked appointments in dashboard as "Gebuchte Termine". Partially covered by existing Cal.com bookings section on customer detail; dashboard-level view still missing. | Medium | 2026-04-14 |
 
 ---
 
 ## Completed / Resolved
 
 Items are grouped by sprint / work session, ordered newest first.
+
+### Sprint 17 — Quick Wins: Security, Dashboard Bookings, Email Log (2026-04-21)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 47 | Security | Photo upload route now verifies `maintenanceId` ownership (`prisma.maintenance.findFirst({ where: { id, userId } })`) and scopes storage path to `{userId}/maintenances/{id}-{ts}.ext`. | 2026-04-21 |
+| 10 | Feature | Dashboard "Gebuchte Termine" section — shows all upcoming CONFIRMED bookings with customer name, system label, date/time. Uses existing `useBookings()` hook. | 2026-04-21 |
+| 36 | Feature | Email log card on customer detail page — `GET /api/customers/[id]/email-logs` route + `useCustomerEmailLogs` hook. Shows up to 30 sent emails with type label (German), date/time, error indicator. Hidden when no logs exist. | 2026-04-21 |
 
 ### Sprint 16 — Multi-Tenancy Architecture Decision (2026-04-21)
 

@@ -10,6 +10,7 @@ import { useCustomer, useDeleteCustomer } from '@/hooks/useCustomers';
 import { useCustomerSystems, useDeleteCustomerSystem } from '@/hooks/useCustomerSystems';
 import type { CustomerSystem } from '@/hooks/useCustomerSystems';
 import { useBookings } from '@/hooks/useBookings';
+import { useCustomerEmailLogs, getEmailTypeLabel } from '@/hooks/useEmailLogs';
 import {
   ArrowLeftIcon,
   PencilIcon,
@@ -29,6 +30,7 @@ import {
   CalendarCheckIcon,
   XCircleIcon,
   SendIcon,
+  InboxIcon,
 } from 'lucide-react';
 import { SystemAssignmentModal } from '@/components/system-form/SystemAssignmentModal';
 import { MaintenanceFormModal } from '@/components/MaintenanceFormModal';
@@ -55,6 +57,7 @@ export default function CustomerDetailPage() {
   const { data: customer, isLoading, error, refetch } = useCustomer(customerId);
   const { data: systems = [], refetch: refetchSystems } = useCustomerSystems({ customerId });
   const { data: bookings } = useBookings(customerId);
+  const { data: emailLogs } = useCustomerEmailLogs(customerId);
   const deleteCustomer = useDeleteCustomer();
   const deleteSystem = useDeleteCustomerSystem();
 
@@ -547,6 +550,47 @@ export default function CustomerDetailPage() {
               </div>
             )}
           </Card>
+
+          {/* Email Log */}
+          {emailLogs && emailLogs.length > 0 && (
+            <Card className="p-6">
+              <h2 className="text-base font-semibold text-foreground mb-5 flex items-center gap-2">
+                <InboxIcon className="h-4 w-4 text-muted-foreground" />
+                E-Mail-Protokoll ({emailLogs.length})
+              </h2>
+              <div className="space-y-2">
+                {emailLogs.map((log) => (
+                  <div key={log.id} className="flex items-center gap-3 py-2 border-b border-border last:border-0">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-foreground">
+                        {getEmailTypeLabel(log.type)}
+                      </p>
+                      {log.error && (
+                        <p className="text-xs text-destructive mt-0.5 truncate">Fehler: {log.error}</p>
+                      )}
+                    </div>
+                    <div className="shrink-0 text-right">
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(log.sentAt).toLocaleDateString('de-DE', {
+                          day: '2-digit', month: '2-digit', year: 'numeric',
+                        })}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {new Date(log.sentAt).toLocaleTimeString('de-DE', {
+                          hour: '2-digit', minute: '2-digit',
+                        })} Uhr
+                      </p>
+                    </div>
+                    {log.error ? (
+                      <XCircleIcon className="h-4 w-4 text-destructive shrink-0" />
+                    ) : (
+                      <CheckCircle2Icon className="h-4 w-4 text-success shrink-0" />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </Card>
+          )}
         </div>
 
         {/* Sidebar */}

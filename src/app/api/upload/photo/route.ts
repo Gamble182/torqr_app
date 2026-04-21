@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth-helpers';
+import { prisma } from '@/lib/prisma';
 import { getSupabaseAdmin } from '@/lib/supabase';
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -7,7 +8,7 @@ const MAX_SIZE = 5 * 1024 * 1024; // 5MB
 
 export async function POST(req: NextRequest) {
   try {
-    await requireAuth();
+    const { userId } = await requireAuth();
 
     const formData = await req.formData();
     const file = formData.get('file') as File | null;
@@ -17,6 +18,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         { success: false, error: 'Datei oder maintenanceId fehlt' },
         { status: 400 }
+      );
+    }
+
+    // Verify the maintenance record belongs to the authenticated user
+    const maintenance = await prisma.maintenance.findFirst({
+      where: { id: maintenanceId, userId },
+      select: { id: true },
+    });
+    if (!maintenance) {
+      return NextResponse.json(
+        { success: false, error: 'Wartung nicht gefunden' },
+        { status: 404 }
       );
     }
 
@@ -36,7 +49,7 @@ export async function POST(req: NextRequest) {
 
     const fileExt = file.name.split('.').pop();
     const fileName = `${maintenanceId}-${Date.now()}.${fileExt}`;
-    const filePath = `maintenances/${fileName}`;
+    const filePath = `${userId}/maintenances/${fileName}`;
 
     const buffer = Buffer.from(await file.arrayBuffer());
 
