@@ -30,8 +30,6 @@ Booking is functional (webhook + customer resolution), but not yet linked to spe
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| 24 | UX | Show booked appointment on system card — once booking↔system link exists (#23), replace or augment "Nächste Wartung" date with actual booked slot (date + time). | Medium | 2026-04-16 |
-| 20 | Feature | "Terminiert" status badge — show on system cards that have a linked future Cal.com booking. Depends on #23. | Medium | 2026-04-15 |
 | 33 | Feature | Multi-system booking — if a customer has multiple systems with the same maintenance interval, allow selecting all for a single appointment. | Medium | 2026-04-16 |
 | 38 | Feature | Office-side appointment booking — allow office staff to book on behalf of a customer (for customers without email, e.g. elderly). Bypass email-based Cal.com flow. | High | 2026-04-16 |
 
@@ -99,6 +97,13 @@ Relevant once multiple employees are on the platform.
 ## Completed / Resolved
 
 Items are grouped by sprint / work session, ordered newest first.
+
+### Sprint 14 — Terminiert Badge + Booked Slot Display (2026-04-21)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 20 | Feature | Green "Terminiert" badge on system cards when a future CONFIRMED booking exists. Replaces urgency badge when booked. | 2026-04-21 |
+| 24 | UX | Booked slot (date + time) replaces "Nächste Wartung" line on system card when booking exists. System detail page shows "Gebuchter Termin" row in Wartungsplan card. | 2026-04-21 |
 
 ### Sprint 13 — Booking ↔ System Link (2026-04-21)
 
