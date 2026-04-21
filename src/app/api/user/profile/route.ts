@@ -10,7 +10,7 @@ export async function GET() {
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { name: true, email: true, phone: true, companyName: true, emailWeeklySummary: true },
+      select: { name: true, email: true, phone: true, companyName: true, emailWeeklySummary: true, reminderGreeting: true, reminderBody: true },
     });
 
     if (!user) {
@@ -40,7 +40,7 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    const { name, email, phone, companyName } = parsed.data;
+    const { name, email, phone, companyName, reminderGreeting, reminderBody } = parsed.data;
 
     // Check email uniqueness if changing email
     if (email) {
@@ -62,8 +62,10 @@ export async function PATCH(request: NextRequest) {
         ...(email !== undefined && { email }),
         ...(phone !== undefined && { phone: phone === '' ? null : phone }),
         ...(companyName !== undefined && { companyName: companyName === '' ? null : companyName }),
+        ...(reminderGreeting !== undefined && { reminderGreeting: reminderGreeting === '' ? null : reminderGreeting }),
+        ...(reminderBody !== undefined && { reminderBody: reminderBody === '' ? null : reminderBody }),
       },
-      select: { name: true, email: true, phone: true, companyName: true },
+      select: { name: true, email: true, phone: true, companyName: true, reminderGreeting: true, reminderBody: true },
     });
 
     return NextResponse.json({ success: true, data: updated });
