@@ -123,6 +123,18 @@ export const userProfileUpdateSchema = z.object({
     .trim()
     .optional()
     .or(z.literal('')),
+  reminderGreeting: z
+    .string()
+    .max(200, 'Begrüßung zu lang (max. 200 Zeichen)')
+    .trim()
+    .optional()
+    .nullable(),
+  reminderBody: z
+    .string()
+    .max(1000, 'Nachrichtentext zu lang (max. 1000 Zeichen)')
+    .trim()
+    .optional()
+    .nullable(),
 });
 
 /**
