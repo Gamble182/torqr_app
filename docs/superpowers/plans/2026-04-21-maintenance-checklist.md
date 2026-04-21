@@ -6,7 +6,7 @@
 
 **Architecture:** Hardcoded default items per system type (TypeScript constants) + `CustomerSystemChecklistItem` DB table for per-system custom items. Completed state stored as a `checklistData: Json` snapshot on `Maintenance` — immutable, never references live item IDs. The old `MaintenanceFormModal` is fully replaced.
 
-**Tech Stack:** Next.js 14 App Router, TypeScript strict, Prisma ORM (Supabase PostgreSQL), React Query v5, Zod, shadcn/ui, Tailwind CSS, sonner (toasts), Jest.
+**Tech Stack:** Next.js 14 App Router, TypeScript strict, Prisma ORM (Supabase PostgreSQL), React Query v5, Zod, shadcn/ui, Tailwind CSS, sonner (toasts), Vitest.
 
 ---
 
@@ -79,7 +79,7 @@ describe('CHECKLIST_DEFAULTS', () => {
 - [ ] **Step 2: Run test to verify it fails**
 
 ```bash
-npx jest src/lib/checklist-defaults.test.ts --no-coverage
+npx vitest run src/lib/checklist-defaults.test.ts --no-coverage
 ```
 
 Expected: FAIL — "Cannot find module './checklist-defaults'"
@@ -148,7 +148,7 @@ export const CHECKLIST_DEFAULTS: Record<string, string[]> = {
 - [ ] **Step 5: Run test to verify it passes**
 
 ```bash
-npx jest src/lib/checklist-defaults.test.ts --no-coverage
+npx vitest run src/lib/checklist-defaults.test.ts --no-coverage
 ```
 
 Expected: PASS — 4 tests passing
@@ -251,7 +251,7 @@ describe('checklistItemCreateSchema', () => {
 - [ ] **Step 2: Run tests to verify they fail**
 
 ```bash
-npx jest src/lib/checklist-validation.test.ts --no-coverage
+npx vitest run src/lib/checklist-validation.test.ts --no-coverage
 ```
 
 Expected: FAIL — "checklistSnapshotSchema is not exported from './validations'"
@@ -319,7 +319,7 @@ export const maintenanceCreateSchema = z.object({
 - [ ] **Step 5: Run tests to verify they pass**
 
 ```bash
-npx jest src/lib/checklist-validation.test.ts --no-coverage
+npx vitest run src/lib/checklist-validation.test.ts --no-coverage
 ```
 
 Expected: PASS — 9 tests passing
@@ -1740,7 +1740,7 @@ git rm src/components/MaintenanceFormModal.tsx
 - [ ] **Step 6: Run all tests**
 
 ```bash
-npx jest --no-coverage
+npx vitest run --no-coverage
 ```
 
 Expected: all tests pass (including the 2 new test files from Tasks 1 and 2)
