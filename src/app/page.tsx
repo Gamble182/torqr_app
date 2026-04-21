@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { TorqrIcon, TorqrWordmark } from '@/components/brand/TorqrIcon';
 import {
   UsersIcon,
   CalendarCheckIcon,
@@ -24,14 +25,7 @@ export default async function Home() {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-lg">
         <div className="mx-auto max-w-6xl flex items-center justify-between h-16 px-6">
-          <div className="flex items-center gap-2.5">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary text-primary-foreground font-bold text-sm">
-              T
-            </div>
-            <span className="text-lg font-bold tracking-tight text-foreground">
-              Torqr
-            </span>
-          </div>
+          <TorqrWordmark size="sm" theme="light" showTagline={false} />
           <div className="flex items-center gap-3">
             <Link href="/login">
               <Button variant="ghost" size="sm">
@@ -51,15 +45,15 @@ export default async function Home() {
       {/* Hero */}
       <section className="pt-32 pb-20 px-6">
         <div className="mx-auto max-w-4xl text-center">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-muted text-sm text-muted-foreground mb-8">
-            <ZapIcon className="h-3.5 w-3.5 text-secondary" />
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-border bg-brand-50 text-sm text-brand-600 mb-8">
+            <ZapIcon className="h-3.5 w-3.5 text-brand-accent" />
             Gebaut für Handwerksbetriebe
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[1.1]">
-            Der Hebel für
+            Heizungswartung
             <br />
-            <span className="text-secondary">dein Handwerk</span>
+            <span className="text-primary">einfach · automatisch</span>
           </h1>
 
           <p className="mt-6 text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
@@ -136,7 +130,7 @@ export default async function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 px-6 border-t border-border">
+      <section className="py-20 px-6 bg-brand-50 border-t border-brand-200">
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-2xl sm:text-3xl font-bold text-foreground">
             Bereit loszulegen?
@@ -158,14 +152,9 @@ export default async function Home() {
       {/* Footer */}
       <footer className="border-t border-border py-8 px-6">
         <div className="mx-auto max-w-5xl flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <div className="flex items-center justify-center w-6 h-6 rounded-md bg-primary text-primary-foreground font-bold text-xs">
-              T
-            </div>
-            <span className="text-sm font-semibold text-foreground">Torqr</span>
-          </div>
+          <TorqrWordmark size="sm" theme="light" showTagline={false} />
           <p className="text-sm text-muted-foreground">
-            &copy; {new Date().getFullYear()} Torqr. Alle Rechte vorbehalten.
+            &copy; {new Date().getFullYear()} torqr. Alle Rechte vorbehalten.
           </p>
         </div>
       </footer>
@@ -183,8 +172,8 @@ function FeatureCard({
   description: string;
 }) {
   return (
-    <div className="group rounded-xl border border-border bg-card p-6 hover:shadow-md hover:border-border/80 transition-all duration-200">
-      <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 text-primary mb-4">
+    <div className="group rounded-xl border border-border bg-card p-6 hover:shadow-md hover:border-brand-200 transition-all duration-200">
+      <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-brand-50 text-primary mb-4">
         <Icon className="h-5 w-5" />
       </div>
       <h3 className="text-base font-semibold text-foreground mb-2">{title}</h3>

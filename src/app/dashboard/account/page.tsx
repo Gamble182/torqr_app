@@ -29,11 +29,11 @@ export default async function AccountPage() {
       {isAdmin && (
         <Link
           href="/admin"
-          className="flex items-center justify-between p-4 rounded-xl border border-destructive/30 bg-destructive/5 hover:bg-destructive/10 transition-colors group"
+          className="flex items-center justify-between p-4 rounded-xl border border-brand-200 bg-brand-50 hover:bg-brand-100 transition-colors group"
         >
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-destructive/15">
-              <ShieldIcon className="h-4 w-4 text-destructive" />
+            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-brand-600/15">
+              <ShieldIcon className="h-4 w-4 text-brand-700" />
             </div>
             <div>
               <p className="text-sm font-semibold text-foreground">Admin Panel</p>

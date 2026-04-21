@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { TorqrIcon, TorqrWordmark } from '@/components/brand/TorqrIcon';
 import { Loader2Icon, AlertCircleIcon, CheckCircleIcon } from 'lucide-react';
 
 const loginSchema = z.object({
@@ -76,18 +77,15 @@ function LoginForm() {
       {/* Left panel — brand */}
       <div className="hidden lg:flex lg:w-120 xl:w-140 shrink-0 bg-primary items-center justify-center p-12">
         <div className="max-w-sm">
-          <div className="flex items-center gap-3 mb-8">
-            <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-white/20 text-white font-bold text-lg">
-              T
-            </div>
-            <span className="text-2xl font-bold text-white tracking-tight">
-              Torqr
-            </span>
+          <div className="mb-8">
+            <TorqrWordmark size="lg" theme="green" />
           </div>
           <h2 className="text-3xl font-bold text-white leading-tight mb-4">
-            Der Hebel für dein Handwerk
+            Heizungswartung
+            <br />
+            einfach · automatisch
           </h2>
-          <p className="text-primary-foreground/70 leading-relaxed">
+          <p className="text-white/70 leading-relaxed">
             Verwalten Sie Kunden, planen Sie Wartungen und digitalisieren Sie
             Ihren Betrieb — alles an einem Ort.
           </p>
@@ -98,13 +96,8 @@ function LoginForm() {
       <div className="flex-1 flex items-center justify-center px-6 py-12 bg-background">
         <div className="w-full max-w-105">
           {/* Mobile logo */}
-          <div className="lg:hidden flex items-center gap-2.5 mb-8">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary text-primary-foreground font-bold text-sm">
-              T
-            </div>
-            <span className="text-lg font-bold tracking-tight text-foreground">
-              Torqr
-            </span>
+          <div className="lg:hidden mb-8">
+            <TorqrWordmark size="md" theme="light" />
           </div>
 
           <Card className="border-0 shadow-none bg-transparent">
@@ -117,15 +110,15 @@ function LoginForm() {
             <form onSubmit={handleSubmit(onSubmit)}>
               <CardContent className="px-0 space-y-4">
                 {registered && (
-                  <div className="flex items-start gap-3 rounded-lg bg-success/10 border border-success/20 p-3 text-sm text-foreground">
-                    <CheckCircleIcon className="h-4 w-4 text-success mt-0.5 shrink-0" />
+                  <div className="flex items-start gap-3 rounded-lg bg-status-ok-bg border border-status-ok-border p-3 text-sm text-status-ok-text">
+                    <CheckCircleIcon className="h-4 w-4 mt-0.5 shrink-0" />
                     Registrierung erfolgreich! Bitte melden Sie sich an.
                   </div>
                 )}
 
                 {error && (
-                  <div className="flex items-start gap-3 rounded-lg bg-destructive/10 border border-destructive/20 p-3 text-sm text-foreground">
-                    <AlertCircleIcon className="h-4 w-4 text-destructive mt-0.5 shrink-0" />
+                  <div className="flex items-start gap-3 rounded-lg bg-status-overdue-bg border border-status-overdue-border p-3 text-sm text-status-overdue-text">
+                    <AlertCircleIcon className="h-4 w-4 mt-0.5 shrink-0" />
                     {error}
                   </div>
                 )}
@@ -173,7 +166,7 @@ function LoginForm() {
                 </Button>
                 <p className="text-center text-sm text-muted-foreground">
                   Noch kein Konto?{' '}
-                  <Link href="/register" className="font-medium text-foreground hover:underline">
+                  <Link href="/register" className="font-medium text-primary hover:underline">
                     Konto erstellen
                   </Link>
                 </p>

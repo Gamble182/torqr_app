@@ -42,9 +42,9 @@ function getMaintenanceUrgency(dateString: string | null) {
 
 function UrgencyBadge({ urgency }: { urgency: string }) {
   const config: Record<string, { label: string; style: string }> = {
-    overdue: { label: 'Überfällig', style: 'bg-destructive/10 text-destructive border-destructive/20' },
-    urgent: { label: 'Diese Woche', style: 'bg-orange-500/10 text-orange-600 border-orange-500/20' },
-    soon: { label: 'Bald fällig', style: 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20' },
+    overdue: { label: 'Überfällig', style: 'bg-status-overdue-bg text-status-overdue-text border-status-overdue-border' },
+    urgent: { label: 'Diese Woche', style: 'bg-status-due-bg text-status-due-text border-status-due-border' },
+    soon: { label: 'Bald fällig', style: 'bg-status-info-bg text-status-info-text border-status-info-border' },
     upcoming: { label: 'Geplant', style: 'bg-muted text-muted-foreground border-border' },
     none: { label: 'Keine Wartung', style: 'bg-muted text-muted-foreground border-border' },
   };
@@ -58,7 +58,7 @@ function UrgencyBadge({ urgency }: { urgency: string }) {
 
 function TerminiertBadge() {
   return (
-    <span className="text-xs font-medium px-2 py-0.5 rounded-md border bg-green-500/10 text-green-700 border-green-500/20">
+    <span className="text-xs font-medium px-2 py-0.5 rounded-md border bg-status-ok-bg text-status-ok-text border-status-ok-border">
       Terminiert
     </span>
   );
@@ -110,7 +110,7 @@ export default function SystemsPage() {
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <div className="bg-card rounded-xl border border-border p-5">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-primary/10">
+            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-brand-50">
               <WrenchIcon className="h-4 w-4 text-primary" />
             </div>
             <div>
@@ -122,12 +122,12 @@ export default function SystemsPage() {
 
         <div className={`bg-card rounded-xl border p-5 ${overdueCount > 0 ? 'border-destructive/30' : 'border-border'}`}>
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-destructive/10">
-              <CalendarIcon className="h-4 w-4 text-destructive" />
+            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-status-overdue-bg">
+              <CalendarIcon className="h-4 w-4 text-status-overdue-text" />
             </div>
             <div>
               <p className="text-xs text-muted-foreground">Überfällige Wartungen</p>
-              <p className={`text-xl font-bold ${overdueCount > 0 ? 'text-destructive' : 'text-foreground'}`}>
+              <p className={`text-xl font-bold ${overdueCount > 0 ? 'text-status-overdue-text' : 'text-foreground'}`}>
                 {overdueCount}
               </p>
             </div>
@@ -175,7 +175,7 @@ export default function SystemsPage() {
                   <Link
                     key={system.id}
                     href={`/dashboard/systems/${system.id}`}
-                    className="group block p-4 rounded-xl border border-border hover:shadow-md hover:border-primary/20 transition-all"
+                    className="group block p-4 rounded-xl border border-border hover:shadow-md hover:border-brand-200 transition-all"
                   >
                     <div className="flex items-start justify-between mb-3">
                       <div className="flex items-center gap-2 flex-1 min-w-0">
@@ -214,7 +214,7 @@ export default function SystemsPage() {
                         </>
                       )}
                       {nextBooking ? (
-                        <div className="flex items-center gap-1.5 text-green-700">
+                        <div className="flex items-center gap-1.5 text-status-ok-text">
                           <CalendarIcon className="h-3 w-3" />
                           <span>
                             Termin: {format(new Date(nextBooking.startTime), 'dd. MMM yyyy, HH:mm', { locale: de })} Uhr

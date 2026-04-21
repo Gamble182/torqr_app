@@ -207,7 +207,7 @@ export default function CustomersPage() {
             <Link
               key={customer.id}
               href={`/dashboard/customers/${customer.id}`}
-              className="group block bg-card rounded-xl border border-border p-4 hover:shadow-md hover:border-primary/20 transition-all"
+              className="group block bg-card rounded-xl border border-border p-4 hover:shadow-md hover:border-brand-200 transition-all"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="flex-1 min-w-0">

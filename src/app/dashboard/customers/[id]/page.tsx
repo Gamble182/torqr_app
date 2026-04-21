@@ -39,8 +39,8 @@ import { SYSTEM_TYPE_LABELS } from '@/lib/constants';
 
 const getEmailOptInDisplay = (status: 'NONE' | 'CONFIRMED' | 'UNSUBSCRIBED', hasEmail: boolean) => {
   if (!hasEmail) return null;
-  if (status === 'CONFIRMED') return { label: 'E-Mail-Erinnerungen aktiv', color: 'text-success', bg: 'bg-success/10 border-success/20' };
-  if (status === 'UNSUBSCRIBED') return { label: 'Abgemeldet', color: 'text-warning-foreground', bg: 'bg-warning/10 border-warning/20' };
+  if (status === 'CONFIRMED') return { label: 'E-Mail-Erinnerungen aktiv', color: 'text-success', bg: 'bg-status-ok-bg border-success/20' };
+  if (status === 'UNSUBSCRIBED') return { label: 'Abgemeldet', color: 'text-warning-foreground', bg: 'bg-status-due-bg border-warning/20' };
   return { label: 'Keine E-Mail-Erinnerungen', color: 'text-muted-foreground', bg: 'bg-muted/50 border-border' };
 };
 
@@ -184,7 +184,7 @@ export default function CustomerDetailPage() {
               size="sm"
               onClick={handleDelete}
               disabled={deleteCustomer.isPending}
-              className="h-9 min-w-11 text-destructive hover:bg-destructive/10 hover:border-destructive/30"
+              className="h-9 min-w-11 text-destructive hover:bg-status-overdue-bg hover:border-destructive/30"
             >
               {deleteCustomer.isPending ? <Loader2Icon className="h-3.5 w-3.5 animate-spin" /> : <TrashIcon className="h-3.5 w-3.5" />}
               Löschen
@@ -197,7 +197,7 @@ export default function CustomerDetailPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <Card className="p-4">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-primary/10">
+            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-brand-50">
               <WrenchIcon className="h-4 w-4 text-primary" />
             </div>
             <div>
@@ -208,7 +208,7 @@ export default function CustomerDetailPage() {
         </Card>
         <Card className="p-4">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-success/10">
+            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-status-ok-bg">
               <CheckCircle2Icon className="h-4 w-4 text-success" />
             </div>
             <div>
@@ -219,7 +219,7 @@ export default function CustomerDetailPage() {
         </Card>
         <Card className="p-4">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-warning/10">
+            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-status-due-bg">
               <ClockIcon className="h-4 w-4 text-warning" />
             </div>
             <div>
@@ -230,7 +230,7 @@ export default function CustomerDetailPage() {
         </Card>
         <Card className="p-4">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-destructive/10">
+            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-status-overdue-bg">
               <AlertCircleIcon className="h-4 w-4 text-destructive" />
             </div>
             <div>
@@ -350,19 +350,19 @@ export default function CustomerDetailPage() {
                               {SYSTEM_TYPE_LABELS[system.catalog.systemType] ?? system.catalog.systemType}
                             </span>
                             {maintenanceStatus === 'overdue' && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-destructive/10 text-destructive border border-destructive/20">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-status-overdue-bg text-destructive border border-destructive/20">
                                 <AlertCircleIcon className="h-3 w-3" />
                                 Überfällig
                               </span>
                             )}
                             {maintenanceStatus === 'upcoming' && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-warning/10 text-warning-foreground border border-warning/20">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-status-due-bg text-warning-foreground border border-warning/20">
                                 <ClockIcon className="h-3 w-3" />
                                 Bald fällig
                               </span>
                             )}
                             {maintenanceStatus === 'ok' && system.nextMaintenance && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-success/10 text-success border border-success/20">
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-status-ok-bg text-success border border-success/20">
                                 <CheckCircle2Icon className="h-3 w-3" />
                                 OK
                               </span>
@@ -376,7 +376,7 @@ export default function CustomerDetailPage() {
                           <Button
                             size="sm"
                             onClick={() => { setSelectedSystem(system); setShowMaintenanceForm(true); }}
-                            className="bg-success hover:bg-success/90 text-success-foreground h-9 min-w-11"
+                            className="bg-primary hover:bg-brand-600 text-primary-foreground h-9 min-w-11"
                           >
                             <CheckCircle2Icon className="h-3.5 w-3.5" />
                             Erledigt
@@ -401,7 +401,7 @@ export default function CustomerDetailPage() {
                             variant="outline" size="icon-sm"
                             onClick={() => handleDeleteSystem(system.id, systemLabel)}
                             disabled={deleteSystem.isPending}
-                            className="w-9 h-9 text-destructive hover:bg-destructive/10 hover:border-destructive/30"
+                            className="w-9 h-9 text-destructive hover:bg-status-overdue-bg hover:border-destructive/30"
                           >
                             {deleteSystem.isPending ? <Loader2Icon className="h-3.5 w-3.5 animate-spin" /> : <TrashIcon className="h-3.5 w-3.5" />}
                           </Button>
@@ -429,8 +429,8 @@ export default function CustomerDetailPage() {
                         )}
                         {system.nextMaintenance && (
                           <div className={`p-2.5 rounded-lg ${
-                            maintenanceStatus === 'overdue' ? 'bg-destructive/10'
-                              : maintenanceStatus === 'upcoming' ? 'bg-warning/10'
+                            maintenanceStatus === 'overdue' ? 'bg-status-overdue-bg'
+                              : maintenanceStatus === 'upcoming' ? 'bg-status-due-bg'
                               : 'bg-muted/50'
                           }`}>
                             <p className="text-xs text-muted-foreground mb-0.5">Nächste Wartung</p>
@@ -487,7 +487,7 @@ export default function CustomerDetailPage() {
                       }`}
                     >
                       <div className={`flex items-center justify-center w-9 h-9 rounded-lg shrink-0 ${
-                        isCancelled ? 'bg-muted' : isPast ? 'bg-muted' : 'bg-primary/10'
+                        isCancelled ? 'bg-muted' : isPast ? 'bg-muted' : 'bg-brand-50'
                       }`}>
                         {isCancelled
                           ? <XCircleIcon className="h-4 w-4 text-muted-foreground" />
@@ -505,7 +505,7 @@ export default function CustomerDetailPage() {
                             </span>
                           )}
                           {!isPast && !isCancelled && (
-                            <span className="text-xs px-1.5 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
+                            <span className="text-xs px-1.5 py-0.5 rounded bg-brand-50 text-primary border border-primary/20">
                               Bevorstehend
                             </span>
                           )}

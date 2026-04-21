@@ -68,18 +68,18 @@ export default function DashboardPage() {
 
   const getUrgencyStyles = (urgency: string) => {
     switch (urgency) {
-      case 'overdue': return 'border-l-destructive bg-destructive/5';
-      case 'urgent': return 'border-l-warning bg-warning/5';
-      case 'soon': return 'border-l-secondary bg-secondary/5';
+      case 'overdue': return 'border-l-status-overdue-border bg-status-overdue-bg';
+      case 'urgent': return 'border-l-status-due-border bg-status-due-bg';
+      case 'soon': return 'border-l-status-info-border bg-status-info-bg';
       default: return 'border-l-border bg-card';
     }
   };
 
   const getUrgencyBadge = (urgency: string) => {
     const styles: Record<string, string> = {
-      overdue: 'bg-destructive/10 text-destructive border-destructive/20',
-      urgent: 'bg-warning/10 text-warning-foreground border-warning/20',
-      soon: 'bg-secondary/10 text-secondary border-secondary/20',
+      overdue: 'bg-status-overdue-bg text-status-overdue-text border-status-overdue-border',
+      urgent: 'bg-status-due-bg text-status-due-text border-status-due-border',
+      soon: 'bg-status-info-bg text-status-info-text border-status-info-border',
       upcoming: 'bg-muted text-muted-foreground border-border',
     };
     const labels: Record<string, string> = {
@@ -109,10 +109,10 @@ export default function DashboardPage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <Link
           href="/dashboard/customers"
-          className="group bg-card rounded-xl border border-border p-5 hover:shadow-md hover:border-primary/20 transition-all"
+          className="group bg-card rounded-xl border border-border p-5 hover:shadow-md hover:border-brand-200 transition-all"
         >
           <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-primary/10">
+            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-brand-50">
               <UsersIcon className="h-4.5 w-4.5 text-primary" />
             </div>
             <ArrowRightIcon className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -123,11 +123,11 @@ export default function DashboardPage() {
 
         <Link
           href="/dashboard/systems"
-          className="group bg-card rounded-xl border border-border p-5 hover:shadow-md hover:border-secondary/20 transition-all"
+          className="group bg-card rounded-xl border border-border p-5 hover:shadow-md hover:border-brand-accent-light transition-all"
         >
           <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-secondary/10">
-              <WrenchIcon className="h-4.5 w-4.5 text-secondary" />
+            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-brand-accent-surface">
+              <WrenchIcon className="h-4.5 w-4.5 text-brand-accent" />
             </div>
             <ArrowRightIcon className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
@@ -139,17 +139,17 @@ export default function DashboardPage() {
           href="/dashboard/wartungen?status=overdue"
           className={`group bg-card rounded-xl border p-5 hover:shadow-md transition-all ${
             (stats?.overdueMaintenances || 0) > 0
-              ? 'border-destructive/30 hover:border-destructive/50'
-              : 'border-border hover:border-destructive/20'
+              ? 'border-status-overdue-border hover:border-status-overdue-text'
+              : 'border-border hover:border-status-overdue-border'
           }`}
         >
           <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-destructive/10">
-              <AlertTriangleIcon className="h-4.5 w-4.5 text-destructive" />
+            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-status-overdue-bg">
+              <AlertTriangleIcon className="h-4.5 w-4.5 text-status-overdue-text" />
             </div>
             <ArrowRightIcon className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
-          <p className={`text-2xl font-bold ${(stats?.overdueMaintenances || 0) > 0 ? 'text-destructive' : 'text-foreground'}`}>
+          <p className={`text-2xl font-bold ${(stats?.overdueMaintenances || 0) > 0 ? 'text-status-overdue-text' : 'text-foreground'}`}>
             {stats?.overdueMaintenances || 0}
           </p>
           <p className="text-xs text-muted-foreground mt-0.5">Überfällig</p>
@@ -157,8 +157,8 @@ export default function DashboardPage() {
 
         <div className="bg-card rounded-xl border border-border p-5">
           <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-warning/10">
-              <CalendarIcon className="h-4.5 w-4.5 text-warning" />
+            <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-status-due-bg">
+              <CalendarIcon className="h-4.5 w-4.5 text-status-due-text" />
             </div>
             <TrendingUpIcon className="h-4 w-4 text-muted-foreground/40" />
           </div>
@@ -219,7 +219,7 @@ export default function DashboardPage() {
                           <PhoneIcon className="h-3 w-3" />
                           <a
                             href={`tel:${system.customer.phone}`}
-                            className="hover:text-secondary"
+                            className="hover:text-primary"
                             onClick={(e) => e.stopPropagation()}
                           >
                             {system.customer.phone}
@@ -242,7 +242,7 @@ export default function DashboardPage() {
                           e.stopPropagation();
                           setSelectedSystem({ id: system.id, label: systemLabel, systemType: system.catalog.systemType });
                         }}
-                        className="bg-success hover:bg-success/90 text-success-foreground shrink-0 h-10 min-w-11"
+                        className="bg-primary hover:bg-brand-600 text-primary-foreground shrink-0 h-10 min-w-11"
                       >
                         <CheckCircle2Icon className="h-3.5 w-3.5" />
                         <span className="hidden sm:inline">Erledigt</span>
@@ -278,8 +278,8 @@ export default function DashboardPage() {
                   href={`/dashboard/systems/${maintenance.system.catalog.id ?? ''}`}
                   className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 transition-colors"
                 >
-                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-secondary/10 shrink-0">
-                    <WrenchIcon className="h-4 w-4 text-secondary" />
+                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-50 shrink-0">
+                    <WrenchIcon className="h-4 w-4 text-primary" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-foreground truncate">
@@ -324,11 +324,11 @@ export default function DashboardPage() {
               {upcomingBookings.map((booking) => (
                 <div
                   key={booking.id}
-                  className="flex items-center gap-4 p-4 rounded-lg border border-green-500/20 bg-green-500/5 cursor-pointer hover:shadow-sm transition-all"
+                  className="flex items-center gap-4 p-4 rounded-lg border border-status-ok-border bg-status-ok-bg cursor-pointer hover:shadow-sm transition-all"
                   onClick={() => booking.customer && router.push(`/dashboard/customers/${booking.customer.id}`)}
                 >
-                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-green-500/10 shrink-0">
-                    <CalendarIcon className="h-4 w-4 text-green-700" />
+                  <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-50 shrink-0">
+                    <CalendarIcon className="h-4 w-4 text-status-ok-text" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-foreground truncate">

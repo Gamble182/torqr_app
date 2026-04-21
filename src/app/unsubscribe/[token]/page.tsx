@@ -40,7 +40,8 @@ export default function UnsubscribePage() {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: '#f9fafb',
+        backgroundColor: '#F7F7F7',
+        fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif",
         padding: '24px',
       }}
     >
@@ -48,40 +49,39 @@ export default function UnsubscribePage() {
         style={{
           maxWidth: '400px',
           width: '100%',
-          backgroundColor: '#ffffff',
-          borderRadius: '8px',
+          backgroundColor: '#FFFFFF',
+          borderRadius: '12px',
           padding: '32px',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+          border: '1px solid #E0E0E0',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
         }}
       >
         {state === 'done' ? (
           <>
-            <p style={{ fontSize: '24px', margin: '0 0 12px' }}>✅</p>
             <h1
-              style={{ fontSize: '18px', fontWeight: '600', margin: '0 0 8px', color: '#111827' }}
+              style={{ fontSize: '18px', fontWeight: 600, margin: '0 0 8px', color: '#1A1A1A' }}
             >
               Abgemeldet
             </h1>
-            <p style={{ color: '#6b7280', fontSize: '14px', margin: '0' }}>{message}</p>
+            <p style={{ color: '#5C5C5C', fontSize: '14px', margin: '0' }}>{message}</p>
           </>
         ) : state === 'error' ? (
           <>
-            <p style={{ fontSize: '24px', margin: '0 0 12px' }}>⚠️</p>
             <h1
-              style={{ fontSize: '18px', fontWeight: '600', margin: '0 0 8px', color: '#111827' }}
+              style={{ fontSize: '18px', fontWeight: 600, margin: '0 0 8px', color: '#1A1A1A' }}
             >
               Fehler
             </h1>
-            <p style={{ color: '#6b7280', fontSize: '14px', margin: '0' }}>{message}</p>
+            <p style={{ color: '#5C5C5C', fontSize: '14px', margin: '0' }}>{message}</p>
           </>
         ) : (
           <>
             <h1
-              style={{ fontSize: '18px', fontWeight: '600', margin: '0 0 8px', color: '#111827' }}
+              style={{ fontSize: '18px', fontWeight: 600, margin: '0 0 8px', color: '#1A1A1A' }}
             >
               E-Mail-Erinnerungen abbestellen
             </h1>
-            <p style={{ color: '#6b7280', fontSize: '14px', margin: '0 0 24px' }}>
+            <p style={{ color: '#5C5C5C', fontSize: '14px', margin: '0 0 24px' }}>
               Möchten Sie keine Wartungserinnerungen mehr erhalten? Klicken Sie auf Abmelden.
             </p>
             <button
@@ -89,13 +89,13 @@ export default function UnsubscribePage() {
               disabled={state === 'loading'}
               style={{
                 width: '100%',
-                padding: '10px 16px',
-                backgroundColor: '#2563eb',
-                color: '#ffffff',
+                padding: '12px 16px',
+                backgroundColor: '#008000',
+                color: '#FFFFFF',
                 border: 'none',
-                borderRadius: '6px',
+                borderRadius: '8px',
                 fontSize: '14px',
-                fontWeight: '600',
+                fontWeight: 600,
                 cursor: state === 'loading' ? 'not-allowed' : 'pointer',
                 opacity: state === 'loading' ? 0.7 : 1,
               }}
