@@ -230,6 +230,16 @@ export const customerSystemUpdateSchema = z.object({
 });
 
 // ============================================================================
+// BOOKING SCHEMAS
+// ============================================================================
+
+export const manualBookingCreateSchema = z.object({
+  systemId: uuidSchema,
+  startTime: z.string().datetime('Ungültiges Datum'),
+  endTime: z.string().datetime('Ungültiges Datum').optional(),
+});
+
+// ============================================================================
 // MAINTENANCE SCHEMAS
 // ============================================================================
 

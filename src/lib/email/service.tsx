@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { buildUnsubscribeUrl } from './unsubscribe-token';
 import { ReminderEmail } from './templates/ReminderEmail';
 import { WeeklySummaryEmail } from './templates/WeeklySummaryEmail';
+import { BookingConfirmationEmail } from './templates/BookingConfirmationEmail';
 import { format, addDays, subDays, differenceInDays } from 'date-fns';
 import { de } from 'date-fns/locale';
 type ReminderType = 'REMINDER_4_WEEKS' | 'REMINDER_1_WEEK';
@@ -87,6 +88,69 @@ export async function sendReminder(
 
   if (error) {
     throw new Error(`Resend error for system ${systemId}: ${JSON.stringify(error)}`);
+  }
+}
+
+/**
+ * Send a booking confirmation email to a customer.
+ * Called after a manual booking is created by office staff.
+ * No-ops silently if the customer has no email.
+ */
+export async function sendBookingConfirmation(bookingId: string): Promise<void> {
+  const booking = await prisma.booking.findUnique({
+    where: { id: bookingId },
+    include: {
+      customer: true,
+      system: {
+        include: {
+          catalog: true,
+          user: { select: { name: true, email: true, phone: true, companyName: true } },
+        },
+      },
+    },
+  });
+
+  if (!booking?.customer?.email || !booking.system) return;
+
+  const { customer, system } = booking;
+  const { catalog, user } = system;
+
+  const appointmentDate = format(booking.startTime, "EEEE, dd. MMMM yyyy", { locale: de });
+  const appointmentTime = format(booking.startTime, "HH:mm 'Uhr'", { locale: de });
+
+  const html = await render(
+    React.createElement(BookingConfirmationEmail, {
+      customerName: customer.name,
+      appointmentDate,
+      appointmentTime,
+      heaterManufacturer: catalog.manufacturer,
+      heaterModel: catalog.name,
+      heaterSerialNumber: system.serialNumber,
+      maxPhone: user?.phone ?? '',
+      maxEmail: user?.email ?? '',
+      maxName: user?.name ?? '',
+      maxCompanyName: user?.companyName ?? null,
+    })
+  );
+
+  const { data, error } = await resend.emails.send({
+    from: FROM_EMAIL,
+    to: customer.email as string,
+    subject: `Ihr Wartungstermin am ${appointmentDate}`,
+    html,
+  });
+
+  await prisma.emailLog.create({
+    data: {
+      customerId: customer.id,
+      type: 'BOOKING_CONFIRMATION',
+      resendId: data?.id ?? null,
+      error: error ? JSON.stringify(error) : null,
+    },
+  });
+
+  if (error) {
+    throw new Error(`Resend error for booking ${bookingId}: ${JSON.stringify(error)}`);
   }
 }
 

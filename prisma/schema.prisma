@@ -213,6 +213,7 @@ enum EmailType {
   REMINDER_4_WEEKS
   REMINDER_1_WEEK
   WEEKLY_SUMMARY
+  BOOKING_CONFIRMATION
 }
 
 // ============================================================================

@@ -13,12 +13,14 @@ import {
   MapPinIcon,
   ChevronRightIcon,
   CalendarIcon,
+  CalendarPlusIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCustomerSystem, useDeleteCustomerSystem } from '@/hooks/useCustomerSystems';
 import { SystemAssignmentModal } from '@/components/system-form/SystemAssignmentModal';
 import { MaintenanceFormModal } from '@/components/MaintenanceFormModal';
 import { MaintenanceHistory } from '@/components/MaintenanceHistory';
+import { BookingFormModal } from '@/components/BookingFormModal';
 
 const SYSTEM_TYPE_LABELS: Record<string, string> = {
   HEATING: 'Heizung',
@@ -36,6 +38,7 @@ export default function SystemDetailPage() {
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [showMaintenanceForm, setShowMaintenanceForm] = useState(false);
+  const [showBookingForm, setShowBookingForm] = useState(false);
 
   const handleDelete = async () => {
     if (!confirm('System wirklich löschen? Alle Wartungseinträge werden ebenfalls gelöscht.')) return;
@@ -154,10 +157,16 @@ export default function SystemDetailPage() {
       {/* Maintenance section */}
       <div className="flex justify-between items-center">
         <h2 className="text-base font-semibold text-foreground">Wartungshistorie</h2>
-        <Button size="sm" onClick={() => setShowMaintenanceForm(true)}>
-          <WrenchIcon className="h-4 w-4 mr-2" />
-          Wartung eintragen
-        </Button>
+        <div className="flex gap-2">
+          <Button size="sm" variant="outline" onClick={() => setShowBookingForm(true)}>
+            <CalendarPlusIcon className="h-4 w-4 mr-2" />
+            Termin eintragen
+          </Button>
+          <Button size="sm" onClick={() => setShowMaintenanceForm(true)}>
+            <WrenchIcon className="h-4 w-4 mr-2" />
+            Wartung eintragen
+          </Button>
+        </div>
       </div>
 
       <MaintenanceHistory maintenances={system.maintenances ?? []} onDelete={() => refetch()} />
@@ -178,6 +187,15 @@ export default function SystemDetailPage() {
           systemLabel={`${system.catalog.manufacturer} ${system.catalog.name}`}
           onClose={() => setShowMaintenanceForm(false)}
           onSuccess={() => { refetch(); setShowMaintenanceForm(false); }}
+        />
+      )}
+
+      {showBookingForm && (
+        <BookingFormModal
+          systemId={systemId}
+          systemLabel={`${system.catalog.manufacturer} ${system.catalog.name}`}
+          onClose={() => setShowBookingForm(false)}
+          onSuccess={() => { refetch(); setShowBookingForm(false); }}
         />
       )}
     </div>
