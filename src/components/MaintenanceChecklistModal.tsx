@@ -17,6 +17,9 @@ import {
   ChevronLeftIcon,
   CheckCircle2Icon,
   ClipboardListIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  PlusIcon,
 } from 'lucide-react';
 import type { ChecklistSnapshot } from '@/types/checklist';
 import { CHECKLIST_DEFAULTS } from '@/lib/checklist-defaults';
@@ -52,6 +55,10 @@ export function MaintenanceChecklistModal({
   const [date, setDate] = useState(today);
   const [loading, setLoading] = useState(false);
   const [uploadingPhotos, setUploadingPhotos] = useState(false);
+  const [followUps, setFollowUps] = useState<Array<{ label: string; description: string }>>([]);
+  const [showFollowUps, setShowFollowUps] = useState(false);
+  const [newFollowUpLabel, setNewFollowUpLabel] = useState('');
+  const [newFollowUpDesc, setNewFollowUpDesc] = useState('');
 
   const { data: customItems } = useChecklistItems(systemId);
 
@@ -106,6 +113,18 @@ export function MaintenanceChecklistModal({
     setPhotos((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const addFollowUp = () => {
+    const label = newFollowUpLabel.trim();
+    if (!label) return;
+    setFollowUps((prev) => [...prev, { label, description: newFollowUpDesc.trim() }]);
+    setNewFollowUpLabel('');
+    setNewFollowUpDesc('');
+  };
+
+  const removeFollowUp = (index: number) => {
+    setFollowUps((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async () => {
     setLoading(true);
     try {
@@ -157,6 +176,26 @@ export function MaintenanceChecklistModal({
 
       const result = await res.json();
       if (result.success) {
+        // Create follow-up jobs if any were added
+        if (followUps.length > 0 && result.data?.id) {
+          try {
+            await Promise.all(
+              followUps.map((fu) =>
+                fetch(`/api/systems/${systemId}/follow-ups`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    label: fu.label,
+                    description: fu.description || null,
+                    maintenanceId: result.data.id,
+                  }),
+                })
+              )
+            );
+          } catch {
+            toast.error('Wartung gespeichert, aber Fehler beim Erstellen der Nachfolgeaufträge');
+          }
+        }
         toast.success('Wartung erfolgreich eingetragen!');
         onSuccess();
       } else {
@@ -348,6 +387,88 @@ export function MaintenanceChecklistModal({
                 <p className="mt-1 text-xs text-muted-foreground">
                   JPEG, PNG oder WebP &middot; Max. 5MB pro Foto
                 </p>
+              </div>
+
+              {/* Follow-up jobs section */}
+              <div className="border-t border-border pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowFollowUps(!showFollowUps)}
+                  className="flex items-center gap-2 text-sm font-medium text-foreground hover:text-primary transition-colors w-full"
+                >
+                  {showFollowUps ? (
+                    <ChevronUpIcon className="h-4 w-4" />
+                  ) : (
+                    <ChevronDownIcon className="h-4 w-4" />
+                  )}
+                  Nachfolgeauftrag hinzufügen?
+                  {followUps.length > 0 && (
+                    <span className="text-xs px-1.5 py-0.5 rounded bg-status-due-bg text-warning-foreground border border-warning/20">
+                      {followUps.length}
+                    </span>
+                  )}
+                </button>
+
+                {showFollowUps && (
+                  <div className="mt-3 space-y-3">
+                    {followUps.length > 0 && (
+                      <ul className="space-y-2">
+                        {followUps.map((fu, i) => (
+                          <li
+                            key={i}
+                            className="flex items-center gap-2 p-2 rounded-lg bg-muted/50 border border-border"
+                          >
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-foreground truncate">
+                                {fu.label}
+                              </p>
+                              {fu.description && (
+                                <p className="text-xs text-muted-foreground truncate">
+                                  {fu.description}
+                                </p>
+                              )}
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => removeFollowUp(i)}
+                              className="shrink-0 p-1 rounded text-muted-foreground hover:text-destructive transition-colors"
+                            >
+                              <TrashIcon className="h-3.5 w-3.5" />
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    <div className="space-y-2">
+                      <Input
+                        value={newFollowUpLabel}
+                        onChange={(e) => setNewFollowUpLabel(e.target.value)}
+                        placeholder="z.B. Wasserfilter erneuern"
+                        maxLength={200}
+                        className="text-base"
+                      />
+                      <Textarea
+                        value={newFollowUpDesc}
+                        onChange={(e) => setNewFollowUpDesc(e.target.value)}
+                        placeholder="Beschreibung (optional)"
+                        rows={2}
+                        maxLength={1000}
+                        className="resize-none text-base"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={addFollowUp}
+                        disabled={!newFollowUpLabel.trim()}
+                      >
+                        <PlusIcon className="h-3.5 w-3.5" />
+                        Hinzufügen
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
