@@ -29,6 +29,7 @@ model User {
   maintenances    Maintenance[]
   sessions        Session[]
   bookings        Booking[]
+  followUpJobs    FollowUpJob[]
 
   @@map("users")
 }
@@ -156,6 +157,7 @@ model CustomerSystem {
   maintenances   Maintenance[]
   bookings       Booking[]
   checklistItems CustomerSystemChecklistItem[]
+  followUpJobs   FollowUpJob[]
 
   @@index([userId])
   @@index([customerId])
@@ -182,6 +184,8 @@ model Maintenance {
   userId   String
   user     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  followUpJobs FollowUpJob[]
+
   @@index([systemId])
   @@index([userId])
   @@index([date])
@@ -202,6 +206,33 @@ model CustomerSystemChecklistItem {
 
   @@index([customerSystemId])
   @@map("customer_system_checklist_items")
+}
+
+// ============================================================================
+// FOLLOW-UP JOBS (tasks discovered during maintenance)
+// ============================================================================
+
+model FollowUpJob {
+  id            String    @id @default(uuid())
+  label         String
+  description   String?
+  photos        String[]  @default([])
+  completed     Boolean   @default(false)
+  completedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  system        CustomerSystem @relation(fields: [systemId], references: [id], onDelete: Cascade)
+  systemId      String
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        String
+  maintenance   Maintenance?   @relation(fields: [maintenanceId], references: [id], onDelete: SetNull)
+  maintenanceId String?
+
+  @@index([systemId])
+  @@index([userId])
+  @@index([completed])
+  @@map("follow_up_jobs")
 }
 
 // ============================================================================
