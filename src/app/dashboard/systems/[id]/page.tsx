@@ -21,13 +21,7 @@ import { SystemAssignmentModal } from '@/components/system-form/SystemAssignment
 import { MaintenanceChecklistModal } from '@/components/MaintenanceChecklistModal';
 import { MaintenanceHistory } from '@/components/MaintenanceHistory';
 import { BookingFormModal } from '@/components/BookingFormModal';
-
-const SYSTEM_TYPE_LABELS: Record<string, string> = {
-  HEATING: 'Heizung',
-  AC: 'Klimaanlage',
-  WATER_TREATMENT: 'Wasseraufbereitung',
-  ENERGY_STORAGE: 'Energiespeicher',
-};
+import { SYSTEM_TYPE_LABELS } from '@/lib/constants';
 
 export default function SystemDetailPage() {
   const params = useParams();

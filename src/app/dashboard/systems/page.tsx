@@ -20,13 +20,7 @@ import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { useCustomerSystems } from '@/hooks/useCustomerSystems';
 import type { SystemType } from '@/hooks/useCatalog';
-
-const SYSTEM_TYPE_LABELS: Record<SystemType, string> = {
-  HEATING: 'Heizung',
-  AC: 'Klimaanlage',
-  WATER_TREATMENT: 'Wasseraufbereitung',
-  ENERGY_STORAGE: 'Energiespeicher',
-};
+import { SYSTEM_TYPE_LABELS } from '@/lib/constants';
 
 const SYSTEM_TYPE_ICONS: Record<SystemType, React.ElementType> = {
   HEATING: FlameIcon,
