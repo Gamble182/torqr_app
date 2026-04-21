@@ -21,16 +21,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Verify the maintenance record belongs to the authenticated user
-    const maintenance = await prisma.maintenance.findFirst({
-      where: { id: maintenanceId, userId },
-      select: { id: true },
-    });
-    if (!maintenance) {
-      return NextResponse.json(
-        { success: false, error: 'Wartung nicht gefunden' },
-        { status: 404 }
-      );
+    // Only verify ownership when a real maintenance ID is provided.
+    // Temp IDs (e.g. "temp-1713123456") are used during pre-creation uploads
+    // and are already scoped to the user via the storage path prefix.
+    const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (UUID_REGEX.test(maintenanceId)) {
+      const maintenance = await prisma.maintenance.findFirst({
+        where: { id: maintenanceId, userId },
+        select: { id: true },
+      });
+      if (!maintenance) {
+        return NextResponse.json(
+          { success: false, error: 'Wartung nicht gefunden' },
+          { status: 404 }
+        );
+      }
     }
 
     if (!ALLOWED_TYPES.includes(file.type)) {
