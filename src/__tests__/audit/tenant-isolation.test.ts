@@ -31,6 +31,9 @@ const TENANT_ROUTES = [
   'user/password/route.ts',
   'user/preferences/route.ts',
   'user/send-weekly-summary/route.ts',
+  'customers/[id]/email-logs/route.ts',
+  'systems/[id]/checklist-items/route.ts',
+  'systems/[id]/checklist-items/[itemId]/route.ts',
 ];
 
 // Routes intentionally exempt from userId scoping — document why.

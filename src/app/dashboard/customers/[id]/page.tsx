@@ -33,7 +33,8 @@ import {
   InboxIcon,
 } from 'lucide-react';
 import { SystemAssignmentModal } from '@/components/system-form/SystemAssignmentModal';
-import { MaintenanceFormModal } from '@/components/MaintenanceFormModal';
+import { MaintenanceChecklistModal } from '@/components/MaintenanceChecklistModal';
+import { SystemChecklistManager } from '@/components/SystemChecklistManager';
 
 const SYSTEM_TYPE_LABELS: Record<string, string> = {
   HEATING: 'Heizung',
@@ -449,6 +450,8 @@ export default function CustomerDetailPage() {
                           </div>
                         )}
                       </div>
+
+                      <SystemChecklistManager systemId={system.id} />
                     </div>
                   );
                 })}
@@ -659,9 +662,10 @@ export default function CustomerDetailPage() {
       )}
 
       {showMaintenanceForm && selectedSystem && (
-        <MaintenanceFormModal
+        <MaintenanceChecklistModal
           systemId={selectedSystem.id}
           systemLabel={`${selectedSystem.catalog.manufacturer} ${selectedSystem.catalog.name}`}
+          systemType={selectedSystem.catalog.systemType}
           onClose={() => { setShowMaintenanceForm(false); setSelectedSystem(null); }}
           onSuccess={() => { setShowMaintenanceForm(false); setSelectedSystem(null); refetch(); refetchSystems(); }}
         />

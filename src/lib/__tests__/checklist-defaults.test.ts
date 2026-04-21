@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { CHECKLIST_DEFAULTS } from './checklist-defaults';
+import { CHECKLIST_DEFAULTS } from '../checklist-defaults';
 
 const SYSTEM_TYPES = ['HEATING', 'AC', 'WATER_TREATMENT', 'ENERGY_STORAGE'];
 

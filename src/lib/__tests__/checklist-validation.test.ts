@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { checklistSnapshotSchema, checklistItemCreateSchema } from './validations';
+import { checklistSnapshotSchema, checklistItemCreateSchema } from '../validations';
 
 describe('checklistSnapshotSchema', () => {
   it('accepts a valid snapshot with items', () => {

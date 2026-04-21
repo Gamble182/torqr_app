@@ -18,7 +18,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { useCustomerSystem, useDeleteCustomerSystem } from '@/hooks/useCustomerSystems';
 import { SystemAssignmentModal } from '@/components/system-form/SystemAssignmentModal';
-import { MaintenanceFormModal } from '@/components/MaintenanceFormModal';
+import { MaintenanceChecklistModal } from '@/components/MaintenanceChecklistModal';
 import { MaintenanceHistory } from '@/components/MaintenanceHistory';
 import { BookingFormModal } from '@/components/BookingFormModal';
 
@@ -182,9 +182,10 @@ export default function SystemDetailPage() {
       )}
 
       {showMaintenanceForm && (
-        <MaintenanceFormModal
+        <MaintenanceChecklistModal
           systemId={systemId}
           systemLabel={`${system.catalog.manufacturer} ${system.catalog.name}`}
+          systemType={system.catalog.systemType}
           onClose={() => setShowMaintenanceForm(false)}
           onSuccess={() => { refetch(); setShowMaintenanceForm(false); }}
         />
