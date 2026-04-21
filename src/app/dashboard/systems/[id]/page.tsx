@@ -20,6 +20,7 @@ import { useCustomerSystem, useDeleteCustomerSystem } from '@/hooks/useCustomerS
 import { SystemAssignmentModal } from '@/components/system-form/SystemAssignmentModal';
 import { MaintenanceChecklistModal } from '@/components/MaintenanceChecklistModal';
 import { MaintenanceHistory } from '@/components/MaintenanceHistory';
+import { FollowUpSection } from '@/components/FollowUpSection';
 import { BookingFormModal } from '@/components/BookingFormModal';
 import { SYSTEM_TYPE_LABELS } from '@/lib/constants';
 
@@ -147,6 +148,9 @@ export default function SystemDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Follow-up jobs */}
+      <FollowUpSection systemId={systemId} />
 
       {/* Maintenance section */}
       <div className="flex justify-between items-center">
