@@ -53,7 +53,6 @@ These are mostly Cal.com dashboard settings, not code changes. Can be done in on
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| 2 | Email | Email deliverability — weekly summary and reminders land in GMX junk. Domain reputation improves over time; consider adding DMARC record to accelerate. | Medium | 2026-04-14 |
 | 13 | Email | Weekly summary content refinement — review copy, structure, and data shown. Account page is now live, so this is unblocked. | Medium | 2026-04-15 |
 | 40 | Feature | Editable email templates — allow users to customize reminder email text in app settings. Reference: Tooltime template from pilot customer. | Medium | 2026-04-16 |
 
@@ -63,7 +62,6 @@ Features for technicians working on-site. The digital checklist (#35) is a key d
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| 35 | Feature | Digital maintenance checklist — technicians fill out a per-system-type checklist during maintenance, check off items on mobile, sign digitally. Acts as digital Arbeitsbericht. | High | 2026-04-16 |
 | 27 | Feature | Follow-up jobs (Nachfolgeaufträge) — section/tab for tasks discovered during maintenance (e.g. "Wasserfilter erneuern", "Angebot Klimaanlage"). Checkable items, photo attachments for quoting. | Medium | 2026-04-16 |
 
 ### Workforce & Scheduling
@@ -110,13 +108,11 @@ Ideas worth keeping in mind but not planned for current sprints. No implementati
 
 Items are grouped by sprint / work session, ordered newest first.
 
-### Feature Branch: maintenance-checklist — Task 1 (2026-04-21)
+### Sprint 18 — Digital Maintenance Checklist (2026-04-21)
 
 | # | Area | Description | Resolved |
 |---|------|-------------|----------|
-| TDD-1 | Foundation | Created `src/types/checklist.ts` with `ChecklistItemSnapshot` and `ChecklistSnapshot` types — snapshot structure supports item labels, checked state, custom flag, and ISO 8601 confirmation timestamp. | 2026-04-21 |
-| TDD-2 | Foundation | Created `src/lib/checklist-defaults.ts` with `CHECKLIST_DEFAULTS` record — provides default checklist items (German) for all 4 system types: HEATING (10 items), AC (7 items), WATER_TREATMENT (6 items), ENERGY_STORAGE (6 items). | 2026-04-21 |
-| TDD-3 | Testing | Created `src/lib/checklist-defaults.test.ts` with 4 Vitest tests — verifies all system types have entries, minimum 5 items per type, no empty strings, and unknown type fallback. All tests passing. | 2026-04-21 |
+| 35 | Feature | Digital maintenance checklist — 3-step `MaintenanceChecklistModal` (checklist → notes/photos → confirm). Per-system-type defaults (HEATING 10, AC 7, WATER_TREATMENT 6, ENERGY_STORAGE 6 items). `CustomerSystemChecklistItem` model for custom items per system. Immutable JSON snapshot on `Maintenance.checklistData`. API routes for checklist items CRUD. Integrated into system detail, customer detail, and dashboard pages. | 2026-04-21 |
 
 ### Sprint 17 — Quick Wins: Security, Dashboard Bookings, Email Log (2026-04-21)
 
