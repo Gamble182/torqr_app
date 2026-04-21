@@ -240,6 +240,29 @@ export const manualBookingCreateSchema = z.object({
 });
 
 // ============================================================================
+// CHECKLIST SCHEMAS
+// ============================================================================
+
+export const checklistItemSnapshotSchema = z.object({
+  label: z.string().min(1).max(200),
+  checked: z.boolean(),
+  isCustom: z.boolean(),
+});
+
+export const checklistSnapshotSchema = z.object({
+  items: z.array(checklistItemSnapshotSchema),
+  confirmedAt: z.string().datetime(),
+});
+
+export const checklistItemCreateSchema = z.object({
+  label: z
+    .string()
+    .trim()
+    .min(1, 'Bezeichnung ist erforderlich')
+    .max(200, 'Bezeichnung zu lang'),
+});
+
+// ============================================================================
 // MAINTENANCE SCHEMAS
 // ============================================================================
 
@@ -252,6 +275,7 @@ export const maintenanceCreateSchema = z.object({
     .optional()
     .or(z.literal('')),
   photos: z.array(z.string().url('Invalid photo URL')).max(10, 'Maximum 10 photos allowed').optional(),
+  checklistData: checklistSnapshotSchema.optional().nullable(),
 });
 
 /**
