@@ -38,6 +38,7 @@ export async function POST(request: NextRequest) {
           date: maintenanceDate,
           notes: validatedData.notes || null,
           photos: validatedData.photos || [],
+          checklistData: validatedData.checklistData ?? undefined,
         },
         include: {
           system: {
