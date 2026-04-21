@@ -8,11 +8,11 @@ import { prisma } from '@/lib/prisma';
  */
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { userId } = await requireAuth();
-    const { id: customerId } = params;
+    const { id: customerId } = await params;
 
     // Verify customer belongs to this user before returning any data
     const customer = await prisma.customer.findFirst({
