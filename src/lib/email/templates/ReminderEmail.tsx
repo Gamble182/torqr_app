@@ -24,6 +24,8 @@ export interface ReminderEmailProps {
   maxName: string;
   maxCompanyName: string | null;
   unsubscribeUrl: string;
+  customGreeting?: string;
+  customBody?: string;
 }
 
 export function ReminderEmail({
@@ -39,6 +41,8 @@ export function ReminderEmail({
   maxName,
   maxCompanyName,
   unsubscribeUrl,
+  customGreeting,
+  customBody,
 }: ReminderEmailProps) {
   const heaterInfo = [heaterManufacturer, heaterModel].filter(Boolean).join(' ');
   const weekWord = weeksUntil === 1 ? 'Woche' : 'Wochen';
@@ -73,16 +77,26 @@ export function ReminderEmail({
             </Heading>
 
             <Text style={{ color: '#5C5C5C', margin: '0 0 8px', lineHeight: '1.7' }}>
-              Guten Tag {customerName},
+              {customGreeting ?? `Guten Tag ${customerName},`}
             </Text>
-            <Text style={{ color: '#5C5C5C', margin: '0 0 8px', lineHeight: '1.7' }}>
-              die letzte Wartung Ihrer Heizungsanlage liegt in{' '}
-              <strong style={{ color: '#1A1A1A' }}>{weeksUntil} {weekWord}</strong> genau ein Jahr zurück.
-            </Text>
-            <Text style={{ color: '#5C5C5C', margin: '0 0 24px', lineHeight: '1.7' }}>
-              Wir empfehlen, jetzt rechtzeitig einen neuen Wartungstermin zu buchen — regelmäßige
-              Wartungen sichern den effizienten Betrieb Ihrer Anlage und beugen teuren Reparaturen vor.
-            </Text>
+            {customBody ? (
+              customBody.split('\n').filter(Boolean).map((paragraph, i, arr) => (
+                <Text key={i} style={{ color: '#5C5C5C', margin: i === arr.length - 1 ? '0 0 24px' : '0 0 8px', lineHeight: '1.7' }}>
+                  {paragraph}
+                </Text>
+              ))
+            ) : (
+              <>
+                <Text style={{ color: '#5C5C5C', margin: '0 0 8px', lineHeight: '1.7' }}>
+                  die letzte Wartung Ihrer Heizungsanlage liegt in{' '}
+                  <strong style={{ color: '#1A1A1A' }}>{weeksUntil} {weekWord}</strong> genau ein Jahr zurück.
+                </Text>
+                <Text style={{ color: '#5C5C5C', margin: '0 0 24px', lineHeight: '1.7' }}>
+                  Wir empfehlen, jetzt rechtzeitig einen neuen Wartungstermin zu buchen — regelmäßige
+                  Wartungen sichern den effizienten Betrieb Ihrer Anlage und beugen teuren Reparaturen vor.
+                </Text>
+              </>
+            )}
 
             {/* Heater card */}
             <Section
