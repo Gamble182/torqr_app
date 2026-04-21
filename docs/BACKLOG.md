@@ -30,7 +30,6 @@ Booking is functional (webhook + customer resolution), but not yet linked to spe
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| 23 | Feature | Link booking to specific system — pass `systemId` in Cal.com URL metadata, store on Booking model, resolve in webhook handler. Prerequisite for #24 and #20. | High | 2026-04-16 |
 | 24 | UX | Show booked appointment on system card — once booking↔system link exists (#23), replace or augment "Nächste Wartung" date with actual booked slot (date + time). | Medium | 2026-04-16 |
 | 20 | Feature | "Terminiert" status badge — show on system cards that have a linked future Cal.com booking. Depends on #23. | Medium | 2026-04-15 |
 | 33 | Feature | Multi-system booking — if a customer has multiple systems with the same maintenance interval, allow selecting all for a single appointment. | Medium | 2026-04-16 |
@@ -53,7 +52,6 @@ These are mostly Cal.com dashboard settings, not code changes. Can be done in on
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| 39 | Email | Rephrase reminder email — current wording implies appointment is in one week. Correct meaning: "In one week it will have been a year since your last maintenance — please book." Copy must be updated. | High | 2026-04-16 |
 | 2 | Email | Email deliverability — weekly summary and reminders land in GMX junk. Domain reputation improves over time; consider adding DMARC record to accelerate. | Medium | 2026-04-14 |
 | 13 | Email | Weekly summary content refinement — review copy, structure, and data shown. Account page is now live, so this is unblocked. | Medium | 2026-04-15 |
 | 40 | Feature | Editable email templates — allow users to customize reminder email text in app settings. Reference: Tooltime template from pilot customer. | Medium | 2026-04-16 |
@@ -101,6 +99,18 @@ Relevant once multiple employees are on the platform.
 ## Completed / Resolved
 
 Items are grouped by sprint / work session, ordered newest first.
+
+### Sprint 13 — Booking ↔ System Link (2026-04-21)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 23 | Feature | `systemId` FK added to `Booking` model. Cal.com reminder URLs now embed `metadata[systemId]`. Webhook resolves and validates `systemId` against user scope before storing. `GET /api/bookings` returns system + catalog info. Unblocks #24 and #20. | 2026-04-21 |
+
+### Sprint 12 — Email Copy Fix (2026-04-20)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 39 | Email | Reminder email rephrased — wording now correctly states "last maintenance was X weeks ago, time to rebook" instead of implying a booked appointment is approaching. Card label changed from "Geplanter Wartungstermin" → "Wartung fällig ab". | 2026-04-20 |
 
 ### Sprint 11 — System Model Overhaul (2026-04-20)
 
