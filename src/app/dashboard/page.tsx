@@ -20,7 +20,7 @@ import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { useDashboardStats } from '@/hooks/useDashboard';
 import { useBookings } from '@/hooks/useBookings';
-import { MaintenanceFormModal } from '@/components/MaintenanceFormModal';
+import { MaintenanceChecklistModal } from '@/components/MaintenanceChecklistModal';
 import { Button } from '@/components/ui/button';
 
 export default function DashboardPage() {
@@ -31,7 +31,11 @@ export default function DashboardPage() {
   const upcomingBookings = (allBookings ?? [])
     .filter((b) => b.status === 'CONFIRMED' && new Date(b.startTime) >= new Date())
     .slice(0, 8);
-  const [selectedSystem, setSelectedSystem] = useState<{ id: string; label: string } | null>(null);
+  const [selectedSystem, setSelectedSystem] = useState<{
+    id: string;
+    label: string;
+    systemType: string;
+  } | null>(null);
 
   if (isLoading) {
     return (
@@ -236,7 +240,7 @@ export default function DashboardPage() {
                         size="sm"
                         onClick={(e) => {
                           e.stopPropagation();
-                          setSelectedSystem({ id: system.id, label: systemLabel });
+                          setSelectedSystem({ id: system.id, label: systemLabel, systemType: system.catalog.systemType });
                         }}
                         className="bg-success hover:bg-success/90 text-success-foreground shrink-0 h-10 min-w-11"
                       >
@@ -357,9 +361,10 @@ export default function DashboardPage() {
       </div>
 
       {selectedSystem && (
-        <MaintenanceFormModal
+        <MaintenanceChecklistModal
           systemId={selectedSystem.id}
           systemLabel={selectedSystem.label}
+          systemType={selectedSystem.systemType}
           onClose={() => setSelectedSystem(null)}
           onSuccess={() => {
             setSelectedSystem(null);
