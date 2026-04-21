@@ -51,10 +51,7 @@ These are mostly Cal.com dashboard settings, not code changes. Can be done in on
 
 ### Email System
 
-| # | Area | Description | Priority | Found |
-|---|------|-------------|----------|-------|
-| 13 | Email | Weekly summary content refinement — review copy, structure, and data shown. Account page is now live, so this is unblocked. | Medium | 2026-04-15 |
-| 40 | Feature | Editable email templates — allow users to customize reminder email text in app settings. Reference: Tooltime template from pilot customer. | Medium | 2026-04-16 |
+_(no open items)_
 
 ### Field Service & Mobile
 
@@ -107,6 +104,15 @@ Ideas worth keeping in mind but not planned for current sprints. No implementati
 ## Completed / Resolved
 
 Items are grouped by sprint / work session, ordered newest first.
+
+### Sprint 19 — Email Rework: Weekly Summary + Editable Templates (2026-04-21)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 13 | Email | Weekly summary rethink — replaced stat-block layout with actionable section-based email: bookings this week (green), due but unbooked (amber), overdue (red), retro last week (gray), totals. 7 parallel queries, 10-item list limits with overflow. | 2026-04-21 |
+| 40 | Feature | Editable email templates — `reminderGreeting` and `reminderBody` fields on User model. Placeholder `{customerName}` support. "E-Mail-Vorlage" card on account page. Empty = use defaults. | 2026-04-21 |
+| 2 | Email | Email deliverability — GMX junk issue resolved. DMARC no longer necessary. | 2026-04-21 |
+| — | Docs | Comprehensive email system documentation written to `docs/EMAIL-SYSTEM.md` — covers all email types, cron jobs, opt-in flow, template architecture, configuration. | 2026-04-21 |
 
 ### Sprint 18 — Digital Maintenance Checklist (2026-04-21)
 
