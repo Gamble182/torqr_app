@@ -9,6 +9,8 @@ export interface UserProfile {
   phone: string | null;
   companyName: string | null;
   emailWeeklySummary: boolean;
+  reminderGreeting: string | null;
+  reminderBody: string | null;
 }
 
 interface ApiResponse<T> {
@@ -37,7 +39,7 @@ export function useUser() {
   });
 
   const updateProfile = useMutation({
-    mutationFn: async (fields: Partial<Pick<UserProfile, 'name' | 'email' | 'phone' | 'companyName'>>) => {
+    mutationFn: async (fields: Partial<Pick<UserProfile, 'name' | 'email' | 'phone' | 'companyName' | 'reminderGreeting' | 'reminderBody'>>) => {
       const res = await fetch('/api/user/profile', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
