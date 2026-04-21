@@ -367,6 +367,12 @@ export default function CustomerDetailPage() {
                                 OK
                               </span>
                             )}
+                            {(system._count?.followUpJobs ?? 0) > 0 && (
+                              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-status-due-bg text-warning-foreground border border-warning/20">
+                                <WrenchIcon className="h-3 w-3" />
+                                {system._count!.followUpJobs} offen
+                              </span>
+                            )}
                           </div>
                           {system.serialNumber && (
                             <p className="text-xs text-muted-foreground">SN: {system.serialNumber}</p>

@@ -24,7 +24,7 @@ export interface CustomerSystem {
     city: string;
     phone: string;
   } | null;
-  _count?: { maintenances: number };
+  _count?: { maintenances: number; followUpJobs?: number };
   maintenances?: Array<{ id: string; date: string; notes: string | null; photos: string[] }>;
   bookings?: Array<{ id: string; startTime: string; endTime: string | null; calBookingUid: string }>;
 }
