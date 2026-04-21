@@ -17,6 +17,12 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 
 ## Open Items
 
+### Architecture & Security
+
+| # | Area | Description | Priority | Found |
+|---|------|-------------|----------|-------|
+| 47 | Security | Photo upload storage path is not userId-scoped — `POST /api/upload/photo` is auth-gated but stores files at `maintenances/{maintenanceId}-{timestamp}.ext`. Any authenticated user could upload to another tenant's maintenance path if they know the `maintenanceId`. Fix: scope path to `{userId}/maintenances/{maintenanceId}-{timestamp}.ext` and verify `maintenanceId` ownership before accepting the upload. | Medium | 2026-04-21 |
+
 ### System Model — Follow-up
 
 | # | Area | Description | Priority | Found |
