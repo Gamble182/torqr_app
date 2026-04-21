@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { XIcon, Loader2Icon } from 'lucide-react';
+import { XIcon, Loader2Icon, CheckIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -50,9 +50,28 @@ export function SystemAssignmentModal({
   const [lastMaintenance, setLastMaintenance] = useState(
     system?.lastMaintenance ? system.lastMaintenance.substring(0, 10) : ''
   );
+  const [copyInstallDate, setCopyInstallDate] = useState(false);
+  const [savedLastMaintenance, setSavedLastMaintenance] = useState('');
 
   const handleCatalogChange = (id: string, _entry: CatalogEntry) => {
     setCatalogId(id);
+  };
+
+  const handleCopyInstallDateToggle = (checked: boolean) => {
+    if (checked) {
+      setSavedLastMaintenance(lastMaintenance);
+      setLastMaintenance(installationDate);
+    } else {
+      setLastMaintenance(savedLastMaintenance);
+    }
+    setCopyInstallDate(checked);
+  };
+
+  const handleInstallationDateChange = (value: string) => {
+    setInstallationDate(value);
+    if (copyInstallDate) {
+      setLastMaintenance(value);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -135,9 +154,32 @@ export function SystemAssignmentModal({
                   id="installationDate"
                   type="date"
                   value={installationDate}
-                  onChange={(e) => setInstallationDate(e.target.value)}
+                  onChange={(e) => handleInstallationDateChange(e.target.value)}
                 />
               </div>
+
+              {installationDate && (
+                <label className="flex items-center gap-2.5 cursor-pointer group">
+                  <div
+                    className={`flex items-center justify-center w-4.5 h-4.5 rounded border-2 transition-colors ${
+                      copyInstallDate
+                        ? 'bg-primary border-primary'
+                        : 'border-muted-foreground/40 group-hover:border-primary/60'
+                    }`}
+                  >
+                    {copyInstallDate && <CheckIcon className="h-3 w-3 text-primary-foreground" />}
+                  </div>
+                  <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+                    Einbaudatum als letztes Wartungsdatum übernehmen
+                  </span>
+                  <input
+                    type="checkbox"
+                    className="sr-only"
+                    checked={copyInstallDate}
+                    onChange={(e) => handleCopyInstallDateToggle(e.target.checked)}
+                  />
+                </label>
+              )}
 
               <div className="space-y-2">
                 <Label htmlFor="maintenanceInterval">Wartungsintervall</Label>
@@ -160,6 +202,8 @@ export function SystemAssignmentModal({
                   type="date"
                   value={lastMaintenance}
                   onChange={(e) => setLastMaintenance(e.target.value)}
+                  disabled={copyInstallDate}
+                  className={copyInstallDate ? 'opacity-60' : ''}
                 />
               </div>
             </>
