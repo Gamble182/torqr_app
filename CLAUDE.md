@@ -160,6 +160,30 @@ The `docs/BACKLOG.md` file is the **single source of truth** for planned work, k
 - All queries scoped to authenticated user's `userId`
 - No inline SQL — Prisma ORM only
 
+### Multi-Tenancy Isolation Rule
+
+Torqr uses shared-database multi-tenancy. Tenant isolation is enforced exclusively in application code.
+
+**Rule:** Any API route that reads or writes a tenant-owned table (`Customer`, `CustomerSystem`, `Maintenance`, `Booking`, `EmailLog`) **must** scope queries with `userId` derived from `requireAuth()`. This must be verified on every new route before merge.
+
+```typescript
+// CORRECT
+const { userId } = await requireAuth();
+prisma.customer.findUnique({ where: { id, userId } });
+
+// WRONG — userId must never come from the client
+const { userId } = req.body; // ❌
+```
+
+**Exceptions by design** (do not add userId scoping to these):
+- `src/app/api/admin/*` — cross-tenant, gated by `requireAdmin()`
+- `src/app/api/cron/*` — cross-tenant, gated by `CRON_SECRET`
+- `src/app/api/webhooks/cal` — resolves tenant dynamically from payload metadata
+- `src/app/api/catalog` — global table, no tenant scope
+- `src/app/api/email/unsubscribe` — stateless HMAC token, no session
+
+Full decision record: `docs/superpowers/specs/2026-04-21-multi-tenancy-design.md`
+
 ### Frontend / Components
 
 - `src/components/ui/` — shadcn/ui primitives, never modified directly

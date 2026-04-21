@@ -82,7 +82,6 @@ Relevant once multiple employees are on the platform.
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| 15 | Decision | Multi-tenancy model — evaluate shared database with logical separation (per-user `userId` scoping, current approach) vs. separate schemas/databases per tenant. Produce architecture recommendation. | High | 2026-04-15 |
 | 14 | Feature | Delete account / danger zone — allow user to delete own account and all associated data. Confirmation dialog. Add to account page settings. | Low | 2026-04-15 |
 
 ### Bookkeeping
@@ -96,6 +95,12 @@ Relevant once multiple employees are on the platform.
 ## Completed / Resolved
 
 Items are grouped by sprint / work session, ordered newest first.
+
+### Sprint 16 — Multi-Tenancy Architecture Decision (2026-04-21)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 15 | Decision | Shared-database, single-schema multi-tenancy confirmed. Isolation via `userId` scoping in application code. No RLS (incompatible with Prisma+NextAuth without significant complexity). Tenant isolation rule added to CLAUDE.md. Full decision record in `docs/superpowers/specs/2026-04-21-multi-tenancy-design.md`. Re-evaluation triggers documented. | 2026-04-21 |
 
 ### Sprint 15 — Office-Side Booking (2026-04-21)
 
