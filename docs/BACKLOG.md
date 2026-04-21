@@ -94,6 +94,18 @@ Relevant once multiple employees are on the platform.
 
 ---
 
+## Maybe / Future
+
+Ideas worth keeping in mind but not planned for current sprints. No implementation until explicitly decided.
+
+| # | Area | Description | Notes |
+|---|------|-------------|-------|
+| M-1 | Feature | PDF / Arbeitsbericht — export a completed maintenance checklist as a PDF work report for the customer. Would require a PDF generation library (e.g. `@react-pdf/renderer`) or a server-side rendering approach. | Requested by pilot customer context. Deferred until checklist feature is validated in production. |
+| M-2 | Feature | Measurement fields on checklist — allow custom checklist items to capture numeric values (e.g. flue gas temperature, pressure reading) instead of just checkboxes. | Revisit after pilot feedback. |
+| M-3 | Feature | Drag-and-drop reordering of custom checklist items per `CustomerSystem`. | Low priority; `sortOrder` field is already in the schema to support this later. |
+
+---
+
 ## Completed / Resolved
 
 Items are grouped by sprint / work session, ordered newest first.
