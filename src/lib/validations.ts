@@ -275,6 +275,50 @@ export const checklistItemCreateSchema = z.object({
 });
 
 // ============================================================================
+// FOLLOW-UP JOB SCHEMAS
+// ============================================================================
+
+export const followUpJobCreateSchema = z.object({
+  label: z
+    .string()
+    .min(1, 'Bezeichnung erforderlich')
+    .max(200, 'Bezeichnung zu lang (max. 200 Zeichen)')
+    .trim(),
+  description: z
+    .string()
+    .max(1000, 'Beschreibung zu lang (max. 1000 Zeichen)')
+    .trim()
+    .optional()
+    .nullable(),
+  photos: z
+    .array(z.string().url())
+    .max(10, 'Maximal 10 Fotos')
+    .optional()
+    .default([]),
+  maintenanceId: z.string().optional().nullable(),
+});
+
+export const followUpJobUpdateSchema = z.object({
+  label: z
+    .string()
+    .min(1, 'Bezeichnung erforderlich')
+    .max(200, 'Bezeichnung zu lang (max. 200 Zeichen)')
+    .trim()
+    .optional(),
+  description: z
+    .string()
+    .max(1000, 'Beschreibung zu lang (max. 1000 Zeichen)')
+    .trim()
+    .optional()
+    .nullable(),
+  photos: z
+    .array(z.string().url())
+    .max(10, 'Maximal 10 Fotos')
+    .optional(),
+  completed: z.boolean().optional(),
+});
+
+// ============================================================================
 // MAINTENANCE SCHEMAS
 // ============================================================================
 
