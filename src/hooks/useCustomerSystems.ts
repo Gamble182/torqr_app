@@ -26,6 +26,7 @@ export interface CustomerSystem {
   } | null;
   _count?: { maintenances: number };
   maintenances?: Array<{ id: string; date: string; notes: string | null; photos: string[] }>;
+  bookings?: Array<{ id: string; startTime: string; endTime: string | null; calBookingUid: string }>;
 }
 
 interface ApiResponse<T> {

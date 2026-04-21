@@ -62,6 +62,14 @@ function UrgencyBadge({ urgency }: { urgency: string }) {
   );
 }
 
+function TerminiertBadge() {
+  return (
+    <span className="text-xs font-medium px-2 py-0.5 rounded-md border bg-green-500/10 text-green-700 border-green-500/20">
+      Terminiert
+    </span>
+  );
+}
+
 export default function SystemsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const { data: systems = [], isLoading, error } = useCustomerSystems({ search: searchQuery });
@@ -167,6 +175,7 @@ export default function SystemsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {systems.map((system) => {
                 const urgency = getMaintenanceUrgency(system.nextMaintenance);
+                const nextBooking = system.bookings?.[0] ?? null;
                 const TypeIcon = SYSTEM_TYPE_ICONS[system.catalog.systemType as SystemType] ?? WrenchIcon;
                 return (
                   <Link
@@ -189,7 +198,10 @@ export default function SystemsPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2 shrink-0 ml-2">
-                        {system.nextMaintenance && <UrgencyBadge urgency={urgency} />}
+                        {nextBooking
+                          ? <TerminiertBadge />
+                          : system.nextMaintenance && <UrgencyBadge urgency={urgency} />
+                        }
                         <ChevronRightIcon className="h-4 w-4 text-muted-foreground/40 opacity-0 group-hover:opacity-100 transition-opacity" />
                       </div>
                     </div>
@@ -207,14 +219,21 @@ export default function SystemsPage() {
                           </div>
                         </>
                       )}
-                      {system.nextMaintenance && (
+                      {nextBooking ? (
+                        <div className="flex items-center gap-1.5 text-green-700">
+                          <CalendarIcon className="h-3 w-3" />
+                          <span>
+                            Termin: {format(new Date(nextBooking.startTime), 'dd. MMM yyyy, HH:mm', { locale: de })} Uhr
+                          </span>
+                        </div>
+                      ) : system.nextMaintenance ? (
                         <div className="flex items-center gap-1.5">
                           <ClockIcon className="h-3 w-3" />
                           <span>
                             Nächste Wartung: {format(new Date(system.nextMaintenance), 'dd. MMM yyyy', { locale: de })}
                           </span>
                         </div>
-                      )}
+                      ) : null}
                       <div className="flex items-center gap-1.5">
                         <WrenchIcon className="h-3 w-3" />
                         <span>

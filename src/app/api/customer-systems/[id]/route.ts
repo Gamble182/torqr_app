@@ -15,12 +15,19 @@ export async function GET(
     const { userId } = await requireAuth();
     const { id } = await params;
 
+    const now = new Date();
     const system = await prisma.customerSystem.findFirst({
       where: { id, userId },
       include: {
         catalog: true,
         customer: { select: { id: true, name: true, street: true, city: true } },
         maintenances: { orderBy: { date: 'desc' } },
+        bookings: {
+          where: { startTime: { gte: now }, status: 'CONFIRMED' },
+          orderBy: { startTime: 'asc' },
+          take: 1,
+          select: { id: true, startTime: true, endTime: true, calBookingUid: true },
+        },
       },
     });
 

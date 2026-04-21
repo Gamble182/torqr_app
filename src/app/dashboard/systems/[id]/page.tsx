@@ -12,6 +12,7 @@ import {
   UserIcon,
   MapPinIcon,
   ChevronRightIcon,
+  CalendarIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCustomerSystem, useDeleteCustomerSystem } from '@/hooks/useCustomerSystems';
@@ -133,6 +134,17 @@ export default function SystemDetailPage() {
               <div className="flex items-center justify-between">
                 <span className="text-muted-foreground">Installiert am</span>
                 <span>{format(new Date(system.installationDate), 'dd. MMM yyyy', { locale: de })}</span>
+              </div>
+            )}
+            {system.bookings?.[0] && (
+              <div className="flex items-center justify-between pt-1 border-t border-border">
+                <span className="flex items-center gap-1.5 text-green-700">
+                  <CalendarIcon className="h-3.5 w-3.5" />
+                  Gebuchter Termin
+                </span>
+                <span className="font-medium text-green-700">
+                  {format(new Date(system.bookings[0].startTime), 'dd. MMM yyyy, HH:mm', { locale: de })} Uhr
+                </span>
               </div>
             )}
           </div>

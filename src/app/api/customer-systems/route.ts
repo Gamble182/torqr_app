@@ -40,6 +40,7 @@ export async function GET(request: NextRequest) {
       }),
     };
 
+    const now = new Date();
     const systems = await prisma.customerSystem.findMany({
       where,
       include: {
@@ -51,6 +52,12 @@ export async function GET(request: NextRequest) {
         maintenances: customerId
           ? { orderBy: { date: 'desc' }, take: 5 }
           : false,
+        bookings: {
+          where: { startTime: { gte: now }, status: 'CONFIRMED' },
+          orderBy: { startTime: 'asc' },
+          take: 1,
+          select: { id: true, startTime: true, endTime: true, calBookingUid: true },
+        },
       },
       orderBy: [{ nextMaintenance: 'asc' }, { customer: { name: 'asc' } }],
     });
