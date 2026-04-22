@@ -1,29 +1,34 @@
-# Torqr MVP - Entwicklungszeiterfassung
+# Torqr MVP — Entwicklungszeiterfassung
 
-**Projekt:** Torqr - Kundenverwaltungs- und Wartungsplattform
+**Projekt:** Torqr — Kundenverwaltungs- und Wartungsplattform
 **Entwickler:** Y. Dorth
-**Stundensatz:** 90-110 €/Std
-**Zeitraum:** 11.12.2025 - 09.01.2026
+**Stundensatz:** 95 €/Std — *günstig für Senior Full-Stack (Marktüblich 90–130 €/h)*
+**Stand:** 2026-04-22
 
 ---
 
 ## Executive Summary
 
 | Metrik | Wert |
-|--------|------|
-| **Geschätzte Entwicklungszeit (Solo)** | **120-145 Stunden** |
-| **Tatsächlich investierte Zeit** | **~18-22 Stunden** |
-| **Effizienzfaktor** | **6-7x schneller** |
-| **MVP-Wert (bei 90€/Std)** | **10.800 - 13.050 €** |
-| **MVP-Wert (bei 110€/Std)** | **13.200 - 15.950 €** |
+|---|---|
+| Echtzeit gesamt (deine Arbeit mit Claude) | *wird in Teil 2 ergänzt* |
+| Solo-Dev-Äquivalenz gesamt (Senior Full-Stack, ohne KI) | *wird in Teil 2 ergänzt* |
+| Effizienzfaktor (Solo / Echtzeit) | *wird in Teil 2 ergänzt* |
+| MVP-Wert @ 95 €/h | *wird in Teil 2 ergänzt* |
+
+*95 €/h ist auf der günstigen Seite des marktüblichen Bands für Senior Full-Stack-Entwicklung (90–130 €/h). Der Effizienzfaktor zeigt, welchen Solo-Dev-Aufwand dieselbe Leistung konventionell gebunden hätte.*
 
 ---
 
-## 1. Geschätzte Entwicklungszeit (Standard Solo-Entwicklung)
+## Teil 1 — MVP-Start (11.12.2025 – 09.01.2026)
+
+> Historische Erfassung, unverändert. Sprints 1–5 mit detaillierter Phasen-Aufschlüsselung. Stundensatz 90–110 €/h (Originalkalkulation).
+
+### 1. Geschätzte Entwicklungszeit (Standard Solo-Entwicklung)
 
 Diese Kalkulation basiert auf realistischen Zeitschätzungen für einen erfahrenen Full-Stack-Entwickler ohne KI-Assistenz.
 
-### Phase 1: Projekt-Setup & Architektur (11.-12.12.2025)
+#### Phase 1: Projekt-Setup & Architektur (11.-12.12.2025)
 | Aufgabe | Geschätzte Zeit |
 |---------|-----------------|
 | Next.js 14 Projekt-Setup, Konfiguration | 2h |
@@ -33,7 +38,7 @@ Diese Kalkulation basiert auf realistischen Zeitschätzungen für einen erfahren
 | Git Repository & Dokumentation | 1h |
 | **Summe Phase 1** | **11h** |
 
-### Phase 2: Sprint 1 - Authentifizierung & Sicherheit (12.-15.12.2025)
+#### Phase 2: Sprint 1 - Authentifizierung & Sicherheit (12.-15.12.2025)
 | Aufgabe | Geschätzte Zeit |
 |---------|-----------------|
 | Session-basierte Authentifizierung (Lucia) | 6h |
@@ -45,7 +50,7 @@ Diese Kalkulation basiert auf realistischen Zeitschätzungen für einen erfahren
 | Testing & Debugging | 3h |
 | **Summe Sprint 1** | **23h** |
 
-### Phase 3: Sprint 2 - Kundenverwaltung (07.-08.01.2026)
+#### Phase 3: Sprint 2 - Kundenverwaltung (07.-08.01.2026)
 | Aufgabe | Geschätzte Zeit |
 |---------|-----------------|
 | Customer CRUD API (4 Endpoints) | 8h |
@@ -58,7 +63,7 @@ Diese Kalkulation basiert auf realistischen Zeitschätzungen für einen erfahren
 | Testing & Bug Fixes | 4h |
 | **Summe Sprint 2** | **34h** |
 
-### Phase 4: Sprint 3 - Heizungsverwaltung & Wartungen (08.-09.01.2026)
+#### Phase 4: Sprint 3 - Heizungsverwaltung & Wartungen (08.-09.01.2026)
 | Aufgabe | Geschätzte Zeit |
 |---------|-----------------|
 | Heater CRUD API (6 Endpoints) | 10h |
@@ -74,7 +79,7 @@ Diese Kalkulation basiert auf realistischen Zeitschätzungen für einen erfahren
 | Testing & Debugging | 5h |
 | **Summe Sprint 3** | **52h** |
 
-### Phase 5: Sprint 5 - Dashboard Statistiken (09.01.2026)
+#### Phase 5: Sprint 5 - Dashboard Statistiken (09.01.2026)
 | Aufgabe | Geschätzte Zeit |
 |---------|-----------------|
 | Dashboard Statistics API | 3h |
@@ -84,7 +89,7 @@ Diese Kalkulation basiert auf realistischen Zeitschätzungen für einen erfahren
 | Testing & Integration | 2h |
 | **Summe Sprint 5** | **13h** |
 
-### Zusätzliche Arbeiten
+#### Zusätzliche Arbeiten
 | Aufgabe | Geschätzte Zeit |
 |---------|-----------------|
 | Code Reviews & Refactoring | 4h |
@@ -95,7 +100,7 @@ Diese Kalkulation basiert auf realistischen Zeitschätzungen für einen erfahren
 
 ---
 
-### **Gesamtsumme Geschätzte Entwicklungszeit: 145 Stunden**
+#### **Gesamtsumme Geschätzte Entwicklungszeit: 145 Stunden**
 
 **Minimale Schätzung (optimale Bedingungen):** 120 Stunden
 **Realistische Schätzung (inkl. Debugging):** 145 Stunden
@@ -103,11 +108,11 @@ Diese Kalkulation basiert auf realistischen Zeitschätzungen für einen erfahren
 
 ---
 
-## 2. Tatsächlich Investierte Zeit (Mit Entwicklungsassistenz)
+### 2. Tatsächlich Investierte Zeit (Mit Entwicklungsassistenz)
 
 Basierend auf Git-Commits, Session-Timestamps und Entwicklungsprotokoll.
 
-### Entwicklungssitzungen
+#### Entwicklungssitzungen
 
 | Datum | Zeitraum | Dauer | Aktivitäten |
 |-------|----------|-------|-------------|
@@ -123,7 +128,7 @@ Basierend auf Git-Commits, Session-Timestamps und Entwicklungsprotokoll.
 | **09.01.2026** | 08:59 - 09:15 | 0.3h | Dashboard Statistics |
 | **Zusätzlich** | - | 7-10h | Konzeption, Planung, Reviews, Testing |
 
-### **Gesamtsumme Tatsächliche Zeit: ~18-22 Stunden**
+#### **Gesamtsumme Tatsächliche Zeit: ~18-22 Stunden**
 
 **Aktive Coding-Sessions:** 11.2 Stunden
 **Konzeption & Planung:** 4-6 Stunden
@@ -132,7 +137,7 @@ Basierend auf Git-Commits, Session-Timestamps und Entwicklungsprotokoll.
 
 ---
 
-## 3. Effizienzanalyse
+### 3. Effizienzanalyse
 
 | Metrik | Wert |
 |--------|------|
@@ -141,7 +146,7 @@ Basierend auf Git-Commits, Session-Timestamps und Entwicklungsprotokoll.
 | **Zeitersparnis** | **125h (86%)** |
 | **Effizienzsteigerung** | **7.25x schneller** |
 
-### Zeitersparnis nach Phase
+#### Zeitersparnis nach Phase
 
 | Phase | Geschätzt | Tatsächlich | Ersparnis |
 |-------|-----------|-------------|-----------|
@@ -154,9 +159,9 @@ Basierend auf Git-Commits, Session-Timestamps und Entwicklungsprotokoll.
 
 ---
 
-## 4. MVP-Preiskalkulation
+### 4. MVP-Preiskalkulation
 
-### Option A: Realistische Entwicklungszeit-Basis
+#### Option A: Realistische Entwicklungszeit-Basis
 ```
 Basis: 145 Stunden geschätzte Entwicklungszeit
 Stundensatz: 90-110 €/Std
@@ -167,7 +172,7 @@ Kalkulation (110€): 145h × 110€ = 15.950 €
 Empfohlener Preis: 13.000 - 16.000 €
 ```
 
-### Option B: Minimale Basis (Wettbewerbsfähig)
+#### Option B: Minimale Basis (Wettbewerbsfähig)
 ```
 Basis: 120 Stunden (optimistisch)
 Stundensatz: 90-110 €/Std
@@ -178,7 +183,7 @@ Kalkulation (110€): 120h × 110€ = 13.200 €
 Empfohlener Preis: 10.800 - 13.200 €
 ```
 
-### Option C: Wertbasierte Preisgestaltung
+#### Option C: Wertbasierte Preisgestaltung
 ```
 Basis: 160 Stunden (mit Puffer für Debugging)
 Stundensatz: 100€/Std (Durchschnitt)
@@ -191,11 +196,11 @@ Empfohlener Preis: 15.000 - 18.000 €
 
 ---
 
-## 5. Feature-Übersicht (Verkaufsargument)
+### 5. Feature-Übersicht (Verkaufsargument)
 
-### Implementierte Features
+#### Implementierte Features
 
-#### ✅ Core Features
+##### Core Features
 - **Authentifizierung & Sicherheit**
   - Session-basiertes Login/Registrierung
   - Argon2 Password Hashing
@@ -226,14 +231,14 @@ Empfohlener Preis: 15.000 - 18.000 €
   - Anstehende Wartungen (Warnung)
   - Kunden- & Heizungsübersicht
 
-#### 🎨 UI/UX Features
+##### UI/UX Features
 - Modernes, responsives Design
 - Toast-Benachrichtigungen
 - Loading States
 - Fehlerbehandlung
 - Deutsche Lokalisierung
 
-#### 🔧 Technische Qualität
+##### Technische Qualität
 - TypeScript (100% typsicher)
 - Next.js 14 App Router
 - Prisma ORM
@@ -243,14 +248,14 @@ Empfohlener Preis: 15.000 - 18.000 €
 
 ---
 
-## 6. Empfohlene Preisstrategie für ersten Kunden
+### 6. Empfohlene Preisstrategie für ersten Kunden
 
-### Staffelpreise
+#### Staffelpreise
 1. **Early Adopter Preis:** 10.500 € (Rabatt für Feedback & Testimonial)
 2. **Standard MVP Preis:** 13.500 € (Empfohlen)
 3. **Premium (mit Support):** 16.000 € (inkl. 3 Monate Support & Anpassungen)
 
-### Begründung gegenüber Kunde
+#### Begründung gegenüber Kunde
 - "Das MVP basiert auf ~140 Stunden Entwicklungsarbeit"
 - "Moderne Tech-Stack mit Best Practices"
 - "Vollständig typsicher, skalierbar & wartbar"
@@ -259,7 +264,7 @@ Empfohlener Preis: 15.000 - 18.000 €
 
 ---
 
-## 7. ROI-Analyse für Sie
+### 7. ROI-Analyse (ursprünglich)
 
 | Metrik | Wert |
 |--------|------|
@@ -272,16 +277,43 @@ Empfohlener Preis: 15.000 - 18.000 €
 
 ---
 
-## Zusammenfassung
+### Zusammenfassung Teil 1
 
-✅ **MVP-Wert:** 13.000 - 16.000 €
-✅ **Entwicklungszeit:** 145 Stunden (geschätzt für Solo-Dev)
-✅ **Tatsächlicher Aufwand:** ~20 Stunden
-✅ **Effizienzsteigerung:** 7x schneller
-✅ **Empfohlener Verkaufspreis:** 13.500 € (Standard)
+- **MVP-Wert:** 13.000 – 16.000 €
+- **Entwicklungszeit:** 145 Stunden (geschätzt für Solo-Dev)
+- **Tatsächlicher Aufwand:** ~20 Stunden
+- **Effizienzsteigerung:** 7× schneller
+- **Empfohlener Verkaufspreis:** 13.500 € (Standard)
+
+*Dokumentation Teil 1 erstellt am:* 09.01.2026 · *Version:* 1.0
 
 ---
 
-**Dokumentation erstellt am:** 09.01.2026
-**Version:** 1.0
-**Entwickler:** Y. Dorth
+## Teil 2 — Retro-Rekonstruktion (10.01.2026 – 22.04.2026)
+
+> Git-basierte Schätzung. Eine Zeile pro Arbeitstag (nur Tage mit ≥1 Commit). Tier S/M/L/XL bestimmt beide Werte gemeinsam.
+
+Tier-Referenz:
+
+| Tier | Echtzeit (du) | Solo-Dev-Äquiv. | Typisches Beispiel |
+|---|---|---|---|
+| S | 30 min | 2 h | Typo / Copy / 1-Datei-Tweak |
+| M | 1 h | 6 h | Einzelfeature, 2–5 Dateien |
+| L | 3 h | 16 h | Neue Seite / Flow / Multi-File-Refactor |
+| XL | 5 h | 32 h | Sprint-Scope (Model / Migration / Cross-Cutting) |
+
+| Datum | Tier | Echtzeit | Solo-Dev-Äquiv. | Sprint / Bereich | Aktivitäten | Commits |
+|---|---|---|---|---|---|---|
+<!-- Rows inserted in Task 7 -->
+
+---
+
+## Teil 3 — Live-Tracking (ab erster Hook-Sitzung)
+
+> Echtzeit ist **gemessen** (Summe der Hook-erfassten Sitzungsdauern). Solo-Dev-Äquivalenz weiterhin per Tier (KI-Beurteilung).
+
+| Datum | Tier | Echtzeit (gem.) | Solo-Dev-Äquiv. | Sprint / Bereich | Aktivitäten | Commits |
+|---|---|---|---|---|---|---|
+<!-- Auto-appended at session start by CLAUDE.md "Timesheet Auto-Update" rule -->
+
+_(noch leer — wird bei jeder neuen Session automatisch ergänzt)_
