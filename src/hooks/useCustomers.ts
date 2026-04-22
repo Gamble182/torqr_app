@@ -28,6 +28,7 @@ interface ApiResponse<T> {
 export function useCustomers() {
   return useQuery<Customer[]>({
     queryKey: ['customers'],
+    staleTime: 30_000,
     queryFn: async () => {
       const response = await fetch('/api/customers');
       const result: ApiResponse<Customer[]> = await response.json();
@@ -47,6 +48,7 @@ export function useCustomers() {
 export function useCustomer(customerId: string | null) {
   return useQuery<Customer>({
     queryKey: ['customer', customerId],
+    staleTime: 30_000,
     queryFn: async () => {
       if (!customerId) throw new Error('Keine Kunden-ID angegeben');
 
