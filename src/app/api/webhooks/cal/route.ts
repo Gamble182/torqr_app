@@ -65,11 +65,11 @@ export async function POST(req: NextRequest) {
   // Strategy 1: metadata userId (from reminder email link — most reliable)
   // Strategy 2: organizer email (Cal.com account owner)
   let user = metaUserId
-    ? await prisma.user.findUnique({ where: { id: metaUserId } })
+    ? await prisma.user.findUnique({ where: { id: metaUserId }, select: { id: true, companyId: true, email: true } })
     : null;
 
   if (!user && organizerEmail) {
-    user = await prisma.user.findUnique({ where: { email: organizerEmail } });
+    user = await prisma.user.findUnique({ where: { email: organizerEmail }, select: { id: true, companyId: true, email: true } });
   }
 
   if (!user) {
@@ -137,6 +137,7 @@ export async function POST(req: NextRequest) {
       attendeeName,
       attendeeEmail,
       status: 'CONFIRMED',
+      companyId: user.companyId,
       userId: user.id,
       customerId: customer?.id ?? null,
       systemId: system?.id ?? null,

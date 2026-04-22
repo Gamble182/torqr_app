@@ -10,7 +10,7 @@ import { rateLimitByUser, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
  */
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await requireAuth();
+    const { userId, companyId } = await requireAuth();
 
     const rateLimitResponse = rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER);
     if (rateLimitResponse) return rateLimitResponse;
@@ -34,6 +34,7 @@ export async function POST(request: NextRequest) {
       const maintenance = await tx.maintenance.create({
         data: {
           systemId: validatedData.systemId,
+          companyId,
           userId,
           date: maintenanceDate,
           notes: validatedData.notes || null,

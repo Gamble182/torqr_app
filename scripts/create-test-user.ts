@@ -29,12 +29,15 @@ async function createTestUser() {
       // Hash the password
       const passwordHash = await hashPassword(testUser.password);
 
-      // Create the user
+      // Create company + user
+      const company = await prisma.company.create({ data: {} });
       const user = await prisma.user.create({
         data: {
           email: testUser.email,
           passwordHash,
           name: testUser.name,
+          companyId: company.id,
+          role: 'OWNER',
         },
       });
 

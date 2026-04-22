@@ -57,7 +57,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await requireAuth();
+    const { userId, companyId } = await requireAuth();
 
     const rateLimitResponse = rateLimitByUser(req, userId, RATE_LIMIT_PRESETS.API_USER);
     if (rateLimitResponse) return rateLimitResponse;
@@ -94,6 +94,7 @@ export async function POST(
         description: validated.description ?? null,
         photos: validated.photos ?? [],
         systemId,
+        companyId,
         userId,
         maintenanceId: validated.maintenanceId ?? null,
       },

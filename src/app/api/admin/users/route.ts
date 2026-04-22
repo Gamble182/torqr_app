@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
           OR: [
             { name: { contains: search, mode: 'insensitive' as const } },
             { email: { contains: search, mode: 'insensitive' as const } },
-            { companyName: { contains: search, mode: 'insensitive' as const } },
+            { company: { name: { contains: search, mode: 'insensitive' as const } } },
           ],
         }
       : {};
@@ -27,7 +27,9 @@ export async function GET(req: NextRequest) {
           id: true,
           name: true,
           email: true,
-          companyName: true,
+          role: true,
+          isActive: true,
+          company: { select: { id: true, name: true } },
           createdAt: true,
           _count: {
             select: { customers: true, customerSystems: true, maintenances: true },
@@ -54,6 +56,7 @@ export async function GET(req: NextRequest) {
 
     const enriched = users.map((u) => ({
       ...u,
+      companyName: u.company?.name ?? null,
       lastLogin: lastLoginMap[u.id] ?? null,
     }));
 

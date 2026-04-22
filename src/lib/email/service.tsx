@@ -23,7 +23,7 @@ export async function sendReminder(
     include: {
       catalog: true,
       customer: true,
-      user: { select: { name: true, email: true, phone: true, companyName: true, reminderGreeting: true, reminderBody: true } },
+      user: { select: { name: true, email: true, phone: true, reminderGreeting: true, reminderBody: true, company: { select: { name: true } } } },
     },
   });
 
@@ -69,7 +69,7 @@ export async function sendReminder(
       maxPhone: user?.phone ?? '',
       maxEmail: user?.email ?? '',
       maxName: user?.name ?? '',
-      maxCompanyName: user?.companyName ?? null,
+      maxCompanyName: user?.company?.name ?? null,
       unsubscribeUrl: buildUnsubscribeUrl(customer.id),
       customGreeting,
       customBody,
@@ -113,7 +113,7 @@ export async function sendBookingConfirmation(bookingId: string): Promise<void> 
       system: {
         include: {
           catalog: true,
-          user: { select: { name: true, email: true, phone: true, companyName: true } },
+          user: { select: { name: true, email: true, phone: true, company: { select: { name: true } } } },
         },
       },
     },
@@ -138,7 +138,7 @@ export async function sendBookingConfirmation(bookingId: string): Promise<void> 
       maxPhone: user?.phone ?? '',
       maxEmail: user?.email ?? '',
       maxName: user?.name ?? '',
-      maxCompanyName: user?.companyName ?? null,
+      maxCompanyName: user?.company?.name ?? null,
     })
   );
 

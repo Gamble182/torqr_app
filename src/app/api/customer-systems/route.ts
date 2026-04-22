@@ -77,7 +77,7 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await requireAuth();
+    const { userId, companyId } = await requireAuth();
 
     const rateLimitResponse = rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER);
     if (rateLimitResponse) return rateLimitResponse;
@@ -110,6 +110,7 @@ export async function POST(request: NextRequest) {
       data: {
         catalogId: validated.catalogId,
         customerId: validated.customerId,
+        companyId,
         userId,
         serialNumber: validated.serialNumber ?? null,
         installationDate: validated.installationDate ? new Date(validated.installationDate) : null,

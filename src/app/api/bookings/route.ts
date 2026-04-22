@@ -44,14 +44,14 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await requireAuth();
+    const { userId, companyId } = await requireAuth();
 
     const body = await request.json();
     const validated = manualBookingCreateSchema.parse(body);
 
-    // Validate system belongs to this user
+    // Validate system belongs to this company
     const system = await prisma.customerSystem.findFirst({
-      where: { id: validated.systemId, userId },
+      where: { id: validated.systemId, companyId },
       include: { customer: { select: { id: true } } },
     });
     if (!system) {
@@ -65,6 +65,7 @@ export async function POST(request: NextRequest) {
         startTime: new Date(validated.startTime),
         endTime: validated.endTime ? new Date(validated.endTime) : null,
         status: 'CONFIRMED',
+        companyId,
         userId,
         customerId: system.customer?.id ?? null,
         systemId: system.id,
