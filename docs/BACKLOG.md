@@ -21,6 +21,7 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
+| 50 | Security | Re-apply RLS deny-all policies on new Supabase project (`hwagqyywixhhorhjtydt`). Tables show "UNRESTRICTED" — Sprint 21 RLS was applied to old project only. Not blocking (Prisma + service role bypasses RLS), but needed for defense-in-depth. | High | 2026-04-22 |
 | 49 | Infra | Delete old Supabase project (`vvsmxzebaoslofigxakt`, eu-west-1) — migrated to new project (`hwagqyywixhhorhjtydt`, eu-central-1) via Vercel integration. Delete once confident everything works. | Low | 2026-04-22 |
 
 ### System Model — Follow-up
@@ -39,15 +40,15 @@ Booking is functional (webhook + customer resolution + system link + Terminiert 
 
 ### Cal.com Configuration
 
-These are mostly Cal.com dashboard settings, not code changes. Can be done in one sitting.
+Generic "Wartungstermin" event type configured (60 min, Mon–Fri 7:30–17:00). Per-system-type event types deferred until pilot feedback.
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| 41 | Config | Business hours — configure booking availability (e.g. Mon–Thu 08:00–17:00) in Cal.com event settings. | Medium | 2026-04-16 |
-| 42 | Config | Time slots per system type — different appointment durations per system type (Wärmepumpe, Gas, Öl, etc.). May require multiple Cal.com event types or app-side logic. | Medium | 2026-04-16 |
-| 43 | Config | Booking location — currently shows "Online Call". Should show technician name or physical address. Cal.com event settings change. | Low | 2026-04-16 |
-| 44 | Config | Target email — booking confirmation should go to business address, not personal. Cal.com settings change. | Low | 2026-04-16 |
+| 42 | Config | Per-system-type event durations — different Cal.com event types per system type (Wärmepumpe, Gas, Öl, etc.) if pilot customer needs it. Deferred until feedback. | Low | 2026-04-16 |
+| 44 | Config | Target email — booking confirmation currently goes to personal email. Change to business address when available. | Low | 2026-04-16 |
 | 45 | Config | Cancellation flow — verify Cal.com cancellation link is included in confirmation email so customers can cancel directly. | Low | 2026-04-16 |
+| 51 | Decision | Cal.com multi-tenant strategy — current single-account setup doesn't scale beyond pilot. Options: Cal.com Teams, per-user Cal.com accounts, or custom booking UI via Cal.com API. Decide post-pilot. | Low | 2026-04-22 |
+| 52 | Testing | Test full booking flow end-to-end — customer receives reminder, clicks Cal.com link, books, webhook fires, booking appears in torqr dashboard. | Medium | 2026-04-22 |
 | 11 | Decision | Calendar integration strategy — recommendation: do NOT build own calendar. Use Cal.com for scheduling, let users sync to Google/Outlook via Cal.com. Embed iframe if needed later. | Low | 2026-04-14 |
 
 ### Email System
@@ -108,6 +109,8 @@ Items are grouped by sprint / work session, ordered newest first.
 |---|------|-------------|----------|
 | 48 | Cleanup | Supabase client cleanup — removed dead `uploadMaintenancePhoto()`, anon client singleton, and `supabase` convenience object. Switched `deleteMaintenancePhoto()` to use admin client (bypasses RLS). | 2026-04-22 |
 | 14 | Feature | Delete account / danger zone — `DELETE /api/user/account` with password verification, Supabase storage cleanup, cascading DB delete. `DangerZoneCard` with `AlertDialog` confirmation on account page. Redirects to login after deletion. | 2026-04-22 |
+| 41 | Config | Business hours — Mon–Fri 7:30–17:00 Europe/Berlin configured in Cal.com availability settings. | 2026-04-22 |
+| 43 | Config | Booking location — changed from "Online Call" to "In Person (Organizer Address)" with business address. | 2026-04-22 |
 
 ### Sprint 21 — Security Hardening + Supabase Migration (2026-04-22)
 
