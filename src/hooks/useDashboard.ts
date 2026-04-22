@@ -40,6 +40,7 @@ interface RecentMaintenance {
   date: string;
   notes: string | null;
   system: {
+    id: string;
     catalog: CatalogEntry;
     customer: {
       id: string;

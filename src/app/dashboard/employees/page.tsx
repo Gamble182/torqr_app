@@ -18,7 +18,7 @@ import {
 } from 'lucide-react';
 
 export default function EmployeesPage() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const { data: employees, isLoading, error } = useEmployees();
   const createMutation = useCreateEmployee();
@@ -28,8 +28,15 @@ export default function EmployeesPage() {
   const [tempPasswordInfo, setTempPasswordInfo] = useState<{ name: string; email: string; password: string } | null>(null);
   const [copied, setCopied] = useState(false);
 
-  // Redirect non-owners
-  if (session?.user?.role !== 'OWNER') {
+  // Redirect non-owners (wait for session to load first)
+  if (status === 'loading') {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2Icon className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+  if (status === 'authenticated' && session?.user?.role !== 'OWNER') {
     router.replace('/dashboard');
     return null;
   }

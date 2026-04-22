@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { isAdminEmail } from '@/lib/admin-auth';
 import { TorqrIcon } from '@/components/brand/TorqrIcon';
 import {
   LayoutDashboardIcon,
@@ -26,11 +27,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const { data: session, status } = useSession();
   const router = useRouter();
 
+  const isAdmin = session?.user?.email ? isAdminEmail(session.user.email) : false;
+
   useEffect(() => {
     if (status === 'unauthenticated') {
       router.push('/login');
+    } else if (status === 'authenticated' && !isAdmin) {
+      router.push('/dashboard');
     }
-  }, [status, router]);
+  }, [status, isAdmin, router]);
 
   if (status === 'loading') {
     return (
@@ -40,7 +45,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     );
   }
 
-  if (!session) return null;
+  if (!session || !isAdmin) return null;
 
   const isActive = (href: string, exact: boolean) =>
     exact ? pathname === href : pathname.startsWith(href);

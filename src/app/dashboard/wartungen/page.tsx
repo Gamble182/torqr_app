@@ -480,7 +480,7 @@ export default function WartungenPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2">
                         <Link
-                          href={`/dashboard/heaters/${heater.id}`}
+                          href={`/dashboard/systems/${heater.id}`}
                           className="font-semibold text-foreground hover:text-primary transition-colors"
                         >
                           {heater.model}
@@ -541,7 +541,7 @@ export default function WartungenPage() {
                   </div>
 
                   <div className="flex gap-2 mt-3 pt-3 border-t border-border">
-                    <Link href={`/dashboard/heaters/${heater.id}`} className="flex-1">
+                    <Link href={`/dashboard/systems/${heater.id}`} className="flex-1">
                       <Button variant="outline" size="sm" className="w-full">
                         <FlameIcon className="h-3.5 w-3.5" />
                         Heizsystem
