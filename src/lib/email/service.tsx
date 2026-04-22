@@ -31,6 +31,10 @@ export async function sendReminder(
     throw new Error(`System ${systemId}: no customer or no email`);
   }
 
+  if (system.customer.emailOptIn === 'UNSUBSCRIBED') {
+    throw new Error(`System ${systemId}: customer has unsubscribed from emails`);
+  }
+
   const { catalog, customer, user } = system;
   const weeksUntil = type === 'REMINDER_4_WEEKS' ? 4 : 1;
   const maintenanceDate = system.nextMaintenance
@@ -119,6 +123,7 @@ export async function sendBookingConfirmation(bookingId: string): Promise<void> 
   });
 
   if (!booking?.customer?.email || !booking.system) return;
+  if (booking.customer.emailOptIn === 'UNSUBSCRIBED') return;
 
   const { customer, system } = booking;
   const { catalog, user } = system;
