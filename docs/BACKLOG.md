@@ -21,7 +21,6 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| 48 | Cleanup | Supabase client cleanup — `deleteMaintenancePhoto()` in `src/lib/supabase.ts` uses anon client instead of admin client. `uploadMaintenancePhoto()` is dead code (uploads go through API route). Anon client export (`getSupabaseClient`) may be entirely unused. Remove dead code, switch delete to admin client. | Medium | 2026-04-22 |
 | 49 | Infra | Delete old Supabase project (`vvsmxzebaoslofigxakt`, eu-west-1) — migrated to new project (`hwagqyywixhhorhjtydt`, eu-central-1) via Vercel integration. Delete once confident everything works. | Low | 2026-04-22 |
 
 ### System Model — Follow-up
@@ -78,9 +77,7 @@ Relevant once multiple employees are on the platform.
 
 ### Architecture & Account
 
-| # | Area | Description | Priority | Found |
-|---|------|-------------|----------|-------|
-| 14 | Feature | Delete account / danger zone — allow user to delete own account and all associated data. Confirmation dialog. Add to account page settings. | Low | 2026-04-15 |
+_(no open items)_
 
 ### Bookkeeping
 
@@ -104,6 +101,13 @@ Ideas worth keeping in mind but not planned for current sprints. No implementati
 ## Completed / Resolved
 
 Items are grouped by sprint / work session, ordered newest first.
+
+### Sprint 22 — Account Cleanup + Delete Account (2026-04-22)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 48 | Cleanup | Supabase client cleanup — removed dead `uploadMaintenancePhoto()`, anon client singleton, and `supabase` convenience object. Switched `deleteMaintenancePhoto()` to use admin client (bypasses RLS). | 2026-04-22 |
+| 14 | Feature | Delete account / danger zone — `DELETE /api/user/account` with password verification, Supabase storage cleanup, cascading DB delete. `DangerZoneCard` with `AlertDialog` confirmation on account page. Redirects to login after deletion. | 2026-04-22 |
 
 ### Sprint 21 — Security Hardening + Supabase Migration (2026-04-22)
 
