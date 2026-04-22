@@ -5,7 +5,7 @@ import { EmailActionsCard } from '@/components/account/EmailActionsCard';
 import { EmailTemplateCard } from '@/components/account/EmailTemplateCard';
 import { DangerZoneCard } from '@/components/account/DangerZoneCard';
 import { auth } from '@/lib/auth';
-import { isAdminEmail } from '@/lib/admin-auth';
+import { isAdminEmail } from '@/lib/admin-email';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { ShieldIcon, ArrowRightIcon } from 'lucide-react';

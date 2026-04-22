@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { isAdminEmail } from '@/lib/admin-auth';
+import { isAdminEmail } from '@/lib/admin-email';
 
 describe('isAdminEmail', () => {
   beforeEach(() => {
