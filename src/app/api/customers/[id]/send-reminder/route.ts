@@ -8,18 +8,18 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await requireAuth();
+    const { companyId } = await requireAuth();
     const { id: customerId } = await params;
 
     const body = await req.json().catch(() => ({})) as { systemId?: string };
     const { systemId } = body;
 
-    const customer = await prisma.customer.findUnique({
-      where: { id: customerId },
-      select: { id: true, userId: true, email: true, name: true },
+    const customer = await prisma.customer.findFirst({
+      where: { id: customerId, companyId },
+      select: { id: true, email: true, name: true },
     });
 
-    if (!customer || customer.userId !== userId) {
+    if (!customer) {
       return NextResponse.json({ success: false, error: 'Kunde nicht gefunden' }, { status: 404 });
     }
 
@@ -31,8 +31,8 @@ export async function POST(
     }
 
     const system = systemId
-      ? await prisma.customerSystem.findFirst({ where: { id: systemId, customerId, userId } })
-      : await prisma.customerSystem.findFirst({ where: { customerId, userId }, orderBy: { createdAt: 'asc' } });
+      ? await prisma.customerSystem.findFirst({ where: { id: systemId, customerId, companyId } })
+      : await prisma.customerSystem.findFirst({ where: { customerId, companyId }, orderBy: { createdAt: 'asc' } });
 
     if (!system) {
       return NextResponse.json({ success: false, error: 'System nicht gefunden' }, { status: 404 });

@@ -11,13 +11,13 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await requireAuth();
+    const { companyId } = await requireAuth();
     const { id } = await params;
 
     const maintenance = await prisma.maintenance.findFirst({
       where: {
         id,
-        system: { userId },
+        companyId,
       },
       include: {
         system: {
@@ -51,7 +51,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await requireAuth();
+    const { companyId } = await requireAuth();
     const { id } = await params;
 
     const body = await request.json();
@@ -62,7 +62,7 @@ export async function PATCH(
     }
 
     const existingMaintenance = await prisma.maintenance.findFirst({
-      where: { id, system: { userId } },
+      where: { id, companyId },
     });
 
     if (!existingMaintenance) {
@@ -103,11 +103,11 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await requireAuth();
+    const { companyId } = await requireAuth();
     const { id } = await params;
 
     const maintenance = await prisma.maintenance.findFirst({
-      where: { id, system: { userId } },
+      where: { id, companyId },
     });
 
     if (!maintenance) {

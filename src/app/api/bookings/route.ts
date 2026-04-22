@@ -13,14 +13,14 @@ import { sendBookingConfirmation } from '@/lib/email/service';
  */
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = await requireAuth();
+    const { companyId } = await requireAuth();
 
     const { searchParams } = new URL(request.url);
     const customerId = searchParams.get('customerId');
 
     const bookings = await prisma.booking.findMany({
       where: {
-        userId,
+        companyId,
         ...(customerId ? { customerId } : {}),
       },
       include: {

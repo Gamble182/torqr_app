@@ -16,7 +16,7 @@ export async function GET(
 ) {
   try {
     // 1. Authenticate user
-    const { userId } = await requireAuth();
+    const { companyId } = await requireAuth();
 
     // 2. Get customer ID from params
     const { id } = await params;
@@ -25,7 +25,7 @@ export async function GET(
     const customer = await prisma.customer.findUnique({
       where: {
         id: id,
-        userId: userId,
+        companyId,
       },
     });
 
@@ -71,7 +71,7 @@ export async function PATCH(
 ) {
   try {
     // 1. Authenticate user
-    const { userId } = await requireAuth();
+    const { userId, companyId } = await requireAuth();
 
     // 2. Rate limiting
     const rateLimitResponse = rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER);
@@ -86,7 +86,7 @@ export async function PATCH(
     const existingCustomer = await prisma.customer.findUnique({
       where: {
         id: id,
-        userId: userId,
+        companyId,
       },
     });
 
@@ -172,7 +172,7 @@ export async function DELETE(
 ) {
   try {
     // 1. Authenticate user
-    const { userId } = await requireAuth();
+    const { companyId } = await requireAuth();
 
     // 2. Get customer ID from params
     const { id } = await params;
@@ -181,7 +181,7 @@ export async function DELETE(
     const existingCustomer = await prisma.customer.findUnique({
       where: {
         id: id,
-        userId: userId,
+        companyId,
       },
     });
 

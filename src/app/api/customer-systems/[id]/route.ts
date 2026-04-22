@@ -12,12 +12,12 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await requireAuth();
+    const { companyId } = await requireAuth();
     const { id } = await params;
 
     const now = new Date();
     const system = await prisma.customerSystem.findFirst({
-      where: { id, userId },
+      where: { id, companyId },
       include: {
         catalog: true,
         customer: { select: { id: true, name: true, street: true, city: true } },
@@ -53,10 +53,10 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await requireAuth();
+    const { companyId } = await requireAuth();
     const { id } = await params;
 
-    const existing = await prisma.customerSystem.findFirst({ where: { id, userId } });
+    const existing = await prisma.customerSystem.findFirst({ where: { id, companyId } });
     if (!existing) {
       return NextResponse.json({ success: false, error: 'System nicht gefunden' }, { status: 404 });
     }
@@ -115,10 +115,10 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await requireAuth();
+    const { companyId } = await requireAuth();
     const { id } = await params;
 
-    const existing = await prisma.customerSystem.findFirst({ where: { id, userId } });
+    const existing = await prisma.customerSystem.findFirst({ where: { id, companyId } });
     if (!existing) {
       return NextResponse.json({ success: false, error: 'System nicht gefunden' }, { status: 404 });
     }

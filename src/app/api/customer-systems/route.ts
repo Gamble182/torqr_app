@@ -11,7 +11,7 @@ import { rateLimitByUser, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
  */
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = await requireAuth();
+    const { companyId } = await requireAuth();
 
     const searchParams = request.nextUrl.searchParams;
     const customerId = searchParams.get('customerId');
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
 
     if (customerId) {
       const customer = await prisma.customer.findUnique({
-        where: { id: customerId, userId },
+        where: { id: customerId, companyId },
       });
       if (!customer) {
         return NextResponse.json({ success: false, error: 'Kunde nicht gefunden' }, { status: 404 });
@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     }
 
     const where: Prisma.CustomerSystemWhereInput = {
-      userId,
+      companyId,
       ...(customerId && { customerId }),
       ...(search && {
         OR: [
@@ -86,7 +86,7 @@ export async function POST(request: NextRequest) {
     const validated = customerSystemCreateSchema.parse(body);
 
     const customer = await prisma.customer.findUnique({
-      where: { id: validated.customerId, userId },
+      where: { id: validated.customerId, companyId },
     });
     if (!customer) {
       return NextResponse.json({ success: false, error: 'Kunde nicht gefunden' }, { status: 404 });

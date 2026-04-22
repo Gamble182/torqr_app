@@ -173,12 +173,12 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
   let user;
 
   if (userId) {
-    user = await prisma.user.findUnique({ where: { id: userId } });
+    user = await prisma.user.findUnique({ where: { id: userId }, include: { company: true } });
     if (!user) throw new Error(`No user found for userId: ${userId}`);
   } else {
     const recipientEmail = process.env.SUMMARY_RECIPIENT_EMAIL;
     if (!recipientEmail) throw new Error('SUMMARY_RECIPIENT_EMAIL is not set');
-    user = await prisma.user.findUnique({ where: { email: recipientEmail } });
+    user = await prisma.user.findUnique({ where: { email: recipientEmail }, include: { company: true } });
     if (!user) throw new Error(`No user found for SUMMARY_RECIPIENT_EMAIL: ${recipientEmail}`);
   }
 
@@ -203,7 +203,7 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
   ] = await Promise.all([
     prisma.booking.findMany({
       where: {
-        userId: user.id,
+        companyId: user.companyId,
         status: 'CONFIRMED',
         startTime: { gte: now, lte: weekEnd },
       },
@@ -215,7 +215,7 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
     }),
     prisma.customerSystem.findMany({
       where: {
-        userId: user.id,
+        companyId: user.companyId,
         nextMaintenance: { gte: now, lte: weekEnd },
       },
       include: {
@@ -231,7 +231,7 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
     }),
     prisma.customerSystem.findMany({
       where: {
-        userId: user.id,
+        companyId: user.companyId,
         nextMaintenance: { lt: now },
       },
       include: {
@@ -241,23 +241,23 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
       orderBy: { nextMaintenance: 'asc' },
     }),
     prisma.maintenance.findMany({
-      where: { userId: user.id, date: { gte: weekAgo, lte: now } },
+      where: { companyId: user.companyId, date: { gte: weekAgo, lte: now } },
       select: { id: true },
     }),
     prisma.emailLog.count({
       where: {
         sentAt: { gte: weekAgo, lte: now },
         type: { in: ['REMINDER_4_WEEKS', 'REMINDER_1_WEEK'] },
-        customer: { userId: user.id },
+        customer: { companyId: user.companyId },
       },
     }),
-    prisma.customer.count({ where: { userId: user.id } }),
-    prisma.customerSystem.count({ where: { userId: user.id } }),
+    prisma.customer.count({ where: { companyId: user.companyId } }),
+    prisma.customerSystem.count({ where: { companyId: user.companyId } }),
   ]);
 
   const bookingsAttendedLastWeek = await prisma.booking.count({
     where: {
-      userId: user.id,
+      companyId: user.companyId,
       status: 'CONFIRMED',
       startTime: { gte: weekAgo, lte: now },
     },

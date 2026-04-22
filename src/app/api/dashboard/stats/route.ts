@@ -7,7 +7,7 @@ import { prisma } from '@/lib/prisma';
  */
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = await requireAuth();
+    const { companyId } = await requireAuth();
 
     const searchParams = request.nextUrl.searchParams;
     const days = parseInt(searchParams.get('days') || '30');
@@ -24,20 +24,20 @@ export async function GET(request: NextRequest) {
       upcomingSystemsList,
       recentMaintenances,
     ] = await Promise.all([
-      prisma.customer.count({ where: { userId } }),
+      prisma.customer.count({ where: { companyId } }),
 
-      prisma.customerSystem.count({ where: { userId } }),
+      prisma.customerSystem.count({ where: { companyId } }),
 
       prisma.customerSystem.count({
-        where: { userId, nextMaintenance: { lt: now } },
+        where: { companyId, nextMaintenance: { lt: now } },
       }),
 
       prisma.customerSystem.count({
-        where: { userId, nextMaintenance: { gte: now, lte: futureDate } },
+        where: { companyId, nextMaintenance: { gte: now, lte: futureDate } },
       }),
 
       prisma.customerSystem.findMany({
-        where: { userId, nextMaintenance: { gte: now, lte: futureDate } },
+        where: { companyId, nextMaintenance: { gte: now, lte: futureDate } },
         include: {
           catalog: true,
           customer: { select: { id: true, name: true, city: true, phone: true } },
@@ -47,7 +47,7 @@ export async function GET(request: NextRequest) {
       }),
 
       prisma.maintenance.findMany({
-        where: { user: { id: userId } },
+        where: { companyId },
         include: {
           system: {
             include: {

@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     const validatedData = maintenanceCreateSchema.parse(body);
 
     const system = await prisma.customerSystem.findFirst({
-      where: { id: validatedData.systemId, userId },
+      where: { id: validatedData.systemId, companyId },
     });
 
     if (!system) {
@@ -77,7 +77,7 @@ export async function POST(request: NextRequest) {
  */
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = await requireAuth();
+    const { companyId } = await requireAuth();
 
     const systemId = request.nextUrl.searchParams.get('systemId');
     if (!systemId) {
@@ -85,7 +85,7 @@ export async function GET(request: NextRequest) {
     }
 
     const system = await prisma.customerSystem.findFirst({
-      where: { id: systemId, userId },
+      where: { id: systemId, companyId },
     });
 
     if (!system) {

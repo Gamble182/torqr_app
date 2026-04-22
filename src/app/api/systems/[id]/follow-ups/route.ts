@@ -5,9 +5,9 @@ import { z } from 'zod';
 import { followUpJobCreateSchema } from '@/lib/validations';
 import { rateLimitByUser, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 
-async function verifySystemOwnership(systemId: string, userId: string) {
+async function verifySystemOwnership(systemId: string, companyId: string) {
   return prisma.customerSystem.findFirst({
-    where: { id: systemId, userId },
+    where: { id: systemId, companyId },
     select: { id: true },
   });
 }
@@ -21,10 +21,10 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await requireAuth();
+    const { companyId } = await requireAuth();
     const { id: systemId } = await params;
 
-    const system = await verifySystemOwnership(systemId, userId);
+    const system = await verifySystemOwnership(systemId, companyId);
     if (!system) {
       return NextResponse.json(
         { success: false, error: 'System nicht gefunden' },
@@ -33,7 +33,7 @@ export async function GET(
     }
 
     const followUps = await prisma.followUpJob.findMany({
-      where: { systemId, userId },
+      where: { systemId, companyId },
       orderBy: [{ completed: 'asc' }, { createdAt: 'desc' }],
     });
 
@@ -64,7 +64,8 @@ export async function POST(
 
     const { id: systemId } = await params;
 
-    const system = await verifySystemOwnership(systemId, userId);
+    const system = await verifySystemOwnership(systemId, companyId);
+
     if (!system) {
       return NextResponse.json(
         { success: false, error: 'System nicht gefunden' },
@@ -77,7 +78,7 @@ export async function POST(
 
     if (validated.maintenanceId) {
       const maintenance = await prisma.maintenance.findFirst({
-        where: { id: validated.maintenanceId, userId },
+        where: { id: validated.maintenanceId, companyId },
         select: { id: true },
       });
       if (!maintenance) {

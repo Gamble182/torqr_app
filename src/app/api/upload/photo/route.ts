@@ -8,7 +8,7 @@ const MAX_SIZE = 5 * 1024 * 1024; // 5MB
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId } = await requireAuth();
+    const { userId, companyId } = await requireAuth();
 
     const formData = await req.formData();
     const file = formData.get('file') as File | null;
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     if (UUID_REGEX.test(maintenanceId)) {
       const maintenance = await prisma.maintenance.findFirst({
-        where: { id: maintenanceId, userId },
+        where: { id: maintenanceId, companyId },
         select: { id: true },
       });
       if (!maintenance) {

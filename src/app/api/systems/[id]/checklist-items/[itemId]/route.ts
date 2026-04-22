@@ -12,18 +12,18 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string; itemId: string }> }
 ) {
   try {
-    const { userId } = await requireAuth();
+    const { userId, companyId } = await requireAuth();
 
     const rateLimitResponse = rateLimitByUser(req, userId, RATE_LIMIT_PRESETS.API_USER);
     if (rateLimitResponse) return rateLimitResponse;
 
     const { id: systemId, itemId } = await params;
 
-    // Ownership check: item must belong to a system that belongs to this user
+    // Ownership check: item must belong to a system that belongs to this company
     const item = await prisma.customerSystemChecklistItem.findFirst({
       where: {
         id: itemId,
-        customerSystem: { id: systemId, userId },
+        customerSystem: { id: systemId, companyId },
       },
       select: { id: true },
     });
