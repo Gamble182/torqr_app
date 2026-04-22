@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -72,13 +72,7 @@ export default function WartungenPage() {
   const [dateTo, setDateTo] = useState('');
   const [useCustomDateRange, setUseCustomDateRange] = useState(false);
 
-  useEffect(() => {
-    if (!useCustomDateRange || (useCustomDateRange && dateFrom && dateTo)) {
-      fetchWartungen();
-    }
-  }, [filterStatus, timeRange, dateFrom, dateTo, useCustomDateRange]);
-
-  const fetchWartungen = async () => {
+  const fetchWartungen = useCallback(async () => {
     try {
       setLoading(true);
       let queryString = `status=${filterStatus}`;
@@ -101,7 +95,13 @@ export default function WartungenPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filterStatus, timeRange, dateFrom, dateTo, useCustomDateRange]);
+
+  useEffect(() => {
+    if (!useCustomDateRange || (useCustomDateRange && dateFrom && dateTo)) {
+      fetchWartungen();
+    }
+  }, [fetchWartungen, useCustomDateRange, dateFrom, dateTo]);
 
   const getMaintenanceUrgency = (dateString: string) => {
     const date = new Date(dateString);
@@ -480,7 +480,7 @@ export default function WartungenPage() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2">
                         <Link
-                          href={`/dashboard/heaters/${heater.id}`}
+                          href={`/dashboard/systems/${heater.id}`}
                           className="font-semibold text-foreground hover:text-primary transition-colors"
                         >
                           {heater.model}
@@ -541,7 +541,7 @@ export default function WartungenPage() {
                   </div>
 
                   <div className="flex gap-2 mt-3 pt-3 border-t border-border">
-                    <Link href={`/dashboard/heaters/${heater.id}`} className="flex-1">
+                    <Link href={`/dashboard/systems/${heater.id}`} className="flex-1">
                       <Button variant="outline" size="sm" className="w-full">
                         <FlameIcon className="h-3.5 w-3.5" />
                         Heizsystem

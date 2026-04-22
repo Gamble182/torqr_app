@@ -102,7 +102,7 @@ export function useAdminUsers(search: string, page: number) {
 
 export function useAdminUser(id: string) {
   return useQuery<AdminUserDetail>({
-    queryKey: ['admin', 'users', id],
+    queryKey: ['admin', 'user', id],
     queryFn: () => fetchAdmin(`/api/admin/users/${id}`),
     staleTime: 30_000,
   });

@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth, requireOwner } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
+import { z } from 'zod';
+import { maintenanceUpdateSchema } from '@/lib/validations';
 import { deleteMaintenancePhoto } from '@/lib/supabase';
 
 /**
@@ -55,9 +57,9 @@ export async function PATCH(
     const { id } = await params;
 
     const body = await request.json();
-    const { date, notes } = body;
+    const validated = maintenanceUpdateSchema.parse(body);
 
-    if (!date) {
+    if (!validated.date) {
       return NextResponse.json({ success: false, error: 'Datum ist erforderlich' }, { status: 400 });
     }
 
@@ -70,10 +72,11 @@ export async function PATCH(
     }
 
     const updatedMaintenance = await prisma.maintenance.update({
-      where: { id },
+      where: { id, companyId },
       data: {
-        date: new Date(date),
-        notes: notes || null,
+        date: new Date(validated.date),
+        notes: validated.notes ?? null,
+        ...(validated.photos !== undefined && { photos: validated.photos }),
       },
       include: {
         system: {
@@ -87,6 +90,9 @@ export async function PATCH(
 
     return NextResponse.json({ success: true, data: updatedMaintenance, message: 'Wartung erfolgreich aktualisiert' });
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ success: false, error: 'Validierungsfehler', details: error.issues }, { status: 400 });
+    }
     if (error instanceof Error && error.message === 'Unauthorized') {
       return NextResponse.json({ success: false, error: 'Nicht autorisiert' }, { status: 401 });
     }
@@ -122,7 +128,7 @@ export async function DELETE(
       }
     }
 
-    await prisma.maintenance.delete({ where: { id } });
+    await prisma.maintenance.delete({ where: { id, companyId } });
 
     return NextResponse.json({ success: true, message: 'Wartung erfolgreich gelöscht' });
   } catch (error) {

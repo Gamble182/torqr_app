@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { auth } from '@/lib/auth';
 import { redirect } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { TorqrIcon, TorqrWordmark } from '@/components/brand/TorqrIcon';
+import { TorqrWordmark } from '@/components/brand/TorqrIcon';
 import {
   UsersIcon,
   CalendarCheckIcon,

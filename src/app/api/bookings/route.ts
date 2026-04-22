@@ -33,8 +33,11 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ success: true, data: bookings });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    return NextResponse.json({ success: false, error: message }, { status: 500 });
+    if (error instanceof Error && error.message === 'Unauthorized') {
+      return NextResponse.json({ success: false, error: 'Nicht autorisiert' }, { status: 401 });
+    }
+    console.error('Error fetching bookings:', error);
+    return NextResponse.json({ success: false, error: 'Fehler beim Laden der Termine' }, { status: 500 });
   }
 }
 

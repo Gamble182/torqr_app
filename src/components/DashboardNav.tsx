@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
-import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
 import { TorqrIcon, TorqrWordmark } from '@/components/brand/TorqrIcon';
 import {
@@ -40,16 +39,18 @@ export function DashboardNav() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
+  const [prevPathname, setPrevPathname] = useState(pathname);
+
+  // Close mobile menu on route change (React-recommended render-time state adjustment)
+  if (pathname !== prevPathname) {
+    setPrevPathname(pathname);
+    setMobileOpen(false);
+  }
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentDateTime(new Date()), 60000);
     return () => clearInterval(timer);
   }, []);
-
-  // Close mobile menu on route change
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [pathname]);
 
   const isActive = (href: string) => {
     if (href === '/dashboard') return pathname === href;

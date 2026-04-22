@@ -15,6 +15,7 @@ export function getEmailTypeLabel(type: string): string {
 export function useCustomerEmailLogs(customerId: string) {
   return useQuery<EmailLog[]>({
     queryKey: ['email-logs', customerId],
+    staleTime: 30_000,
     queryFn: async () => {
       const res = await fetch(`/api/customers/${customerId}/email-logs`);
       const result = await res.json();

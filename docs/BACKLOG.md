@@ -21,8 +21,13 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| # | Area | Description | Priority | Found |
 | 49 | Infra | Delete old Supabase project (`vvsmxzebaoslofigxakt`, eu-west-1) — migrated to new project (`hwagqyywixhhorhjtydt`, eu-central-1) via Vercel integration. Delete once confident everything works. | Low | 2026-04-22 |
+| 55 | Architecture | Wartungen + edit customer pages use `useEffect` data fetching instead of React Query — violates established hook pattern. Migrate to `useQuery` hooks. | Medium | 2026-04-22 |
+| 56 | Architecture | `MaintenanceHistory`, `MaintenanceChecklistModal`, `BookingFormModal` use direct `fetch()` instead of React Query mutations — should use `useMutation` hooks for consistency and cache invalidation. | Medium | 2026-04-22 |
+| 57 | Security | Follow-ups and checklist-items DELETE routes use `requireAuth()` instead of `requireOwner()` — TECHNICIAN can delete records. Align with permission matrix (delete = OWNER only). | High | 2026-04-22 |
+| 58 | Security | Cal.com webhook HMAC verification fails open when `CAL_WEBHOOK_SECRET` env var is unset — should reject all requests if secret is missing. | High | 2026-04-22 |
+| 59 | Infra | In-memory rate limiter (`Map`) resets on every cold start — no-op on Vercel serverless. Migrate to Upstash Redis for persistent rate limiting. | Medium | 2026-04-22 |
+| 60 | Architecture | `CatalogPicker` "Ändern" button passes `entries[0]` to `onChange` when clearing — semantically incorrect. `onChange` signature should support `null` entry for clear action. | Low | 2026-04-22 |
 
 ### System Model — Follow-up
 

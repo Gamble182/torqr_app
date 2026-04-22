@@ -28,6 +28,7 @@ interface ApiResponse<T> {
 export function useBookings(customerId?: string) {
   return useQuery<Booking[]>({
     queryKey: ['bookings', customerId ?? 'all'],
+    staleTime: 30_000,
     queryFn: async () => {
       const url = customerId
         ? `/api/bookings?customerId=${customerId}`

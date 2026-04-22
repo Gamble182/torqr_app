@@ -17,11 +17,9 @@ type PasswordFormValues = {
 export function PasswordCard() {
   const { updatePassword } = useUser();
 
-  const { register, handleSubmit, watch, reset, formState: { errors } } = useForm<PasswordFormValues>({
+  const { register, handleSubmit, getValues, reset, formState: { errors } } = useForm<PasswordFormValues>({
     defaultValues: { currentPassword: '', newPassword: '', confirmPassword: '' },
   });
-
-  const newPassword = watch('newPassword');
 
   const onSubmit = async (values: PasswordFormValues) => {
     try {
@@ -75,7 +73,7 @@ export function PasswordCard() {
               className="text-base h-11"
               {...register('confirmPassword', {
                 required: 'Bitte Passwort bestätigen',
-                validate: (value) => value === newPassword || 'Passwörter stimmen nicht überein',
+                validate: (value) => value === getValues('newPassword') || 'Passwörter stimmen nicht überein',
               })}
             />
             {errors.confirmPassword && <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>}

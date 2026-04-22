@@ -1,6 +1,4 @@
 import { z } from 'zod';
-// Type imports for future use
-// import { EmailOptInStatus } from '@prisma/client';
 
 // ============================================================================
 // COMMON VALIDATION PATTERNS
@@ -101,7 +99,7 @@ export const userUpdateSchema = z.object({
     .max(100, 'Name must be less than 100 characters')
     .trim()
     .optional(),
-  phone: optionalPhoneSchema.optional(),
+  phone: optionalPhoneSchema,
   email: emailSchema.optional(),
 });
 
@@ -116,7 +114,7 @@ export const userProfileUpdateSchema = z.object({
     .trim()
     .optional(),
   email: emailSchema.optional(),
-  phone: optionalPhoneSchema.optional(),
+  phone: optionalPhoneSchema,
   companyName: z
     .string()
     .max(100, 'Firmenname zu lang')

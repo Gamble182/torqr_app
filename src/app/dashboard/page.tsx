@@ -11,7 +11,6 @@ import {
   CalendarIcon,
   MapPinIcon,
   PhoneIcon,
-  ClockIcon,
   CheckCircle2Icon,
   ArrowRightIcon,
   TrendingUpIcon,
@@ -317,7 +316,7 @@ export default function DashboardPage() {
               {stats.recentMaintenances.map((maintenance) => (
                 <Link
                   key={maintenance.id}
-                  href={`/dashboard/systems/${maintenance.system.catalog.id ?? ''}`}
+                  href={`/dashboard/systems/${maintenance.system.id}`}
                   className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 transition-colors"
                 >
                   <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-50 shrink-0">

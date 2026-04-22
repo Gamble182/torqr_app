@@ -39,11 +39,11 @@ export async function GET(
 
     return NextResponse.json({ success: true, data: followUps });
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Unbekannter Fehler';
-    if (message === 'Unauthorized') {
-      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    if (err instanceof Error && err.message === 'Unauthorized') {
+      return NextResponse.json({ success: false, error: 'Nicht autorisiert' }, { status: 401 });
     }
-    return NextResponse.json({ success: false, error: message }, { status: 500 });
+    console.error('Error fetching follow-ups:', err);
+    return NextResponse.json({ success: false, error: 'Fehler beim Laden der Nachfolgeaufträge' }, { status: 500 });
   }
 }
 
@@ -109,10 +109,10 @@ export async function POST(
         { status: 400 }
       );
     }
-    const message = err instanceof Error ? err.message : 'Unbekannter Fehler';
-    if (message === 'Unauthorized') {
-      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    if (err instanceof Error && err.message === 'Unauthorized') {
+      return NextResponse.json({ success: false, error: 'Nicht autorisiert' }, { status: 401 });
     }
-    return NextResponse.json({ success: false, error: message }, { status: 500 });
+    console.error('Error creating follow-up:', err);
+    return NextResponse.json({ success: false, error: 'Fehler beim Erstellen des Nachfolgeauftrags' }, { status: 500 });
   }
 }

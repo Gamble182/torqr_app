@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { isAdminEmail } from '@/lib/admin-auth';
 
 describe('isAdminEmail', () => {

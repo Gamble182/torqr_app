@@ -91,8 +91,12 @@ export async function GET(request: NextRequest) {
     // 2. Get query parameters for search/filter
     const { searchParams } = new URL(request.url);
     const search = searchParams.get('search') || '';
-    const sortBy = searchParams.get('sortBy') || 'name';
-    const sortOrder = searchParams.get('sortOrder') || 'asc';
+    const allowedSortFields = ['name', 'city', 'createdAt', 'updatedAt'] as const;
+    const sortByParam = searchParams.get('sortBy') || 'name';
+    const sortBy = allowedSortFields.includes(sortByParam as typeof allowedSortFields[number])
+      ? sortByParam
+      : 'name';
+    const sortOrder = searchParams.get('sortOrder') === 'desc' ? 'desc' : 'asc';
 
     // 3. Build where clause for search
     const whereClause = {

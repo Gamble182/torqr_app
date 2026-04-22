@@ -13,7 +13,8 @@ export async function GET(request: NextRequest) {
 
     const searchParams = request.nextUrl.searchParams;
     const status = searchParams.get('status') || 'all';
-    const days = parseInt(searchParams.get('days') || '30');
+    const daysRaw = parseInt(searchParams.get('days') || '30');
+    const days = Number.isFinite(daysRaw) && daysRaw > 0 ? daysRaw : 30;
     const dateFrom = searchParams.get('dateFrom');
     const dateTo = searchParams.get('dateTo');
 
@@ -84,16 +85,12 @@ export async function GET(request: NextRequest) {
       thisWeek: systems.filter(s => {
         if (!s.nextMaintenance) return false;
         const date = new Date(s.nextMaintenance);
-        const wfn = new Date();
-        wfn.setDate(wfn.getDate() + 7);
-        return date >= now && date <= wfn;
+        return date >= now && date <= weekFromNow;
       }).length,
       thisMonth: systems.filter(s => {
         if (!s.nextMaintenance) return false;
         const date = new Date(s.nextMaintenance);
-        const mfn = new Date();
-        mfn.setDate(mfn.getDate() + 30);
-        return date >= now && date <= mfn;
+        return date >= now && date <= monthFromNow;
       }).length,
     };
 

@@ -11,7 +11,8 @@ export async function GET() {
     const user = await prisma.user.findUnique({
       where: { id: userId },
       select: {
-        name: true, email: true, phone: true, reminderGreeting: true, reminderBody: true,
+        name: true, email: true, phone: true, emailWeeklySummary: true,
+        reminderGreeting: true, reminderBody: true,
         company: { select: { name: true } },
       },
     });
@@ -78,7 +79,8 @@ export async function PATCH(request: NextRequest) {
         ...(reminderBody !== undefined && { reminderBody: reminderBody === '' ? null : reminderBody }),
       },
       select: {
-        name: true, email: true, phone: true, reminderGreeting: true, reminderBody: true,
+        name: true, email: true, phone: true, emailWeeklySummary: true,
+        reminderGreeting: true, reminderBody: true,
         company: { select: { name: true } },
       },
     });
