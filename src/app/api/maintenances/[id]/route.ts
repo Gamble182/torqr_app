@@ -72,7 +72,7 @@ export async function PATCH(
     }
 
     const updatedMaintenance = await prisma.maintenance.update({
-      where: { id },
+      where: { id, companyId },
       data: {
         date: new Date(validated.date),
         notes: validated.notes ?? null,
@@ -128,7 +128,7 @@ export async function DELETE(
       }
     }
 
-    await prisma.maintenance.delete({ where: { id } });
+    await prisma.maintenance.delete({ where: { id, companyId } });
 
     return NextResponse.json({ success: true, message: 'Wartung erfolgreich gelöscht' });
   } catch (error) {

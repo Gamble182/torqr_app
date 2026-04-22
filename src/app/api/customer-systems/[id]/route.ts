@@ -65,6 +65,20 @@ export async function PATCH(
     const body = await request.json();
     const validated = customerSystemUpdateSchema.parse(body);
 
+    // Validate new customerId belongs to same company
+    if (validated.customerId !== undefined && validated.customerId !== existing.customerId) {
+      const newCustomer = await prisma.customer.findFirst({
+        where: { id: validated.customerId, companyId },
+        select: { id: true },
+      });
+      if (!newCustomer) {
+        return NextResponse.json(
+          { success: false, error: 'Kunde nicht gefunden' },
+          { status: 400 }
+        );
+      }
+    }
+
     // Only OWNER can assign technicians
     if (validated.assignedToUserId !== undefined && role !== 'OWNER') {
       return NextResponse.json(
@@ -98,7 +112,7 @@ export async function PATCH(
     }
 
     const updated = await prisma.customerSystem.update({
-      where: { id },
+      where: { id, companyId },
       data: {
         ...(validated.catalogId !== undefined && { catalogId: validated.catalogId }),
         ...(validated.customerId !== undefined && { customerId: validated.customerId }),
@@ -152,7 +166,7 @@ export async function DELETE(
       return NextResponse.json({ success: false, error: 'System nicht gefunden' }, { status: 404 });
     }
 
-    await prisma.customerSystem.delete({ where: { id } });
+    await prisma.customerSystem.delete({ where: { id, companyId } });
 
     return NextResponse.json({ success: true, message: 'System erfolgreich gelöscht' });
   } catch (error) {

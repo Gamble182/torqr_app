@@ -115,6 +115,7 @@ export async function PATCH(
     const updatedCustomer = await prisma.customer.update({
       where: {
         id: id,
+        companyId,
       },
       data: {
         ...(validatedData.name && { name: validatedData.name }),
@@ -187,7 +188,7 @@ export async function DELETE(
     }
 
     // 4. Delete customer (cascade will delete systems, maintenances, etc.)
-    await prisma.customer.delete({ where: { id } });
+    await prisma.customer.delete({ where: { id, companyId } });
 
     return NextResponse.json({ success: true, message: 'Kunde erfolgreich gelöscht' });
   } catch (error) {
