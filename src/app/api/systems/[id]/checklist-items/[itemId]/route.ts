@@ -36,10 +36,10 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Unbekannter Fehler';
-    if (message === 'Unauthorized') {
-      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    if (err instanceof Error && err.message === 'Unauthorized') {
+      return NextResponse.json({ success: false, error: 'Nicht autorisiert' }, { status: 401 });
     }
-    return NextResponse.json({ success: false, error: message }, { status: 500 });
+    console.error('Error deleting checklist item:', err);
+    return NextResponse.json({ success: false, error: 'Fehler beim Löschen des Checklisteneintrags' }, { status: 500 });
   }
 }

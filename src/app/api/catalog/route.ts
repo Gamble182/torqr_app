@@ -5,6 +5,8 @@ import { z } from 'zod';
 import { catalogCreateSchema } from '@/lib/validations';
 import { SystemType, AcSubtype, StorageSubtype } from '@prisma/client';
 
+const validSystemTypes = Object.values(SystemType);
+
 /**
  * GET /api/catalog?systemType=HEATING
  * Returns all catalog entries, optionally filtered by systemType.
@@ -13,7 +15,10 @@ export async function GET(request: NextRequest) {
   try {
     await requireAuth();
 
-    const systemType = request.nextUrl.searchParams.get('systemType') as SystemType | null;
+    const rawSystemType = request.nextUrl.searchParams.get('systemType');
+    const systemType = rawSystemType && validSystemTypes.includes(rawSystemType as SystemType)
+      ? (rawSystemType as SystemType)
+      : null;
 
     const entries = await prisma.systemCatalog.findMany({
       where: systemType ? { systemType } : undefined,

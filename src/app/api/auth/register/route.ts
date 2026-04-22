@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     if (!validationResult.success) {
       return NextResponse.json(
         {
-          error: 'Validation failed',
+          error: 'Validierung fehlgeschlagen',
           details: validationResult.errors,
         },
         { status: 400 }
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
 
     if (existingUser) {
       return NextResponse.json(
-        { error: 'User with this email already exists' },
+        { error: 'Ein Benutzer mit dieser E-Mail-Adresse existiert bereits' },
         { status: 400 }
       );
     }
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(
       {
-        message: 'User registered successfully',
+        message: 'Registrierung erfolgreich',
         user,
       },
       { status: 201 }
@@ -84,7 +84,7 @@ export async function POST(request: NextRequest) {
     // Handle other errors
     console.error('Registration error:', error);
     return NextResponse.json(
-      { error: 'An error occurred during registration' },
+      { error: 'Fehler bei der Registrierung' },
       { status: 500 }
     );
   }

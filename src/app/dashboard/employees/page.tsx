@@ -160,7 +160,7 @@ export default function EmployeesPage() {
             </div>
             <p className="text-sm text-muted-foreground">
               <strong>{tempPasswordInfo.name}</strong> ({tempPasswordInfo.email}) wurde erfolgreich angelegt.
-              Teilen Sie das temporare Passwort mit dem Techniker. Es muss beim ersten Login geandert werden.
+              Teilen Sie das temporäre Passwort mit dem Techniker. Es muss beim ersten Login geändert werden.
             </p>
             <div className="flex items-center gap-2 p-3 bg-muted rounded-lg font-mono text-sm">
               <span className="flex-1 select-all">{tempPasswordInfo.password}</span>

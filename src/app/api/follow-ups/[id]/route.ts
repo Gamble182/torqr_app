@@ -58,11 +58,11 @@ export async function PATCH(
         { status: 400 }
       );
     }
-    const message = err instanceof Error ? err.message : 'Unbekannter Fehler';
-    if (message === 'Unauthorized') {
-      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    if (err instanceof Error && err.message === 'Unauthorized') {
+      return NextResponse.json({ success: false, error: 'Nicht autorisiert' }, { status: 401 });
     }
-    return NextResponse.json({ success: false, error: message }, { status: 500 });
+    console.error('Error updating follow-up:', err);
+    return NextResponse.json({ success: false, error: 'Fehler beim Aktualisieren des Nachfolgeauftrags' }, { status: 500 });
   }
 }
 
@@ -97,10 +97,10 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Unbekannter Fehler';
-    if (message === 'Unauthorized') {
-      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+    if (err instanceof Error && err.message === 'Unauthorized') {
+      return NextResponse.json({ success: false, error: 'Nicht autorisiert' }, { status: 401 });
     }
-    return NextResponse.json({ success: false, error: message }, { status: 500 });
+    console.error('Error deleting follow-up:', err);
+    return NextResponse.json({ success: false, error: 'Fehler beim Löschen des Nachfolgeauftrags' }, { status: 500 });
   }
 }

@@ -33,7 +33,7 @@ export async function GET(
     if (!customer) {
       return NextResponse.json({
         success: false,
-        error: 'Customer not found',
+        error: 'Kunde nicht gefunden',
       }, { status: 404 });
     }
 
@@ -48,7 +48,7 @@ export async function GET(
     if (error instanceof Error && error.message === 'Unauthorized') {
       return NextResponse.json({
         success: false,
-        error: 'Unauthorized',
+        error: 'Nicht autorisiert',
       }, { status: 401 });
     }
 
@@ -56,7 +56,7 @@ export async function GET(
     console.error('Error fetching customer:', error);
     return NextResponse.json({
       success: false,
-      error: 'Failed to fetch customer',
+      error: 'Fehler beim Laden des Kunden',
     }, { status: 500 });
   }
 }
@@ -93,7 +93,7 @@ export async function PATCH(
     if (!existingCustomer) {
       return NextResponse.json({
         success: false,
-        error: 'Customer not found',
+        error: 'Kunde nicht gefunden',
       }, { status: 404 });
     }
 
@@ -140,7 +140,7 @@ export async function PATCH(
     if (error instanceof z.ZodError) {
       return NextResponse.json({
         success: false,
-        error: 'Validation error',
+        error: 'Validierungsfehler',
         details: error.issues,
       }, { status: 400 });
     }
@@ -149,7 +149,7 @@ export async function PATCH(
     if (error instanceof Error && error.message === 'Unauthorized') {
       return NextResponse.json({
         success: false,
-        error: 'Unauthorized',
+        error: 'Nicht autorisiert',
       }, { status: 401 });
     }
 
@@ -157,7 +157,7 @@ export async function PATCH(
     console.error('Error updating customer:', error);
     return NextResponse.json({
       success: false,
-      error: 'Failed to update customer',
+      error: 'Fehler beim Aktualisieren des Kunden',
     }, { status: 500 });
   }
 }
@@ -189,15 +189,15 @@ export async function DELETE(
     // 4. Delete customer (cascade will delete systems, maintenances, etc.)
     await prisma.customer.delete({ where: { id } });
 
-    return NextResponse.json({ success: true, message: 'Kunde erfolgreich geloscht' });
+    return NextResponse.json({ success: true, message: 'Kunde erfolgreich gelöscht' });
   } catch (error) {
     if (error instanceof Error && error.message === 'Unauthorized') {
       return NextResponse.json({ success: false, error: 'Nicht autorisiert' }, { status: 401 });
     }
     if (error instanceof Error && error.message === 'Forbidden') {
-      return NextResponse.json({ success: false, error: 'Nur Inhaber konnen Kunden loschen' }, { status: 403 });
+      return NextResponse.json({ success: false, error: 'Nur Inhaber können Kunden löschen' }, { status: 403 });
     }
     console.error('Error deleting customer:', error);
-    return NextResponse.json({ success: false, error: 'Fehler beim Loschen des Kunden' }, { status: 500 });
+    return NextResponse.json({ success: false, error: 'Fehler beim Löschen des Kunden' }, { status: 500 });
   }
 }
