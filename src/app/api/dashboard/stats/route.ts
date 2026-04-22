@@ -14,7 +14,8 @@ export async function GET(request: NextRequest) {
     const { userId, companyId, role } = await requireAuth();
 
     const searchParams = request.nextUrl.searchParams;
-    const days = parseInt(searchParams.get('days') || '30');
+    const daysRaw = parseInt(searchParams.get('days') || '30');
+    const days = Number.isFinite(daysRaw) && daysRaw > 0 ? daysRaw : 30;
 
     const now = new Date();
     const futureDate = new Date();

@@ -32,7 +32,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials, request) {
+      async authorize(credentials, _request) {
         const headersList = await headers();
         const ip = headersList.get('x-forwarded-for')?.split(',')[0].trim()
           ?? headersList.get('x-real-ip')
@@ -101,7 +101,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: '/login',
   },
   callbacks: {
-    async jwt({ token, user, trigger }) {
+    async jwt({ token, user, trigger: _trigger }) {
       // Add user id to token on sign in
       if (user) {
         token.id = user.id;

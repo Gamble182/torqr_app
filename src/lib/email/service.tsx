@@ -76,7 +76,6 @@ export async function sendReminder(
     })
   );
 
-  const systemLabel = [catalog.manufacturer, catalog.name].filter(Boolean).join(' ');
   const weekWord = weeksUntil === 1 ? 'Woche' : 'Wochen';
 
   const { data, error } = await resend.emails.send({

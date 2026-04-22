@@ -45,7 +45,7 @@ describe('customerSystemCreateSchema', () => {
     const result = customerSystemCreateSchema.safeParse({
       catalogId: '123e4567-e89b-12d3-a456-426614174000',
       customerId: '123e4567-e89b-12d3-a456-426614174001',
-      maintenanceInterval: '12',
+      maintenanceInterval: 12,
     });
     expect(result.success).toBe(true);
   });
@@ -53,16 +53,25 @@ describe('customerSystemCreateSchema', () => {
   it('rejects missing catalogId', () => {
     const result = customerSystemCreateSchema.safeParse({
       customerId: '123e4567-e89b-12d3-a456-426614174001',
-      maintenanceInterval: '12',
+      maintenanceInterval: 12,
     });
     expect(result.success).toBe(false);
   });
 
-  it('rejects invalid maintenanceInterval', () => {
+  it('rejects non-positive maintenanceInterval', () => {
     const result = customerSystemCreateSchema.safeParse({
       catalogId: '123e4567-e89b-12d3-a456-426614174000',
       customerId: '123e4567-e89b-12d3-a456-426614174001',
-      maintenanceInterval: '7',
+      maintenanceInterval: -1,
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects string maintenanceInterval', () => {
+    const result = customerSystemCreateSchema.safeParse({
+      catalogId: '123e4567-e89b-12d3-a456-426614174000',
+      customerId: '123e4567-e89b-12d3-a456-426614174001',
+      maintenanceInterval: '12',
     });
     expect(result.success).toBe(false);
   });

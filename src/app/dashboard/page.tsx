@@ -11,7 +11,6 @@ import {
   CalendarIcon,
   MapPinIcon,
   PhoneIcon,
-  ClockIcon,
   CheckCircle2Icon,
   ArrowRightIcon,
   TrendingUpIcon,

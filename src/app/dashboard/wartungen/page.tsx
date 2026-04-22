@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -72,13 +72,7 @@ export default function WartungenPage() {
   const [dateTo, setDateTo] = useState('');
   const [useCustomDateRange, setUseCustomDateRange] = useState(false);
 
-  useEffect(() => {
-    if (!useCustomDateRange || (useCustomDateRange && dateFrom && dateTo)) {
-      fetchWartungen();
-    }
-  }, [filterStatus, timeRange, dateFrom, dateTo, useCustomDateRange]);
-
-  const fetchWartungen = async () => {
+  const fetchWartungen = useCallback(async () => {
     try {
       setLoading(true);
       let queryString = `status=${filterStatus}`;
@@ -101,7 +95,13 @@ export default function WartungenPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filterStatus, timeRange, dateFrom, dateTo, useCustomDateRange]);
+
+  useEffect(() => {
+    if (!useCustomDateRange || (useCustomDateRange && dateFrom && dateTo)) {
+      fetchWartungen();
+    }
+  }, [fetchWartungen, useCustomDateRange, dateFrom, dateTo]);
 
   const getMaintenanceUrgency = (dateString: string) => {
     const date = new Date(dateString);

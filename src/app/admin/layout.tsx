@@ -12,7 +12,6 @@ import {
   MailIcon,
   ActivityIcon,
   LogOutIcon,
-  ShieldIcon,
 } from 'lucide-react';
 
 const navigation = [

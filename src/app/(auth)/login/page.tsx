@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { TorqrIcon, TorqrWordmark } from '@/components/brand/TorqrIcon';
+import { TorqrWordmark } from '@/components/brand/TorqrIcon';
 import { Loader2Icon, AlertCircleIcon, CheckCircleIcon } from 'lucide-react';
 
 const loginSchema = z.object({
