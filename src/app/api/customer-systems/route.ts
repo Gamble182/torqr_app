@@ -11,7 +11,7 @@ import { rateLimitByUser, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
  */
 export async function GET(request: NextRequest) {
   try {
-    const { companyId } = await requireAuth();
+    const { userId, companyId, role } = await requireAuth();
 
     const searchParams = request.nextUrl.searchParams;
     const customerId = searchParams.get('customerId');
@@ -28,6 +28,7 @@ export async function GET(request: NextRequest) {
 
     const where: Prisma.CustomerSystemWhereInput = {
       companyId,
+      ...(role === 'TECHNICIAN' && { assignedToUserId: userId }),
       ...(customerId && { customerId }),
       ...(search && {
         OR: [

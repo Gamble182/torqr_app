@@ -66,8 +66,6 @@ _(no open items)_
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
 | 37 | Feature | Technician calendar view — which technician has appointments when. Admin can enter vacation / sick days. Sick day triggers automated rebook email to affected customers. | Medium | 2026-04-16 |
-| 53 | Feature | Technician system list filtering — TECHNICIAN role currently sees all company systems on the /dashboard/systems page. Should be filtered to only show assigned systems (matching dashboard stats scoping). | Medium | 2026-04-22 |
-| 54 | Feature | Must-change-password flow — TECHNICIAN users created with `mustChangePassword: true` need a force-change-password page after first login. Middleware redirect exists but the page implementation is pending. | High | 2026-04-22 |
 
 ### Data Import
 
@@ -115,6 +113,8 @@ Items are grouped by sprint / work session, ordered newest first.
 | — | Security | Permission matrix enforced — DELETE operations require `requireOwner()`. Bookings POST restricted to OWNER only. Send-reminder restricted to OWNER only. Technician assignment restricted to OWNER only. Nav items filtered by role. Delete/booking buttons hidden for TECHNICIAN. | 2026-04-22 |
 | — | Feature | Company name setup modal — shown once for OWNER when `company.name` is null. Ensures company identity is set before employees are created. | 2026-04-22 |
 | — | Testing | Tenant isolation audit test updated — checks all route files for `companyId` scoping (tenant routes) or `userId` scoping (user routes). Catches uncategorised new routes. Pre-existing stale entry for `sentry-example-api` removed. | 2026-04-22 |
+| 53 | Feature | TECHNICIAN list filtering — `customer-systems`, `wartungen`, and `bookings` GET routes now scope to assigned systems / own bookings for TECHNICIAN role. OWNER sees all company data. Consistent with dashboard stats scoping. | 2026-04-22 |
+| 54 | Feature | Must-change-password flow — `ProtectedRoute` redirects to `/dashboard/change-password` when `mustChangePassword: true`. Change-password page with validation + `POST /api/user/force-change-password` API route that sets `mustChangePassword: false`. Session refresh after change. | 2026-04-22 |
 | — | Docs | CLAUDE.md updated with Company-as-Tenant isolation rules, role helpers, exception list, and multi-tenancy section. | 2026-04-22 |
 
 ### Sprint 22 — Account Cleanup + Delete Account (2026-04-22)
