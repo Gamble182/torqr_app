@@ -239,6 +239,7 @@ export const customerSystemUpdateSchema = z.object({
   lastMaintenance: z.string().datetime().optional().nullable(),
   storageCapacityLiters: z.number().int().positive().optional().nullable(),
   requiredParts: z.string().optional().nullable(),
+  assignedToUserId: uuidSchema.optional().nullable(),
 });
 
 // ============================================================================

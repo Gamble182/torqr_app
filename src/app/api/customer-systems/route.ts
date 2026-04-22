@@ -48,6 +48,7 @@ export async function GET(request: NextRequest) {
         customer: {
           select: { id: true, name: true, street: true, city: true, phone: true },
         },
+        assignedTo: { select: { id: true, name: true } },
         _count: { select: { maintenances: true, followUpJobs: { where: { completed: false } } } },
         maintenances: customerId
           ? { orderBy: { date: 'desc' }, take: 5 }

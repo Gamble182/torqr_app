@@ -164,9 +164,8 @@ export async function sendBookingConfirmation(bookingId: string): Promise<void> 
 }
 
 /**
- * Send the weekly summary email to a user.
- * If userId provided (manual trigger): looks up user by ID.
- * If no userId (cron): falls back to SUMMARY_RECIPIENT_EMAIL env var.
+ * Send the weekly summary email to a single user.
+ * Role-aware: OWNER gets company-wide data, TECHNICIAN gets only assigned systems + own maintenances.
  * Respects the user's emailWeeklySummary preference — returns { emailsSent: 0 } if disabled.
  */
 export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: number }> {
@@ -192,6 +191,21 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
 
   const LIST_LIMIT = 10;
 
+  const isOwner = user.role === 'OWNER';
+
+  // Scope queries by role: OWNER sees company-wide, TECHNICIAN sees only assigned systems
+  const systemScope = isOwner
+    ? { companyId: user.companyId }
+    : { companyId: user.companyId, assignedToUserId: user.id };
+
+  const maintenanceScope = isOwner
+    ? { companyId: user.companyId }
+    : { companyId: user.companyId, userId: user.id };
+
+  const bookingScope = isOwner
+    ? { companyId: user.companyId }
+    : { companyId: user.companyId, userId: user.id };
+
   const [
     bookingsRaw,
     dueSystemsRaw,
@@ -203,7 +217,7 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
   ] = await Promise.all([
     prisma.booking.findMany({
       where: {
-        companyId: user.companyId,
+        ...bookingScope,
         status: 'CONFIRMED',
         startTime: { gte: now, lte: weekEnd },
       },
@@ -215,7 +229,7 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
     }),
     prisma.customerSystem.findMany({
       where: {
-        companyId: user.companyId,
+        ...systemScope,
         nextMaintenance: { gte: now, lte: weekEnd },
       },
       include: {
@@ -231,7 +245,7 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
     }),
     prisma.customerSystem.findMany({
       where: {
-        companyId: user.companyId,
+        ...systemScope,
         nextMaintenance: { lt: now },
       },
       include: {
@@ -241,7 +255,7 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
       orderBy: { nextMaintenance: 'asc' },
     }),
     prisma.maintenance.findMany({
-      where: { companyId: user.companyId, date: { gte: weekAgo, lte: now } },
+      where: { ...maintenanceScope, date: { gte: weekAgo, lte: now } },
       select: { id: true },
     }),
     prisma.emailLog.count({
@@ -252,12 +266,12 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
       },
     }),
     prisma.customer.count({ where: { companyId: user.companyId } }),
-    prisma.customerSystem.count({ where: { companyId: user.companyId } }),
+    prisma.customerSystem.count({ where: systemScope }),
   ]);
 
   const bookingsAttendedLastWeek = await prisma.booking.count({
     where: {
-      companyId: user.companyId,
+      ...bookingScope,
       status: 'CONFIRMED',
       startTime: { gte: weekAgo, lte: now },
     },
@@ -319,4 +333,31 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
   if (error) throw new Error(`Resend error for weekly summary: ${JSON.stringify(error)}`);
 
   return { emailsSent: 1 };
+}
+
+/**
+ * Send weekly summary to all active users who have the preference enabled.
+ * Called by the cron job. Returns total emails sent.
+ */
+export async function sendWeeklySummaryToAll(): Promise<{ emailsSent: number; errors: string[] }> {
+  const users = await prisma.user.findMany({
+    where: { isActive: true, emailWeeklySummary: true },
+    select: { id: true },
+  });
+
+  let emailsSent = 0;
+  const errors: string[] = [];
+
+  for (const user of users) {
+    try {
+      const result = await sendWeeklySummary(user.id);
+      emailsSent += result.emailsSent;
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      errors.push(`User ${user.id}: ${msg}`);
+      console.error(`[weekly-summary] Failed for user ${user.id}:`, msg);
+    }
+  }
+
+  return { emailsSent, errors };
 }

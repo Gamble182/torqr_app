@@ -61,7 +61,6 @@ const EXEMPT_ROUTES: Record<string, string> = {
   'email/unsubscribe/[token]/route.ts': 'Stateless HMAC token — no session required',
   'auth/[...nextauth]/route.ts':      'Auth handler — not a data route',
   'auth/register/route.ts':           'Registration — creates new company + user',
-  'sentry-example-api/route.ts':      'Sentry test route — no tenant data',
   'upload/photo/route.ts':            'Storage-only route — ownership verified via companyId on maintenance record',
 };
 

@@ -5,6 +5,7 @@ import type { CatalogEntry } from './useCatalog';
 export interface CustomerSystem {
   id: string;
   userId: string;
+  companyId: string;
   customerId: string;
   catalogId: string;
   catalog: CatalogEntry;
@@ -15,6 +16,8 @@ export interface CustomerSystem {
   nextMaintenance: string | null;
   storageCapacityLiters: number | null;
   requiredParts: string | null;
+  assignedToUserId: string | null;
+  assignedTo?: { id: string; name: string } | null;
   createdAt: string;
   updatedAt: string;
   customer?: {

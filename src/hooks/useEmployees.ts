@@ -34,11 +34,12 @@ async function fetchEmployees(): Promise<Employee[]> {
   return result.data;
 }
 
-export function useEmployees() {
+export function useEmployees(options?: { enabled?: boolean }) {
   return useQuery({
     queryKey: ['employees'],
     queryFn: fetchEmployees,
     staleTime: 30_000,
+    enabled: options?.enabled ?? true,
   });
 }
 

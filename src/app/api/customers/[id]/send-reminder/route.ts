@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAuth } from '@/lib/auth-helpers';
+import { requireOwner } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 import { sendReminder } from '@/lib/email/service';
 
@@ -8,7 +8,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { companyId } = await requireAuth();
+    const { companyId } = await requireOwner();
     const { id: customerId } = await params;
 
     const body = await req.json().catch(() => ({})) as { systemId?: string };
@@ -44,7 +44,10 @@ export async function POST(
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unbekannter Fehler';
     if (message === 'Unauthorized') {
-      return NextResponse.json({ success: false, error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ success: false, error: 'Nicht autorisiert' }, { status: 401 });
+    }
+    if (message === 'Forbidden') {
+      return NextResponse.json({ success: false, error: 'Nur Inhaber können Erinnerungen senden' }, { status: 403 });
     }
     return NextResponse.json({ success: false, error: message }, { status: 500 });
   }

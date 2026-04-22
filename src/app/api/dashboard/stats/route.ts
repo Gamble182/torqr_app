@@ -1,13 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
+import type { Prisma } from '@prisma/client';
 
 /**
  * GET /api/dashboard/stats?days=30
+ *
+ * OWNER: Company-wide stats — all systems, all maintenances.
+ * TECHNICIAN: "Meine Woche" — only systems assigned to self + own maintenances.
  */
 export async function GET(request: NextRequest) {
   try {
-    const { companyId } = await requireAuth();
+    const { userId, companyId, role } = await requireAuth();
 
     const searchParams = request.nextUrl.searchParams;
     const days = parseInt(searchParams.get('days') || '30');
@@ -15,6 +19,18 @@ export async function GET(request: NextRequest) {
     const now = new Date();
     const futureDate = new Date();
     futureDate.setDate(futureDate.getDate() + days);
+
+    const isOwner = role === 'OWNER';
+
+    // Technicians see only their assigned systems; owners see all company systems
+    const systemScope: Prisma.CustomerSystemWhereInput = isOwner
+      ? { companyId }
+      : { companyId, assignedToUserId: userId };
+
+    // Technicians see only their own maintenances; owners see all
+    const maintenanceScope: Prisma.MaintenanceWhereInput = isOwner
+      ? { companyId }
+      : { companyId, userId };
 
     const [
       totalCustomers,
@@ -26,28 +42,29 @@ export async function GET(request: NextRequest) {
     ] = await Promise.all([
       prisma.customer.count({ where: { companyId } }),
 
-      prisma.customerSystem.count({ where: { companyId } }),
+      prisma.customerSystem.count({ where: systemScope }),
 
       prisma.customerSystem.count({
-        where: { companyId, nextMaintenance: { lt: now } },
+        where: { ...systemScope, nextMaintenance: { lt: now } },
       }),
 
       prisma.customerSystem.count({
-        where: { companyId, nextMaintenance: { gte: now, lte: futureDate } },
+        where: { ...systemScope, nextMaintenance: { gte: now, lte: futureDate } },
       }),
 
       prisma.customerSystem.findMany({
-        where: { companyId, nextMaintenance: { gte: now, lte: futureDate } },
+        where: { ...systemScope, nextMaintenance: { gte: now, lte: futureDate } },
         include: {
           catalog: true,
           customer: { select: { id: true, name: true, city: true, phone: true } },
+          assignedTo: { select: { id: true, name: true } },
         },
         orderBy: { nextMaintenance: 'asc' },
         take: 10,
       }),
 
       prisma.maintenance.findMany({
-        where: { companyId },
+        where: maintenanceScope,
         include: {
           system: {
             include: {
@@ -61,15 +78,35 @@ export async function GET(request: NextRequest) {
       }),
     ]);
 
+    // For OWNER only: find systems/bookings assigned to deactivated users
+    let unassignedAfterDeactivation: unknown[] = [];
+    if (isOwner) {
+      unassignedAfterDeactivation = await prisma.customerSystem.findMany({
+        where: {
+          companyId,
+          assignedToUserId: { not: null },
+          assignedTo: { isActive: false },
+        },
+        include: {
+          catalog: true,
+          customer: { select: { id: true, name: true } },
+          assignedTo: { select: { id: true, name: true } },
+        },
+        orderBy: { nextMaintenance: 'asc' },
+      });
+    }
+
     return NextResponse.json({
       success: true,
       data: {
+        role,
         totalCustomers,
         totalSystems,
         overdueMaintenances,
         upcomingMaintenances,
         upcomingSystemsList,
         recentMaintenances,
+        unassignedAfterDeactivation,
       },
     });
   } catch (error) {

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAuth } from '@/lib/auth-helpers';
+import { requireAuth, requireOwner } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { randomUUID } from 'crypto';
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    const { userId, companyId } = await requireAuth();
+    const { userId, companyId } = await requireOwner();
 
     const body = await request.json();
     const validated = manualBookingCreateSchema.parse(body);
@@ -86,6 +86,9 @@ export async function POST(request: NextRequest) {
     }
     if (error instanceof Error && error.message === 'Unauthorized') {
       return NextResponse.json({ success: false, error: 'Nicht autorisiert' }, { status: 401 });
+    }
+    if (error instanceof Error && error.message === 'Forbidden') {
+      return NextResponse.json({ success: false, error: 'Nur Inhaber können Termine erstellen' }, { status: 403 });
     }
     console.error('Error creating booking:', error);
     return NextResponse.json({ success: false, error: 'Fehler beim Erstellen des Termins' }, { status: 500 });

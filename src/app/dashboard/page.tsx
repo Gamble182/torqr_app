@@ -15,6 +15,7 @@ import {
   CheckCircle2Icon,
   ArrowRightIcon,
   TrendingUpIcon,
+  UserXIcon,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
@@ -99,9 +100,13 @@ export default function DashboardPage() {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
+        <h1 className="text-2xl font-bold text-foreground">
+          {stats?.role === 'TECHNICIAN' ? 'Meine Woche' : 'Dashboard'}
+        </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Übersicht über Ihre Kunden und anstehende Wartungen
+          {stats?.role === 'TECHNICIAN'
+            ? 'Ihre zugewiesenen Wartungen und Termine'
+            : 'Übersicht über Ihre Kunden und anstehende Wartungen'}
         </p>
       </div>
 
@@ -166,6 +171,43 @@ export default function DashboardPage() {
           <p className="text-xs text-muted-foreground mt-0.5">Nächste 30 Tage</p>
         </div>
       </div>
+
+      {/* Unassigned after deactivation — OWNER only */}
+      {stats?.role === 'OWNER' && stats.unassignedAfterDeactivation.length > 0 && (
+        <div className="bg-status-overdue-bg rounded-xl border border-status-overdue-border">
+          <div className="px-6 py-4 border-b border-status-overdue-border">
+            <div className="flex items-center gap-2">
+              <UserXIcon className="h-4.5 w-4.5 text-status-overdue-text" />
+              <h2 className="text-base font-semibold text-status-overdue-text">
+                Nicht zugewiesen nach Deaktivierung
+              </h2>
+            </div>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Diese Systeme waren einem deaktivierten Mitarbeiter zugewiesen und müssen neu zugewiesen werden
+            </p>
+          </div>
+          <div className="p-4 space-y-2">
+            {stats.unassignedAfterDeactivation.map((system) => (
+              <div
+                key={system.id}
+                className="flex items-center gap-4 p-3 rounded-lg border border-status-overdue-border bg-card cursor-pointer hover:shadow-sm transition-all"
+                onClick={() => router.push(`/dashboard/systems/${system.id}`)}
+              >
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium truncate">{system.customer.name}</p>
+                  <p className="text-xs text-muted-foreground truncate">
+                    {system.catalog.manufacturer} {system.catalog.name}
+                    {system.assignedTo && ` — bisher: ${system.assignedTo.name}`}
+                  </p>
+                </div>
+                <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); router.push(`/dashboard/systems/${system.id}`); }}>
+                  Neu zuweisen
+                </Button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Upcoming Maintenances */}
       <div className="bg-card rounded-xl border border-border">

@@ -21,6 +21,7 @@ export async function GET(
       include: {
         catalog: true,
         customer: { select: { id: true, name: true, street: true, city: true } },
+        assignedTo: { select: { id: true, name: true } },
         maintenances: { orderBy: { date: 'desc' } },
         bookings: {
           where: { startTime: { gte: now }, status: 'CONFIRMED' },
@@ -53,7 +54,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { companyId } = await requireAuth();
+    const { companyId, role } = await requireAuth();
     const { id } = await params;
 
     const existing = await prisma.customerSystem.findFirst({ where: { id, companyId } });
@@ -63,6 +64,28 @@ export async function PATCH(
 
     const body = await request.json();
     const validated = customerSystemUpdateSchema.parse(body);
+
+    // Only OWNER can assign technicians
+    if (validated.assignedToUserId !== undefined && role !== 'OWNER') {
+      return NextResponse.json(
+        { success: false, error: 'Nur Inhaber können Techniker zuweisen' },
+        { status: 403 }
+      );
+    }
+
+    // Validate assigned user belongs to same company and is active
+    if (validated.assignedToUserId) {
+      const assignee = await prisma.user.findFirst({
+        where: { id: validated.assignedToUserId, companyId, isActive: true },
+        select: { id: true },
+      });
+      if (!assignee) {
+        return NextResponse.json(
+          { success: false, error: 'Mitarbeiter nicht gefunden oder nicht aktiv' },
+          { status: 400 }
+        );
+      }
+    }
 
     let nextMaintenance = existing.nextMaintenance;
     if (validated.maintenanceInterval || validated.lastMaintenance) {
@@ -89,9 +112,15 @@ export async function PATCH(
         }),
         ...(validated.storageCapacityLiters !== undefined && { storageCapacityLiters: validated.storageCapacityLiters }),
         ...(validated.requiredParts !== undefined && { requiredParts: validated.requiredParts }),
+        ...(validated.assignedToUserId !== undefined && {
+          assignedToUserId: validated.assignedToUserId,
+        }),
         nextMaintenance,
       },
-      include: { catalog: true },
+      include: {
+        catalog: true,
+        assignedTo: { select: { id: true, name: true } },
+      },
     });
 
     return NextResponse.json({ success: true, data: updated });
