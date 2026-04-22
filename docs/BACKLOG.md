@@ -21,7 +21,7 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| 50 | Security | Re-apply RLS deny-all policies on new Supabase project (`hwagqyywixhhorhjtydt`). Tables show "UNRESTRICTED" — Sprint 21 RLS was applied to old project only. Not blocking (Prisma + service role bypasses RLS), but needed for defense-in-depth. | High | 2026-04-22 |
+| # | Area | Description | Priority | Found |
 | 49 | Infra | Delete old Supabase project (`vvsmxzebaoslofigxakt`, eu-west-1) — migrated to new project (`hwagqyywixhhorhjtydt`, eu-central-1) via Vercel integration. Delete once confident everything works. | Low | 2026-04-22 |
 
 ### System Model — Follow-up
@@ -111,6 +111,7 @@ Items are grouped by sprint / work session, ordered newest first.
 | 14 | Feature | Delete account / danger zone — `DELETE /api/user/account` with password verification, Supabase storage cleanup, cascading DB delete. `DangerZoneCard` with `AlertDialog` confirmation on account page. Redirects to login after deletion. | 2026-04-22 |
 | 41 | Config | Business hours — Mon–Fri 7:30–17:00 Europe/Berlin configured in Cal.com availability settings. | 2026-04-22 |
 | 43 | Config | Booking location — changed from "Online Call" to "In Person (Organizer Address)" with business address. | 2026-04-22 |
+| 50 | Security | RLS deny-all policies applied to all 12 public tables on new Supabase project (`hwagqyywixhhorhjtydt`). RLS was already enabled but had no explicit policies — now each table has a named `deny_all` policy. | 2026-04-22 |
 
 ### Sprint 21 — Security Hardening + Supabase Migration (2026-04-22)
 
