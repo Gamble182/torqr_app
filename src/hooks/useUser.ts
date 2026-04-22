@@ -90,6 +90,18 @@ export function useUser() {
     },
   });
 
+  const deleteAccount = useMutation({
+    mutationFn: async (password: string) => {
+      const res = await fetch('/api/user/account', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+      const result: ApiResponse<null> = await res.json();
+      if (!result.success) throw new Error(result.error || 'Fehler beim Löschen des Kontos');
+    },
+  });
+
   return {
     data: query.data,
     isLoading: query.isLoading,
@@ -98,5 +110,6 @@ export function useUser() {
     updatePassword,
     updatePreferences,
     sendWeeklySummary,
+    deleteAccount,
   };
 }

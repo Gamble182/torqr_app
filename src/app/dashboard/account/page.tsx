@@ -3,6 +3,7 @@ import { PasswordCard } from '@/components/account/PasswordCard';
 import { NotificationsCard } from '@/components/account/NotificationsCard';
 import { EmailActionsCard } from '@/components/account/EmailActionsCard';
 import { EmailTemplateCard } from '@/components/account/EmailTemplateCard';
+import { DangerZoneCard } from '@/components/account/DangerZoneCard';
 import { auth } from '@/lib/auth';
 import { isAdminEmail } from '@/lib/admin-auth';
 import { redirect } from 'next/navigation';
@@ -27,6 +28,7 @@ export default async function AccountPage() {
       <NotificationsCard />
       <EmailTemplateCard />
       <EmailActionsCard />
+      <DangerZoneCard />
 
       {isAdmin && (
         <Link
