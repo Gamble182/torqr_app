@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAuth } from '@/lib/auth-helpers';
+import { requireAuth, requireOwner } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { customerSystemUpdateSchema } from '@/lib/validations';
@@ -115,7 +115,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { companyId } = await requireAuth();
+    const { companyId } = await requireOwner();
     const { id } = await params;
 
     const existing = await prisma.customerSystem.findFirst({ where: { id, companyId } });
@@ -129,6 +129,9 @@ export async function DELETE(
   } catch (error) {
     if (error instanceof Error && error.message === 'Unauthorized') {
       return NextResponse.json({ success: false, error: 'Nicht autorisiert' }, { status: 401 });
+    }
+    if (error instanceof Error && error.message === 'Forbidden') {
+      return NextResponse.json({ success: false, error: 'Nur Inhaber können Systeme löschen' }, { status: 403 });
     }
     console.error('Error deleting system:', error);
     return NextResponse.json({ success: false, error: 'Fehler beim Löschen des Systems' }, { status: 500 });

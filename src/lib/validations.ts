@@ -400,6 +400,19 @@ export const fileUploadSchema = z.object({
 });
 
 // ============================================================================
+// EMPLOYEE MANAGEMENT SCHEMAS
+// ============================================================================
+
+/**
+ * Create a new technician account (OWNER only)
+ */
+export const employeeCreateSchema = z.object({
+  name: nonEmptyStringSchema,
+  email: emailSchema,
+  phone: optionalPhoneSchema,
+});
+
+// ============================================================================
 // HELPER FUNCTIONS
 // ============================================================================
 

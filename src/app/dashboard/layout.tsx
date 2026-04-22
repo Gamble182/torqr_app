@@ -1,5 +1,6 @@
 import { ProtectedRoute } from '@/components/ProtectedRoute';
 import { DashboardNav } from '@/components/DashboardNav';
+import { CompanyNameSetupModal } from '@/components/CompanyNameSetupModal';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 
 export default function DashboardLayout({
@@ -12,6 +13,7 @@ export default function DashboardLayout({
       <ErrorBoundary>
         <div className="min-h-screen bg-background">
           <DashboardNav />
+          <CompanyNameSetupModal />
           {/* Mobile: top padding for fixed mobile bar */}
           {/* Desktop: left margin for sidebar */}
           <main className="pt-14 lg:pt-0 lg:pl-65 transition-all duration-200">
