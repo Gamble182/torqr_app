@@ -201,11 +201,11 @@ export const catalogCreateSchema = z
     systemType: SystemTypeEnum,
     manufacturer: z.string().min(1, 'Hersteller ist erforderlich').max(100),
     name: z.string().min(1, 'Name ist erforderlich').max(100),
-    acSubtype: AcSubtypeEnum.optional(),
-    storageSubtype: StorageSubtypeEnum.optional(),
+    acSubtype: AcSubtypeEnum.nullish(),
+    storageSubtype: StorageSubtypeEnum.nullish(),
   })
   .refine(
-    (data) => data.systemType !== 'AC' || data.acSubtype !== undefined,
+    (data) => data.systemType !== 'AC' || !!data.acSubtype,
     { message: 'AC-Subtyp ist für Klimaanlagen erforderlich', path: ['acSubtype'] }
   );
 
