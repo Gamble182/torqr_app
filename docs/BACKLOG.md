@@ -19,7 +19,10 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 
 ### Architecture & Security
 
-_(no open items)_
+| # | Area | Description | Priority | Found |
+|---|------|-------------|----------|-------|
+| 48 | Cleanup | Supabase client cleanup — `deleteMaintenancePhoto()` in `src/lib/supabase.ts` uses anon client instead of admin client. `uploadMaintenancePhoto()` is dead code (uploads go through API route). Anon client export (`getSupabaseClient`) may be entirely unused. Remove dead code, switch delete to admin client. | Medium | 2026-04-22 |
+| 49 | Infra | Delete old Supabase project (`vvsmxzebaoslofigxakt`, eu-west-1) — migrated to new project (`hwagqyywixhhorhjtydt`, eu-central-1) via Vercel integration. Delete once confident everything works. | Low | 2026-04-22 |
 
 ### System Model — Follow-up
 
@@ -101,6 +104,17 @@ Ideas worth keeping in mind but not planned for current sprints. No implementati
 ## Completed / Resolved
 
 Items are grouped by sprint / work session, ordered newest first.
+
+### Sprint 21 — Security Hardening + Supabase Migration (2026-04-22)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| — | Security | Full credential rotation — DB password, Supabase service role key, Resend API key, Cal.com webhook secret, Sentry auth token, AUTH_SECRET, CRON_SECRET, UNSUBSCRIBE_SECRET. All Vercel env vars marked sensitive where applicable. | 2026-04-22 |
+| — | Security | RLS enabled on all 13 public tables with deny-all policy. Fixes Supabase "tables publicly accessible" critical alert. All data access goes through Prisma + service role key (bypasses RLS). | 2026-04-22 |
+| — | Security | Storage bucket `maintenance-photos` recreated without broad SELECT policy. Fixes "public bucket allows listing" warning. Public URLs still work, but file listing is blocked. | 2026-04-22 |
+| — | Infra | Migrated to new Supabase project (`hwagqyywixhhorhjtydt`, eu-central-1) via Vercel integration. All 6 Prisma migrations applied. Storage bucket configured with 5MB limit and JPEG/PNG/WebP restriction. | 2026-04-22 |
+| — | Fix | Prisma config — switched from `env()` (broken in Prisma 7 for `migrate deploy`) to `dotenv/config` import + `process.env.DIRECT_URL` fallback. Migrations now work reliably. | 2026-04-22 |
+| — | Fix | SSL fix for `pg` Pool — Supabase requires SSL but `pg` library doesn't parse `sslmode` from connection string. Added explicit `ssl: { rejectUnauthorized: false }` to Pool constructor. | 2026-04-22 |
 
 ### Sprint 20 — Follow-Up Jobs + Installation Date Checkbox (2026-04-21)
 
