@@ -16,7 +16,9 @@ export async function GET(
         id: true,
         name: true,
         email: true,
-        companyName: true,
+        role: true,
+        isActive: true,
+        company: { select: { id: true, name: true } },
         phone: true,
         createdAt: true,
         updatedAt: true,
@@ -59,7 +61,7 @@ export async function GET(
       }),
     ]);
 
-    return NextResponse.json({ success: true, data: { ...user, emailLogs, lastLogin } });
+    return NextResponse.json({ success: true, data: { ...user, companyName: user.company?.name ?? null, emailLogs, lastLogin } });
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Unknown error';
     if (message === 'Unauthorized') return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });

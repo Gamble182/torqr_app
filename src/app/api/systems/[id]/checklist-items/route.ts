@@ -5,9 +5,9 @@ import { z } from 'zod';
 import { checklistItemCreateSchema } from '@/lib/validations';
 import { rateLimitByUser, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 
-async function verifySystemOwnership(systemId: string, userId: string) {
+async function verifySystemOwnership(systemId: string, companyId: string) {
   return prisma.customerSystem.findFirst({
-    where: { id: systemId, userId },
+    where: { id: systemId, companyId },
     select: { id: true },
   });
 }
@@ -21,10 +21,10 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await requireAuth();
+    const { companyId } = await requireAuth();
     const { id: systemId } = await params;
 
-    const system = await verifySystemOwnership(systemId, userId);
+    const system = await verifySystemOwnership(systemId, companyId);
     if (!system) {
       return NextResponse.json({ success: false, error: 'System nicht gefunden' }, { status: 404 });
     }
@@ -55,14 +55,14 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await requireAuth();
+    const { userId, companyId } = await requireAuth();
 
     const rateLimitResponse = rateLimitByUser(req, userId, RATE_LIMIT_PRESETS.API_USER);
     if (rateLimitResponse) return rateLimitResponse;
 
     const { id: systemId } = await params;
 
-    const system = await verifySystemOwnership(systemId, userId);
+    const system = await verifySystemOwnership(systemId, companyId);
     if (!system) {
       return NextResponse.json({ success: false, error: 'System nicht gefunden' }, { status: 404 });
     }

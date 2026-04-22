@@ -63,11 +63,8 @@ _(no open items)_
 
 ### Workforce & Scheduling
 
-Relevant once multiple employees are on the platform.
-
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| 26 | Feature | Employee management — "Mitarbeiter" tab. Create/delete employees. Show weekly maintenance count per employee and historical workload. | Medium | 2026-04-16 |
 | 37 | Feature | Technician calendar view — which technician has appointments when. Admin can enter vacation / sick days. Sick day triggers automated rebook email to affected customers. | Medium | 2026-04-16 |
 
 ### Data Import
@@ -102,6 +99,23 @@ Ideas worth keeping in mind but not planned for current sprints. No implementati
 ## Completed / Resolved
 
 Items are grouped by sprint / work session, ordered newest first.
+
+### Sprint 23 — Company Multi-User Architecture (2026-04-22)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| — | Architecture | User-as-Tenant → Company-as-Tenant migration. `Company` model added. All tenant-scoped tables (`Customer`, `CustomerSystem`, `Maintenance`, `Booking`, `FollowUpJob`, `EmailLog`) now have `companyId` FK. All 19 API routes migrated from `userId` to `companyId` scoping. `userId` retained as audit field on create operations only. Full decision record: `docs/superpowers/specs/2026-04-22-company-multi-user-architecture.md`. | 2026-04-22 |
+| — | Auth | `requireAuth()` now returns `{ userId, companyId, role, email, name }`. New `requireOwner()` and `requireRole()` helpers. `UserRole` enum (OWNER, TECHNICIAN) on User model. JWT/session callbacks load role from DB on every refresh. Deactivated users get token invalidated immediately. | 2026-04-22 |
+| 26 | Feature | Employee management — "Mitarbeiter" page (OWNER only). Create technician with temp password + `mustChangePassword` flag. Activate/deactivate (never delete to preserve history). `isActive` flag blocks login. Session invalidation on deactivation. `useEmployees` hook with `enabled` option. | 2026-04-22 |
+| — | Feature | Technician assignment — `assignedToUserId` nullable FK on `CustomerSystem`. OWNER-only assignment via PATCH endpoint with company membership + active status validation. Dropdown on system detail page for OWNER, read-only display for TECHNICIAN. | 2026-04-22 |
+| — | Feature | Role-aware dashboard — OWNER sees company-wide stats, TECHNICIAN sees "Meine Woche" (only assigned systems + own maintenances). "Unassigned after deactivation" warning card for OWNER when systems are assigned to deactivated users. | 2026-04-22 |
+| — | Feature | Role-aware weekly summary — cron now iterates all active users with `emailWeeklySummary` enabled. OWNER gets company-wide data, TECHNICIAN gets only assigned systems + own maintenances. `sendWeeklySummaryToAll()` function with per-user error handling. | 2026-04-22 |
+| — | Security | Permission matrix enforced — DELETE operations require `requireOwner()`. Bookings POST restricted to OWNER only. Send-reminder restricted to OWNER only. Technician assignment restricted to OWNER only. Nav items filtered by role. Delete/booking buttons hidden for TECHNICIAN. | 2026-04-22 |
+| — | Feature | Company name setup modal — shown once for OWNER when `company.name` is null. Ensures company identity is set before employees are created. | 2026-04-22 |
+| — | Testing | Tenant isolation audit test updated — checks all route files for `companyId` scoping (tenant routes) or `userId` scoping (user routes). Catches uncategorised new routes. Pre-existing stale entry for `sentry-example-api` removed. | 2026-04-22 |
+| 53 | Feature | TECHNICIAN list filtering — `customer-systems`, `wartungen`, and `bookings` GET routes now scope to assigned systems / own bookings for TECHNICIAN role. OWNER sees all company data. Consistent with dashboard stats scoping. | 2026-04-22 |
+| 54 | Feature | Must-change-password flow — `ProtectedRoute` redirects to `/dashboard/change-password` when `mustChangePassword: true`. Change-password page with validation + `POST /api/user/force-change-password` API route that sets `mustChangePassword: false`. Session refresh after change. | 2026-04-22 |
+| — | Docs | CLAUDE.md updated with Company-as-Tenant isolation rules, role helpers, exception list, and multi-tenancy section. | 2026-04-22 |
 
 ### Sprint 22 — Account Cleanup + Delete Account (2026-04-22)
 
@@ -158,7 +172,7 @@ Items are grouped by sprint / work session, ordered newest first.
 
 | # | Area | Description | Resolved |
 |---|------|-------------|----------|
-| 15 | Decision | Shared-database, single-schema multi-tenancy confirmed. Isolation via `userId` scoping in application code. No RLS (incompatible with Prisma+NextAuth without significant complexity). Tenant isolation rule added to CLAUDE.md. Full decision record in `docs/superpowers/specs/2026-04-21-multi-tenancy-design.md`. Re-evaluation triggers documented. | 2026-04-21 |
+| 15 | Decision | Shared-database, single-schema multi-tenancy confirmed. Originally `userId`-scoped; **superseded by Sprint 23** Company-as-Tenant (`companyId`-scoped). Updated decision record: `docs/superpowers/specs/2026-04-22-company-multi-user-architecture.md`. | 2026-04-21 |
 
 ### Sprint 15 — Office-Side Booking (2026-04-21)
 

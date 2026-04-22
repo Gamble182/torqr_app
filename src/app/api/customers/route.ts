@@ -13,7 +13,7 @@ import { computeOptInData } from '@/lib/email/opt-in';
 export async function POST(request: NextRequest) {
   try {
     // 1. Authenticate user
-    const { userId } = await requireAuth();
+    const { userId, companyId } = await requireAuth();
 
     // 2. Rate limiting
     const rateLimitResponse = rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER);
@@ -41,7 +41,8 @@ export async function POST(request: NextRequest) {
         emailOptIn: optInData.emailOptIn,
         optInConfirmedAt: optInData.optInConfirmedAt,
         notes: validatedData.notes || null,
-        userId: userId,
+        companyId,
+        userId,
       },
     });
 
@@ -85,7 +86,7 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     // 1. Authenticate user
-    const { userId } = await requireAuth();
+    const { companyId } = await requireAuth();
 
     // 2. Get query parameters for search/filter
     const { searchParams } = new URL(request.url);
@@ -95,7 +96,7 @@ export async function GET(request: NextRequest) {
 
     // 3. Build where clause for search
     const whereClause = {
-      userId: userId,
+      companyId,
       ...(search && {
         OR: [
           { name: { contains: search, mode: 'insensitive' as const } },

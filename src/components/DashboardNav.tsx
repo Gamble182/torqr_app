@@ -16,13 +16,22 @@ import {
   CalendarIcon,
   ClockIcon,
   ChevronLeftIcon,
+  UserCogIcon,
 } from 'lucide-react';
 
-const navigation = [
+type NavItem = {
+  name: string;
+  href: string;
+  icon: typeof LayoutDashboardIcon;
+  ownerOnly?: boolean;
+};
+
+const navigation: NavItem[] = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboardIcon },
   { name: 'Kunden', href: '/dashboard/customers', icon: UsersIcon },
   { name: 'Systeme', href: '/dashboard/systems', icon: WrenchIcon },
   { name: 'Wartungen', href: '/dashboard/wartungen', icon: WrenchIcon },
+  { name: 'Mitarbeiter', href: '/dashboard/employees', icon: UserCogIcon, ownerOnly: true },
 ];
 
 export function DashboardNav() {
@@ -93,7 +102,7 @@ export function DashboardNav() {
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {navigation.map((item) => {
+        {navigation.filter((item) => !item.ownerOnly || session?.user?.role === 'OWNER').map((item) => {
           const active = isActive(item.href);
           return (
             <Link

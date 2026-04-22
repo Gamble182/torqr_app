@@ -23,7 +23,7 @@ export async function sendReminder(
     include: {
       catalog: true,
       customer: true,
-      user: { select: { name: true, email: true, phone: true, companyName: true, reminderGreeting: true, reminderBody: true } },
+      user: { select: { name: true, email: true, phone: true, reminderGreeting: true, reminderBody: true, company: { select: { name: true } } } },
     },
   });
 
@@ -69,7 +69,7 @@ export async function sendReminder(
       maxPhone: user?.phone ?? '',
       maxEmail: user?.email ?? '',
       maxName: user?.name ?? '',
-      maxCompanyName: user?.companyName ?? null,
+      maxCompanyName: user?.company?.name ?? null,
       unsubscribeUrl: buildUnsubscribeUrl(customer.id),
       customGreeting,
       customBody,
@@ -113,7 +113,7 @@ export async function sendBookingConfirmation(bookingId: string): Promise<void> 
       system: {
         include: {
           catalog: true,
-          user: { select: { name: true, email: true, phone: true, companyName: true } },
+          user: { select: { name: true, email: true, phone: true, company: { select: { name: true } } } },
         },
       },
     },
@@ -138,7 +138,7 @@ export async function sendBookingConfirmation(bookingId: string): Promise<void> 
       maxPhone: user?.phone ?? '',
       maxEmail: user?.email ?? '',
       maxName: user?.name ?? '',
-      maxCompanyName: user?.companyName ?? null,
+      maxCompanyName: user?.company?.name ?? null,
     })
   );
 
@@ -164,21 +164,20 @@ export async function sendBookingConfirmation(bookingId: string): Promise<void> 
 }
 
 /**
- * Send the weekly summary email to a user.
- * If userId provided (manual trigger): looks up user by ID.
- * If no userId (cron): falls back to SUMMARY_RECIPIENT_EMAIL env var.
+ * Send the weekly summary email to a single user.
+ * Role-aware: OWNER gets company-wide data, TECHNICIAN gets only assigned systems + own maintenances.
  * Respects the user's emailWeeklySummary preference — returns { emailsSent: 0 } if disabled.
  */
 export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: number }> {
   let user;
 
   if (userId) {
-    user = await prisma.user.findUnique({ where: { id: userId } });
+    user = await prisma.user.findUnique({ where: { id: userId }, include: { company: true } });
     if (!user) throw new Error(`No user found for userId: ${userId}`);
   } else {
     const recipientEmail = process.env.SUMMARY_RECIPIENT_EMAIL;
     if (!recipientEmail) throw new Error('SUMMARY_RECIPIENT_EMAIL is not set');
-    user = await prisma.user.findUnique({ where: { email: recipientEmail } });
+    user = await prisma.user.findUnique({ where: { email: recipientEmail }, include: { company: true } });
     if (!user) throw new Error(`No user found for SUMMARY_RECIPIENT_EMAIL: ${recipientEmail}`);
   }
 
@@ -192,6 +191,21 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
 
   const LIST_LIMIT = 10;
 
+  const isOwner = user.role === 'OWNER';
+
+  // Scope queries by role: OWNER sees company-wide, TECHNICIAN sees only assigned systems
+  const systemScope = isOwner
+    ? { companyId: user.companyId }
+    : { companyId: user.companyId, assignedToUserId: user.id };
+
+  const maintenanceScope = isOwner
+    ? { companyId: user.companyId }
+    : { companyId: user.companyId, userId: user.id };
+
+  const bookingScope = isOwner
+    ? { companyId: user.companyId }
+    : { companyId: user.companyId, userId: user.id };
+
   const [
     bookingsRaw,
     dueSystemsRaw,
@@ -203,7 +217,7 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
   ] = await Promise.all([
     prisma.booking.findMany({
       where: {
-        userId: user.id,
+        ...bookingScope,
         status: 'CONFIRMED',
         startTime: { gte: now, lte: weekEnd },
       },
@@ -215,7 +229,7 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
     }),
     prisma.customerSystem.findMany({
       where: {
-        userId: user.id,
+        ...systemScope,
         nextMaintenance: { gte: now, lte: weekEnd },
       },
       include: {
@@ -231,7 +245,7 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
     }),
     prisma.customerSystem.findMany({
       where: {
-        userId: user.id,
+        ...systemScope,
         nextMaintenance: { lt: now },
       },
       include: {
@@ -241,23 +255,23 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
       orderBy: { nextMaintenance: 'asc' },
     }),
     prisma.maintenance.findMany({
-      where: { userId: user.id, date: { gte: weekAgo, lte: now } },
+      where: { ...maintenanceScope, date: { gte: weekAgo, lte: now } },
       select: { id: true },
     }),
     prisma.emailLog.count({
       where: {
         sentAt: { gte: weekAgo, lte: now },
         type: { in: ['REMINDER_4_WEEKS', 'REMINDER_1_WEEK'] },
-        customer: { userId: user.id },
+        customer: { companyId: user.companyId },
       },
     }),
-    prisma.customer.count({ where: { userId: user.id } }),
-    prisma.customerSystem.count({ where: { userId: user.id } }),
+    prisma.customer.count({ where: { companyId: user.companyId } }),
+    prisma.customerSystem.count({ where: systemScope }),
   ]);
 
   const bookingsAttendedLastWeek = await prisma.booking.count({
     where: {
-      userId: user.id,
+      ...bookingScope,
       status: 'CONFIRMED',
       startTime: { gte: weekAgo, lte: now },
     },
@@ -319,4 +333,31 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
   if (error) throw new Error(`Resend error for weekly summary: ${JSON.stringify(error)}`);
 
   return { emailsSent: 1 };
+}
+
+/**
+ * Send weekly summary to all active users who have the preference enabled.
+ * Called by the cron job. Returns total emails sent.
+ */
+export async function sendWeeklySummaryToAll(): Promise<{ emailsSent: number; errors: string[] }> {
+  const users = await prisma.user.findMany({
+    where: { isActive: true, emailWeeklySummary: true },
+    select: { id: true },
+  });
+
+  let emailsSent = 0;
+  const errors: string[] = [];
+
+  for (const user of users) {
+    try {
+      const result = await sendWeeklySummary(user.id);
+      emailsSent += result.emailsSent;
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      errors.push(`User ${user.id}: ${msg}`);
+      console.error(`[weekly-summary] Failed for user ${user.id}:`, msg);
+    }
+  }
+
+  return { emailsSent, errors };
 }

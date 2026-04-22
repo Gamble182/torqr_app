@@ -18,6 +18,8 @@ declare module 'next-auth' {
       id: string;
       email: string;
       name: string;
+      role: 'OWNER' | 'TECHNICIAN';
+      mustChangePassword: boolean;
     };
   }
 }
@@ -69,6 +71,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return null;
           }
 
+          if (!user.isActive) {
+            await log({ email, userId: user.id, success: false, reason: 'account_deactivated' });
+            return null;
+          }
+
           const isValidPassword = await verifyPassword(password, user.passwordHash);
 
           if (!isValidPassword) {
@@ -94,17 +101,34 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: '/login',
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       // Add user id to token on sign in
       if (user) {
         token.id = user.id;
       }
+      // Load role + mustChangePassword from DB on every token refresh
+      // This ensures deactivation and role changes take effect promptly
+      if (token.id) {
+        const dbUser = await prisma.user.findUnique({
+          where: { id: token.id as string },
+          select: { role: true, mustChangePassword: true, isActive: true },
+        });
+        if (dbUser && dbUser.isActive) {
+          token.role = dbUser.role;
+          token.mustChangePassword = dbUser.mustChangePassword;
+        } else {
+          // User deactivated or deleted — invalidate token
+          return {};
+        }
+      }
       return token;
     },
     async session({ session, token }) {
-      // Add user id to session
+      // Add user id, role, and mustChangePassword to session
       if (token && session.user) {
         session.user.id = token.id as string;
+        session.user.role = (token.role as 'OWNER' | 'TECHNICIAN') ?? 'OWNER';
+        session.user.mustChangePassword = (token.mustChangePassword as boolean) ?? false;
       }
       return session;
     },

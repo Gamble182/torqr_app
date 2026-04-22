@@ -15,7 +15,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await requireAuth();
+    const { userId, companyId } = await requireAuth();
 
     const rateLimitResponse = rateLimitByUser(req, userId, RATE_LIMIT_PRESETS.API_USER);
     if (rateLimitResponse) return rateLimitResponse;
@@ -23,7 +23,7 @@ export async function PATCH(
     const { id: followUpId } = await params;
 
     const existing = await prisma.followUpJob.findFirst({
-      where: { id: followUpId, userId },
+      where: { id: followUpId, companyId },
     });
     if (!existing) {
       return NextResponse.json(
@@ -75,7 +75,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await requireAuth();
+    const { userId, companyId } = await requireAuth();
 
     const rateLimitResponse = rateLimitByUser(req, userId, RATE_LIMIT_PRESETS.API_USER);
     if (rateLimitResponse) return rateLimitResponse;
@@ -83,7 +83,7 @@ export async function DELETE(
     const { id: followUpId } = await params;
 
     const existing = await prisma.followUpJob.findFirst({
-      where: { id: followUpId, userId },
+      where: { id: followUpId, companyId },
       select: { id: true },
     });
     if (!existing) {

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAuth } from '@/lib/auth-helpers';
+import { requireAuth, requireOwner } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { customerUpdateSchema } from '@/lib/validations';
@@ -16,7 +16,7 @@ export async function GET(
 ) {
   try {
     // 1. Authenticate user
-    const { userId } = await requireAuth();
+    const { companyId } = await requireAuth();
 
     // 2. Get customer ID from params
     const { id } = await params;
@@ -25,7 +25,7 @@ export async function GET(
     const customer = await prisma.customer.findUnique({
       where: {
         id: id,
-        userId: userId,
+        companyId,
       },
     });
 
@@ -71,7 +71,7 @@ export async function PATCH(
 ) {
   try {
     // 1. Authenticate user
-    const { userId } = await requireAuth();
+    const { userId, companyId } = await requireAuth();
 
     // 2. Rate limiting
     const rateLimitResponse = rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER);
@@ -86,7 +86,7 @@ export async function PATCH(
     const existingCustomer = await prisma.customer.findUnique({
       where: {
         id: id,
-        userId: userId,
+        companyId,
       },
     });
 
@@ -171,54 +171,33 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // 1. Authenticate user
-    const { userId } = await requireAuth();
+    // 1. Authenticate user — OWNER only for delete
+    const { companyId } = await requireOwner();
 
     // 2. Get customer ID from params
     const { id } = await params;
 
-    // 3. Check if customer exists and belongs to user
+    // 3. Check if customer exists and belongs to company
     const existingCustomer = await prisma.customer.findUnique({
-      where: {
-        id: id,
-        userId: userId,
-      },
+      where: { id, companyId },
     });
 
     if (!existingCustomer) {
-      return NextResponse.json({
-        success: false,
-        error: 'Customer not found',
-      }, { status: 404 });
+      return NextResponse.json({ success: false, error: 'Kunde nicht gefunden' }, { status: 404 });
     }
 
-    // 4. Delete customer (cascade will delete heaters, maintenances, etc.)
-    await prisma.customer.delete({
-      where: {
-        id: id,
-      },
-    });
+    // 4. Delete customer (cascade will delete systems, maintenances, etc.)
+    await prisma.customer.delete({ where: { id } });
 
-    // 5. Return success
-    return NextResponse.json({
-      success: true,
-      message: 'Customer deleted successfully',
-    });
-
+    return NextResponse.json({ success: true, message: 'Kunde erfolgreich geloscht' });
   } catch (error) {
-    // Handle authentication errors
     if (error instanceof Error && error.message === 'Unauthorized') {
-      return NextResponse.json({
-        success: false,
-        error: 'Unauthorized',
-      }, { status: 401 });
+      return NextResponse.json({ success: false, error: 'Nicht autorisiert' }, { status: 401 });
     }
-
-    // Handle other errors
+    if (error instanceof Error && error.message === 'Forbidden') {
+      return NextResponse.json({ success: false, error: 'Nur Inhaber konnen Kunden loschen' }, { status: 403 });
+    }
     console.error('Error deleting customer:', error);
-    return NextResponse.json({
-      success: false,
-      error: 'Failed to delete customer',
-    }, { status: 500 });
+    return NextResponse.json({ success: false, error: 'Fehler beim Loschen des Kunden' }, { status: 500 });
   }
 }

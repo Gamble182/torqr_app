@@ -239,6 +239,7 @@ export const customerSystemUpdateSchema = z.object({
   lastMaintenance: z.string().datetime().optional().nullable(),
   storageCapacityLiters: z.number().int().positive().optional().nullable(),
   requiredParts: z.string().optional().nullable(),
+  assignedToUserId: uuidSchema.optional().nullable(),
 });
 
 // ============================================================================
@@ -397,6 +398,19 @@ export const fileUploadSchema = z.object({
     .int()
     .positive()
     .max(5 * 1024 * 1024, 'File size must be less than 5MB'), // 5MB max
+});
+
+// ============================================================================
+// EMPLOYEE MANAGEMENT SCHEMAS
+// ============================================================================
+
+/**
+ * Create a new technician account (OWNER only)
+ */
+export const employeeCreateSchema = z.object({
+  name: nonEmptyStringSchema,
+  email: emailSchema,
+  phone: optionalPhoneSchema,
 });
 
 // ============================================================================

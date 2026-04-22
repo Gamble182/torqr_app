@@ -9,7 +9,7 @@ import { Prisma } from '@prisma/client';
  */
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = await requireAuth();
+    const { userId, companyId, role } = await requireAuth();
 
     const searchParams = request.nextUrl.searchParams;
     const status = searchParams.get('status') || 'all';
@@ -54,7 +54,8 @@ export async function GET(request: NextRequest) {
 
     const systems = await prisma.customerSystem.findMany({
       where: {
-        userId,
+        companyId,
+        ...(role === 'TECHNICIAN' && { assignedToUserId: userId }),
         nextMaintenance: nextMaintenanceFilter,
       },
       include: {

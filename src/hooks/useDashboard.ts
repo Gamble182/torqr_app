@@ -14,11 +14,25 @@ interface Customer {
   phone: string;
 }
 
+interface AssignedUser {
+  id: string;
+  name: string;
+}
+
 interface UpcomingSystem {
   id: string;
   nextMaintenance: string;
   catalog: CatalogEntry;
   customer: Customer;
+  assignedTo?: AssignedUser | null;
+}
+
+interface UnassignedSystem {
+  id: string;
+  nextMaintenance: string | null;
+  catalog: CatalogEntry;
+  customer: { id: string; name: string };
+  assignedTo: AssignedUser | null;
 }
 
 interface RecentMaintenance {
@@ -35,12 +49,14 @@ interface RecentMaintenance {
 }
 
 interface DashboardStats {
+  role: 'OWNER' | 'TECHNICIAN';
   totalCustomers: number;
   totalSystems: number;
   overdueMaintenances: number;
   upcomingMaintenances: number;
   upcomingSystemsList: UpcomingSystem[];
   recentMaintenances: RecentMaintenance[];
+  unassignedAfterDeactivation: UnassignedSystem[];
 }
 
 interface ApiResponse<T> {

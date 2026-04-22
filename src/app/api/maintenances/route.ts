@@ -10,7 +10,7 @@ import { rateLimitByUser, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
  */
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await requireAuth();
+    const { userId, companyId } = await requireAuth();
 
     const rateLimitResponse = rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER);
     if (rateLimitResponse) return rateLimitResponse;
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     const validatedData = maintenanceCreateSchema.parse(body);
 
     const system = await prisma.customerSystem.findFirst({
-      where: { id: validatedData.systemId, userId },
+      where: { id: validatedData.systemId, companyId },
     });
 
     if (!system) {
@@ -34,6 +34,7 @@ export async function POST(request: NextRequest) {
       const maintenance = await tx.maintenance.create({
         data: {
           systemId: validatedData.systemId,
+          companyId,
           userId,
           date: maintenanceDate,
           notes: validatedData.notes || null,
@@ -76,7 +77,7 @@ export async function POST(request: NextRequest) {
  */
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = await requireAuth();
+    const { companyId } = await requireAuth();
 
     const systemId = request.nextUrl.searchParams.get('systemId');
     if (!systemId) {
@@ -84,7 +85,7 @@ export async function GET(request: NextRequest) {
     }
 
     const system = await prisma.customerSystem.findFirst({
-      where: { id: systemId, userId },
+      where: { id: systemId, companyId },
     });
 
     if (!system) {

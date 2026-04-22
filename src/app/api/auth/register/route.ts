@@ -48,21 +48,29 @@ export async function POST(request: NextRequest) {
     // Hash password
     const passwordHash = await hashPassword(validatedData.password);
 
-    // Create user
-    const user = await prisma.user.create({
-      data: {
-        email: validatedData.email,
-        passwordHash,
-        name: validatedData.name,
-        phone: validatedData.phone,
-      },
-      select: {
-        id: true,
-        email: true,
-        name: true,
-        phone: true,
-        createdAt: true,
-      },
+    // Create Company + OWNER User in a single transaction
+    const user = await prisma.$transaction(async (tx) => {
+      const company = await tx.company.create({
+        data: {},
+      });
+
+      return tx.user.create({
+        data: {
+          email: validatedData.email,
+          passwordHash,
+          name: validatedData.name,
+          phone: validatedData.phone,
+          companyId: company.id,
+          role: 'OWNER',
+        },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          phone: true,
+          createdAt: true,
+        },
+      });
     });
 
     return NextResponse.json(

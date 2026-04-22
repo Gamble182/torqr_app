@@ -11,7 +11,7 @@ import { rateLimitByUser, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
  */
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = await requireAuth();
+    const { userId, companyId, role } = await requireAuth();
 
     const searchParams = request.nextUrl.searchParams;
     const customerId = searchParams.get('customerId');
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
 
     if (customerId) {
       const customer = await prisma.customer.findUnique({
-        where: { id: customerId, userId },
+        where: { id: customerId, companyId },
       });
       if (!customer) {
         return NextResponse.json({ success: false, error: 'Kunde nicht gefunden' }, { status: 404 });
@@ -27,7 +27,8 @@ export async function GET(request: NextRequest) {
     }
 
     const where: Prisma.CustomerSystemWhereInput = {
-      userId,
+      companyId,
+      ...(role === 'TECHNICIAN' && { assignedToUserId: userId }),
       ...(customerId && { customerId }),
       ...(search && {
         OR: [
@@ -48,6 +49,7 @@ export async function GET(request: NextRequest) {
         customer: {
           select: { id: true, name: true, street: true, city: true, phone: true },
         },
+        assignedTo: { select: { id: true, name: true } },
         _count: { select: { maintenances: true, followUpJobs: { where: { completed: false } } } },
         maintenances: customerId
           ? { orderBy: { date: 'desc' }, take: 5 }
@@ -77,7 +79,7 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await requireAuth();
+    const { userId, companyId } = await requireAuth();
 
     const rateLimitResponse = rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER);
     if (rateLimitResponse) return rateLimitResponse;
@@ -86,7 +88,7 @@ export async function POST(request: NextRequest) {
     const validated = customerSystemCreateSchema.parse(body);
 
     const customer = await prisma.customer.findUnique({
-      where: { id: validated.customerId, userId },
+      where: { id: validated.customerId, companyId },
     });
     if (!customer) {
       return NextResponse.json({ success: false, error: 'Kunde nicht gefunden' }, { status: 404 });
@@ -110,6 +112,7 @@ export async function POST(request: NextRequest) {
       data: {
         catalogId: validated.catalogId,
         customerId: validated.customerId,
+        companyId,
         userId,
         serialNumber: validated.serialNumber ?? null,
         installationDate: validated.installationDate ? new Date(validated.installationDate) : null,

@@ -10,14 +10,19 @@ export async function GET() {
 
     const user = await prisma.user.findUnique({
       where: { id: userId },
-      select: { name: true, email: true, phone: true, companyName: true, emailWeeklySummary: true, reminderGreeting: true, reminderBody: true },
+      select: {
+        name: true, email: true, phone: true, reminderGreeting: true, reminderBody: true,
+        company: { select: { name: true } },
+      },
     });
 
     if (!user) {
       return NextResponse.json({ success: false, error: 'Benutzer nicht gefunden' }, { status: 404 });
     }
 
-    return NextResponse.json({ success: true, data: user });
+    // Return companyName at top level for backward compatibility with frontend
+    const { company, ...rest } = user;
+    return NextResponse.json({ success: true, data: { ...rest, companyName: company?.name ?? null } });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     if (message === 'Unauthorized') {
@@ -29,7 +34,7 @@ export async function GET() {
 
 export async function PATCH(request: NextRequest) {
   try {
-    const { userId } = await requireAuth();
+    const { userId, companyId } = await requireAuth();
     const body = await request.json();
     const parsed = userProfileUpdateSchema.safeParse(body);
 
@@ -55,20 +60,31 @@ export async function PATCH(request: NextRequest) {
       }
     }
 
+    // Update companyName on Company, not User
+    if (companyName !== undefined) {
+      await prisma.company.update({
+        where: { id: companyId },
+        data: { name: companyName === '' ? null : companyName },
+      });
+    }
+
     const updated = await prisma.user.update({
       where: { id: userId },
       data: {
         ...(name !== undefined && { name }),
         ...(email !== undefined && { email }),
         ...(phone !== undefined && { phone: phone === '' ? null : phone }),
-        ...(companyName !== undefined && { companyName: companyName === '' ? null : companyName }),
         ...(reminderGreeting !== undefined && { reminderGreeting: reminderGreeting === '' ? null : reminderGreeting }),
         ...(reminderBody !== undefined && { reminderBody: reminderBody === '' ? null : reminderBody }),
       },
-      select: { name: true, email: true, phone: true, companyName: true, reminderGreeting: true, reminderBody: true },
+      select: {
+        name: true, email: true, phone: true, reminderGreeting: true, reminderBody: true,
+        company: { select: { name: true } },
+      },
     });
 
-    return NextResponse.json({ success: true, data: updated });
+    const { company, ...rest } = updated;
+    return NextResponse.json({ success: true, data: { ...rest, companyName: company?.name ?? null } });
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown error';
     if (message === 'Unauthorized') {

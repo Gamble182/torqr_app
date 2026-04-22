@@ -60,7 +60,7 @@ Goal: **precision, consistency, and decision quality** — not verbosity.
 
 **Forms:** Zod validation on both client and server. React Hook Form where applicable.
 
-**Auth context:** Every DB query is scoped to `session.user.id` — no cross-tenant data leakage.
+**Auth context:** Every DB query is scoped to `companyId` from `requireAuth()` — no cross-tenant data leakage. Two roles: OWNER (full access) and TECHNICIAN (restricted — no delete, no employee management).
 
 **Cal.com webhook:** Two-strategy customer resolution — metadata `customerId` first, email fallback second.
 
@@ -157,32 +157,46 @@ The `docs/BACKLOG.md` file is the **single source of truth** for planned work, k
 
 - Every route: `requireAuth()` first, then validate input with Zod, then execute
 - Consistent error responses: `{ error: string, status: number }`
-- All queries scoped to authenticated user's `userId`
+- All tenant-scoped queries use `companyId` from `requireAuth()` — never `userId` for tenant scoping
+- `userId` stays on create operations as audit ("created by" / "performed by") — never used for `where` clauses on reads
+- Delete operations require `requireOwner()` — technicians cannot delete records
 - No inline SQL — Prisma ORM only
 
 ### Multi-Tenancy Isolation Rule
 
-Torqr uses shared-database multi-tenancy. Tenant isolation is enforced exclusively in application code.
+Torqr uses shared-database, Company-as-Tenant multi-tenancy. Tenant isolation is enforced exclusively in application code.
 
-**Rule:** Any API route that reads or writes a tenant-owned table (`Customer`, `CustomerSystem`, `Maintenance`, `Booking`, `EmailLog`) **must** scope queries with `userId` derived from `requireAuth()`. This must be verified on every new route before merge.
+**Rule:** Any API route that reads or writes a tenant-owned table (`Customer`, `CustomerSystem`, `Maintenance`, `Booking`, `FollowUpJob`, `EmailLog`) **must** scope queries with `companyId` derived from `requireAuth()`. This must be verified on every new route before merge.
 
 ```typescript
-// CORRECT
-const { userId } = await requireAuth();
-prisma.customer.findUnique({ where: { id, userId } });
+// CORRECT — tenant scoping via companyId
+const { userId, companyId } = await requireAuth();
+prisma.customer.findUnique({ where: { id, companyId } });
 
-// WRONG — userId must never come from the client
-const { userId } = req.body; // ❌
+// CORRECT — userId as audit field in create
+prisma.maintenance.create({ data: { ..., companyId, userId } });
+
+// WRONG — userId must never be used for tenant scoping
+prisma.customer.findMany({ where: { userId } }); // ❌
+
+// WRONG — companyId must never come from the client
+const { companyId } = req.body; // ❌
 ```
 
-**Exceptions by design** (do not add userId scoping to these):
+**Role helpers:**
+- `requireAuth()` → returns `{ userId, companyId, role, email, name }` — use for all authenticated routes
+- `requireOwner()` → same, but throws `Forbidden` if not OWNER — use for delete, employee management, company settings
+- `requireRole(['OWNER', 'TECHNICIAN'])` → parameterized role check
+
+**Exceptions by design** (do not add companyId scoping to these):
 - `src/app/api/admin/*` — cross-tenant, gated by `requireAdmin()`
 - `src/app/api/cron/*` — cross-tenant, gated by `CRON_SECRET`
 - `src/app/api/webhooks/cal` — resolves tenant dynamically from payload metadata
 - `src/app/api/catalog` — global table, no tenant scope
 - `src/app/api/email/unsubscribe` — stateless HMAC token, no session
+- `src/app/api/user/*` — user-specific routes use `userId` for own-record access
 
-Full decision record: `docs/superpowers/specs/2026-04-21-multi-tenancy-design.md`
+Full decision record: `docs/superpowers/specs/2026-04-22-company-multi-user-architecture.md`
 
 ### Frontend / Components
 

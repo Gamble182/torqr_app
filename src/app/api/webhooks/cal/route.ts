@@ -65,11 +65,11 @@ export async function POST(req: NextRequest) {
   // Strategy 1: metadata userId (from reminder email link — most reliable)
   // Strategy 2: organizer email (Cal.com account owner)
   let user = metaUserId
-    ? await prisma.user.findUnique({ where: { id: metaUserId } })
+    ? await prisma.user.findUnique({ where: { id: metaUserId }, select: { id: true, companyId: true, email: true } })
     : null;
 
   if (!user && organizerEmail) {
-    user = await prisma.user.findUnique({ where: { email: organizerEmail } });
+    user = await prisma.user.findUnique({ where: { email: organizerEmail }, select: { id: true, companyId: true, email: true } });
   }
 
   if (!user) {
@@ -82,7 +82,7 @@ export async function POST(req: NextRequest) {
   // Strategy 2: attendee email within the resolved user's customer scope
   let customer = metaCustomerId
     ? await prisma.customer.findFirst({
-        where: { id: metaCustomerId, userId: user.id },
+        where: { id: metaCustomerId, companyId: user.companyId },
       })
     : null;
 
@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
     customer = await prisma.customer.findFirst({
       where: {
         email: { equals: attendeeEmail, mode: 'insensitive' },
-        userId: user.id,
+        companyId: user.companyId,
       },
     });
     if (customer) {
@@ -107,7 +107,7 @@ export async function POST(req: NextRequest) {
   let system = null;
   if (metaSystemId) {
     system = await prisma.customerSystem.findFirst({
-      where: { id: metaSystemId, userId: user.id },
+      where: { id: metaSystemId, companyId: user.companyId },
     });
     if (!system) {
       console.warn(`[cal-webhook] systemId ${metaSystemId} not found for user ${user.id} — ignored`);
@@ -137,6 +137,7 @@ export async function POST(req: NextRequest) {
       attendeeName,
       attendeeEmail,
       status: 'CONFIRMED',
+      companyId: user.companyId,
       userId: user.id,
       customerId: customer?.id ?? null,
       systemId: system?.id ?? null,

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAuth } from '@/lib/auth-helpers';
+import { requireAuth, requireOwner } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 import { deleteMaintenancePhoto } from '@/lib/supabase';
 
@@ -11,13 +11,13 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await requireAuth();
+    const { companyId } = await requireAuth();
     const { id } = await params;
 
     const maintenance = await prisma.maintenance.findFirst({
       where: {
         id,
-        system: { userId },
+        companyId,
       },
       include: {
         system: {
@@ -51,7 +51,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await requireAuth();
+    const { companyId } = await requireAuth();
     const { id } = await params;
 
     const body = await request.json();
@@ -62,7 +62,7 @@ export async function PATCH(
     }
 
     const existingMaintenance = await prisma.maintenance.findFirst({
-      where: { id, system: { userId } },
+      where: { id, companyId },
     });
 
     if (!existingMaintenance) {
@@ -103,11 +103,11 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await requireAuth();
+    const { companyId } = await requireOwner();
     const { id } = await params;
 
     const maintenance = await prisma.maintenance.findFirst({
-      where: { id, system: { userId } },
+      where: { id, companyId },
     });
 
     if (!maintenance) {
@@ -128,6 +128,9 @@ export async function DELETE(
   } catch (error) {
     if (error instanceof Error && error.message === 'Unauthorized') {
       return NextResponse.json({ success: false, error: 'Nicht autorisiert' }, { status: 401 });
+    }
+    if (error instanceof Error && error.message === 'Forbidden') {
+      return NextResponse.json({ success: false, error: 'Nur Inhaber können Wartungen löschen' }, { status: 403 });
     }
     console.error('Error deleting maintenance:', error);
     return NextResponse.json({ success: false, error: 'Fehler beim Löschen der Wartung' }, { status: 500 });

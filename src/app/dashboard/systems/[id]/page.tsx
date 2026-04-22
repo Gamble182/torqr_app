@@ -14,9 +14,12 @@ import {
   ChevronRightIcon,
   CalendarIcon,
   CalendarPlusIcon,
+  UserCogIcon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useCustomerSystem, useDeleteCustomerSystem } from '@/hooks/useCustomerSystems';
+import { useSession } from 'next-auth/react';
+import { useCustomerSystem, useDeleteCustomerSystem, useUpdateCustomerSystem } from '@/hooks/useCustomerSystems';
+import { useEmployees } from '@/hooks/useEmployees';
 import { SystemAssignmentModal } from '@/components/system-form/SystemAssignmentModal';
 import { MaintenanceChecklistModal } from '@/components/MaintenanceChecklistModal';
 import { MaintenanceHistory } from '@/components/MaintenanceHistory';
@@ -28,8 +31,14 @@ export default function SystemDetailPage() {
   const params = useParams();
   const systemId = params.id as string;
 
+  const { data: session } = useSession();
+  const isOwner = session?.user?.role === 'OWNER';
+
   const { data: system, isLoading, error, refetch } = useCustomerSystem(systemId);
   const deleteSystem = useDeleteCustomerSystem();
+  const updateSystem = useUpdateCustomerSystem(systemId);
+  const { data: employees } = useEmployees({ enabled: isOwner });
+  const activeEmployees = employees?.filter((e) => e.isActive) ?? [];
 
   const [showEditModal, setShowEditModal] = useState(false);
   const [showMaintenanceForm, setShowMaintenanceForm] = useState(false);
@@ -79,9 +88,11 @@ export default function SystemDetailPage() {
           <Button variant="outline" size="sm" onClick={() => setShowEditModal(true)}>
             Bearbeiten
           </Button>
-          <Button variant="destructive" size="sm" onClick={handleDelete}>
-            Löschen
-          </Button>
+          {isOwner && (
+            <Button variant="destructive" size="sm" onClick={handleDelete}>
+              Löschen
+            </Button>
+          )}
         </div>
       </div>
 
@@ -105,6 +116,37 @@ export default function SystemDetailPage() {
             </div>
           </div>
         )}
+
+        {/* Technician assignment */}
+        <div className="bg-card rounded-xl border border-border p-5 space-y-3">
+          <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
+            <UserCogIcon className="h-4 w-4" />
+            Zuständiger Techniker
+          </h2>
+          {isOwner ? (
+            <select
+              value={system.assignedTo?.id ?? ''}
+              onChange={async (e) => {
+                const value = e.target.value || null;
+                await updateSystem.mutateAsync({ assignedToUserId: value });
+                refetch();
+              }}
+              disabled={updateSystem.isPending}
+              className="w-full px-3 py-2 bg-card border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            >
+              <option value="">Nicht zugewiesen</option>
+              {activeEmployees.map((emp) => (
+                <option key={emp.id} value={emp.id}>
+                  {emp.name}{emp.role === 'OWNER' ? ' (Inhaber)' : ''}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              {system.assignedTo?.name ?? 'Nicht zugewiesen'}
+            </p>
+          )}
+        </div>
 
         {/* Maintenance schedule */}
         <div className="bg-card rounded-xl border border-border p-5 space-y-3">
@@ -156,10 +198,12 @@ export default function SystemDetailPage() {
       <div className="flex justify-between items-center">
         <h2 className="text-base font-semibold text-foreground">Wartungshistorie</h2>
         <div className="flex gap-2">
-          <Button size="sm" variant="outline" onClick={() => setShowBookingForm(true)}>
-            <CalendarPlusIcon className="h-4 w-4 mr-2" />
-            Termin eintragen
-          </Button>
+          {isOwner && (
+            <Button size="sm" variant="outline" onClick={() => setShowBookingForm(true)}>
+              <CalendarPlusIcon className="h-4 w-4 mr-2" />
+              Termin eintragen
+            </Button>
+          )}
           <Button size="sm" onClick={() => setShowMaintenanceForm(true)}>
             <WrenchIcon className="h-4 w-4 mr-2" />
             Wartung eintragen

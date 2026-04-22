@@ -11,12 +11,12 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId } = await requireAuth();
+    const { companyId } = await requireAuth();
     const { id: customerId } = await params;
 
-    // Verify customer belongs to this user before returning any data
+    // Verify customer belongs to this company
     const customer = await prisma.customer.findFirst({
-      where: { id: customerId, userId },
+      where: { id: customerId, companyId },
       select: { id: true },
     });
     if (!customer) {

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAuth } from '@/lib/auth-helpers';
+import { requireAuth, requireOwner } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { randomUUID } from 'crypto';
@@ -13,14 +13,15 @@ import { sendBookingConfirmation } from '@/lib/email/service';
  */
 export async function GET(request: NextRequest) {
   try {
-    const { userId } = await requireAuth();
+    const { userId, companyId, role } = await requireAuth();
 
     const { searchParams } = new URL(request.url);
     const customerId = searchParams.get('customerId');
 
     const bookings = await prisma.booking.findMany({
       where: {
-        userId,
+        companyId,
+        ...(role === 'TECHNICIAN' && { userId }),
         ...(customerId ? { customerId } : {}),
       },
       include: {
@@ -44,14 +45,14 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
-    const { userId } = await requireAuth();
+    const { userId, companyId } = await requireOwner();
 
     const body = await request.json();
     const validated = manualBookingCreateSchema.parse(body);
 
-    // Validate system belongs to this user
+    // Validate system belongs to this company
     const system = await prisma.customerSystem.findFirst({
-      where: { id: validated.systemId, userId },
+      where: { id: validated.systemId, companyId },
       include: { customer: { select: { id: true } } },
     });
     if (!system) {
@@ -65,6 +66,7 @@ export async function POST(request: NextRequest) {
         startTime: new Date(validated.startTime),
         endTime: validated.endTime ? new Date(validated.endTime) : null,
         status: 'CONFIRMED',
+        companyId,
         userId,
         customerId: system.customer?.id ?? null,
         systemId: system.id,
@@ -85,6 +87,9 @@ export async function POST(request: NextRequest) {
     }
     if (error instanceof Error && error.message === 'Unauthorized') {
       return NextResponse.json({ success: false, error: 'Nicht autorisiert' }, { status: 401 });
+    }
+    if (error instanceof Error && error.message === 'Forbidden') {
+      return NextResponse.json({ success: false, error: 'Nur Inhaber können Termine erstellen' }, { status: 403 });
     }
     console.error('Error creating booking:', error);
     return NextResponse.json({ success: false, error: 'Fehler beim Erstellen des Termins' }, { status: 500 });
