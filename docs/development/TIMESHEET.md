@@ -11,12 +11,14 @@
 
 | Metrik | Wert |
 |---|---|
-| Echtzeit gesamt (deine Arbeit mit Claude) | *wird in Teil 2 ergänzt* |
-| Solo-Dev-Äquivalenz gesamt (Senior Full-Stack, ohne KI) | *wird in Teil 2 ergänzt* |
-| Effizienzfaktor (Solo / Echtzeit) | *wird in Teil 2 ergänzt* |
-| MVP-Wert @ 95 €/h | *wird in Teil 2 ergänzt* |
+| Echtzeit gesamt (deine Arbeit mit Claude) | **~70 h** (Teil 1: ~20 h · Teil 2: ~50 h · Teil 3: 0 h) |
+| Solo-Dev-Äquivalenz gesamt (Senior Full-Stack, ohne KI) | **~457 h** (Teil 1: 145 h · Teil 2: 312 h · Teil 3: 0 h) |
+| Effizienzfaktor (Solo / Echtzeit) | **~6.5 ×** |
+| MVP-Wert @ 95 €/h | **~43.400 €** |
 
 *95 €/h ist auf der günstigen Seite des marktüblichen Bands für Senior Full-Stack-Entwicklung (90–130 €/h). Der Effizienzfaktor zeigt, welchen Solo-Dev-Aufwand dieselbe Leistung konventionell gebunden hätte.*
+
+*Teil 2 ist Git-basiert geschätzt (Tier S/M/L/XL). Teil 3 wird ab der nächsten Sitzung automatisch über Hooks ergänzt.*
 
 ---
 
@@ -304,7 +306,20 @@ Tier-Referenz:
 
 | Datum | Tier | Echtzeit | Solo-Dev-Äquiv. | Sprint / Bereich | Aktivitäten | Commits |
 |---|---|---|---|---|---|---|
-<!-- Rows inserted in Task 7 -->
+| 2026-01-12 | XL | 5 h | 32 h | Heizungs-Overhaul + Deploy | Heizungssystem erweitert (DE-Heizungstypen, Konfig), Kundenliste modernisiert, Wartungsmanagement, Dashboard mit Upcoming/Recent, Prisma 7 + Vercel Deployment-Fixes, deutsche Login-Texte | 23 |
+| 2026-01-13 | XL | 5 h | 32 h | React Query + v1.0 Release | React Query + Komponenten-Architektur-Umbau, Quick-Wartung vom Dashboard, umfangreiche Doku (Projektdoku, Demo-Checklist, Sprint 3/4), v1.0.0 Production-Release | 13 |
+| 2026-01-14 | S | 30 min | 2 h | Dokumentation | Doku-Merge, Development-Branch-Sync | 3 |
+| 2026-01-15 | S | 30 min | 2 h | Kostenschätzung | Kostenaufstellung | 1 |
+| 2026-03-06 | S | 30 min | 2 h | Trivial | Test-Commit | 1 |
+| 2026-04-09 | S | 30 min | 2 h | Login-Logging | Login Activity Logging | 1 |
+| 2026-04-13 | XL | 5 h | 32 h | Sprint 4 — Email Automation | Resend-Client, React-Email-Templates (Reminder + Weekly Summary), Daily- & Weekly-Cron-Routes, HMAC-Unsubscribe-Token + öffentliche Seite, Customer-Form Email-Suppress-Toggle, Vitest-Test-Infrastruktur | 14 |
+| 2026-04-14 | L | 3 h | 16 h | Cal.com Integration + Fixes | Cal.com Webhook-Handler (HMAC-SHA256), Customer-Booking-Page, Email-Opt-In-Indicator, Hydration-Fix Dashboard, Unsubscribe via APP_URL, Reminder-Template-Verbesserung | 9 |
+| 2026-04-15 | XL | 5 h | 32 h | Account-Page Foundation | User-Modell (companyName, emailWeeklySummary, reminderGreeting/Body), /api/user/* Routes (profile, password, preferences, send-weekly-summary), Zod-Schemas, useUser React-Query-Hook, Account-Cards (Profile, Password, Notifications, Email-Actions) | 13 |
+| 2026-04-16 | XL | 5 h | 32 h | Account + Mobile + Sprint 7 + Admin-Basis | Account-Page Merge, Mobile Responsiveness (iOS-Zoom-Fix, 44 px Touch-Targets, responsive Forms), Sprint 7 Bugfixes (#16/#17 Cache-Invalidation, #19/#21 Pflichtfelder, #12 Manueller Reminder), Admin-Panel Foundation (requireAdmin, /api/admin/stats, /api/admin/users) | 24 |
+| 2026-04-17 | XL | 5 h | 32 h | Admin-Panel komplett + System-Overhaul-Spec | Admin-UI komplett (Layout, Overview, Users, User-Detail, Email-Log, Cron-Monitor), useAdmin React-Query-Hooks, System-Model-Overhaul Design-Spec, Backlog-Restrukturierung, Account-Page Admin-Link | 11 |
+| 2026-04-20 | XL | 5 h | 32 h | Sprint 11 — System-Model-Overhaul | SystemCatalog + CustomerSystem Prisma-Models (AcSubtype/StorageSubtype Enums), Heater→CustomerSystem Migration (API, Email, Maintenance), GET/POST /api/catalog + customer-systems CRUD, SystemTypeSelector + CatalogPicker + SystemAssignmentModal, Seed mit 224 Heizungs-Einträgen | 14 |
+| 2026-04-21 | XL | 5 h | 32 h | Sprints 18 + 19 + 20 + Rebrand + Audit | Digitale Wartungs-Checklist (3-Step-Modal, per-SystemType Defaults, CustomerSystemChecklistItem Model), Weekly-Summary-Rework (Section-Layout, 7 parallele Queries), Editable Email-Templates mit Platzhaltern, Follow-Up-Jobs (Model, API, Hook, UI, Badge), Install-Date-Checkbox, Rebranding (Green/Amber + Pulse-Icon), Sentry-Config, umfassender Codebase-Audit | 54 |
+| 2026-04-22 | XL | 5 h | 32 h | Sprints 21 + 22 + 23 + Catalog + Timesheet | Credential-Rotation, RLS deny-all auf allen 13 Tabellen, Supabase-Migration auf neues Projekt (eu-central-1), Delete-Account / Danger Zone, Company-Multi-User Architektur (companyId-Scoping über 19 API-Routes, OWNER/TECHNICIAN-Rollen, Employee-Management, Technician-Assignment, rollenbewusstes Dashboard + Weekly-Summary), Turbopack-Fix via Admin-Auth-Split, Catalog-Validation-Fix + Seed-Erweiterung (904 Einträge), Timesheet Auto-Track Spec + Plan + Implementation | 33 |
 
 ---
 
