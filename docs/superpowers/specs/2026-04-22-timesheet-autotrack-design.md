@@ -29,10 +29,11 @@ Aggregates across Teil 1 + 2 + 3. Kept short.
 
 | Metrik | Wert |
 |---|---|
-| Gesamte Echtzeit (Ø gemessen/geschätzt) | `X h` |
-| Gesamte Solo-Dev-Äquivalenz | `Y h` |
-| Effizienzfaktor | `Y / X` |
+| Gesamte Echtzeit (deine Arbeit mit Claude) | `X h` |
+| Gesamte Solo-Dev-Äquivalenz (Senior Full-Stack, ohne KI) | `Y h` |
+| Effizienzfaktor (Y / X) | `… ×` |
 | MVP-Wert @ 95 €/h | `Y × 95 €` |
+| Hinweis | *95 €/h — günstig für Senior Full-Stack (Marktüblich 90–130 €/h)* |
 
 Updated automatically when new rows are appended.
 
@@ -44,18 +45,23 @@ Preserve existing Sprint 1–5 breakdown verbatim. Do not restructure. It alread
 
 One row per calendar day that has at least one commit. Flagged as *geschätzt (Git-basiert)* in the header.
 
-| Datum | Echtzeit (gesch.) | Solo-Dev-Äquiv. | Sprint / Bereich | Aktivitäten | Commits |
-|---|---|---|---|---|---|
-| 2026-04-22 | ~3.5 h | 12 h | Sprint 23 + Catalog | Company multi-user rollout, catalog fix & seed | 6 |
+| Datum | Tier | Echtzeit (du) | Solo-Dev-Äquiv. | Sprint / Bereich | Aktivitäten | Commits |
+|---|---|---|---|---|---|---|
+| 2026-04-22 | XL | 5 h | 32 h | Sprint 23 + Catalog | Company multi-user rollout, catalog fix & seed, timesheet spec | 8 |
 
 **Row rules:**
 - Include only days where `git log --author=<user>` has ≥1 commit.
-- **Echtzeit:** difference between earliest and latest commit timestamp on that day, capped at 8 h. If the day has only one commit, use 0.5 h.
-- **Solo-Dev-Äquiv.:** one of four complexity tiers, judged from the day's diff scope:
-  - **S** (Small) = 2 h — typo fix, copy change, one-file tweak
-  - **M** (Medium) = 5 h — single feature or bugfix touching 2–5 files
-  - **L** (Large) = 10 h — new page/flow or multi-file refactor
-  - **XL** (Extra Large) = 16 h — sprint-scale feature (new models, migrations, cross-cutting)
+- Each day gets **one complexity tier** (S/M/L/XL), judged from the day's diff scope. The tier carries two values:
+
+  | Tier | Echtzeit (dein Aufwand mit Claude) | Solo-Dev-Äquivalenz (ohne KI) | Beispiel |
+  |------|-----|-----|-----|
+  | **S** | 30 min | 2 h | Typo-Fix, Copy-Änderung, 1-Datei-Tweak |
+  | **M** | 1 h | 6 h | Ein Feature / Bugfix über 2–5 Dateien |
+  | **L** | 3 h | 16 h | Neue Seite / Flow, Multi-File-Refactor |
+  | **XL** | 5 h | 32 h | Sprint-Scope (Model, Migration, Cross-Cutting) |
+
+- **Echtzeit** is your actual time in front of Claude Code for that day. For retro it comes from the tier (rough). Sanity-check: cross-reference with first/last commit timestamp on that day; if the commit window is wildly out of line with the tier's Echtzeit, bump tier up or down.
+- **Solo-Dev-Äquivalenz** is what an experienced full-stack senior dev without AI would need — independent of your real time, judged purely on output scope. This is the number that feeds MVP-Wert.
 - **Aktivitäten:** one-line German summary derived from commit messages.
 - **Commits:** count for the day.
 
@@ -63,7 +69,7 @@ Tier assignment is judgment-based. No multi-row per-sprint decomposition — the
 
 ### 2.4 Teil 3 — Live-Tracking (ab erster Hook-Sitzung)
 
-Same column layout as Teil 2, but **Echtzeit** is *gemessen* (hook-measured), not estimated. Header notes this distinction. New rows appended chronologically.
+Same column layout as Teil 2. **Echtzeit** is now *gemessen* (sum of hook-recorded session durations for that day), not derived from the tier. **Solo-Dev-Äquivalenz** still comes from the S/M/L/XL tier (AI judgment), since no measurement of that is possible. Header notes this distinction.
 
 **Cutover:** Teil 2 covers everything up to and including the day hooks are installed (today's work lands in the backfill, since it was not hook-measured). Teil 3 begins with the first calendar day whose sessions are fully captured by the hooks. No day appears in both parts.
 
@@ -135,8 +141,9 @@ This is executed once by me during implementation, not by the automation.
 
 ## 5. Pricing & Rate
 
-- **Hourly rate:** 95 €/h (midpoint of prior 90–110 € band, per user decision).
-- **MVP-Wert formula:** Solo-Dev-Äquivalenz × 95 € (this is the "what a client would pay for this scope" number).
+- **Hourly rate:** 95 €/h (per user decision).
+- **Positioning note** (rendered in the Executive Summary): *"95 €/h — günstig für Senior Full-Stack-Entwicklung (Marktüblich 90–130 €/h)"*. Makes clear the rate is on the low side of market, strengthening the price argument.
+- **MVP-Wert formula:** Solo-Dev-Äquivalenz × 95 € (what a client would pay for equivalent scope from a traditional senior dev).
 - Pricing tables from the existing document (Option A/B/C at different rates) are preserved in Teil 1 unchanged. A new single-rate line is added to the Executive Summary.
 
 ---
