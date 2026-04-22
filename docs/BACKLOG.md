@@ -105,6 +105,14 @@ Ideas worth keeping in mind but not planned for current sprints. No implementati
 
 Items are grouped by sprint / work session, ordered newest first.
 
+### Catalog fix & expansion (2026-04-22)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| — | Bugfix | `catalogCreateSchema` rejected `null` for `acSubtype`/`storageSubtype` (`.optional()` accepts `undefined` only) — `POST /api/catalog` returned 400 "Validierungsfehler" when adding a new heating/water entry from the CatalogPicker dialog. Switched to `.nullish()`; AC refine tightened to also reject `null`. | 2026-04-22 |
+| — | Infra | Re-seeded `SystemCatalog` on the new Supabase DB (migration left it empty). Added `src/config/additional-catalog.json` with ~680 entries covering AC (346), water treatment (125), and energy storage (209, split BOILER / BUFFER_TANK). Extended `prisma/seed.ts` to upsert all four `SystemType` enums. Total catalog: 904 entries. Idempotent — re-running refreshes `storageSubtype` classification. | 2026-04-22 |
+| — | Feature | `CatalogPicker` "Neues Gerät hinzufügen" form now renders a conditional subtype `<select>` when `systemType` is `AC` (Single-/Multi-Split 2–5) or `ENERGY_STORAGE` (Boiler / Pufferspeicher). `canSubmit` guard blocks submit until required subtype is chosen, so the server-side Zod refine never rejects the payload. | 2026-04-22 |
+
 ### Sprint 23 — Company Multi-User Architecture (2026-04-22)
 
 | # | Area | Description | Resolved |
