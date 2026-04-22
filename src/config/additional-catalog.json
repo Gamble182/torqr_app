@@ -1,0 +1,997 @@
+{
+  "ac": [
+    {
+      "manufacturer": "Daikin",
+      "models": [
+        "Stylish FTXA20",
+        "Stylish FTXA25",
+        "Stylish FTXA35",
+        "Stylish FTXA42",
+        "Stylish FTXA50",
+        "Perfera FTXM20",
+        "Perfera FTXM25",
+        "Perfera FTXM35",
+        "Perfera FTXM42",
+        "Perfera FTXM50",
+        "Perfera FTXM60",
+        "Perfera FTXM71",
+        "Emura FTXJ25",
+        "Emura FTXJ35",
+        "Emura FTXJ50",
+        "Sensira FTXF20",
+        "Sensira FTXF25",
+        "Sensira FTXF35",
+        "Sensira FTXF50",
+        "Sensira FTXF60",
+        "Sensira FTXF71",
+        "Comfora FTXP20",
+        "Comfora FTXP25",
+        "Comfora FTXP35",
+        "Comfora FTXP50",
+        "Comfora FTXP60",
+        "Comfora FTXP71",
+        "Ururu Sarara FTXZ25",
+        "Ururu Sarara FTXZ35",
+        "Ururu Sarara FTXZ50",
+        "Professional FTXS50",
+        "Professional FTXS60",
+        "Sky Air FBA60",
+        "Sky Air FBA71",
+        "Sky Air FBA100",
+        "Sky Air FBA125",
+        "Sky Air FBA140"
+      ]
+    },
+    {
+      "manufacturer": "Mitsubishi Electric",
+      "models": [
+        "MSZ-LN25 Diamond",
+        "MSZ-LN35 Diamond",
+        "MSZ-LN50 Diamond",
+        "MSZ-LN60 Diamond",
+        "MSZ-EF25 Design",
+        "MSZ-EF35 Design",
+        "MSZ-EF42 Design",
+        "MSZ-EF50 Design",
+        "MSZ-AP15 Compact",
+        "MSZ-AP20 Compact",
+        "MSZ-AP25 Compact",
+        "MSZ-AP35 Compact",
+        "MSZ-AP42 Compact",
+        "MSZ-AP50 Compact",
+        "MSZ-AP60 Compact",
+        "MSZ-AP71 Compact",
+        "MSZ-HR25 Entry",
+        "MSZ-HR35 Entry",
+        "MSZ-HR50 Entry",
+        "MSZ-BT20 Klassik",
+        "MSZ-BT25 Klassik",
+        "MSZ-BT35 Klassik",
+        "MSZ-BT50 Klassik",
+        "MSZ-FT25 Premium",
+        "MSZ-FT35 Premium",
+        "MSZ-FT50 Premium",
+        "MSZ-RW25 Plus",
+        "MSZ-RW35 Plus",
+        "MSZ-RW50 Plus"
+      ]
+    },
+    {
+      "manufacturer": "Mitsubishi Heavy Industries",
+      "models": [
+        "SRK25ZSX-W Premium",
+        "SRK35ZSX-W Premium",
+        "SRK50ZSX-W Premium",
+        "SRK63ZSX-W Premium",
+        "SRK20ZS-W Diamond",
+        "SRK25ZS-W Diamond",
+        "SRK35ZS-W Diamond",
+        "SRK50ZS-W Diamond",
+        "SRK63ZS-W Diamond",
+        "SRK20ZMP-S Standard",
+        "SRK25ZMP-S Standard",
+        "SRK35ZMP-S Standard",
+        "SRK50ZMP-S Standard",
+        "SRK63ZR-W Ecoline",
+        "SCM40ZM-S Multi",
+        "SCM45ZM-S Multi",
+        "SCM60ZM-S Multi",
+        "SCM71ZM-S Multi",
+        "SCM80ZM-S Multi",
+        "SCM100ZM-S Multi"
+      ]
+    },
+    {
+      "manufacturer": "Panasonic",
+      "models": [
+        "Etherea Z20TKEW",
+        "Etherea Z25TKEW",
+        "Etherea Z35TKEW",
+        "Etherea Z42TKEW",
+        "Etherea Z50TKEW",
+        "Etherea Z60TKEW",
+        "Etherea Z71TKEW",
+        "TZ20TKE Compact",
+        "TZ25TKE Compact",
+        "TZ35TKE Compact",
+        "TZ50TKE Compact",
+        "TZ71TKE Compact",
+        "PZ25WKE Standard",
+        "PZ35WKE Standard",
+        "PZ50WKE Standard",
+        "PZ71WKE Standard",
+        "Design Color XZ25XKE",
+        "Design Color XZ35XKE",
+        "Design Color XZ50XKE",
+        "Nordic HZ25XKE",
+        "Nordic HZ35XKE",
+        "Nordic HZ50XKE"
+      ]
+    },
+    {
+      "manufacturer": "Samsung",
+      "models": [
+        "WindFree Comfort AR07",
+        "WindFree Comfort AR09",
+        "WindFree Comfort AR12",
+        "WindFree Comfort AR18",
+        "WindFree Comfort AR24",
+        "WindFree Elite AR09",
+        "WindFree Elite AR12",
+        "WindFree Elite AR18",
+        "WindFree Elite AR24",
+        "WindFree Pure AR09",
+        "WindFree Pure AR12",
+        "WindFree Pure AR18",
+        "Maldives WindFree AR09",
+        "Maldives WindFree AR12",
+        "Maldives WindFree AR18",
+        "Wind-Free Avant AR09",
+        "Wind-Free Avant AR12",
+        "Geo AR07",
+        "Geo AR09",
+        "Geo AR12"
+      ]
+    },
+    {
+      "manufacturer": "LG",
+      "models": [
+        "Artcool Gallery A09FT",
+        "Artcool Gallery A12FT",
+        "Artcool Gallery A18FT",
+        "Artcool Mirror AM09BP",
+        "Artcool Mirror AM12BP",
+        "Artcool Mirror AM18BP",
+        "Standard Plus PC07SQ",
+        "Standard Plus PC09SQ",
+        "Standard Plus PC12SQ",
+        "Standard Plus PC18SQ",
+        "Standard Plus PC24SQ",
+        "DualCool Premium DC09RH",
+        "DualCool Premium DC12RH",
+        "DualCool Premium DC18RH",
+        "Deluxe DC09RQ",
+        "Deluxe DC12RQ",
+        "Deluxe DC18RQ",
+        "Libero S09EQ",
+        "Libero S12EQ"
+      ]
+    },
+    {
+      "manufacturer": "Toshiba",
+      "models": [
+        "Daiseikai 10 RAS-10PKVPG",
+        "Daiseikai 10 RAS-13PKVPG",
+        "Daiseikai 10 RAS-16PKVPG",
+        "Shorai Edge RAS-B07J2KVSG",
+        "Shorai Edge RAS-B10J2KVSG",
+        "Shorai Edge RAS-B13J2KVSG",
+        "Shorai Edge RAS-B16J2KVSG",
+        "Shorai Edge RAS-B22J2KVSG",
+        "Shorai Edge RAS-B24J2KVSG",
+        "Seiya Classic RAS-B07J2KVG",
+        "Seiya Classic RAS-B10J2KVG",
+        "Seiya Classic RAS-B13J2KVG",
+        "Seiya Classic RAS-B16J2KVG",
+        "Haori RAS-B10N4KVRG",
+        "Haori RAS-B13N4KVRG",
+        "Haori RAS-B16N4KVRG",
+        "Yukai RAS-B10E2KVG",
+        "Yukai RAS-B13E2KVG",
+        "Yukai RAS-B16E2KVG"
+      ]
+    },
+    {
+      "manufacturer": "Fujitsu",
+      "models": [
+        "LUCA Eco ASYG07LMCE",
+        "LUCA Eco ASYG09LMCE",
+        "LUCA Eco ASYG12LMCE",
+        "LUCA Eco ASYG14LMCE",
+        "LUCA Eco ASYG18LMCE",
+        "Design ASYG09KXCA",
+        "Design ASYG12KXCA",
+        "Design ASYG14KXCA",
+        "Nocria X ASYG09KXCA",
+        "Nocria X ASYG12KXCA",
+        "Nocria X ASYG14KXCA",
+        "Standard ASYG07KMCC",
+        "Standard ASYG09KMCC",
+        "Standard ASYG12KMCC",
+        "Standard ASYG14KMCC",
+        "Standard ASYG18KMCC"
+      ]
+    },
+    {
+      "manufacturer": "Hitachi",
+      "models": [
+        "Performance RAK-25PSE",
+        "Performance RAK-35PSE",
+        "Performance RAK-50PSE",
+        "Akebono RAK-25RPE",
+        "Akebono RAK-35RPE",
+        "Akebono RAK-50RPE",
+        "Shirokuma RAS-25PH1",
+        "Shirokuma RAS-35PH1",
+        "Shirokuma RAS-50PH1",
+        "Monozone Premium RAK-25RXE",
+        "Monozone Premium RAK-35RXE",
+        "Monozone Premium RAK-50RXE"
+      ]
+    },
+    {
+      "manufacturer": "Gree",
+      "models": [
+        "Fairy 07",
+        "Fairy 09",
+        "Fairy 12",
+        "Fairy 18",
+        "Fairy 24",
+        "Lomo Luxury 09",
+        "Lomo Luxury 12",
+        "Lomo Luxury 18",
+        "Bora 09",
+        "Bora 12",
+        "Bora 18",
+        "Pular 09",
+        "Pular 12",
+        "Pular 18",
+        "Amber Prestige 09",
+        "Amber Prestige 12",
+        "Amber Prestige 18"
+      ]
+    },
+    {
+      "manufacturer": "Midea",
+      "models": [
+        "Xtreme Save Pro 07",
+        "Xtreme Save Pro 09",
+        "Xtreme Save Pro 12",
+        "Xtreme Save Pro 18",
+        "Xtreme Save Pro 24",
+        "All Easy Pro 07",
+        "All Easy Pro 09",
+        "All Easy Pro 12",
+        "All Easy Pro 18",
+        "All Easy Pro 24",
+        "Blanc 09",
+        "Blanc 12",
+        "Blanc 18",
+        "Oasis 09",
+        "Oasis 12",
+        "Oasis 18",
+        "Mission II 09",
+        "Mission II 12"
+      ]
+    },
+    {
+      "manufacturer": "Haier",
+      "models": [
+        "Flexis Plus 25",
+        "Flexis Plus 35",
+        "Flexis Plus 50",
+        "Flexis Plus 70",
+        "Pearl Plus 25",
+        "Pearl Plus 35",
+        "Pearl Plus 50",
+        "Tundra Plus 25",
+        "Tundra Plus 35",
+        "Tundra Plus 50",
+        "Tundra Plus 70",
+        "Expert Plus 25",
+        "Expert Plus 35",
+        "Expert Plus 50"
+      ]
+    },
+    {
+      "manufacturer": "Vaillant",
+      "models": [
+        "climaVAIR exclusive VAI 8-025 WN",
+        "climaVAIR exclusive VAI 8-035 WN",
+        "climaVAIR exclusive VAI 8-050 WN",
+        "climaVAIR exclusive VAI 8-065 WN",
+        "climaVAIR plus VAI 6-025 WN",
+        "climaVAIR plus VAI 6-035 WN",
+        "climaVAIR plus VAI 6-050 WN",
+        "climaVAIR plus VAI 6-065 WN"
+      ]
+    },
+    {
+      "manufacturer": "Viessmann",
+      "models": [
+        "Vitoclima 300-S HE25",
+        "Vitoclima 300-S HE35",
+        "Vitoclima 300-S HE50",
+        "Vitoclima 300-S HE70",
+        "Vitoclima 232-S HE25",
+        "Vitoclima 232-S HE35",
+        "Vitoclima 232-S HE50",
+        "Vitoclima 200-S HE25",
+        "Vitoclima 200-S HE35"
+      ]
+    },
+    {
+      "manufacturer": "Bosch",
+      "models": [
+        "Climate 5000 RAC 2.6",
+        "Climate 5000 RAC 3.5",
+        "Climate 5000 RAC 5.3",
+        "Climate 5000 RAC 7.0",
+        "Climate 8500 RAC 2.6",
+        "Climate 8500 RAC 3.5",
+        "Climate 8500 RAC 5.3",
+        "Climate 8500 RAC 7.0",
+        "Climate 9000i 2.6",
+        "Climate 9000i 3.5",
+        "Climate 9000i 5.3",
+        "Climate 9000i 7.0",
+        "Climate 6100i 2.6",
+        "Climate 6100i 3.5",
+        "Climate 6100i 5.3"
+      ]
+    },
+    {
+      "manufacturer": "Stiebel Eltron",
+      "models": [
+        "HSBC-compact 180",
+        "HSBC-compact 200",
+        "HSBC-compact 300",
+        "ACP 25",
+        "ACP 35",
+        "ACP 50"
+      ]
+    },
+    {
+      "manufacturer": "Olimpia Splendid",
+      "models": [
+        "Maestro Pro 09",
+        "Maestro Pro 12",
+        "Maestro Pro 18",
+        "Unico Air 8 SF",
+        "Unico Air 8 HP",
+        "Unico Air 20 HP",
+        "Alyas Pro E 9",
+        "Alyas Pro E 12",
+        "Alyas Pro E 18",
+        "Nexya S4 E 9",
+        "Nexya S4 E 12",
+        "Nexya S4 E 18"
+      ]
+    },
+    {
+      "manufacturer": "Remko",
+      "models": [
+        "ATY 265 DC",
+        "ATY 355 DC",
+        "ATY 525 DC",
+        "ATY 710 DC",
+        "MVT 263 DC",
+        "MVT 353 DC",
+        "MVT 523 DC"
+      ]
+    },
+    {
+      "manufacturer": "AEG",
+      "models": [
+        "RX26 Comfort",
+        "RX35 Comfort",
+        "RX52 Comfort",
+        "RX71 Comfort",
+        "ARC 2626",
+        "ARC 3535",
+        "ARC 5252"
+      ]
+    },
+    {
+      "manufacturer": "Sharp",
+      "models": [
+        "AY-XP9LS",
+        "AY-XP12LS",
+        "AY-XP18LS",
+        "AY-XR9PHR",
+        "AY-XR12PHR",
+        "AY-XR18PHR"
+      ]
+    },
+    {
+      "manufacturer": "Sinclair",
+      "models": [
+        "Focus Plus 09",
+        "Focus Plus 12",
+        "Focus Plus 18",
+        "Terrel 09",
+        "Terrel 12",
+        "Terrel 18",
+        "Marvin 09",
+        "Marvin 12"
+      ]
+    },
+    {
+      "manufacturer": "Kaisai",
+      "models": [
+        "Fly 25",
+        "Fly 35",
+        "Fly 50",
+        "Fly 70",
+        "ECO 25",
+        "ECO 35",
+        "ECO 50",
+        "ONE 25",
+        "ONE 35",
+        "ONE 50"
+      ]
+    },
+    {
+      "manufacturer": "Rotenso",
+      "models": [
+        "Roni R26",
+        "Roni R35",
+        "Roni R50",
+        "Hiro H26",
+        "Hiro H35",
+        "Hiro H50",
+        "Aquami A26",
+        "Aquami A35"
+      ]
+    },
+    {
+      "manufacturer": "Airwell",
+      "models": [
+        "HAF 018",
+        "HAF 025",
+        "HAF 035",
+        "HDLA 018",
+        "HDLA 025",
+        "HDLA 035",
+        "HDLA 050"
+      ]
+    }
+  ],
+  "waterTreatment": [
+    {
+      "manufacturer": "BWT",
+      "models": [
+        "AQA perla",
+        "AQA perla BIO",
+        "AQA perla XL",
+        "AQA perla tech",
+        "AQA smart Plus",
+        "AQA smart A",
+        "AQA nano",
+        "AQA therm HRS",
+        "AQA therm HFS",
+        "AQA total Energy",
+        "AQA total Protect",
+        "E1 Einhebelfilter",
+        "E1 HWS",
+        "Bewamat Mono",
+        "Bewamat Duplex",
+        "Bewamat Eco",
+        "Infinity M",
+        "Infinity A",
+        "Infinity AP",
+        "Multiblock 2",
+        "Rondomat Duo"
+      ]
+    },
+    {
+      "manufacturer": "Grünbeck",
+      "models": [
+        "softliQ:SC18",
+        "softliQ:SC23",
+        "softliQ:SD18",
+        "softliQ:SD23",
+        "softliQ:MC32",
+        "softliQ:MD32",
+        "softliQ:P",
+        "softliQ:PA",
+        "BOXER R",
+        "BOXER KD",
+        "BOXER KX",
+        "GENO-mat M5",
+        "GENO-mat M7",
+        "exaliQ safe-K",
+        "exaliQ safe-MKX",
+        "exaliQ KB",
+        "desalQ:MKC",
+        "spaliS",
+        "pureliQ:KR",
+        "pureliQ:RD"
+      ]
+    },
+    {
+      "manufacturer": "Judo",
+      "models": [
+        "JUDO i-soft PRO",
+        "JUDO i-soft safe+",
+        "JUDO i-soft K-SAFE+",
+        "JUDO i-soft plus",
+        "JUDO ProFi-AP",
+        "JUDO ProFi-Plus",
+        "JUDO BIOSTAT-SAFE",
+        "JUDO ZEWA-WASSERSTOP",
+        "JUDO QUICK PROM-i",
+        "JUDO JPF",
+        "JUDO JRSF",
+        "JUDO JAF",
+        "JUDO JFY-AT",
+        "JUDO softRent"
+      ]
+    },
+    {
+      "manufacturer": "Honeywell",
+      "models": [
+        "F76S Miniplus",
+        "F76S-1",
+        "F74CS",
+        "F74C",
+        "HS10S",
+        "KH300 Rückspülfilter",
+        "FK06 Kompaktfilter",
+        "FK76CS Kompaktfilter",
+        "Z11S Druckminderer",
+        "Z11AS Druckminderer",
+        "D06F Druckminderer"
+      ]
+    },
+    {
+      "manufacturer": "Syr",
+      "models": [
+        "LEX Plus 10 S",
+        "LEX Plus 10 Connect",
+        "LEX Plus 10 SL",
+        "LEX Plus 20",
+        "Drufi+ DFR",
+        "Drufi+ FR",
+        "Drufi max FR",
+        "Fillsoft Zero",
+        "Fillsoft I",
+        "Fillsoft II",
+        "Duoflux 32",
+        "Duoflux 50",
+        "Safetech Connect",
+        "Hauswasserstation Typ 2315"
+      ]
+    },
+    {
+      "manufacturer": "Reflex",
+      "models": [
+        "Servitec Magcontrol",
+        "Servitec Mini",
+        "Servitec Midi",
+        "Fillset",
+        "Fillset Impuls",
+        "Fillsoft I",
+        "Fillsoft II",
+        "Fillsoft III",
+        "Exvoid",
+        "Exdirt"
+      ]
+    },
+    {
+      "manufacturer": "Cillit",
+      "models": [
+        "Cillit Neutra",
+        "Cillit Neutra Plus",
+        "Cillit Safeguard",
+        "Cillit Vario",
+        "Cillit Duplex",
+        "Cillit Neutra Soft",
+        "Cillit HYDROTEC"
+      ]
+    },
+    {
+      "manufacturer": "Kemper",
+      "models": [
+        "KHS Regulierventil",
+        "Kemper Kompaktstation",
+        "KHS Zirkulations-Inspektor",
+        "Kemper Multi-Therm",
+        "Kemper Frosti",
+        "Kemper Figur 144",
+        "Kemper Figur 361"
+      ]
+    },
+    {
+      "manufacturer": "Aquintos",
+      "models": [
+        "Aquasoft AST-ECO",
+        "Aquasoft SD 18",
+        "Aquasoft SD 32",
+        "Aquasoft MINI",
+        "Aquahome 20+",
+        "Aquahome 30+",
+        "Aquacompact 32"
+      ]
+    },
+    {
+      "manufacturer": "Watts Industries",
+      "models": [
+        "OneFlow+ OFPSY Standard",
+        "OneFlow+ OFPSY Plus",
+        "Aquasoft B",
+        "Aquasoft BM",
+        "Watts Vision Duplex",
+        "W3/4 Druckminderer"
+      ]
+    },
+    {
+      "manufacturer": "Schell",
+      "models": [
+        "MODUS Trinkwasserstation",
+        "COMPACT Wasserstation",
+        "WBD-SC Trinkwasserstation",
+        "Smart SWS"
+      ]
+    },
+    {
+      "manufacturer": "Perfect Water",
+      "models": [
+        "Siata Duplex Eco",
+        "Siata Duplex Plus",
+        "Premium Softener PS 20",
+        "Premium Softener PS 30"
+      ]
+    }
+  ],
+  "energyStorage": {
+    "boiler": [
+      {
+        "manufacturer": "Stiebel Eltron",
+        "models": [
+          "SHW 200",
+          "SHW 300",
+          "SHW 400",
+          "SHW 500",
+          "HSBC 200",
+          "HSBC 300",
+          "SBB 300 WP",
+          "SBB 400 WP",
+          "SBB 500 WP",
+          "PSH 80",
+          "PSH 100",
+          "PSH 120",
+          "PSH 150",
+          "PSH 200",
+          "WWK 300",
+          "WWK 300 electronic"
+        ]
+      },
+      {
+        "manufacturer": "Vaillant",
+        "models": [
+          "uniSTOR VIH R 120",
+          "uniSTOR VIH R 150",
+          "uniSTOR VIH R 200",
+          "uniSTOR VIH R 300",
+          "uniSTOR VIH R 500",
+          "uniSTOR VIH RL 400",
+          "uniSTOR VIH RW 400",
+          "auroSTOR VIH S 300",
+          "auroSTOR VIH S 400",
+          "auroSTOR VIH S 500",
+          "auroSTOR VIH SW 400",
+          "auroSTOR VIH SW 500",
+          "actoSTOR VIH K 70",
+          "actoSTOR VIH RL 300",
+          "geoSTOR VIH RW 300",
+          "geoSTOR VIH QW 190"
+        ]
+      },
+      {
+        "manufacturer": "Viessmann",
+        "models": [
+          "Vitocell 100-B CVBB 300",
+          "Vitocell 100-B CVBB 400",
+          "Vitocell 100-B CVBB 500",
+          "Vitocell 100-V CVA 160",
+          "Vitocell 100-V CVA 200",
+          "Vitocell 100-V CVA 300",
+          "Vitocell 100-V CVAA 400",
+          "Vitocell 300-B EVBA 300",
+          "Vitocell 300-B EVBA 500",
+          "Vitocell 300-V EVI 200",
+          "Vitocell 300-V EVI 300",
+          "Vitocell 100-W CVAA 160",
+          "Vitocell 100-W CVAA 200",
+          "Vitocell 200-B CVBB 300",
+          "Vitocell 200-W CVAA 160"
+        ]
+      },
+      {
+        "manufacturer": "Buderus",
+        "models": [
+          "Logalux SU120",
+          "Logalux SU160",
+          "Logalux SU200",
+          "Logalux SU300",
+          "Logalux SU400",
+          "Logalux SM300",
+          "Logalux SM400",
+          "Logalux SF300",
+          "Logalux SF500",
+          "Logalux SF750",
+          "Logalux LT160",
+          "Logalux LT200",
+          "Logalux LT300",
+          "Logalux L135",
+          "Logalux L200"
+        ]
+      },
+      {
+        "manufacturer": "Wolf",
+        "models": [
+          "CEW-2 300",
+          "CEW-2 400",
+          "SEW-2 300",
+          "SEW-2 400",
+          "SE-2 200",
+          "SE-2 300",
+          "BSH 120",
+          "BSH 150",
+          "BSH 200",
+          "SPU-1 200 E",
+          "SPU-1 300 E"
+        ]
+      },
+      {
+        "manufacturer": "Elco",
+        "models": [
+          "Vistron 120",
+          "Vistron 150",
+          "Vistron 200",
+          "Smart 200",
+          "Smart 300",
+          "Classic 200",
+          "Classic 300"
+        ]
+      },
+      {
+        "manufacturer": "Weishaupt",
+        "models": [
+          "WAS 150",
+          "WAS 200",
+          "WAS 300",
+          "WAS 400",
+          "WES 300",
+          "WES 400",
+          "WES 500"
+        ]
+      },
+      {
+        "manufacturer": "Junkers Bosch",
+        "models": [
+          "ST 120-2 E",
+          "ST 160-2 E",
+          "ST 200-2 E",
+          "SK 200-5 ZB",
+          "SK 300-5 ZB",
+          "SK 400-5 ZB"
+        ]
+      },
+      {
+        "manufacturer": "Austria Email",
+        "models": [
+          "EHTR 200",
+          "EHTR 300",
+          "EHTR 400",
+          "EHTR 500",
+          "WWPA 300",
+          "WWPA 500",
+          "HR-Solar 400",
+          "HR-Solar 500"
+        ]
+      },
+      {
+        "manufacturer": "Roth",
+        "models": [
+          "Roth DWS Compact 300",
+          "Roth DWS Compact 500",
+          "Roth Solartank DWS 400",
+          "Roth Solartank DWS 500",
+          "Roth Thermotank Quadroline TQ 300",
+          "Roth Thermotank Quadroline TQ 500"
+        ]
+      },
+      {
+        "manufacturer": "Remko",
+        "models": [
+          "KWP 300",
+          "KWP 500",
+          "WPS 300",
+          "WPS 500"
+        ]
+      },
+      {
+        "manufacturer": "Panasonic",
+        "models": [
+          "Aquarea PAW-TD20C8E5-1",
+          "Aquarea PAW-TD30C8E5-1",
+          "Aquarea PAW-TD50C8E5-1"
+        ]
+      }
+    ],
+    "bufferTank": [
+      {
+        "manufacturer": "Vaillant",
+        "models": [
+          "allSTOR plus VPS 300",
+          "allSTOR plus VPS 500",
+          "allSTOR plus VPS 800",
+          "allSTOR plus VPS 1000",
+          "allSTOR plus VPS 2000",
+          "allSTOR exclusive VPS 500",
+          "allSTOR exclusive VPS 800",
+          "allSTOR exclusive VPS 1000",
+          "allSTOR exclusive VPS 1500",
+          "geoSTOR VPS 300"
+        ]
+      },
+      {
+        "manufacturer": "Viessmann",
+        "models": [
+          "Vitocell 100-E SVP 400",
+          "Vitocell 100-E SVP 600",
+          "Vitocell 100-E SVP 750",
+          "Vitocell 100-E SVP 950",
+          "Vitocell 340-M EVS 750",
+          "Vitocell 340-M EVS 950",
+          "Vitocell 360-M EVB 750",
+          "Vitocell 360-M EVB 950",
+          "Vitocell 120-E SVPA 400",
+          "Vitocell 120-E SVPA 750"
+        ]
+      },
+      {
+        "manufacturer": "Buderus",
+        "models": [
+          "Logalux PS500",
+          "Logalux PS750",
+          "Logalux PS1000",
+          "Logalux PS1500",
+          "Logalux PS2000",
+          "Logalux P200",
+          "Logalux P300",
+          "Logalux P500",
+          "Logalux P750"
+        ]
+      },
+      {
+        "manufacturer": "Reflex",
+        "models": [
+          "Storatherm Heat H 300",
+          "Storatherm Heat H 500",
+          "Storatherm Heat H 800",
+          "Storatherm Heat H 1000",
+          "Storatherm Heat H 1500",
+          "Storatherm Heat H 2000",
+          "Storatherm Aqua AB 300",
+          "Storatherm Aqua AB 500",
+          "Storatherm Aqua AB 800",
+          "Storatherm Aqua Heat AH",
+          "Storatherm Aqua Heat AH-SL"
+        ]
+      },
+      {
+        "manufacturer": "TWL",
+        "models": [
+          "TWL Ekonomik 300",
+          "TWL Ekonomik 500",
+          "TWL Ekonomik 800",
+          "TWL Ekonomik 1000",
+          "TWL Ekonomik 1500",
+          "TWL HRC 500",
+          "TWL HRC 800",
+          "TWL HRC 1000",
+          "TWL Solar 500",
+          "TWL Solar 800",
+          "TWL Solar 1000"
+        ]
+      },
+      {
+        "manufacturer": "Austria Email",
+        "models": [
+          "PSX 300",
+          "PSX 500",
+          "PSX 800",
+          "PSX 1000",
+          "PSX 1500",
+          "PSX 2000"
+        ]
+      },
+      {
+        "manufacturer": "Oventrop",
+        "models": [
+          "Regucor WHS 500",
+          "Regucor WHS 800",
+          "Regucor WH 500",
+          "Regucor WH 800"
+        ]
+      },
+      {
+        "manufacturer": "Stiebel Eltron",
+        "models": [
+          "SBP 200 E",
+          "SBP 400 E",
+          "SBP 700 E",
+          "SBP 1000 E",
+          "SBP 1500 E",
+          "SBP 2000 E",
+          "SBS 601 W",
+          "SBS 801 W"
+        ]
+      },
+      {
+        "manufacturer": "Wolf",
+        "models": [
+          "SPU-1-500",
+          "SPU-1-800",
+          "SPU-1-1000",
+          "BSP-500",
+          "BSP-800",
+          "BSP-1000",
+          "BSP-1500"
+        ]
+      },
+      {
+        "manufacturer": "Elco",
+        "models": [
+          "Vistron PB 300",
+          "Vistron PB 500",
+          "Vistron PB 800",
+          "Vistron PB 1000"
+        ]
+      },
+      {
+        "manufacturer": "Weishaupt",
+        "models": [
+          "WPS-B 300",
+          "WPS-B 500",
+          "WPS-B 800",
+          "WPS-B 1000",
+          "WPS-B 1500"
+        ]
+      },
+      {
+        "manufacturer": "Solvis",
+        "models": [
+          "SolvisMax 550",
+          "SolvisMax 757",
+          "SolvisMax 950",
+          "SolvisBen 450",
+          "SolvisStrato 750"
+        ]
+      },
+      {
+        "manufacturer": "Remko",
+        "models": [
+          "PSW 300",
+          "PSW 500",
+          "PSW 800",
+          "PSW 1000",
+          "PSW 1500"
+        ]
+      }
+    ]
+  }
+}

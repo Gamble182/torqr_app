@@ -3,13 +3,26 @@
 import { useState, useMemo } from 'react';
 import { SearchIcon, PlusIcon, Loader2Icon } from 'lucide-react';
 import { useCatalog, useCreateCatalogEntry } from '@/hooks/useCatalog';
-import type { CatalogEntry, SystemType } from '@/hooks/useCatalog';
+import type { CatalogEntry, SystemType, AcSubtype, StorageSubtype } from '@/hooks/useCatalog';
 
 interface CatalogPickerProps {
   systemType: SystemType;
   value: string; // catalogId
   onChange: (catalogId: string, entry: CatalogEntry) => void;
 }
+
+const AC_SUBTYPE_OPTIONS: Array<{ value: AcSubtype; label: string }> = [
+  { value: 'SINGLE_SPLIT', label: 'Single-Split (1 Innengerät)' },
+  { value: 'MULTI_SPLIT_2', label: 'Multi-Split (2 Innengeräte)' },
+  { value: 'MULTI_SPLIT_3', label: 'Multi-Split (3 Innengeräte)' },
+  { value: 'MULTI_SPLIT_4', label: 'Multi-Split (4 Innengeräte)' },
+  { value: 'MULTI_SPLIT_5', label: 'Multi-Split (5 Innengeräte)' },
+];
+
+const STORAGE_SUBTYPE_OPTIONS: Array<{ value: StorageSubtype; label: string }> = [
+  { value: 'BOILER', label: 'Warmwasserspeicher (Boiler)' },
+  { value: 'BUFFER_TANK', label: 'Pufferspeicher' },
+];
 
 export function CatalogPicker({ systemType, value, onChange }: CatalogPickerProps) {
   const { data: entries = [], isLoading } = useCatalog(systemType);
@@ -18,6 +31,8 @@ export function CatalogPicker({ systemType, value, onChange }: CatalogPickerProp
   const [showAddForm, setShowAddForm] = useState(false);
   const [newManufacturer, setNewManufacturer] = useState('');
   const [newName, setNewName] = useState('');
+  const [newAcSubtype, setNewAcSubtype] = useState<AcSubtype | ''>('');
+  const [newStorageSubtype, setNewStorageSubtype] = useState<StorageSubtype | ''>('');
 
   const filtered = useMemo(() => {
     if (!search) return entries;
@@ -40,20 +55,31 @@ export function CatalogPicker({ systemType, value, onChange }: CatalogPickerProp
 
   const selected = entries.find((e) => e.id === value);
 
+  const needsAcSubtype = systemType === 'AC';
+  const needsStorageSubtype = systemType === 'ENERGY_STORAGE';
+
+  const canSubmit =
+    newManufacturer.trim() !== '' &&
+    newName.trim() !== '' &&
+    (!needsAcSubtype || newAcSubtype !== '') &&
+    (!needsStorageSubtype || newStorageSubtype !== '');
+
   const handleAdd = async () => {
-    if (!newManufacturer.trim() || !newName.trim()) return;
+    if (!canSubmit) return;
     const entry = await createEntry.mutateAsync({
       systemType,
       manufacturer: newManufacturer.trim(),
       name: newName.trim(),
-      acSubtype: null,
-      storageSubtype: null,
+      acSubtype: needsAcSubtype && newAcSubtype ? newAcSubtype : null,
+      storageSubtype: needsStorageSubtype && newStorageSubtype ? newStorageSubtype : null,
     });
     if (entry) {
       onChange(entry.id, entry);
       setShowAddForm(false);
       setNewManufacturer('');
       setNewName('');
+      setNewAcSubtype('');
+      setNewStorageSubtype('');
     }
   };
 
@@ -145,11 +171,39 @@ export function CatalogPicker({ systemType, value, onChange }: CatalogPickerProp
                 onChange={(e) => setNewName(e.target.value)}
                 className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring bg-card"
               />
+              {needsAcSubtype && (
+                <select
+                  value={newAcSubtype}
+                  onChange={(e) => setNewAcSubtype(e.target.value as AcSubtype | '')}
+                  className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring bg-card"
+                >
+                  <option value="">Split-Typ wählen...</option>
+                  {AC_SUBTYPE_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              )}
+              {needsStorageSubtype && (
+                <select
+                  value={newStorageSubtype}
+                  onChange={(e) => setNewStorageSubtype(e.target.value as StorageSubtype | '')}
+                  className="w-full px-3 py-2 text-sm border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring bg-card"
+                >
+                  <option value="">Speichertyp wählen...</option>
+                  {STORAGE_SUBTYPE_OPTIONS.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              )}
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={handleAdd}
-                  disabled={createEntry.isPending}
+                  disabled={createEntry.isPending || !canSubmit}
                   className="flex-1 py-1.5 text-sm bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50"
                 >
                   {createEntry.isPending ? 'Speichern...' : 'Hinzufügen'}
