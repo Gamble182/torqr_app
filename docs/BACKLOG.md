@@ -25,7 +25,6 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 | 55 | Architecture | Wartungen + edit customer pages use `useEffect` data fetching instead of React Query — violates established hook pattern. Migrate to `useQuery` hooks. | Medium | 2026-04-22 |
 | 56 | Architecture | `MaintenanceHistory`, `MaintenanceChecklistModal`, `BookingFormModal` use direct `fetch()` instead of React Query mutations — should use `useMutation` hooks for consistency and cache invalidation. | Medium | 2026-04-22 |
 | 57 | Security | Follow-ups and checklist-items DELETE routes use `requireAuth()` instead of `requireOwner()` — TECHNICIAN can delete records. Align with permission matrix (delete = OWNER only). | High | 2026-04-22 |
-| 58 | Security | Cal.com webhook HMAC verification fails open when `CAL_WEBHOOK_SECRET` env var is unset — should reject all requests if secret is missing. | High | 2026-04-22 |
 | 59 | Infra | In-memory rate limiter (`Map`) resets on every cold start — no-op on Vercel serverless. Migrate to Upstash Redis for persistent rate limiting. | Medium | 2026-04-22 |
 | 60 | Architecture | `CatalogPicker` "Ändern" button passes `entries[0]` to `onChange` when clearing — semantically incorrect. `onChange` signature should support `null` entry for clear action. | Low | 2026-04-22 |
 
@@ -33,7 +32,9 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| 62 | Feature | Termine page — full `/dashboard/termine` with list + monthly calendar view, filters (time/status/technician/customer/system/source), in-app reschedule + cancel via Cal.com v2 API, customer notification emails, source icon + legend. Spec: `docs/superpowers/specs/2026-04-23-termine-page-design.md`. Plan: `docs/superpowers/plans/2026-04-23-termine-page.md`. Includes fixing #58 (HMAC fail-open) since it touches the same webhook. | High | 2026-04-23 |
+| 63 | Feature | Drag-and-drop rescheduling on calendar view. | Low | 2026-04-23 |
+| 64 | Feature | Weekly/daily calendar modes. | Low | 2026-04-23 |
+| 65 | Infra | Deploy `CAL_COM_API_KEY` + apply Termine page Prisma migration to production Supabase before enabling Cal.com reschedule/cancel flow. | High | 2026-04-23 |
 
 ### System Model — Follow-up
 
@@ -57,7 +58,6 @@ Generic "Wartungstermin" event type configured (60 min, Mon–Fri 7:30–17:00).
 |---|------|-------------|----------|-------|
 | 42 | Config | Per-system-type event durations — different Cal.com event types per system type (Wärmepumpe, Gas, Öl, etc.) if pilot customer needs it. Deferred until feedback. | Low | 2026-04-16 |
 | 44 | Config | Target email — booking confirmation currently goes to personal email. Change to business address when available. | Low | 2026-04-16 |
-| 45 | Config | Cancellation flow — verify Cal.com cancellation link is included in confirmation email so customers can cancel directly. | Low | 2026-04-16 |
 | 51 | Decision | Cal.com multi-tenant strategy — current single-account setup doesn't scale beyond pilot. Options: Cal.com Teams, per-user Cal.com accounts, or custom booking UI via Cal.com API. Decide post-pilot. | Low | 2026-04-22 |
 | 52 | Testing | Test full booking flow end-to-end — customer receives reminder, clicks Cal.com link, books, webhook fires, booking appears in torqr dashboard. | Medium | 2026-04-22 |
 | 11 | Decision | Calendar integration strategy — recommendation: do NOT build own calendar. Use Cal.com for scheduling, let users sync to Google/Outlook via Cal.com. Embed iframe if needed later. | Low | 2026-04-14 |
@@ -74,9 +74,7 @@ _(no open items)_
 
 ### Workforce & Scheduling
 
-| # | Area | Description | Priority | Found |
-|---|------|-------------|----------|-------|
-| 37 | Feature | Technician calendar view — which technician has appointments when. Admin can enter vacation / sick days. Sick day triggers automated rebook email to affected customers. | Medium | 2026-04-16 |
+_(no open items — calendar view shipped as part of Sprint 25 Termine page)_
 
 ### Data Import
 
@@ -110,6 +108,22 @@ Ideas worth keeping in mind but not planned for current sprints. No implementati
 ## Completed / Resolved
 
 Items are grouped by sprint / work session, ordered newest first.
+
+### Sprint 25 — Termine Page + Cal.com Reschedule/Cancel (2026-04-23)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 62 | Feature | Termine page — full /dashboard/termine list + monthly calendar view, filters (time/status/technician/customer/system/source), in-app reschedule + cancel via Cal.com v2 API or direct DB update (manual bookings), customer notification emails (BookingRescheduleEmail, BookingCancellationEmail), source icon + legend. Spec: docs/superpowers/specs/2026-04-23-termine-page-design.md. Plan: docs/superpowers/plans/2026-04-23-termine-page.md. | 2026-04-23 |
+| 58 | Security | Cal.com webhook HMAC verification now fails CLOSED when CAL_WEBHOOK_SECRET is unset (was fail-open). Added vitest coverage. | 2026-04-23 |
+| 45 | Config | Cal.com cancellation flow verified end-to-end — webhook handles BOOKING_CANCELLED, DELETE /api/bookings/[id] + CancelBookingModal implemented with customer notification email. | 2026-04-23 |
+| 37 | Feature (partial) | Technician calendar view — monthly grid + filters shipped as part of the Termine page. Vacation/sick days + auto-rebook emails remain deferred as a separate feature. | 2026-04-23 (partial) |
+| — | DB | Prisma migration 20260423120000_termine_page adds 5 nullable columns to Booking (cancelReason, cancelledAt, rescheduledFromUid, rescheduledToUid, rescheduledAt) + 2 EmailType values (BOOKING_RESCHEDULED, BOOKING_CANCELLED) + 2 indexes. Migration file committed; run `npx prisma migrate deploy --config config/prisma.config.ts` to apply. | 2026-04-23 |
+| — | Infra | Cal.com v2 API client at src/lib/cal-com/client.ts (reschedule + cancel, with CalComApiError + Bearer auth). 5 vitest cases cover auth, URL construction, error handling, default-base fallback. | 2026-04-23 |
+| — | Webhook | Extended Cal.com webhook to handle BOOKING_RESCHEDULED (marks original as RESCHEDULED, inserts new row with rescheduledFromUid) and BOOKING_CANCELLED (sets status + cancelReason + cancelledAt). Dynamic email-service import is safe against pre-Task-11 state. | 2026-04-23 |
+| — | Email | Two new React Email templates: BookingRescheduleEmail (old/new date comparison) and BookingCancellationEmail (with optional rebook link via Cal.com metadata pre-fill). German copy, matches existing brand. | 2026-04-23 |
+| — | API | Extended GET /api/bookings with 8 filter params (range, status[], assignee, customerId, systemType, source, from, to, limit). New GET /api/bookings/[id], PATCH (manual + Cal.com branches), DELETE (manual + Cal.com branches), all tenant-scoped via companyId with TECHNICIAN own-only restriction on DELETE. | 2026-04-23 |
+| — | Hooks | Extended useBookings with full filter object (backwards-compatible with customerId string form). New useBooking(id), useRescheduleBooking, useCancelBooking mutations with query invalidation. | 2026-04-23 |
+| — | UI | Full Termine page: TermineFilters (URL-driven), TermineList (row actions), BookingDetailsDrawer, TermineCalendar (monthly grid with click-outside collapse), RescheduleBookingModal, CancelBookingModal. All components in src/components/termine/. | 2026-04-23 |
 
 ### Sprint 24 — Technician Workload Management (2026-04-23)
 
