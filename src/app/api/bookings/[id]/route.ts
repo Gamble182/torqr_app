@@ -119,6 +119,7 @@ export async function PATCH(
       );
     }
 
+    console.info(`[bookings] cal reschedule: booking=${existing.id} oldUid=${existing.calBookingUid} newStart=${newStart.toISOString()}`);
     const { newUid } = await rescheduleCalBooking({
       uid: existing.calBookingUid,
       startTime: newStart,
