@@ -315,11 +315,11 @@ export default function EditCustomerPage() {
           {/* Actions */}
           <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 pt-6 border-t">
             <Link href="/dashboard/customers" className="w-full sm:w-auto">
-              <Button type="button" variant="outline" disabled={loading} className="w-full sm:w-auto h-11 sm:h-9">
+              <Button type="button" variant="outline" disabled={loading} className="w-full sm:w-auto h-11">
                 Abbrechen
               </Button>
             </Link>
-            <Button type="submit" disabled={loading} className="w-full sm:w-auto h-11 sm:h-9">
+            <Button type="submit" disabled={loading} className="w-full sm:w-auto h-11">
               {loading ? (
                 <>
                   <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>

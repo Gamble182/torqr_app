@@ -80,7 +80,7 @@ export function PasswordCard() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" disabled={updatePassword.isPending} className="h-11 sm:h-9 w-full sm:w-auto">
+          <Button type="submit" disabled={updatePassword.isPending} className="h-11 w-full sm:w-auto">
             {updatePassword.isPending ? 'Wird gespeichert…' : 'Passwort ändern'}
           </Button>
         </CardFooter>

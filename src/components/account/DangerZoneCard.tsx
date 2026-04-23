@@ -60,7 +60,7 @@ export function DangerZoneCard() {
           </p>
           <Button
             variant="destructive"
-            className="h-11 sm:h-9 w-full sm:w-auto"
+            className="h-11 w-full sm:w-auto"
             onClick={() => setOpen(true)}
           >
             <Trash2Icon className="h-4 w-4" />

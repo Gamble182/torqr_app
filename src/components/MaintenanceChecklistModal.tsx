@@ -558,7 +558,7 @@ export function MaintenanceChecklistModal({
               variant="outline"
               onClick={onClose}
               disabled={loading}
-              className="h-11 sm:h-9"
+              className="h-11"
             >
               Abbrechen
             </Button>
@@ -567,7 +567,7 @@ export function MaintenanceChecklistModal({
               variant="outline"
               onClick={() => setStep((prev) => (prev - 1) as 1 | 2)}
               disabled={loading}
-              className="h-11 sm:h-9"
+              className="h-11"
             >
               <ChevronLeftIcon className="h-4 w-4" />
               Zurück
@@ -577,7 +577,7 @@ export function MaintenanceChecklistModal({
           {step < 3 ? (
             <Button
               onClick={() => setStep((prev) => (prev + 1) as 2 | 3)}
-              className="h-11 sm:h-9"
+              className="h-11"
             >
               Weiter
               <ChevronRightIcon className="h-4 w-4" />
@@ -586,7 +586,7 @@ export function MaintenanceChecklistModal({
             <Button
               onClick={handleSubmit}
               disabled={loading || uploadingPhotos || !date}
-              className="h-11 sm:h-9 bg-success hover:bg-success/90 text-success-foreground"
+              className="h-11 bg-success hover:bg-success/90 text-success-foreground"
             >
               {uploadingPhotos ? (
                 <>

@@ -83,7 +83,7 @@ export function ProfileCard() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" disabled={!isDirty || updateProfile.isPending} className="h-11 sm:h-9 w-full sm:w-auto">
+          <Button type="submit" disabled={!isDirty || updateProfile.isPending} className="h-11 w-full sm:w-auto">
             {updateProfile.isPending ? 'Wird gespeichert…' : 'Speichern'}
           </Button>
         </CardFooter>

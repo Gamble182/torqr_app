@@ -328,7 +328,7 @@ export const maintenanceCreateSchema = z.object({
     .string()
     .max(2000, 'Notes must be less than 2000 characters')
     .optional()
-    .or(z.literal('')),
+    .nullable(),
   photos: z.array(z.string().url('Invalid photo URL')).max(10, 'Maximum 10 photos allowed').optional(),
   checklistData: checklistSnapshotSchema.optional().nullable(),
 });
@@ -341,7 +341,8 @@ export const maintenanceUpdateSchema = z.object({
   notes: z
     .string()
     .max(2000, 'Notes must be less than 2000 characters')
-    .optional(),
+    .optional()
+    .nullable(),
   photos: z.array(z.string().url('Invalid photo URL')).max(10, 'Maximum 10 photos allowed').optional(),
 });
 

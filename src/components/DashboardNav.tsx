@@ -159,9 +159,20 @@ export function DashboardNav() {
               </div>
               {!collapsed && (
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-sidebar-accent-foreground truncate">
-                    {session?.user?.name}
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-medium text-sidebar-accent-foreground truncate">
+                      {session?.user?.name}
+                    </p>
+                    {session?.user?.role === 'OWNER' ? (
+                      <span className="shrink-0 text-[10px] font-medium uppercase tracking-wide px-1.5 py-0.5 rounded bg-sidebar-primary/20 text-sidebar-primary">
+                        Inhaber
+                      </span>
+                    ) : session?.user?.role === 'TECHNICIAN' ? (
+                      <span className="shrink-0 text-[10px] font-medium uppercase tracking-wide px-1.5 py-0.5 rounded bg-sidebar-accent text-sidebar-accent-foreground border border-sidebar-border">
+                        Techniker
+                      </span>
+                    ) : null}
+                  </div>
                   <p className="text-xs text-sidebar-foreground truncate">
                     {session?.user?.email}
                   </p>

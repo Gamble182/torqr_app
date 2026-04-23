@@ -219,9 +219,9 @@ export default function NewCustomerPage() {
           {/* Actions */}
           <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-end gap-3 pt-6 border-t border-border">
             <Link href="/dashboard/customers" className="w-full sm:w-auto">
-              <Button type="button" variant="outline" disabled={createCustomer.isPending} className="w-full sm:w-auto h-11 sm:h-9">Abbrechen</Button>
+              <Button type="button" variant="outline" disabled={createCustomer.isPending} className="w-full sm:w-auto h-11">Abbrechen</Button>
             </Link>
-            <Button type="submit" disabled={createCustomer.isPending} className="w-full sm:w-auto h-11 sm:h-9">
+            <Button type="submit" disabled={createCustomer.isPending} className="w-full sm:w-auto h-11">
               {createCustomer.isPending && <Loader2Icon className="h-4 w-4 animate-spin" />}
               {createCustomer.isPending ? 'Wird erstellt...' : 'Kunde erstellen'}
             </Button>
