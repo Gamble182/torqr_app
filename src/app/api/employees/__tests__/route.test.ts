@@ -30,7 +30,7 @@ vi.mock('@/lib/prisma', () => ({
 }));
 
 import { GET } from '../route';
-import { GET as GET_DETAIL } from '../[id]/route';
+import { GET as GET_DETAIL, PATCH } from '../[id]/route';
 import { requireOwner } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 
@@ -152,5 +152,87 @@ describe('GET /api/employees/[id]', () => {
     expect(body.data.assignedSystems).toHaveLength(1); // one customer group
     expect(body.data.assignedSystems[0].systems).toHaveLength(2);
     expect(body.data.recentActivity).toHaveLength(1);
+  });
+});
+
+describe('PATCH /api/employees/[id] — deactivation auto-reassign', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('transactionally reassigns systems to OWNER when deactivating', async () => {
+    vi.mocked(requireOwner).mockResolvedValue({
+      userId: 'owner-1', companyId: 'co-1', role: 'OWNER', email: 'o@x.de', name: 'O',
+    });
+    vi.mocked(prisma.user.findFirst).mockResolvedValue({
+      id: 'u1', role: 'TECHNICIAN', isActive: true,
+    } as never);
+
+    const txUpdate = vi.fn().mockResolvedValue({
+      id: 'u1', name: 'T', email: 't@x.de', phone: null, role: 'TECHNICIAN',
+      isActive: false, deactivatedAt: new Date(), createdAt: new Date(),
+    });
+    const txUpdateMany = vi.fn().mockResolvedValue({ count: 7 });
+    const txDeleteMany = vi.fn().mockResolvedValue({ count: 0 });
+
+    (vi.mocked(prisma.$transaction) as unknown as { mockImplementation: (fn: (...args: unknown[]) => Promise<unknown>) => void }).mockImplementation(async (fn: unknown) => {
+      const callback = fn as (tx: unknown) => Promise<unknown>;
+      return callback({
+        user: { update: txUpdate },
+        customerSystem: { updateMany: txUpdateMany },
+        session: { deleteMany: txDeleteMany },
+      });
+    });
+
+    const req = new Request('http://x/api/employees/u1', {
+      method: 'PATCH',
+      body: JSON.stringify({ isActive: false }),
+    });
+    const res = await PATCH(req as never, { params: Promise.resolve({ id: 'u1' }) });
+    const body = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(body.data.isActive).toBe(false);
+    expect(body.data.reassignedCount).toBe(7);
+    expect(txUpdateMany).toHaveBeenCalledWith({
+      where: { companyId: 'co-1', assignedToUserId: 'u1' },
+      data: { assignedToUserId: 'owner-1' },
+    });
+    expect(txDeleteMany).toHaveBeenCalledWith({ where: { userId: 'u1' } });
+  });
+
+  it('blocks self-deactivation with 400', async () => {
+    vi.mocked(requireOwner).mockResolvedValue({
+      userId: 'owner-1', companyId: 'co-1', role: 'OWNER', email: 'o@x.de', name: 'O',
+    });
+    const req = new Request('http://x/api/employees/owner-1', {
+      method: 'PATCH',
+      body: JSON.stringify({ isActive: false }),
+    });
+    const res = await PATCH(req as never, { params: Promise.resolve({ id: 'owner-1' }) });
+    expect(res.status).toBe(400);
+  });
+
+  it('does not reassign on reactivation', async () => {
+    vi.mocked(requireOwner).mockResolvedValue({
+      userId: 'owner-1', companyId: 'co-1', role: 'OWNER', email: 'o@x.de', name: 'O',
+    });
+    vi.mocked(prisma.user.findFirst).mockResolvedValue({
+      id: 'u1', role: 'TECHNICIAN', isActive: false,
+    } as never);
+    vi.mocked(prisma.user.update).mockResolvedValue({
+      id: 'u1', name: 'T', email: 't@x.de', phone: null, role: 'TECHNICIAN',
+      isActive: true, deactivatedAt: null, createdAt: new Date(),
+    } as never);
+
+    const req = new Request('http://x/api/employees/u1', {
+      method: 'PATCH',
+      body: JSON.stringify({ isActive: true }),
+    });
+    const res = await PATCH(req as never, { params: Promise.resolve({ id: 'u1' }) });
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.data.isActive).toBe(true);
+    expect(prisma.$transaction).not.toHaveBeenCalled();
   });
 });
