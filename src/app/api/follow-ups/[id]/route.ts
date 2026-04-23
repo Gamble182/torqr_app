@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireAuth } from '@/lib/auth-helpers';
+import { requireAuth, requireOwner } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 import type { Prisma } from '@prisma/client';
 import { z } from 'zod';
@@ -75,7 +75,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { userId, companyId } = await requireAuth();
+    const { userId, companyId } = await requireOwner();
 
     const rateLimitResponse = rateLimitByUser(req, userId, RATE_LIMIT_PRESETS.API_USER);
     if (rateLimitResponse) return rateLimitResponse;
@@ -99,6 +99,9 @@ export async function DELETE(
   } catch (err) {
     if (err instanceof Error && err.message === 'Unauthorized') {
       return NextResponse.json({ success: false, error: 'Nicht autorisiert' }, { status: 401 });
+    }
+    if (err instanceof Error && err.message === 'Forbidden') {
+      return NextResponse.json({ success: false, error: 'Nur Inhaber können Nachfolgeaufträge löschen' }, { status: 403 });
     }
     console.error('Error deleting follow-up:', err);
     return NextResponse.json({ success: false, error: 'Fehler beim Löschen des Nachfolgeauftrags' }, { status: 500 });
