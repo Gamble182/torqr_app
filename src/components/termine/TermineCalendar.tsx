@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useRef, useMemo, useState } from 'react';
 import {
   addMonths,
   eachDayOfInterval,
@@ -68,6 +68,18 @@ export function TermineCalendar({ filters, onOpenDetails }: TermineCalendarProps
 
   const [expandedDay, setExpandedDay] = useState<string | null>(null);
 
+  const gridRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (!expandedDay) return;
+    const onClick = (e: MouseEvent) => {
+      if (gridRef.current && !gridRef.current.contains(e.target as Node)) {
+        setExpandedDay(null);
+      }
+    };
+    document.addEventListener('mousedown', onClick);
+    return () => document.removeEventListener('mousedown', onClick);
+  }, [expandedDay]);
+
   return (
     <div className="rounded-lg border border-border bg-card">
       {/* Header */}
@@ -111,7 +123,7 @@ export function TermineCalendar({ filters, onOpenDetails }: TermineCalendarProps
           <Loader2Icon className="h-6 w-6 animate-spin text-muted-foreground" />
         </div>
       ) : (
-        <div className="grid grid-cols-7 divide-x divide-y divide-border">
+        <div ref={gridRef} className="grid grid-cols-7 divide-x divide-y divide-border">
           {days.map((day) => {
             const key = format(day, 'yyyy-MM-dd');
             const dayBookings = bookingsByDay.get(key) ?? [];
