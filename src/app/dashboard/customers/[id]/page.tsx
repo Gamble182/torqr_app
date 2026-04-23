@@ -36,6 +36,8 @@ import { SystemAssignmentModal } from '@/components/system-form/SystemAssignment
 import { MaintenanceChecklistModal } from '@/components/MaintenanceChecklistModal';
 import { SystemChecklistManager } from '@/components/SystemChecklistManager';
 import { SYSTEM_TYPE_LABELS } from '@/lib/constants';
+import { AssigneeBadge } from '@/components/AssigneeBadge';
+import { useSession } from 'next-auth/react';
 
 const getEmailOptInDisplay = (status: 'NONE' | 'CONFIRMED' | 'UNSUBSCRIBED', hasEmail: boolean) => {
   if (!hasEmail) return null;
@@ -55,6 +57,8 @@ export default function CustomerDetailPage() {
   const { data: emailLogs } = useCustomerEmailLogs(customerId);
   const deleteCustomer = useDeleteCustomer();
   const deleteSystem = useDeleteCustomerSystem();
+  const { data: session } = useSession();
+  const isOwner = session?.user?.role === 'OWNER';
 
   const [showSystemForm, setShowSystemForm] = useState(false);
   const [editingSystem, setEditingSystem] = useState<CustomerSystem | null>(null);
@@ -345,6 +349,9 @@ export default function CustomerDetailPage() {
                       <div className="flex items-start justify-between mb-3">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 mb-1 flex-wrap">
+                            {isOwner && (
+                              <AssigneeBadge user={system.assignedTo ?? null} size="sm" showName={false} />
+                            )}
                             <h3 className="font-semibold text-foreground">{systemLabel}</h3>
                             <span className="text-xs text-muted-foreground px-1.5 py-0.5 rounded bg-muted/50 border border-border">
                               {SYSTEM_TYPE_LABELS[system.catalog.systemType] ?? system.catalog.systemType}
