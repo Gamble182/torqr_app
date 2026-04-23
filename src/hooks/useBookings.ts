@@ -88,3 +88,22 @@ export function useBookings(input?: string | BookingListFilters) {
     },
   });
 }
+
+/**
+ * Fetch a single booking by id with full detail (customer email, phone, system catalog).
+ */
+export function useBooking(id: string | null | undefined) {
+  return useQuery<Booking>({
+    queryKey: ['booking', id],
+    enabled: !!id,
+    staleTime: 30_000,
+    queryFn: async () => {
+      const res = await fetch(`/api/bookings/${id}`);
+      const result: ApiResponse<Booking> = await res.json();
+      if (!result.success || !result.data) {
+        throw new Error(result.error || 'Fehler beim Laden des Termins');
+      }
+      return result.data;
+    },
+  });
+}
