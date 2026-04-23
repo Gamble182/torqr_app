@@ -168,6 +168,227 @@ function EmployeeStatsGrid({ stats }: { stats: EmployeeDetail['stats'] }) {
   );
 }
 
-// Placeholder subcomponents — filled in subsequent tasks
-function AssignedSystemsSection(_: { employee: EmployeeDetail }) { return null; }
+function AssignedSystemsSection({ employee }: { employee: EmployeeDetail }) {
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [reassignOpen, setReassignOpen] = useState<{ systemIds: string[] } | null>(null);
+
+  const totalSystems = employee.assignedSystems.reduce((n, g) => n + g.systems.length, 0);
+  const toggleSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
+  if (employee.assignedSystems.length === 0) {
+    return (
+      <div className="bg-card rounded-xl border border-border p-8 text-center">
+        <p className="text-sm text-muted-foreground">Noch keine Kunden zugewiesen.</p>
+        <Link
+          href="/dashboard/systems?assignee=unassigned"
+          className="mt-2 inline-block text-sm text-primary hover:underline"
+        >
+          Nicht zugewiesene Systeme anzeigen →
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-card rounded-xl border border-border">
+      <div className="flex items-center justify-between px-6 py-4 border-b border-border">
+        <h2 className="text-base font-semibold">Zugewiesene Systeme ({totalSystems})</h2>
+      </div>
+      <div className="p-4 space-y-5">
+        {employee.assignedSystems.map((group) => (
+          <div key={group.customer.id}>
+            <div className="flex items-center justify-between mb-2 px-1">
+              <Link
+                href={`/dashboard/customers/${group.customer.id}`}
+                className="text-sm font-semibold hover:underline"
+              >
+                {group.customer.name}
+              </Link>
+              <span className="text-xs text-muted-foreground">
+                {group.customer.city} · {group.systems.length} {group.systems.length === 1 ? 'System' : 'Systeme'}
+              </span>
+            </div>
+            <div className="space-y-1.5">
+              {group.systems.map((s) => (
+                <AssignedSystemRowItem
+                  key={s.id}
+                  row={s}
+                  selected={selectedIds.has(s.id)}
+                  onToggle={() => toggleSelect(s.id)}
+                  onReassign={() => setReassignOpen({ systemIds: [s.id] })}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      {selectedIds.size > 0 && (
+        <div className="sticky bottom-0 flex items-center justify-between gap-3 px-6 py-3 border-t border-border bg-card/95 backdrop-blur rounded-b-xl">
+          <span className="text-sm">{selectedIds.size} ausgewählt</span>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm" onClick={() => setSelectedIds(new Set())}>
+              Abbrechen
+            </Button>
+            <Button size="sm" onClick={() => setReassignOpen({ systemIds: Array.from(selectedIds) })}>
+              Zuweisen an …
+            </Button>
+          </div>
+        </div>
+      )}
+      {reassignOpen && (
+        <ReassignModal
+          systemIds={reassignOpen.systemIds}
+          currentAssigneeId={employee.id}
+          onClose={() => {
+            setReassignOpen(null);
+            setSelectedIds(new Set());
+          }}
+        />
+      )}
+    </div>
+  );
+}
+
+function AssignedSystemRowItem({
+  row,
+  selected,
+  onToggle,
+  onReassign,
+}: {
+  row: AssignedSystemRow;
+  selected: boolean;
+  onToggle: () => void;
+  onReassign: () => void;
+}) {
+  const statusStyles: Record<AssignedSystemRow['status'], string> = {
+    overdue: 'bg-status-overdue-bg text-status-overdue-text border-status-overdue-border',
+    'due-soon': 'bg-status-due-bg text-status-due-text border-status-due-border',
+    ok: 'bg-muted text-muted-foreground border-border',
+    scheduled: 'bg-status-ok-bg text-status-ok-text border-status-ok-border',
+  };
+  const statusLabels: Record<AssignedSystemRow['status'], string> = {
+    overdue: 'Überfällig',
+    'due-soon': 'Bald fällig',
+    ok: 'OK',
+    scheduled: 'Terminiert',
+  };
+  return (
+    <div className="flex items-center gap-3 p-3 rounded-lg border border-border hover:shadow-sm transition-all">
+      <input
+        type="checkbox"
+        checked={selected}
+        onChange={onToggle}
+        className="h-4 w-4 rounded border-input"
+        aria-label="System auswählen"
+      />
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2">
+          <Link href={`/dashboard/systems/${row.id}`} className="text-sm font-medium hover:underline truncate">
+            {row.label}
+          </Link>
+          <span className={`text-[10px] font-medium px-1.5 py-0.5 rounded-md border ${statusStyles[row.status]}`}>
+            {statusLabels[row.status]}
+          </span>
+        </div>
+        <p className="text-xs text-muted-foreground mt-0.5">
+          {row.bookedAt
+            ? `Termin: ${format(new Date(row.bookedAt), 'dd. MMM yyyy, HH:mm', { locale: de })} Uhr`
+            : row.nextMaintenance
+              ? `Nächste Wartung: ${format(new Date(row.nextMaintenance), 'dd. MMM yyyy', { locale: de })}`
+              : 'Keine Wartung geplant'}
+        </p>
+      </div>
+      <Button variant="ghost" size="sm" onClick={onReassign}>
+        Zuweisung ändern
+      </Button>
+    </div>
+  );
+}
+
+function ReassignModal({
+  systemIds,
+  currentAssigneeId,
+  onClose,
+}: {
+  systemIds: string[];
+  currentAssigneeId: string;
+  onClose: () => void;
+}) {
+  const { data: employees = [] } = useEmployees();
+  const bulkReassign = useBulkReassignSystems();
+  const [target, setTarget] = useState<string>('');
+
+  const eligible = employees
+    .filter((e) => e.isActive && e.id !== currentAssigneeId)
+    .sort((a, b) => {
+      if (a.role === 'OWNER' && b.role !== 'OWNER') return -1;
+      if (b.role === 'OWNER' && a.role !== 'OWNER') return 1;
+      return a.name.localeCompare(b.name);
+    });
+
+  const handleConfirm = async () => {
+    if (!target) return;
+    const assignedToUserId = target === 'unassigned' ? null : target;
+    await bulkReassign.mutateAsync({ systemIds, assignedToUserId });
+    onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+      <div className="bg-card rounded-xl border shadow-lg p-6 w-full max-w-md mx-4 space-y-4">
+        <h3 className="text-lg font-semibold">
+          {systemIds.length === 1 ? 'System neu zuweisen' : `${systemIds.length} Systeme neu zuweisen`}
+        </h3>
+        <div>
+          <label htmlFor="reassign-target" className="block text-sm font-medium mb-1.5">
+            Zuweisen an
+          </label>
+          <select
+            id="reassign-target"
+            value={target}
+            onChange={(e) => setTarget(e.target.value)}
+            className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm h-10"
+          >
+            <option value="">Bitte auswählen …</option>
+            <option value="unassigned">Nicht zugewiesen</option>
+            {eligible.map((e) => (
+              <option key={e.id} value={e.id}>
+                {e.name}{e.role === 'OWNER' ? ' (Inhaber)' : ''}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="flex gap-3 pt-2">
+          <Button
+            type="button"
+            variant="outline"
+            className="flex-1"
+            onClick={onClose}
+            disabled={bulkReassign.isPending}
+          >
+            Abbrechen
+          </Button>
+          <Button
+            type="button"
+            className="flex-1"
+            onClick={handleConfirm}
+            disabled={!target || bulkReassign.isPending}
+          >
+            {bulkReassign.isPending ? (
+              <Loader2Icon className="h-4 w-4 animate-spin mr-2" />
+            ) : null}
+            Zuweisen
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function RecentActivitySection(_: { activity: EmployeeDetail['recentActivity'] }) { return null; }
