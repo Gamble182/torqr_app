@@ -82,17 +82,30 @@ export function useToggleEmployee() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ isActive }),
       });
-      const result: ApiResponse<Employee> = await res.json();
+      const result: ApiResponse<Employee & { reassignedCount?: number }> = await res.json();
       if (!result.success || !result.data) {
         throw new Error(result.error || 'Fehler beim Aktualisieren');
       }
       return result.data;
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ['employees'] });
       queryClient.invalidateQueries({ queryKey: ['employee', variables.id] });
       queryClient.invalidateQueries({ queryKey: ['customer-systems'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] });
+      if (!variables.isActive) {
+        const count = data.reassignedCount ?? 0;
+        if (count > 0) {
+          toast.success(`Mitarbeiter deaktiviert. ${count} System(e) wurden dem Inhaber zugewiesen.`);
+        } else {
+          toast.success('Mitarbeiter deaktiviert.');
+        }
+      } else {
+        toast.success('Mitarbeiter aktiviert.');
+      }
+    },
+    onError: (error: Error) => {
+      toast.error(`Fehler: ${error.message}`);
     },
   });
 }
