@@ -6,7 +6,7 @@ import { userRegistrationSchema, safeValidateRequest } from '@/lib/validations';
 
 export async function POST(request: NextRequest) {
   // Apply rate limiting: 5 registration attempts per 15 minutes
-  const rateLimitResponse = rateLimitMiddleware(
+  const rateLimitResponse = await rateLimitMiddleware(
     request,
     RATE_LIMIT_PRESETS.REGISTER
   );

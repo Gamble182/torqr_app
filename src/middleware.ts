@@ -2,13 +2,13 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { rateLimitMiddleware, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   // Apply rate limiting to login endpoint
   if (
     request.nextUrl.pathname.startsWith('/api/auth/signin') ||
     request.nextUrl.pathname.startsWith('/api/auth/callback/credentials')
   ) {
-    const rateLimitResponse = rateLimitMiddleware(
+    const rateLimitResponse = await rateLimitMiddleware(
       request,
       RATE_LIMIT_PRESETS.LOGIN
     );

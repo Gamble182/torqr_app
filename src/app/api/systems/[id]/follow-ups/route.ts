@@ -59,7 +59,7 @@ export async function POST(
   try {
     const { userId, companyId } = await requireAuth();
 
-    const rateLimitResponse = rateLimitByUser(req, userId, RATE_LIMIT_PRESETS.API_USER);
+    const rateLimitResponse = await rateLimitByUser(req, userId, RATE_LIMIT_PRESETS.API_USER);
     if (rateLimitResponse) return rateLimitResponse;
 
     const { id: systemId } = await params;

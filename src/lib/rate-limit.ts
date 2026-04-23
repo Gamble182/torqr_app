@@ -1,73 +1,85 @@
-import { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { Ratelimit } from '@upstash/ratelimit';
+import { Redis } from '@upstash/redis';
 
-interface RateLimitConfig {
+export interface RateLimitConfig {
   interval: number; // Time window in milliseconds
   maxRequests: number; // Maximum requests per interval
 }
 
-interface RateLimitRecord {
-  count: number;
-  resetTime: number;
-}
-
-// In-memory store for rate limiting
-const rateLimitStore = new Map<string, RateLimitRecord>();
-
-// Cleanup old entries every 10 minutes
-setInterval(() => {
-  const now = Date.now();
-  for (const [key, record] of rateLimitStore.entries()) {
-    if (record.resetTime < now) {
-      rateLimitStore.delete(key);
-    }
-  }
-}, 10 * 60 * 1000);
-
-/**
- * Rate limiter function
- * @param identifier - Unique identifier (e.g., IP address or user ID)
- * @param config - Rate limit configuration
- * @returns Object with success status and remaining requests
- */
-export function rateLimit(
-  identifier: string,
-  config: RateLimitConfig = { interval: 60000, maxRequests: 10 }
-): {
+export interface RateLimitResult {
   success: boolean;
   remaining: number;
   resetTime: number;
-} {
+}
+
+/**
+ * In-memory fallback store. Used when Upstash Redis is not configured (local dev / CI tests).
+ * This store resets on every Vercel cold start and does NOT shard across instances — so it must
+ * never be relied on in production.
+ */
+const rateLimitStore = new Map<string, { count: number; resetTime: number }>();
+
+if (typeof setInterval !== 'undefined') {
+  setInterval(() => {
+    const now = Date.now();
+    for (const [key, record] of rateLimitStore.entries()) {
+      if (record.resetTime < now) {
+        rateLimitStore.delete(key);
+      }
+    }
+  }, 10 * 60 * 1000);
+}
+
+/**
+ * Upstash client (null when env vars are missing — triggers in-memory fallback).
+ */
+const redis =
+  process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
+    ? new Redis({
+        url: process.env.UPSTASH_REDIS_REST_URL,
+        token: process.env.UPSTASH_REDIS_REST_TOKEN,
+      })
+    : null;
+
+/**
+ * One limiter per (interval, maxRequests) combination. Cached so we don't rebuild limiters on
+ * every call. Keyed by `${interval}:${maxRequests}` and uses a sliding-window algorithm.
+ */
+const limiterCache = new Map<string, Ratelimit>();
+
+function getLimiter(config: RateLimitConfig): Ratelimit | null {
+  if (!redis) return null;
+  const key = `${config.interval}:${config.maxRequests}`;
+  let limiter = limiterCache.get(key);
+  if (!limiter) {
+    limiter = new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(config.maxRequests, `${config.interval} ms`),
+      analytics: false,
+      prefix: 'torqr:ratelimit',
+    });
+    limiterCache.set(key, limiter);
+  }
+  return limiter;
+}
+
+function inMemoryCheck(identifier: string, config: RateLimitConfig): RateLimitResult {
   const now = Date.now();
   const record = rateLimitStore.get(identifier);
 
-  // If no record exists or reset time has passed, create new record
   if (!record || record.resetTime < now) {
     const resetTime = now + config.interval;
-    rateLimitStore.set(identifier, {
-      count: 1,
-      resetTime,
-    });
-
-    return {
-      success: true,
-      remaining: config.maxRequests - 1,
-      resetTime,
-    };
+    rateLimitStore.set(identifier, { count: 1, resetTime });
+    return { success: true, remaining: config.maxRequests - 1, resetTime };
   }
 
-  // Check if limit exceeded
   if (record.count >= config.maxRequests) {
-    return {
-      success: false,
-      remaining: 0,
-      resetTime: record.resetTime,
-    };
+    return { success: false, remaining: 0, resetTime: record.resetTime };
   }
 
-  // Increment count
   record.count++;
   rateLimitStore.set(identifier, record);
-
   return {
     success: true,
     remaining: config.maxRequests - record.count,
@@ -76,17 +88,35 @@ export function rateLimit(
 }
 
 /**
- * Get client identifier from request
- * @param request - NextRequest object
- * @returns Client identifier (IP or fallback)
+ * Core rate limiter. Uses Upstash Redis when configured, otherwise an in-memory Map.
+ * On Upstash transport errors we fail OPEN to keep the product available.
+ */
+export async function rateLimit(
+  identifier: string,
+  config: RateLimitConfig = { interval: 60_000, maxRequests: 10 }
+): Promise<RateLimitResult> {
+  const limiter = getLimiter(config);
+  if (!limiter) {
+    return inMemoryCheck(identifier, config);
+  }
+
+  try {
+    const { success, remaining, reset } = await limiter.limit(identifier);
+    return { success, remaining, resetTime: reset };
+  } catch (err) {
+    console.error('Upstash rate limit failed (fail-open):', err);
+    return { success: true, remaining: config.maxRequests, resetTime: Date.now() + config.interval };
+  }
+}
+
+/**
+ * Get client identifier from request headers.
  */
 export function getClientIdentifier(request: NextRequest): string {
-  // Try to get real IP from various headers
   const forwarded = request.headers.get('x-forwarded-for');
   const realIp = request.headers.get('x-real-ip');
   const cfConnectingIp = request.headers.get('cf-connecting-ip');
 
-  // Use the first available IP
   const ip =
     cfConnectingIp ||
     realIp ||
@@ -96,96 +126,62 @@ export function getClientIdentifier(request: NextRequest): string {
   return ip;
 }
 
-/**
- * Rate limit middleware for API routes (IP-based)
- * @param request - NextRequest object
- * @param config - Rate limit configuration
- * @returns Response object if rate limited, null otherwise
- */
-export function rateLimitMiddleware(
-  request: NextRequest,
-  config?: RateLimitConfig
-) {
-  const identifier = getClientIdentifier(request);
-  const result = rateLimit(identifier, config);
+function buildLimitResponse(result: RateLimitResult, config: RateLimitConfig) {
+  const retryAfter = Math.max(1, Math.ceil((result.resetTime - Date.now()) / 1000));
 
-  if (!result.success) {
-    const retryAfter = Math.ceil((result.resetTime - Date.now()) / 1000);
-
-    return new Response(
-      JSON.stringify({
-        error: 'Too many requests',
-        message: 'Rate limit exceeded. Please try again later.',
-        retryAfter,
-      }),
-      {
-        status: 429,
-        headers: {
-          'Content-Type': 'application/json',
-          'Retry-After': retryAfter.toString(),
-          'X-RateLimit-Limit': config?.maxRequests.toString() || '10',
-          'X-RateLimit-Remaining': '0',
-          'X-RateLimit-Reset': result.resetTime.toString(),
-        },
-      }
-    );
-  }
-
-  return null; // No rate limit response needed
+  return new Response(
+    JSON.stringify({
+      error: 'Too many requests',
+      message: 'Rate limit exceeded. Please try again later.',
+      retryAfter,
+    }),
+    {
+      status: 429,
+      headers: {
+        'Content-Type': 'application/json',
+        'Retry-After': retryAfter.toString(),
+        'X-RateLimit-Limit': config.maxRequests.toString(),
+        'X-RateLimit-Remaining': result.remaining.toString(),
+        'X-RateLimit-Reset': result.resetTime.toString(),
+      },
+    }
+  );
 }
 
 /**
- * Rate limit middleware for authenticated API routes (user-based)
- * @param request - NextRequest object
- * @param userId - User ID from authentication
- * @param config - Rate limit configuration
- * @returns Response object if rate limited, null otherwise
+ * IP-based rate limit middleware. Returns a Response if blocked, null otherwise.
  */
-export function rateLimitByUser(
+export async function rateLimitMiddleware(
   request: NextRequest,
+  config: RateLimitConfig = { interval: 60_000, maxRequests: 10 }
+): Promise<Response | null> {
+  const identifier = `ip:${getClientIdentifier(request)}`;
+  const result = await rateLimit(identifier, config);
+  if (!result.success) {
+    return buildLimitResponse(result, config);
+  }
+  return null;
+}
+
+/**
+ * User-based rate limit for authenticated endpoints.
+ */
+export async function rateLimitByUser(
+  _request: NextRequest,
   userId: string,
-  config?: RateLimitConfig
-) {
-  // Use user ID as identifier for rate limiting
+  config: RateLimitConfig = { interval: 60_000, maxRequests: 100 }
+): Promise<Response | null> {
   const identifier = `user:${userId}`;
-  const result = rateLimit(identifier, config);
-
+  const result = await rateLimit(identifier, config);
   if (!result.success) {
-    const retryAfter = Math.ceil((result.resetTime - Date.now()) / 1000);
-
-    return new Response(
-      JSON.stringify({
-        error: 'Too many requests',
-        message: 'Rate limit exceeded. Please try again later.',
-        retryAfter,
-      }),
-      {
-        status: 429,
-        headers: {
-          'Content-Type': 'application/json',
-          'Retry-After': retryAfter.toString(),
-          'X-RateLimit-Limit': config?.maxRequests.toString() || '100',
-          'X-RateLimit-Remaining': result.remaining.toString(),
-          'X-RateLimit-Reset': result.resetTime.toString(),
-        },
-      }
-    );
+    return buildLimitResponse(result, config);
   }
-
-  return null; // No rate limit response needed
+  return null;
 }
 
-/**
- * Rate limit configuration presets
- */
 export const RATE_LIMIT_PRESETS = {
-  // Authentication endpoints
-  LOGIN: { interval: 15 * 60 * 1000, maxRequests: 10 }, // 10 per 15 minutes
-  REGISTER: { interval: 15 * 60 * 1000, maxRequests: 5 }, // 5 per 15 minutes
-
-  // General API endpoints (per user)
-  API_USER: { interval: 60 * 1000, maxRequests: 100 }, // 100 per minute
-
-  // File upload endpoints (per user)
-  FILE_UPLOAD: { interval: 60 * 1000, maxRequests: 10 }, // 10 per minute
+  LOGIN: { interval: 15 * 60 * 1000, maxRequests: 10 },
+  REGISTER: { interval: 15 * 60 * 1000, maxRequests: 5 },
+  API_USER: { interval: 60 * 1000, maxRequests: 100 },
+  FILE_UPLOAD: { interval: 60 * 1000, maxRequests: 10 },
 } as const;

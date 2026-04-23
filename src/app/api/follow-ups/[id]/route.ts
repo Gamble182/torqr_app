@@ -17,7 +17,7 @@ export async function PATCH(
   try {
     const { userId, companyId } = await requireAuth();
 
-    const rateLimitResponse = rateLimitByUser(req, userId, RATE_LIMIT_PRESETS.API_USER);
+    const rateLimitResponse = await rateLimitByUser(req, userId, RATE_LIMIT_PRESETS.API_USER);
     if (rateLimitResponse) return rateLimitResponse;
 
     const { id: followUpId } = await params;
@@ -77,7 +77,7 @@ export async function DELETE(
   try {
     const { userId, companyId } = await requireOwner();
 
-    const rateLimitResponse = rateLimitByUser(req, userId, RATE_LIMIT_PRESETS.API_USER);
+    const rateLimitResponse = await rateLimitByUser(req, userId, RATE_LIMIT_PRESETS.API_USER);
     if (rateLimitResponse) return rateLimitResponse;
 
     const { id: followUpId } = await params;

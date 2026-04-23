@@ -74,7 +74,7 @@ export async function PATCH(
     const { userId, companyId } = await requireAuth();
 
     // 2. Rate limiting
-    const rateLimitResponse = rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER);
+    const rateLimitResponse = await rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER);
     if (rateLimitResponse) {
       return rateLimitResponse;
     }
