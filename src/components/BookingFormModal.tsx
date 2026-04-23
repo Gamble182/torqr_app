@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { CalendarIcon, Loader2Icon, XIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useCreateBooking } from '@/hooks/useBookings';
 
 interface BookingFormModalProps {
   systemId: string;
@@ -14,39 +14,26 @@ interface BookingFormModalProps {
 }
 
 export function BookingFormModal({ systemId, systemLabel, onClose, onSuccess }: BookingFormModalProps) {
-  const queryClient = useQueryClient();
   const [date, setDate] = useState('');
   const [time, setTime] = useState('08:00');
   const [duration, setDuration] = useState('60');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const createBooking = useCreateBooking();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!date || !time) return;
 
-    setIsSubmitting(true);
+    const startTime = new Date(`${date}T${time}:00`).toISOString();
+    const endTime = new Date(
+      new Date(`${date}T${time}:00`).getTime() + parseInt(duration) * 60 * 1000
+    ).toISOString();
+
     try {
-      const startTime = new Date(`${date}T${time}:00`).toISOString();
-      const endTime = new Date(
-        new Date(`${date}T${time}:00`).getTime() + parseInt(duration) * 60 * 1000
-      ).toISOString();
-
-      const res = await fetch('/api/bookings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ systemId, startTime, endTime }),
-      });
-      const result = await res.json();
-      if (!result.success) throw new Error(result.error || 'Fehler beim Speichern');
-
-      await queryClient.invalidateQueries({ queryKey: ['customer-systems'] });
-      await queryClient.invalidateQueries({ queryKey: ['customer-system', systemId] });
+      await createBooking.mutateAsync({ systemId, startTime, endTime });
       toast.success('Termin erfolgreich eingetragen');
       onSuccess();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : 'Fehler beim Speichern');
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -117,8 +104,8 @@ export function BookingFormModal({ systemId, systemLabel, onClose, onSuccess }: 
             <Button type="button" variant="outline" className="flex-1" onClick={onClose}>
               Abbrechen
             </Button>
-            <Button type="submit" className="flex-1" disabled={isSubmitting || !date}>
-              {isSubmitting && <Loader2Icon className="h-4 w-4 mr-2 animate-spin" />}
+            <Button type="submit" className="flex-1" disabled={createBooking.isPending || !date}>
+              {createBooking.isPending && <Loader2Icon className="h-4 w-4 mr-2 animate-spin" />}
               Termin speichern
             </Button>
           </div>

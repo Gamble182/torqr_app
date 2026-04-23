@@ -2,7 +2,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
@@ -25,6 +24,8 @@ import {
 import type { ChecklistSnapshot } from '@/types/checklist';
 import { CHECKLIST_DEFAULTS } from '@/lib/checklist-defaults';
 import { useChecklistItems } from '@/hooks/useChecklistItems';
+import { useCreateMaintenance } from '@/hooks/useMaintenances';
+import { useCreateFollowUpJob } from '@/hooks/useFollowUpJobs';
 
 interface MaintenanceChecklistModalProps {
   systemId: string;
@@ -47,7 +48,6 @@ export function MaintenanceChecklistModal({
   onClose,
   onSuccess,
 }: MaintenanceChecklistModalProps) {
-  const queryClient = useQueryClient();
   const today = new Date().toISOString().split('T')[0];
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
@@ -63,6 +63,8 @@ export function MaintenanceChecklistModal({
   const [newFollowUpDesc, setNewFollowUpDesc] = useState('');
 
   const { data: customItems } = useChecklistItems(systemId);
+  const createMaintenance = useCreateMaintenance();
+  const createFollowUp = useCreateFollowUpJob(systemId, { silent: true });
 
   // Build the full checklist when custom items are loaded
   useEffect(() => {
@@ -164,49 +166,34 @@ export function MaintenanceChecklistModal({
         confirmedAt: new Date().toISOString(),
       };
 
-      const res = await fetch('/api/maintenances', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          systemId,
-          date: new Date(date).toISOString(),
-          notes: notes.trim() || null,
-          photos: uploadedUrls,
-          checklistData,
-        }),
+      const maintenance = await createMaintenance.mutateAsync({
+        systemId,
+        date: new Date(date).toISOString(),
+        notes: notes.trim() || null,
+        photos: uploadedUrls,
+        checklistData,
       });
 
-      const result = await res.json();
-      if (result.success) {
-        // Create follow-up jobs if any were added
-        if (followUps.length > 0 && result.data?.id) {
-          try {
-            await Promise.all(
-              followUps.map((fu) =>
-                fetch(`/api/systems/${systemId}/follow-ups`, {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    label: fu.label,
-                    description: fu.description || null,
-                    maintenanceId: result.data.id,
-                  }),
-                })
-              )
-            );
-            queryClient.invalidateQueries({ queryKey: ['follow-up-jobs', systemId] });
-            queryClient.invalidateQueries({ queryKey: ['customer-systems'] });
-          } catch {
-            toast.error('Wartung gespeichert, aber Fehler beim Erstellen der Nachfolgeaufträge');
-          }
+      if (followUps.length > 0) {
+        try {
+          await Promise.all(
+            followUps.map((fu) =>
+              createFollowUp.mutateAsync({
+                label: fu.label,
+                description: fu.description || null,
+                maintenanceId: maintenance.id,
+              })
+            )
+          );
+        } catch {
+          toast.error('Wartung gespeichert, aber Fehler beim Erstellen der Nachfolgeaufträge');
         }
-        toast.success('Wartung erfolgreich eingetragen!');
-        onSuccess();
-      } else {
-        toast.error(result.error ?? 'Fehler beim Speichern der Wartung');
       }
-    } catch {
-      toast.error('Fehler beim Speichern der Wartung');
+
+      toast.success('Wartung erfolgreich eingetragen!');
+      onSuccess();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Fehler beim Speichern der Wartung');
     } finally {
       setLoading(false);
       setUploadingPhotos(false);

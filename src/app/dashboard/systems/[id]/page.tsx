@@ -211,7 +211,7 @@ export default function SystemDetailPage() {
         </div>
       </div>
 
-      <MaintenanceHistory maintenances={system.maintenances ?? []} onDelete={() => refetch()} />
+      <MaintenanceHistory maintenances={system.maintenances ?? []} />
 
       {/* Modals */}
       {showEditModal && (

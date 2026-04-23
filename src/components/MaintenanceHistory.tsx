@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { CalendarIcon, FileTextIcon, ImageIcon, TrashIcon, XIcon } from 'lucide-react';
-import { toast } from 'sonner';
+import { useDeleteMaintenance } from '@/hooks/useMaintenances';
 
 interface Maintenance {
   id: string;
@@ -15,14 +15,11 @@ interface Maintenance {
 
 interface MaintenanceHistoryProps {
   maintenances: Maintenance[];
-  onDelete: (id: string) => void;
 }
 
-export function MaintenanceHistory({
-  maintenances,
-  onDelete,
-}: MaintenanceHistoryProps) {
+export function MaintenanceHistory({ maintenances }: MaintenanceHistoryProps) {
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
+  const deleteMutation = useDeleteMaintenance();
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('de-DE', {
@@ -32,7 +29,7 @@ export function MaintenanceHistory({
     });
   };
 
-  const handleDelete = async (maintenance: Maintenance) => {
+  const handleDelete = (maintenance: Maintenance) => {
     if (
       !confirm(
         `Möchten Sie die Wartung vom ${formatDate(maintenance.date)} wirklich löschen?`
@@ -40,24 +37,7 @@ export function MaintenanceHistory({
     ) {
       return;
     }
-
-    try {
-      const response = await fetch(`/api/maintenances/${maintenance.id}`, {
-        method: 'DELETE',
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        toast.success('Wartung gelöscht');
-        onDelete(maintenance.id);
-      } else {
-        toast.error(`Fehler: ${result.error}`);
-      }
-    } catch (err) {
-      console.error('Error deleting maintenance:', err);
-      toast.error('Fehler beim Löschen der Wartung');
-    }
+    deleteMutation.mutate(maintenance.id);
   };
 
   if (maintenances.length === 0) {
@@ -119,6 +99,7 @@ export function MaintenanceHistory({
                 variant="outline"
                 size="icon-sm"
                 onClick={() => handleDelete(maintenance)}
+                disabled={deleteMutation.isPending}
                 className="ml-3 text-destructive hover:bg-destructive/10 hover:border-destructive/30"
               >
                 <TrashIcon className="h-3.5 w-3.5" />
