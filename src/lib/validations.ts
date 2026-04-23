@@ -413,6 +413,24 @@ export const employeeCreateSchema = z.object({
 });
 
 // ============================================================================
+// ASSIGNMENT / WORKLOAD SCHEMAS
+// ============================================================================
+
+/**
+ * Query-param filter for /api/customer-systems?assignee=...
+ * - 'all' or missing: no filter
+ * - 'unassigned': assignedToUserId is null
+ * - <uuid>: assignedToUserId equals that user id
+ */
+export const assigneeFilterSchema = z.union([
+  z.literal('all'),
+  z.literal('unassigned'),
+  z.string().uuid(),
+]);
+
+export type AssigneeFilter = z.infer<typeof assigneeFilterSchema>;
+
+// ============================================================================
 // HELPER FUNCTIONS
 // ============================================================================
 
