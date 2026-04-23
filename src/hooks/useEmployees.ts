@@ -2,6 +2,11 @@
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
+export interface EmployeeWorkload {
+  assignedSystemsCount: number;
+  overdueSystemsCount: number;
+}
+
 export interface Employee {
   id: string;
   name: string;
@@ -11,6 +16,7 @@ export interface Employee {
   isActive: boolean;
   deactivatedAt: string | null;
   createdAt: string;
+  workload: EmployeeWorkload;
 }
 
 export interface CreateEmployeeInput {
@@ -81,8 +87,11 @@ export function useToggleEmployee() {
       }
       return result.data;
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['employees'] });
+      queryClient.invalidateQueries({ queryKey: ['employee', variables.id] });
+      queryClient.invalidateQueries({ queryKey: ['customer-systems'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard-stats'] });
     },
   });
 }
