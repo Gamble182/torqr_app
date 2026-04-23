@@ -22,8 +22,8 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
 | 49 | Infra | Delete old Supabase project (`vvsmxzebaoslofigxakt`, eu-west-1) — migrated to new project (`hwagqyywixhhorhjtydt`, eu-central-1) via Vercel integration. Delete once confident everything works. | Low | 2026-04-22 |
-| 59 | Infra | In-memory rate limiter (`Map`) resets on every cold start — no-op on Vercel serverless. Migrate to Upstash Redis for persistent rate limiting. | Medium | 2026-04-22 |
 | 60 | Architecture | `CatalogPicker` "Ändern" button passes `entries[0]` to `onChange` when clearing — semantically incorrect. `onChange` signature should support `null` entry for clear action. | Low | 2026-04-22 |
+| 66 | Infra | Provision Upstash Redis via Vercel Marketplace and confirm `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` are injected to Production + Preview. Verify LOGIN lock-out end-to-end after deploy. | High | 2026-04-23 |
 
 ### Workload & Scheduling — Upcoming Features
 
@@ -105,13 +105,14 @@ Ideas worth keeping in mind but not planned for current sprints. No implementati
 
 Items are grouped by sprint / work session, ordered newest first.
 
-### Sprint 26 — React Query Consistency + Permission Hardening (2026-04-23)
+### Sprint 26 — React Query Consistency + Permission Hardening + Rate Limiting (2026-04-23)
 
 | # | Area | Description | Resolved |
 |---|------|-------------|----------|
 | 55 | Architecture | `/dashboard/wartungen` + `/dashboard/customers/[id]/edit` migrated from `useEffect`/`useCallback` + direct `fetch` to React Query. New `useWartungen(filters)` hook in `src/hooks/useWartungen.ts`; customer-edit now consumes existing `useCustomer` + `useUpdateCustomer`. | 2026-04-23 |
 | 56 | Architecture | `MaintenanceHistory`, `MaintenanceChecklistModal`, `BookingFormModal` migrated from direct `fetch()` + manual `queryClient.invalidateQueries` to `useMutation` hooks. New `useCreateMaintenance` + `useDeleteMaintenance` (`src/hooks/useMaintenances.ts`); new `useCreateBooking` in `useBookings.ts`; `useCreateFollowUpJob` now accepts `{ silent: true }` for bulk-create contexts. `MaintenanceHistory.onDelete` prop removed; parent page simplified. | 2026-04-23 |
 | 57 | Security | `DELETE /api/follow-ups/[id]` and `DELETE /api/systems/[id]/checklist-items/[itemId]` now require `requireOwner()` (was `requireAuth()`) + return 403 with German message. Aligns with permission matrix: delete = OWNER only. | 2026-04-23 |
+| 59 | Infra | Rate limiter migrated from in-memory `Map` to Upstash Redis (sliding window via `@upstash/ratelimit`). `src/lib/rate-limit.ts` exports async `rateLimit`/`rateLimitMiddleware`/`rateLimitByUser`; all 10 callsites + `src/middleware.ts` updated to `await`. Fails open on Upstash transport errors. In-memory fallback retained when Upstash env vars are missing (dev + CI). New backlog item #66 tracks the Vercel Marketplace provisioning. | 2026-04-23 |
 | 65 | Infra | `CAL_COM_API_KEY` deployed to Vercel + `20260423120000_termine_page` Prisma migration applied to production Supabase. Cal.com reschedule/cancel flow now live. | 2026-04-23 |
 | — | Bugfix | `/dashboard/wartungen` page displayed `heater.model` which does not exist on the `CustomerSystem` API response (leftover from pre-Sprint 11 `Heater` model). Now uses `catalog.manufacturer` + `catalog.name` consistently via `getSystemLabel()`. | 2026-04-23 |
 
