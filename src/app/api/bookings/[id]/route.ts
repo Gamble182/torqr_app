@@ -230,6 +230,7 @@ export async function DELETE(
           { status: 503 }
         );
       }
+      console.info(`[bookings] cal cancel: booking=${existing.id} uid=${existing.calBookingUid}`);
       await cancelCalBooking({
         uid: existing.calBookingUid,
         cancellationReason: validated.reason ?? undefined,
