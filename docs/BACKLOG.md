@@ -22,9 +22,6 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
 | 49 | Infra | Delete old Supabase project (`vvsmxzebaoslofigxakt`, eu-west-1) — migrated to new project (`hwagqyywixhhorhjtydt`, eu-central-1) via Vercel integration. Delete once confident everything works. | Low | 2026-04-22 |
-| 55 | Architecture | Wartungen + edit customer pages use `useEffect` data fetching instead of React Query — violates established hook pattern. Migrate to `useQuery` hooks. | Medium | 2026-04-22 |
-| 56 | Architecture | `MaintenanceHistory`, `MaintenanceChecklistModal`, `BookingFormModal` use direct `fetch()` instead of React Query mutations — should use `useMutation` hooks for consistency and cache invalidation. | Medium | 2026-04-22 |
-| 57 | Security | Follow-ups and checklist-items DELETE routes use `requireAuth()` instead of `requireOwner()` — TECHNICIAN can delete records. Align with permission matrix (delete = OWNER only). | High | 2026-04-22 |
 | 59 | Infra | In-memory rate limiter (`Map`) resets on every cold start — no-op on Vercel serverless. Migrate to Upstash Redis for persistent rate limiting. | Medium | 2026-04-22 |
 | 60 | Architecture | `CatalogPicker` "Ändern" button passes `entries[0]` to `onChange` when clearing — semantically incorrect. `onChange` signature should support `null` entry for clear action. | Low | 2026-04-22 |
 
@@ -34,7 +31,6 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 |---|------|-------------|----------|-------|
 | 63 | Feature | Drag-and-drop rescheduling on calendar view. | Low | 2026-04-23 |
 | 64 | Feature | Weekly/daily calendar modes. | Low | 2026-04-23 |
-| 65 | Infra | Deploy `CAL_COM_API_KEY` + apply Termine page Prisma migration to production Supabase before enabling Cal.com reschedule/cancel flow. | High | 2026-04-23 |
 
 ### System Model — Follow-up
 
@@ -108,6 +104,16 @@ Ideas worth keeping in mind but not planned for current sprints. No implementati
 ## Completed / Resolved
 
 Items are grouped by sprint / work session, ordered newest first.
+
+### Sprint 26 — React Query Consistency + Permission Hardening (2026-04-23)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 55 | Architecture | `/dashboard/wartungen` + `/dashboard/customers/[id]/edit` migrated from `useEffect`/`useCallback` + direct `fetch` to React Query. New `useWartungen(filters)` hook in `src/hooks/useWartungen.ts`; customer-edit now consumes existing `useCustomer` + `useUpdateCustomer`. | 2026-04-23 |
+| 56 | Architecture | `MaintenanceHistory`, `MaintenanceChecklistModal`, `BookingFormModal` migrated from direct `fetch()` + manual `queryClient.invalidateQueries` to `useMutation` hooks. New `useCreateMaintenance` + `useDeleteMaintenance` (`src/hooks/useMaintenances.ts`); new `useCreateBooking` in `useBookings.ts`; `useCreateFollowUpJob` now accepts `{ silent: true }` for bulk-create contexts. `MaintenanceHistory.onDelete` prop removed; parent page simplified. | 2026-04-23 |
+| 57 | Security | `DELETE /api/follow-ups/[id]` and `DELETE /api/systems/[id]/checklist-items/[itemId]` now require `requireOwner()` (was `requireAuth()`) + return 403 with German message. Aligns with permission matrix: delete = OWNER only. | 2026-04-23 |
+| 65 | Infra | `CAL_COM_API_KEY` deployed to Vercel + `20260423120000_termine_page` Prisma migration applied to production Supabase. Cal.com reschedule/cancel flow now live. | 2026-04-23 |
+| — | Bugfix | `/dashboard/wartungen` page displayed `heater.model` which does not exist on the `CustomerSystem` API response (leftover from pre-Sprint 11 `Heater` model). Now uses `catalog.manufacturer` + `catalog.name` consistently via `getSystemLabel()`. | 2026-04-23 |
 
 ### Sprint 25 — Termine Page + Cal.com Reschedule/Cancel (2026-04-23)
 
