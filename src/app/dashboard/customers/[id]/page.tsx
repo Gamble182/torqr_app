@@ -466,13 +466,19 @@ export default function CustomerDetailPage() {
             )}
           </Card>
 
-          {/* Cal.com Bookings */}
+          {/* Bookings */}
           <Card className="p-6">
-            <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center justify-between mb-3">
               <h2 className="text-base font-semibold text-foreground flex items-center gap-2">
-                <CalendarCheckIcon className="h-4 w-4 text-muted-foreground" />
-                Gebuchte Termine ({bookings?.length || 0})
+                <CalendarCheckIcon className="h-4 w-4 text-primary" />
+                Termine
               </h2>
+              <Link
+                href={`/dashboard/termine?customerId=${customerId}`}
+                className="text-xs text-primary hover:underline"
+              >
+                Alle Termine zu diesem Kunden →
+              </Link>
             </div>
 
             {(!bookings || bookings.length === 0) ? (
@@ -504,7 +510,9 @@ export default function CustomerDetailPage() {
                       }`}>
                         {isCancelled
                           ? <XCircleIcon className="h-4 w-4 text-muted-foreground" />
-                          : <CalendarCheckIcon className={`h-4 w-4 ${isPast ? 'text-muted-foreground' : 'text-primary'}`} />
+                          : booking.triggerEvent === 'BOOKING_MANUAL'
+                          ? <WrenchIcon className="h-3.5 w-3.5 text-muted-foreground" />
+                          : <CalendarIcon className="h-3.5 w-3.5 text-primary" />
                         }
                       </div>
                       <div className="flex-1 min-w-0">
