@@ -79,21 +79,10 @@ export async function GET(request: NextRequest) {
       }),
     ]);
 
-    // For OWNER only: find systems/bookings assigned to deactivated users
-    let unassignedAfterDeactivation: unknown[] = [];
+    let unassignedSystemsCount = 0;
     if (isOwner) {
-      unassignedAfterDeactivation = await prisma.customerSystem.findMany({
-        where: {
-          companyId,
-          assignedToUserId: { not: null },
-          assignedTo: { isActive: false },
-        },
-        include: {
-          catalog: true,
-          customer: { select: { id: true, name: true } },
-          assignedTo: { select: { id: true, name: true } },
-        },
-        orderBy: { nextMaintenance: 'asc' },
+      unassignedSystemsCount = await prisma.customerSystem.count({
+        where: { companyId, assignedToUserId: null },
       });
     }
 
@@ -107,7 +96,7 @@ export async function GET(request: NextRequest) {
         upcomingMaintenances,
         upcomingSystemsList,
         recentMaintenances,
-        unassignedAfterDeactivation,
+        unassignedSystemsCount,
       },
     });
   } catch (error) {

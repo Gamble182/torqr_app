@@ -27,14 +27,6 @@ interface UpcomingSystem {
   assignedTo?: AssignedUser | null;
 }
 
-interface UnassignedSystem {
-  id: string;
-  nextMaintenance: string | null;
-  catalog: CatalogEntry;
-  customer: { id: string; name: string };
-  assignedTo: AssignedUser | null;
-}
-
 interface RecentMaintenance {
   id: string;
   date: string;
@@ -57,7 +49,7 @@ interface DashboardStats {
   upcomingMaintenances: number;
   upcomingSystemsList: UpcomingSystem[];
   recentMaintenances: RecentMaintenance[];
-  unassignedAfterDeactivation: UnassignedSystem[];
+  unassignedSystemsCount: number;
 }
 
 interface ApiResponse<T> {

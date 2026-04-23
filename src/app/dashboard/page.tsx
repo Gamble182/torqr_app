@@ -110,7 +110,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
         <Link
           href="/dashboard/customers"
           className="group bg-card rounded-xl border border-border p-5 hover:shadow-md hover:border-brand-200 transition-all"
@@ -159,6 +159,22 @@ export default function DashboardPage() {
           <p className="text-xs text-muted-foreground mt-0.5">Überfällig</p>
         </Link>
 
+        {stats?.role === 'OWNER' && (stats.unassignedSystemsCount ?? 0) > 0 && (
+          <Link
+            href="/dashboard/systems?assignee=unassigned"
+            className="group bg-card rounded-xl border border-status-overdue-border bg-status-overdue-bg p-5 hover:shadow-md transition-all"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-card">
+                <UserXIcon className="h-4.5 w-4.5 text-status-overdue-text" />
+              </div>
+              <ArrowRightIcon className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+            <p className="text-2xl font-bold text-status-overdue-text">{stats.unassignedSystemsCount}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">Nicht zugewiesen</p>
+          </Link>
+        )}
+
         <div className="bg-card rounded-xl border border-border p-5">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-status-due-bg">
@@ -170,43 +186,6 @@ export default function DashboardPage() {
           <p className="text-xs text-muted-foreground mt-0.5">Nächste 30 Tage</p>
         </div>
       </div>
-
-      {/* Unassigned after deactivation — OWNER only */}
-      {stats?.role === 'OWNER' && stats.unassignedAfterDeactivation.length > 0 && (
-        <div className="bg-status-overdue-bg rounded-xl border border-status-overdue-border">
-          <div className="px-6 py-4 border-b border-status-overdue-border">
-            <div className="flex items-center gap-2">
-              <UserXIcon className="h-4.5 w-4.5 text-status-overdue-text" />
-              <h2 className="text-base font-semibold text-status-overdue-text">
-                Nicht zugewiesen nach Deaktivierung
-              </h2>
-            </div>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              Diese Systeme waren einem deaktivierten Mitarbeiter zugewiesen und müssen neu zugewiesen werden
-            </p>
-          </div>
-          <div className="p-4 space-y-2">
-            {stats.unassignedAfterDeactivation.map((system) => (
-              <div
-                key={system.id}
-                className="flex items-center gap-4 p-3 rounded-lg border border-status-overdue-border bg-card cursor-pointer hover:shadow-sm transition-all"
-                onClick={() => router.push(`/dashboard/systems/${system.id}`)}
-              >
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">{system.customer.name}</p>
-                  <p className="text-xs text-muted-foreground truncate">
-                    {system.catalog.manufacturer} {system.catalog.name}
-                    {system.assignedTo && ` — bisher: ${system.assignedTo.name}`}
-                  </p>
-                </div>
-                <Button size="sm" variant="outline" onClick={(e) => { e.stopPropagation(); router.push(`/dashboard/systems/${system.id}`); }}>
-                  Neu zuweisen
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Upcoming Maintenances */}
       <div className="bg-card rounded-xl border border-border">
