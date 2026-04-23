@@ -199,11 +199,25 @@ function EmployeeCard({
   onToggle: (emp: Employee) => void;
   isToggling: boolean;
 }) {
+  const router = useRouter();
   const isOwner = employee.role === 'OWNER';
   const roleLabel = isOwner ? 'Inhaber' : 'Techniker';
+  const assignedCount = employee.workload?.assignedSystemsCount ?? 0;
+  const overdueCount = employee.workload?.overdueSystemsCount ?? 0;
 
   return (
-    <div className={`flex items-center gap-4 p-4 rounded-lg border bg-card ${!employee.isActive ? 'opacity-60' : ''}`}>
+    <div
+      role="button"
+      tabIndex={0}
+      onClick={() => router.push(`/dashboard/employees/${employee.id}`)}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          router.push(`/dashboard/employees/${employee.id}`);
+        }
+      }}
+      className={`flex items-center gap-4 p-4 rounded-lg border bg-card cursor-pointer hover:shadow-sm hover:border-brand-200 transition-all ${!employee.isActive ? 'opacity-60' : ''}`}
+    >
       <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 shrink-0">
         {isOwner ? (
           <ShieldIcon className="h-5 w-5 text-primary" />
@@ -229,12 +243,27 @@ function EmployeeCard({
           )}
         </div>
         <p className="text-xs text-muted-foreground truncate">{employee.email}</p>
+        {!isOwner && employee.isActive && (
+          <p className="text-xs mt-1">
+            <span className="text-muted-foreground">{assignedCount} Systeme · </span>
+            {overdueCount > 0 ? (
+              <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-status-overdue-bg text-status-overdue-text border border-status-overdue-border">
+                {overdueCount} überfällig
+              </span>
+            ) : (
+              <span className="text-muted-foreground">0 überfällig</span>
+            )}
+          </p>
+        )}
       </div>
       {!isOwner && !isCurrentUser && (
         <Button
           variant={employee.isActive ? 'outline' : 'default'}
           size="sm"
-          onClick={() => onToggle(employee)}
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggle(employee);
+          }}
           disabled={isToggling}
         >
           {isToggling ? (
