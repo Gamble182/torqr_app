@@ -250,6 +250,35 @@ export const manualBookingCreateSchema = z.object({
   endTime: z.string().datetime('Ungültiges Datum').optional(),
 });
 
+export const bookingRangeEnum = z.enum(['upcoming', 'week', 'month', 'past', 'all']);
+export const bookingSourceEnum = z.enum(['cal', 'manual', 'all']);
+export const bookingStatusEnum = z.enum(['CONFIRMED', 'CANCELLED', 'RESCHEDULED']);
+export const bookingSystemTypeEnum = z.enum(['HEATING', 'AC', 'WATER_TREATMENT', 'ENERGY_STORAGE', 'all']);
+
+export const bookingListQuerySchema = z.object({
+  range: bookingRangeEnum.optional().default('upcoming'),
+  status: z.union([bookingStatusEnum, z.array(bookingStatusEnum)]).optional(),
+  assignee: z.string().uuid().or(z.literal('unassigned')).optional(),
+  customerId: uuidSchema.optional(),
+  systemType: bookingSystemTypeEnum.optional(),
+  source: bookingSourceEnum.optional().default('all'),
+  from: z.string().datetime().optional(),
+  to: z.string().datetime().optional(),
+  limit: z.coerce.number().int().min(1).max(500).optional().default(200),
+});
+
+export const bookingRescheduleSchema = z.object({
+  startTime: z.string().datetime('Ungültiges Datum'),
+  endTime: z.string().datetime('Ungültiges Datum').optional(),
+  notifyCustomer: z.boolean().optional().default(true),
+  reason: z.string().max(500, 'Grund zu lang').optional().nullable(),
+});
+
+export const bookingCancelSchema = z.object({
+  notifyCustomer: z.boolean().optional().default(true),
+  reason: z.string().max(500, 'Grund zu lang').optional().nullable(),
+});
+
 // ============================================================================
 // CHECKLIST SCHEMAS
 // ============================================================================

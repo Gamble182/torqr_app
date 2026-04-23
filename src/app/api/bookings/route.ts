@@ -3,32 +3,104 @@ import { requireAuth, requireOwner } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { randomUUID } from 'crypto';
-import { manualBookingCreateSchema } from '@/lib/validations';
+import { Prisma } from '@prisma/client';
+import { manualBookingCreateSchema, bookingListQuerySchema } from '@/lib/validations';
 import { sendBookingConfirmation } from '@/lib/email/service';
 
 /**
- * GET /api/bookings?customerId=xxx
- * Returns bookings for the authenticated user, optionally filtered by customer.
- * Ordered: upcoming first, then past (desc).
+ * GET /api/bookings
+ * Returns bookings for the authenticated company with rich filtering.
+ * TECHNICIAN role is scoped to their assigned bookings/systems.
  */
 export async function GET(request: NextRequest) {
   try {
     const { userId, companyId, role } = await requireAuth();
 
     const { searchParams } = new URL(request.url);
-    const customerId = searchParams.get('customerId');
+    const parsed = bookingListQuerySchema.safeParse({
+      range: searchParams.get('range') ?? undefined,
+      status: searchParams.getAll('status').length > 0 ? searchParams.getAll('status') : undefined,
+      assignee: searchParams.get('assignee') ?? undefined,
+      customerId: searchParams.get('customerId') ?? undefined,
+      systemType: searchParams.get('systemType') ?? undefined,
+      source: searchParams.get('source') ?? undefined,
+      from: searchParams.get('from') ?? undefined,
+      to: searchParams.get('to') ?? undefined,
+      limit: searchParams.get('limit') ?? undefined,
+    });
+
+    if (!parsed.success) {
+      return NextResponse.json(
+        { success: false, error: 'Ungültige Filterparameter', details: parsed.error.issues },
+        { status: 400 }
+      );
+    }
+
+    const f = parsed.data;
+    const now = new Date();
+    const where: Prisma.BookingWhereInput = { companyId };
+
+    if (role === 'TECHNICIAN') {
+      where.OR = [
+        { assignedToUserId: userId },
+        { system: { assignedToUserId: userId } },
+      ];
+    }
+
+    if (f.customerId) where.customerId = f.customerId;
+
+    if (role === 'OWNER' && f.assignee) {
+      where.assignedToUserId = f.assignee === 'unassigned' ? null : f.assignee;
+    }
+
+    if (f.systemType && f.systemType !== 'all') {
+      where.system = { ...(where.system as object | undefined), catalog: { systemType: f.systemType } };
+    }
+
+    if (f.source === 'manual') where.triggerEvent = 'BOOKING_MANUAL';
+    else if (f.source === 'cal') where.triggerEvent = { not: 'BOOKING_MANUAL' };
+
+    if (f.status) {
+      const statusArr = Array.isArray(f.status) ? f.status : [f.status];
+      where.status = { in: statusArr };
+    } else {
+      where.status = { in: ['CONFIRMED', 'RESCHEDULED'] };
+    }
+
+    if (f.from || f.to) {
+      where.startTime = {};
+      if (f.from) (where.startTime as Prisma.DateTimeFilter).gte = new Date(f.from);
+      if (f.to) (where.startTime as Prisma.DateTimeFilter).lte = new Date(f.to);
+    } else if (f.range === 'upcoming') {
+      where.startTime = { gte: now };
+    } else if (f.range === 'week') {
+      const weekLater = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+      where.startTime = { gte: now, lte: weekLater };
+    } else if (f.range === 'month') {
+      const monthLater = new Date(now);
+      monthLater.setMonth(monthLater.getMonth() + 1);
+      where.startTime = { gte: now, lte: monthLater };
+    } else if (f.range === 'past') {
+      where.startTime = { lt: now };
+    }
 
     const bookings = await prisma.booking.findMany({
-      where: {
-        companyId,
-        ...(role === 'TECHNICIAN' && { userId }),
-        ...(customerId ? { customerId } : {}),
-      },
+      where,
       include: {
-        customer: { select: { id: true, name: true } },
-        system: { select: { id: true, catalog: { select: { manufacturer: true, name: true } } } },
+        customer: { select: { id: true, name: true, email: true, phone: true } },
+        system: {
+          select: {
+            id: true,
+            serialNumber: true,
+            catalog: { select: { manufacturer: true, name: true, systemType: true } },
+          },
+        },
+        assignedTo: { select: { id: true, name: true } },
       },
-      orderBy: { startTime: 'asc' },
+      orderBy: [
+        { startTime: f.range === 'past' ? 'desc' : 'asc' },
+      ],
+      take: f.limit,
     });
 
     return NextResponse.json({ success: true, data: bookings });
