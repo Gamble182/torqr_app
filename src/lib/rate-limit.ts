@@ -32,15 +32,30 @@ if (typeof setInterval !== 'undefined') {
 }
 
 /**
+ * Resolve Upstash REST credentials. Supports multiple env var naming conventions so the same
+ * code works across manual config, legacy Vercel KV, and the current Vercel Marketplace
+ * "Upstash For Redis" integration (which injects `UP_KV_REST_API_*`).
+ */
+function resolveUpstashCredentials(): { url: string; token: string } | null {
+  const url =
+    process.env.UPSTASH_REDIS_REST_URL ||
+    process.env.KV_REST_API_URL ||
+    process.env.UP_KV_REST_API_URL;
+  const token =
+    process.env.UPSTASH_REDIS_REST_TOKEN ||
+    process.env.KV_REST_API_TOKEN ||
+    process.env.UP_KV_REST_API_TOKEN;
+  if (!url || !token) return null;
+  return { url, token };
+}
+
+/**
  * Upstash client (null when env vars are missing — triggers in-memory fallback).
  */
-const redis =
-  process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN
-    ? new Redis({
-        url: process.env.UPSTASH_REDIS_REST_URL,
-        token: process.env.UPSTASH_REDIS_REST_TOKEN,
-      })
-    : null;
+const upstashCredentials = resolveUpstashCredentials();
+const redis = upstashCredentials
+  ? new Redis({ url: upstashCredentials.url, token: upstashCredentials.token })
+  : null;
 
 /**
  * One limiter per (interval, maxRequests) combination. Cached so we don't rebuild limiters on
