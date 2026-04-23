@@ -30,6 +30,7 @@ vi.mock('@/lib/prisma', () => ({
 }));
 
 import { GET } from '../route';
+import { GET as GET_DETAIL } from '../[id]/route';
 import { requireOwner } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 
@@ -77,5 +78,79 @@ describe('GET /api/employees', () => {
     vi.mocked(requireOwner).mockRejectedValue(new Error('Forbidden'));
     const res = await GET();
     expect(res.status).toBe(403);
+  });
+});
+
+describe('GET /api/employees/[id]', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('returns 403 for non-OWNER', async () => {
+    vi.mocked(requireOwner).mockRejectedValue(new Error('Forbidden'));
+    const res = await GET_DETAIL(new Request('http://x/api/employees/u1') as never, {
+      params: Promise.resolve({ id: 'u1' }),
+    });
+    expect(res.status).toBe(403);
+  });
+
+  it('returns 404 when employee not found in company', async () => {
+    vi.mocked(requireOwner).mockResolvedValue({
+      userId: 'owner-1', companyId: 'co-1', role: 'OWNER', email: 'o@x.de', name: 'O',
+    });
+    vi.mocked(prisma.user.findFirst).mockResolvedValue(null);
+    const res = await GET_DETAIL(new Request('http://x/api/employees/u1') as never, {
+      params: Promise.resolve({ id: 'u1' }),
+    });
+    expect(res.status).toBe(404);
+  });
+
+  it('returns detail shape with stats, grouped systems, and recent activity', async () => {
+    vi.mocked(requireOwner).mockResolvedValue({
+      userId: 'owner-1', companyId: 'co-1', role: 'OWNER', email: 'o@x.de', name: 'O',
+    });
+    vi.mocked(prisma.user.findFirst).mockResolvedValue({
+      id: 'u1', name: 'Tech A', email: 'a@x.de', phone: '+49',
+      role: 'TECHNICIAN', isActive: true, deactivatedAt: null, createdAt: new Date(),
+    } as never);
+    vi.mocked(prisma.customerSystem.count).mockResolvedValue(5 as never);
+    vi.mocked(prisma.customerSystem.findMany).mockResolvedValue([
+      {
+        id: 's1', nextMaintenance: new Date(Date.now() - 86400000),
+        catalog: { systemType: 'HEATING', manufacturer: 'Vaillant', name: 'ecoTEC' },
+        customer: { id: 'c1', name: 'Müller', city: 'Berlin' },
+        bookings: [],
+      },
+      {
+        id: 's2', nextMaintenance: new Date(Date.now() + 86400000 * 10),
+        catalog: { systemType: 'AC', manufacturer: 'Daikin', name: 'Perfera' },
+        customer: { id: 'c1', name: 'Müller', city: 'Berlin' },
+        bookings: [{ startTime: new Date(Date.now() + 86400000 * 2) }],
+      },
+    ] as never);
+    vi.mocked(prisma.maintenance.count).mockResolvedValue(3 as never);
+    vi.mocked(prisma.maintenance.findMany).mockResolvedValue([
+      {
+        id: 'm1', date: new Date(),
+        system: {
+          id: 's1', catalog: { manufacturer: 'Vaillant', name: 'ecoTEC' },
+          customer: { id: 'c1', name: 'Müller' },
+        },
+      },
+    ] as never);
+
+    const res = await GET_DETAIL(new Request('http://x/api/employees/u1') as never, {
+      params: Promise.resolve({ id: 'u1' }),
+    });
+    const body = await res.json();
+
+    expect(body.success).toBe(true);
+    expect(body.data.id).toBe('u1');
+    expect(body.data.stats.assignedSystemsCount).toBe(5);
+    expect(body.data.stats.overdueSystemsCount).toBeGreaterThanOrEqual(1);
+    expect(body.data.stats.maintenancesLast30Days).toBe(3);
+    expect(body.data.assignedSystems).toHaveLength(1); // one customer group
+    expect(body.data.assignedSystems[0].systems).toHaveLength(2);
+    expect(body.data.recentActivity).toHaveLength(1);
   });
 });
