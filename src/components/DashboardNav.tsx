@@ -30,6 +30,7 @@ const navigation: NavItem[] = [
   { name: 'Kunden', href: '/dashboard/customers', icon: UsersIcon },
   { name: 'Systeme', href: '/dashboard/systems', icon: WrenchIcon },
   { name: 'Wartungen', href: '/dashboard/wartungen', icon: WrenchIcon },
+  { name: 'Termine', href: '/dashboard/termine', icon: CalendarIcon },
   { name: 'Mitarbeiter', href: '/dashboard/employees', icon: UserCogIcon, ownerOnly: true },
 ];
 
