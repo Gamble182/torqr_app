@@ -6,6 +6,11 @@ import { employeeCreateSchema } from '@/lib/validations';
 import { hashPassword } from '@/lib/password';
 import { randomBytes } from 'crypto';
 
+/**
+ * GET /api/employees — List company employees with per-user workload (OWNER only).
+ * Returns each user augmented with `workload: { assignedSystemsCount, overdueSystemsCount }`
+ * computed via two parallel `customerSystem.groupBy` queries (total + overdue where nextMaintenance < now).
+ */
 export async function GET() {
   try {
     const { companyId } = await requireOwner();

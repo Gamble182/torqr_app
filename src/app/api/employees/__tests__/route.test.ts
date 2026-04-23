@@ -50,14 +50,17 @@ describe('GET /api/employees', () => {
       { id: 'u1', name: 'Tech A', email: 'a@x.de', phone: null, role: 'TECHNICIAN', isActive: true, deactivatedAt: null, createdAt: new Date() } as never,
       { id: 'u2', name: 'Tech B', email: 'b@x.de', phone: null, role: 'TECHNICIAN', isActive: true, deactivatedAt: null, createdAt: new Date() } as never,
     ]);
-    vi.mocked(prisma.customerSystem.groupBy)
-      .mockResolvedValueOnce([
+    (vi.mocked(prisma.customerSystem.groupBy) as unknown as {
+      mockImplementation: (fn: (args: { where: { nextMaintenance?: unknown } }) => Promise<unknown>) => void;
+    }).mockImplementation((args) => {
+      if (args.where.nextMaintenance) {
+        return Promise.resolve([{ assignedToUserId: 'u1', _count: { _all: 2 } }]);
+      }
+      return Promise.resolve([
         { assignedToUserId: 'u1', _count: { _all: 5 } },
         { assignedToUserId: 'u2', _count: { _all: 3 } },
-      ] as never)
-      .mockResolvedValueOnce([
-        { assignedToUserId: 'u1', _count: { _all: 2 } },
-      ] as never);
+      ]);
+    });
 
     const res = await GET();
     const body = await res.json();
