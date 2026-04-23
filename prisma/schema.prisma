@@ -315,6 +315,8 @@ enum EmailType {
   REMINDER_1_WEEK
   WEEKLY_SUMMARY
   BOOKING_CONFIRMATION
+  BOOKING_RESCHEDULED
+  BOOKING_CANCELLED
 }
 
 // ============================================================================
@@ -375,6 +377,13 @@ model Booking {
   attendeeName  String?
   attendeeEmail String?
   status        BookingStatus @default(CONFIRMED)
+
+  cancelReason       String?
+  cancelledAt        DateTime?
+  rescheduledFromUid String?
+  rescheduledToUid   String?
+  rescheduledAt      DateTime?
+
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
@@ -395,6 +404,8 @@ model Booking {
   @@index([customerId])
   @@index([systemId])
   @@index([startTime])
+  @@index([status])
+  @@index([rescheduledFromUid])
   @@map("bookings")
 }
 
