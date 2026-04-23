@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 export type BookingSource = 'cal' | 'manual' | 'all';
 export type BookingRange = 'upcoming' | 'week' | 'month' | 'past' | 'all';
@@ -104,6 +104,74 @@ export function useBooking(id: string | null | undefined) {
         throw new Error(result.error || 'Fehler beim Laden des Termins');
       }
       return result.data;
+    },
+  });
+}
+
+export interface RescheduleInput {
+  bookingId: string;
+  startTime: string; // ISO
+  endTime?: string;  // ISO
+  notifyCustomer: boolean;
+  reason?: string | null;
+}
+
+export function useRescheduleBooking() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: RescheduleInput) => {
+      const res = await fetch(`/api/bookings/${input.bookingId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          startTime: input.startTime,
+          endTime: input.endTime,
+          notifyCustomer: input.notifyCustomer,
+          reason: input.reason ?? null,
+        }),
+      });
+      const result: ApiResponse<Booking> = await res.json();
+      if (!result.success || !result.data) {
+        throw new Error(result.error || 'Fehler beim Verschieben');
+      }
+      return result.data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['bookings'] });
+      qc.invalidateQueries({ queryKey: ['booking'] });
+      qc.invalidateQueries({ queryKey: ['customer-systems'] });
+    },
+  });
+}
+
+export interface CancelInput {
+  bookingId: string;
+  notifyCustomer: boolean;
+  reason?: string | null;
+}
+
+export function useCancelBooking() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: CancelInput) => {
+      const res = await fetch(`/api/bookings/${input.bookingId}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          notifyCustomer: input.notifyCustomer,
+          reason: input.reason ?? null,
+        }),
+      });
+      const result: ApiResponse<Booking> = await res.json();
+      if (!result.success) {
+        throw new Error(result.error || 'Fehler beim Stornieren');
+      }
+      return result.data;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['bookings'] });
+      qc.invalidateQueries({ queryKey: ['booking'] });
+      qc.invalidateQueries({ queryKey: ['customer-systems'] });
     },
   });
 }
