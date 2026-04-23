@@ -267,6 +267,10 @@ export const bookingListQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(500).optional().default(200),
 });
 
+/**
+ * Body schema for PATCH /api/bookings/[id] — manual reschedule.
+ * endTime is optional; if omitted the existing duration is preserved.
+ */
 export const bookingRescheduleSchema = z.object({
   startTime: z.string().datetime('Ungültiges Datum'),
   endTime: z.string().datetime('Ungültiges Datum').optional(),
@@ -274,6 +278,10 @@ export const bookingRescheduleSchema = z.object({
   reason: z.string().max(500, 'Grund zu lang').optional().nullable(),
 });
 
+/**
+ * Body schema for DELETE /api/bookings/[id] — cancellation.
+ * Body is optional (endpoint accepts empty JSON or no body).
+ */
 export const bookingCancelSchema = z.object({
   notifyCustomer: z.boolean().optional().default(true),
   reason: z.string().max(500, 'Grund zu lang').optional().nullable(),
