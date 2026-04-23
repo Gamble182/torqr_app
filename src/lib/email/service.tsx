@@ -6,6 +6,8 @@ import { buildUnsubscribeUrl } from './unsubscribe-token';
 import { ReminderEmail } from './templates/ReminderEmail';
 import { WeeklySummaryEmail } from './templates/WeeklySummaryEmail';
 import { BookingConfirmationEmail } from './templates/BookingConfirmationEmail';
+import { BookingRescheduleEmail } from './templates/BookingRescheduleEmail';
+import { BookingCancellationEmail } from './templates/BookingCancellationEmail';
 import { format, addDays, subDays, differenceInDays } from 'date-fns';
 import { de } from 'date-fns/locale';
 type ReminderType = 'REMINDER_4_WEEKS' | 'REMINDER_1_WEEK';
@@ -364,4 +366,160 @@ export async function sendWeeklySummaryToAll(): Promise<{ emailsSent: number; er
   }
 
   return { emailsSent, errors };
+}
+
+/**
+ * Send a reschedule notification email to the customer whose booking was moved.
+ * No-ops silently if the customer has no email or has unsubscribed.
+ *
+ * `oldStartTime` is the pre-reschedule start — required for the email copy.
+ * Caller must pass it because the DB now already holds the new startTime.
+ */
+export async function sendBookingReschedule(
+  bookingId: string,
+  oldStartTime?: Date,
+  reason?: string | null,
+): Promise<void> {
+  const booking = await prisma.booking.findUnique({
+    where: { id: bookingId },
+    include: {
+      customer: true,
+      system: {
+        include: {
+          catalog: true,
+          user: { select: { name: true, email: true, phone: true, company: { select: { name: true } } } },
+        },
+      },
+    },
+  });
+
+  if (!booking?.customer?.email || !booking.system) return;
+  if (booking.customer.emailOptIn === 'UNSUBSCRIBED') return;
+
+  const { customer, system } = booking;
+  const { catalog, user } = system;
+
+  const newDate = format(booking.startTime, 'EEEE, dd. MMMM yyyy', { locale: de });
+  const newTime = format(booking.startTime, "HH:mm 'Uhr'", { locale: de });
+  const effectiveOld = oldStartTime ?? booking.startTime;
+  const oldDate = format(effectiveOld, 'EEEE, dd. MMMM yyyy', { locale: de });
+  const oldTime = format(effectiveOld, "HH:mm 'Uhr'", { locale: de });
+
+  const html = await render(
+    React.createElement(BookingRescheduleEmail, {
+      customerName: customer.name,
+      oldDate,
+      oldTime,
+      newDate,
+      newTime,
+      heaterManufacturer: catalog.manufacturer,
+      heaterModel: catalog.name,
+      heaterSerialNumber: system.serialNumber,
+      reason: reason ?? null,
+      maxPhone: user?.phone ?? '',
+      maxEmail: user?.email ?? '',
+      maxName: user?.name ?? '',
+      maxCompanyName: user?.company?.name ?? null,
+    })
+  );
+
+  const { data, error } = await resend.emails.send({
+    from: FROM_EMAIL,
+    to: customer.email as string,
+    subject: `Ihr Wartungstermin wurde verschoben – neuer Termin ${newDate}`,
+    html,
+  });
+
+  await prisma.emailLog.create({
+    data: {
+      customerId: customer.id,
+      type: 'BOOKING_RESCHEDULED',
+      resendId: data?.id ?? null,
+      error: error ? JSON.stringify(error) : null,
+    },
+  });
+
+  if (error) {
+    throw new Error(`Resend error for reschedule ${bookingId}: ${JSON.stringify(error)}`);
+  }
+}
+
+/**
+ * Send a cancellation notification email to the customer.
+ * Includes a "rebook" link to CAL_COM_URL with pre-filled metadata when available.
+ */
+export async function sendBookingCancellation(
+  bookingId: string,
+  reason?: string | null,
+): Promise<void> {
+  const booking = await prisma.booking.findUnique({
+    where: { id: bookingId },
+    include: {
+      customer: true,
+      system: {
+        include: {
+          catalog: true,
+          user: { select: { name: true, email: true, phone: true, company: { select: { name: true } } } },
+        },
+      },
+    },
+  });
+
+  if (!booking?.customer?.email || !booking.system) return;
+  if (booking.customer.emailOptIn === 'UNSUBSCRIBED') return;
+
+  const { customer, system } = booking;
+  const { catalog, user } = system;
+
+  const cancelledDate = format(booking.startTime, 'EEEE, dd. MMMM yyyy', { locale: de });
+  const cancelledTime = format(booking.startTime, "HH:mm 'Uhr'", { locale: de });
+
+  const rebookUrl = CAL_COM_URL
+    ? (() => {
+        const url = new URL(CAL_COM_URL);
+        url.searchParams.set('metadata[customerId]', customer.id);
+        url.searchParams.set('metadata[userId]', system.userId);
+        url.searchParams.set('metadata[systemId]', system.id);
+        if (customer.name) url.searchParams.set('name', customer.name);
+        if (customer.email) url.searchParams.set('email', customer.email as string);
+        return url.toString();
+      })()
+    : null;
+
+  const html = await render(
+    React.createElement(BookingCancellationEmail, {
+      customerName: customer.name,
+      cancelledDate,
+      cancelledTime,
+      heaterManufacturer: catalog.manufacturer,
+      heaterModel: catalog.name,
+      heaterSerialNumber: system.serialNumber,
+      reason: reason ?? booking.cancelReason ?? null,
+      rebookUrl,
+      maxPhone: user?.phone ?? '',
+      maxEmail: user?.email ?? '',
+      maxName: user?.name ?? '',
+      maxCompanyName: user?.company?.name ?? null,
+    })
+  );
+
+  const { data, error } = await resend.emails.send({
+    from: FROM_EMAIL,
+    to: customer.email as string,
+    subject: `Ihr Wartungstermin am ${cancelledDate} wurde storniert`,
+    html,
+  });
+
+  await prisma.emailLog.create({
+    data: {
+      customerId: customer.id,
+      type: 'BOOKING_CANCELLED',
+      resendId: data?.id ?? null,
+      error: error ? JSON.stringify(error) : null,
+    },
+  });
+
+  if (error) {
+    throw new Error(`Resend error for cancellation ${bookingId}: ${JSON.stringify(error)}`);
+  }
 }
