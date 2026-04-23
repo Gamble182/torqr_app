@@ -3,19 +3,38 @@ import { requireAuth } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 import { z } from 'zod';
 import { Prisma } from '@prisma/client';
-import { customerSystemCreateSchema } from '@/lib/validations';
+import { customerSystemCreateSchema, assigneeFilterSchema } from '@/lib/validations';
 import { rateLimitByUser, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 
 /**
- * GET /api/customer-systems?customerId=xxx&search=xxx
+ * GET /api/customer-systems?customerId=xxx&search=xxx&assignee=xxx
  */
 export async function GET(request: NextRequest) {
   try {
     const { userId, companyId, role } = await requireAuth();
 
-    const searchParams = request.nextUrl.searchParams;
+    const searchParams = new URL(request.url).searchParams;
     const customerId = searchParams.get('customerId');
     const search = searchParams.get('search') || '';
+    const assigneeRaw = searchParams.get('assignee');
+
+    let assigneeFilter: Prisma.CustomerSystemWhereInput = {};
+    if (role === 'TECHNICIAN') {
+      assigneeFilter = { assignedToUserId: userId };
+    } else if (assigneeRaw) {
+      const parsed = assigneeFilterSchema.safeParse(assigneeRaw);
+      if (!parsed.success) {
+        return NextResponse.json(
+          { success: false, error: 'Ungültiger Filterwert' },
+          { status: 400 }
+        );
+      }
+      if (parsed.data === 'unassigned') {
+        assigneeFilter = { assignedToUserId: null };
+      } else if (parsed.data !== 'all') {
+        assigneeFilter = { assignedToUserId: parsed.data };
+      }
+    }
 
     if (customerId) {
       const customer = await prisma.customer.findUnique({
@@ -28,7 +47,7 @@ export async function GET(request: NextRequest) {
 
     const where: Prisma.CustomerSystemWhereInput = {
       companyId,
-      ...(role === 'TECHNICIAN' && { assignedToUserId: userId }),
+      ...assigneeFilter,
       ...(customerId && { customerId }),
       ...(search && {
         OR: [

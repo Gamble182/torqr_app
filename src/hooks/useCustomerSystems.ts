@@ -38,13 +38,14 @@ interface ApiResponse<T> {
   error?: string;
 }
 
-export function useCustomerSystems(params?: { customerId?: string; search?: string }) {
+export function useCustomerSystems(params?: { customerId?: string; search?: string; assignee?: string }) {
   return useQuery<CustomerSystem[]>({
     queryKey: ['customer-systems', params],
     queryFn: async () => {
       const sp = new URLSearchParams();
       if (params?.customerId) sp.set('customerId', params.customerId);
       if (params?.search) sp.set('search', params.search);
+      if (params?.assignee) sp.set('assignee', params.assignee);
       const url = `/api/customer-systems${sp.toString() ? `?${sp}` : ''}`;
       const res = await fetch(url);
       const result: ApiResponse<CustomerSystem[]> = await res.json();
