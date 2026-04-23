@@ -20,6 +20,8 @@ import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { useCustomerSystems } from '@/hooks/useCustomerSystems';
 import type { SystemType } from '@/hooks/useCatalog';
+import { AssigneeBadge } from '@/components/AssigneeBadge';
+import { useSession } from 'next-auth/react';
 
 const SYSTEM_TYPE_ICONS: Record<SystemType, React.ElementType> = {
   HEATING: FlameIcon,
@@ -66,6 +68,8 @@ function TerminiertBadge() {
 export default function SystemsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const { data: systems = [], isLoading, error } = useCustomerSystems({ search: searchQuery });
+  const { data: session } = useSession();
+  const isOwner = session?.user?.role === 'OWNER';
 
   const overdueCount = useMemo(
     () => systems.filter((s) => s.nextMaintenance && getMaintenanceUrgency(s.nextMaintenance) === 'overdue').length,
@@ -191,6 +195,13 @@ export default function SystemsPage() {
                         </div>
                       </div>
                       <div className="flex items-center gap-2 shrink-0 ml-2">
+                        {isOwner && (
+                          <AssigneeBadge
+                            user={system.assignedTo ?? null}
+                            size="sm"
+                            showName={false}
+                          />
+                        )}
                         {nextBooking
                           ? <TerminiertBadge />
                           : system.nextMaintenance && <UrgencyBadge urgency={urgency} />
