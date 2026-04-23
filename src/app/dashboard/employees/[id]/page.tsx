@@ -132,7 +132,42 @@ function EmployeeHeaderCard({ employee, currentUserId }: { employee: EmployeeDet
   );
 }
 
+function EmployeeStatsGrid({ stats }: { stats: EmployeeDetail['stats'] }) {
+  const tiles: Array<{ label: string; value: number; Icon: React.ElementType; tone?: 'overdue' | 'neutral' }> = [
+    { label: 'Kunden', value: stats.assignedCustomersCount, Icon: UsersIcon, tone: 'neutral' },
+    { label: 'Systeme', value: stats.assignedSystemsCount, Icon: WrenchIcon, tone: 'neutral' },
+    { label: 'Überfällig', value: stats.overdueSystemsCount, Icon: AlertTriangleIcon, tone: 'overdue' },
+    { label: 'In 30 Tagen', value: stats.dueSoonSystemsCount, Icon: CalendarIcon, tone: 'neutral' },
+  ];
+  return (
+    <div className="space-y-3">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {tiles.map(({ label, value, Icon, tone }) => {
+          const isOverdueTone = tone === 'overdue' && value > 0;
+          return (
+            <div
+              key={label}
+              className={`bg-card rounded-xl border p-5 ${isOverdueTone ? 'border-status-overdue-border bg-status-overdue-bg' : 'border-border'}`}
+            >
+              <div className="flex items-center justify-center w-9 h-9 rounded-lg bg-muted mb-3">
+                <Icon className={`h-4 w-4 ${isOverdueTone ? 'text-status-overdue-text' : 'text-muted-foreground'}`} />
+              </div>
+              <p className={`text-2xl font-bold ${isOverdueTone ? 'text-status-overdue-text' : 'text-foreground'}`}>{value}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{label}</p>
+            </div>
+          );
+        })}
+      </div>
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <ClipboardCheckIcon className="h-4 w-4" />
+        <span>
+          Wartungen durchgeführt (30 Tage): <strong className="text-foreground">{stats.maintenancesLast30Days}</strong>
+        </span>
+      </div>
+    </div>
+  );
+}
+
 // Placeholder subcomponents — filled in subsequent tasks
-function EmployeeStatsGrid(_: { stats: EmployeeDetail['stats'] }) { return null; }
 function AssignedSystemsSection(_: { employee: EmployeeDetail }) { return null; }
 function RecentActivitySection(_: { activity: EmployeeDetail['recentActivity'] }) { return null; }
