@@ -1,7 +1,8 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import {
   Loader2Icon,
   WrenchIcon,
@@ -22,6 +23,7 @@ import { useCustomerSystems } from '@/hooks/useCustomerSystems';
 import type { SystemType } from '@/hooks/useCatalog';
 import { AssigneeBadge } from '@/components/AssigneeBadge';
 import { useSession } from 'next-auth/react';
+import { useEmployees } from '@/hooks/useEmployees';
 
 const SYSTEM_TYPE_ICONS: Record<SystemType, React.ElementType> = {
   HEATING: FlameIcon,
@@ -67,9 +69,31 @@ function TerminiertBadge() {
 
 export default function SystemsPage() {
   const [searchQuery, setSearchQuery] = useState('');
-  const { data: systems = [], isLoading, error } = useCustomerSystems({ search: searchQuery });
   const { data: session } = useSession();
   const isOwner = session?.user?.role === 'OWNER';
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const assigneeParam = searchParams.get('assignee') ?? 'all';
+
+  const { data: systems = [], isLoading, error } = useCustomerSystems({
+    search: searchQuery,
+    assignee: isOwner ? assigneeParam : undefined,
+  });
+  const { data: employees = [] } = useEmployees({ enabled: isOwner });
+
+  const setAssignee = (value: string) => {
+    const sp = new URLSearchParams(searchParams.toString());
+    if (value === 'all') sp.delete('assignee'); else sp.set('assignee', value);
+    router.replace(`/dashboard/systems${sp.toString() ? `?${sp}` : ''}`);
+  };
+
+  useEffect(() => {
+    if (!isOwner) return;
+    if (assigneeParam === 'all' || assigneeParam === 'unassigned') return;
+    const isValid = employees.some((e) => e.id === assigneeParam);
+    if (employees.length > 0 && !isValid) setAssignee('all');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOwner, assigneeParam, employees]);
 
   const overdueCount = useMemo(
     () => systems.filter((s) => s.nextMaintenance && getMaintenanceUrgency(s.nextMaintenance) === 'overdue').length,
@@ -149,6 +173,29 @@ export default function SystemsPage() {
           </div>
         </div>
       </div>
+
+      {/* Filters */}
+      {isOwner && (
+        <div className="flex items-center gap-2">
+          <label htmlFor="assignee-filter" className="text-sm text-muted-foreground shrink-0">
+            Zuweisung:
+          </label>
+          <select
+            id="assignee-filter"
+            value={assigneeParam}
+            onChange={(e) => setAssignee(e.target.value)}
+            className="px-3 py-2 bg-card border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring h-10"
+          >
+            <option value="all">Alle</option>
+            <option value="unassigned">Nicht zugewiesen</option>
+            {employees
+              .filter((e) => e.isActive)
+              .map((e) => (
+                <option key={e.id} value={e.id}>{e.name}</option>
+              ))}
+          </select>
+        </div>
+      )}
 
       {/* Search */}
       <div className="relative">
