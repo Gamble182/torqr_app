@@ -35,7 +35,7 @@ export function useFollowUpJobs(systemId: string) {
   });
 }
 
-export function useCreateFollowUpJob(systemId: string) {
+export function useCreateFollowUpJob(systemId: string, options?: { silent?: boolean }) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: {
@@ -57,9 +57,11 @@ export function useCreateFollowUpJob(systemId: string) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['follow-up-jobs', systemId] });
       queryClient.invalidateQueries({ queryKey: ['customer-systems'] });
-      toast.success('Nachfolgeauftrag erstellt');
+      if (!options?.silent) toast.success('Nachfolgeauftrag erstellt');
     },
-    onError: (error: Error) => toast.error(`Fehler: ${error.message}`),
+    onError: (error: Error) => {
+      if (!options?.silent) toast.error(`Fehler: ${error.message}`);
+    },
   });
 }
 

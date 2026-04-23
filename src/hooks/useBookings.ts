@@ -108,6 +108,35 @@ export function useBooking(id: string | null | undefined) {
   });
 }
 
+export interface CreateBookingInput {
+  systemId: string;
+  startTime: string; // ISO
+  endTime: string;   // ISO
+}
+
+export function useCreateBooking() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (input: CreateBookingInput): Promise<Booking> => {
+      const res = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(input),
+      });
+      const result: ApiResponse<Booking> = await res.json();
+      if (!result.success || !result.data) {
+        throw new Error(result.error || 'Fehler beim Speichern');
+      }
+      return result.data;
+    },
+    onSuccess: (_data, variables) => {
+      qc.invalidateQueries({ queryKey: ['bookings'] });
+      qc.invalidateQueries({ queryKey: ['customer-systems'] });
+      qc.invalidateQueries({ queryKey: ['customer-system', variables.systemId] });
+    },
+  });
+}
+
 export interface RescheduleInput {
   bookingId: string;
   startTime: string; // ISO
