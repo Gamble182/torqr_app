@@ -25,6 +25,7 @@ import { MaintenanceChecklistModal } from '@/components/MaintenanceChecklistModa
 import { MaintenanceHistory } from '@/components/MaintenanceHistory';
 import { FollowUpSection } from '@/components/FollowUpSection';
 import { BookingFormModal } from '@/components/BookingFormModal';
+import { SystemPhotosCard } from '@/components/SystemPhotosCard';
 import { SYSTEM_TYPE_LABELS } from '@/lib/constants';
 
 export default function SystemDetailPage() {
@@ -190,6 +191,9 @@ export default function SystemDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* System photos */}
+      <SystemPhotosCard systemId={systemId} photos={system.photos ?? []} />
 
       {/* Follow-up jobs */}
       <FollowUpSection systemId={systemId} />

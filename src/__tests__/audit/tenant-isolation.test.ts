@@ -32,6 +32,7 @@ const TENANT_ROUTES = [
   'systems/[id]/follow-ups/route.ts',
   'systems/[id]/checklist-items/route.ts',
   'systems/[id]/checklist-items/[itemId]/route.ts',
+  'systems/[id]/photos/route.ts',
   'follow-ups/[id]/route.ts',
   'employees/route.ts',
   'employees/[id]/route.ts',
