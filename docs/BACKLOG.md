@@ -29,6 +29,13 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 | 59 | Infra | In-memory rate limiter (`Map`) resets on every cold start — no-op on Vercel serverless. Migrate to Upstash Redis for persistent rate limiting. | Medium | 2026-04-22 |
 | 60 | Architecture | `CatalogPicker` "Ändern" button passes `entries[0]` to `onChange` when clearing — semantically incorrect. `onChange` signature should support `null` entry for clear action. | Low | 2026-04-22 |
 
+### Workload & Scheduling — Upcoming Features
+
+| # | Area | Description | Priority | Found |
+|---|------|-------------|----------|-------|
+| 61 | Feature | Technician workload management — assignee badges on systems, OWNER-only `/dashboard/employees/[id]` detail page, bulk reassign, workload column, systems filter, "Nicht zugewiesen" dashboard tile, auto-reassign to OWNER on deactivation. Spec: `docs/superpowers/specs/2026-04-23-technician-workload-management-design.md`. Plan: `docs/superpowers/plans/2026-04-23-technician-workload-management.md`. | High | 2026-04-23 |
+| 62 | Feature | Termine page — full `/dashboard/termine` with list + monthly calendar view, filters (time/status/technician/customer/system/source), in-app reschedule + cancel via Cal.com v2 API, customer notification emails, source icon + legend. Spec: `docs/superpowers/specs/2026-04-23-termine-page-design.md`. Plan: `docs/superpowers/plans/2026-04-23-termine-page.md`. Includes fixing #58 (HMAC fail-open) since it touches the same webhook. | High | 2026-04-23 |
+
 ### System Model — Follow-up
 
 | # | Area | Description | Priority | Found |
