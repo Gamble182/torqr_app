@@ -377,6 +377,15 @@ export default function DashboardPage() {
               <p className="text-sm text-muted-foreground">Keine bevorstehenden Termine</p>
             </div>
           )}
+          <div className="pt-3 border-t border-border mt-3">
+            <Link
+              href="/dashboard/termine"
+              className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+            >
+              Alle Termine anzeigen
+              <ArrowRightIcon className="h-3.5 w-3.5" />
+            </Link>
+          </div>
         </div>
       </div>
 
