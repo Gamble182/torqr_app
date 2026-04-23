@@ -107,6 +107,8 @@ Items are grouped by sprint / work session, ordered newest first.
 | # | Area | Description | Resolved |
 |---|------|-------------|----------|
 | 34 | Feature | Photos per `CustomerSystem` — up to 5 per system, max 5MB each (JPEG/PNG/WebP). New `SystemPhotosCard` on `/dashboard/systems/[id]` between Wartungsplan and FollowUpSection: grid + lightbox + batch upload. Permission model (Variant B): OWNER + TECHNICIAN upload, OWNER-only delete. Server guards TECHNICIAN to own assigned systems. Stored in Supabase `maintenance-photos` bucket at `{userId}/systems/{systemId}/{ts}.{ext}`. 12 new vitest cases; tenant-isolation audit updated. Migration `20260423131104_add_system_photos` applied to production. Spec: `docs/superpowers/specs/2026-04-23-system-photos-design.md`. | 2026-04-23 |
+| — | Bugfix | Termine row "..."-Menü war durch `overflow-hidden` am Wrapper abgeschnitten — entfernt. Gerundete Ecken bleiben erhalten (Row-Contents überragen Border nicht). | 2026-04-23 |
+| — | Bugfix | System-Foto-Upload tat nichts beim Dateiauswahl-Dialog. Root cause: `e.target.files` ist live — `e.target.value = ''` leerte die FileList, bevor iteriert werden konnte. Fix: `Array.from()` vor dem Reset. | 2026-04-23 |
 
 ### Sprint 26 — React Query Consistency + Permission Hardening + Rate Limiting (2026-04-23)
 

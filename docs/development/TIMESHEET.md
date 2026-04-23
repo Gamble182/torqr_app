@@ -3,7 +3,7 @@
 **Projekt:** Torqr — Kundenverwaltungs- und Wartungsplattform
 **Entwickler:** Y. Dorth
 **Stundensatz:** 95 €/Std — *günstig für Senior Full-Stack (Marktüblich 90–130 €/h)*
-**Stand:** 2026-04-22
+**Stand:** 2026-04-23
 
 ---
 
@@ -11,10 +11,10 @@
 
 | Metrik | Wert |
 |---|---|
-| Echtzeit gesamt (deine Arbeit mit Claude) | **~70 h** (Teil 1: ~20 h · Teil 2: ~50 h · Teil 3: 0 h) |
-| Solo-Dev-Äquivalenz gesamt (Senior Full-Stack, ohne KI) | **~457 h** (Teil 1: 145 h · Teil 2: 312 h · Teil 3: 0 h) |
+| Echtzeit gesamt (deine Arbeit mit Claude) | **~75 h** (Teil 1: ~20 h · Teil 2: ~50 h · Teil 3: ~5 h) |
+| Solo-Dev-Äquivalenz gesamt (Senior Full-Stack, ohne KI) | **~489 h** (Teil 1: 145 h · Teil 2: 312 h · Teil 3: 32 h) |
 | Effizienzfaktor (Solo / Echtzeit) | **~6.5 ×** |
-| MVP-Wert @ 95 €/h | **~43.400 €** |
+| MVP-Wert @ 95 €/h | **~46.455 €** |
 
 *95 €/h ist auf der günstigen Seite des marktüblichen Bands für Senior Full-Stack-Entwicklung (90–130 €/h). Der Effizienzfaktor zeigt, welchen Solo-Dev-Aufwand dieselbe Leistung konventionell gebunden hätte.*
 
@@ -329,6 +329,5 @@ Tier-Referenz:
 
 | Datum | Tier | Echtzeit (gem.) | Solo-Dev-Äquiv. | Sprint / Bereich | Aktivitäten | Commits |
 |---|---|---|---|---|---|---|
+| 2026-04-23 | XL | 5 h | 32 h | Sprints 24 + 25 + 26 + 27 | **Sprint 24** Technician Workload Management (AssigneeBadge, Employee-Detail-Page, URL-driven Assignee-Filter, Auto-Reassign bei Deaktivierung, 8 neue Tests). **Sprint 25** Termine-Page + Cal.com Reschedule/Cancel (volle `/dashboard/termine` Seite mit List+Kalender, Booking-Details-Drawer, Reschedule+Cancel-Modals, Cal.com v2 API-Client, 2 neue Email-Templates, Booking-Status-Metadaten + Migration, HMAC-Fail-Closed-Fix). **Sprint 26** React-Query-Konsistenz + Permission-Hardening + Rate-Limiting (wartungen + customer-edit Pages auf useQuery, 3 Components auf useMutation, DELETE-Routes auf requireOwner #57, Upstash-Redis-Rate-Limiter #59/#66). **Sprint 27** System-Photos (up to 5 photos pro CustomerSystem, Variant-B-Permissions, SystemPhotosCard, 12 neue Tests, Migration live auf Prod-Supabase). **Bugfixes** Termine-Dropdown-Clip + FileList-live-Reference. Hook-Sessions nur fragmentarisch erfasst (11 Min in 3 Konsultations-Blips) — Hauptarbeit per Git-Timespan rekonstruiert. | 66 |
 <!-- Auto-appended at session start by CLAUDE.md "Timesheet Auto-Update" rule -->
-
-_(noch leer — wird bei jeder neuen Session automatisch ergänzt)_
