@@ -34,14 +34,16 @@ export function SystemPhotosCard({ systemId, photos }: SystemPhotosCardProps) {
   const handlePickFiles = () => fileInputRef.current?.click();
 
   const handleFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files || files.length === 0) return;
-
-    // reset input so the same file can be picked again later
+    // Snapshot the FileList into a regular array BEFORE resetting the input —
+    // e.target.files is a live reference that becomes empty as soon as we
+    // reset e.target.value.
+    const picked = Array.from(e.target.files ?? []);
     e.target.value = '';
 
+    if (picked.length === 0) return;
+
     const valid: File[] = [];
-    for (const file of Array.from(files)) {
+    for (const file of picked) {
       if (!ALLOWED_TYPES.includes(file.type)) {
         toast.error(`${file.name}: Nur JPEG, PNG oder WebP erlaubt`);
         continue;

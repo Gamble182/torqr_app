@@ -55,7 +55,7 @@ export function TermineList({
   }
 
   return (
-    <div className="divide-y divide-border rounded-lg border border-border bg-card overflow-hidden">
+    <div className="divide-y divide-border rounded-lg border border-border bg-card">
       {bookings.map((b) => {
         const systemLabel = b.system
           ? [b.system.catalog.manufacturer, b.system.catalog.name].filter(Boolean).join(' ')
