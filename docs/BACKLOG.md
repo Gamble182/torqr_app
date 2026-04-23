@@ -33,7 +33,6 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| 61 | Feature | Technician workload management — assignee badges on systems, OWNER-only `/dashboard/employees/[id]` detail page, bulk reassign, workload column, systems filter, "Nicht zugewiesen" dashboard tile, auto-reassign to OWNER on deactivation. Spec: `docs/superpowers/specs/2026-04-23-technician-workload-management-design.md`. Plan: `docs/superpowers/plans/2026-04-23-technician-workload-management.md`. | High | 2026-04-23 |
 | 62 | Feature | Termine page — full `/dashboard/termine` with list + monthly calendar view, filters (time/status/technician/customer/system/source), in-app reschedule + cancel via Cal.com v2 API, customer notification emails, source icon + legend. Spec: `docs/superpowers/specs/2026-04-23-termine-page-design.md`. Plan: `docs/superpowers/plans/2026-04-23-termine-page.md`. Includes fixing #58 (HMAC fail-open) since it touches the same webhook. | High | 2026-04-23 |
 
 ### System Model — Follow-up
@@ -111,6 +110,22 @@ Ideas worth keeping in mind but not planned for current sprints. No implementati
 ## Completed / Resolved
 
 Items are grouped by sprint / work session, ordered newest first.
+
+### Sprint 24 — Technician Workload Management (2026-04-23)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 61 | Feature | Technician workload management — new `AssigneeBadge` component on systems list + customer detail (OWNER only); new `/dashboard/employees/[id]` page with header, 4-tile stats grid, customer-grouped assigned systems with per-row + bulk reassign modal, and last-10 recent maintenance activity; Mitarbeiter list rows clickable with workload column + overdue pill; URL-driven `?assignee=` filter on `/dashboard/systems`; dashboard "Nicht zugewiesen" tile replacing the old orphaned-after-deactivation warning; deactivation now silently reassigns all systems to OWNER in a single transaction with a toast showing the count. Spec: `docs/superpowers/specs/2026-04-23-technician-workload-management-design.md`. Plan: `docs/superpowers/plans/2026-04-23-technician-workload-management.md`. | 2026-04-23 |
+| — | API | `GET /api/employees` returns per-employee `workload: { assignedSystemsCount, overdueSystemsCount }` via two parallel `customerSystem.groupBy` queries (no N+1). | 2026-04-23 |
+| — | API | New `GET /api/employees/[id]` returns `{ stats, assignedSystems (grouped by customer), recentActivity }` via 6 parallel Prisma queries. | 2026-04-23 |
+| — | API | `GET /api/customer-systems` now accepts `?assignee=all\|unassigned\|<uuid>` via `assigneeFilterSchema`. TECHNICIAN role always scoped to own userId regardless of param. | 2026-04-23 |
+| — | API | `GET /api/dashboard/stats` replaces `unassignedAfterDeactivation` list with a single `unassignedSystemsCount` count. | 2026-04-23 |
+| — | API | `PATCH /api/employees/[id]` deactivation now wraps `user.update` + `customerSystem.updateMany` (reassign to OWNER) + `session.deleteMany` in a single `$transaction`; returns `reassignedCount`. | 2026-04-23 |
+| — | Hooks | `useEmployee(id)`, `useBulkReassignSystems` (Promise.allSettled with partial-success toast), plus extended `useToggleEmployee` with contextual success messaging. | 2026-04-23 |
+| — | Testing | 8 new vitest cases covering employees workload, detail shape, assignee filter variants, auto-reassign transaction, self-deactivation block, reactivation. Full suite: 122/122 passing. | 2026-04-23 |
+| — | Bugfix | `maintenanceCreateSchema`/`maintenanceUpdateSchema` `notes` field was rejecting `null` payloads from the client (Zod `.optional()` only accepts `undefined`). Switched to `.optional().nullable()`. | 2026-04-23 |
+| — | UI | All form submit buttons standardised to `h-11` on both mobile + desktop (was `h-11 sm:h-9`, producing visual mismatch with 44 px inputs). 7 files. | 2026-04-23 |
+| — | UI | Sidebar now shows "Inhaber" / "Techniker" role badge next to user name. | 2026-04-23 |
 
 ### Catalog fix & expansion (2026-04-22)
 
