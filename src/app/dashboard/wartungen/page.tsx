@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { toast } from 'sonner';
@@ -22,49 +22,17 @@ import {
 import { format } from 'date-fns';
 import { de } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
-
-interface Customer {
-  id: string;
-  name: string;
-  street: string;
-  city: string;
-  phone: string;
-  email: string | null;
-}
-
-interface Maintenance {
-  id: string;
-  date: string;
-  notes: string | null;
-}
-
-interface Heater {
-  id: string;
-  model: string;
-  serialNumber: string | null;
-  nextMaintenance: string;
-  maintenanceInterval: number;
-  customer: Customer;
-  maintenances: Maintenance[];
-}
-
-interface Stats {
-  total: number;
-  overdue: number;
-  thisWeek: number;
-  thisMonth: number;
-}
-
-type FilterStatus = 'all' | 'overdue' | 'upcoming' | 'thisWeek' | 'thisMonth';
+import {
+  useWartungen,
+  type WartungenStatus,
+  type WartungSystem,
+} from '@/hooks/useWartungen';
 
 export default function WartungenPage() {
   const searchParams = useSearchParams();
-  const initialFilter = (searchParams.get('status') as FilterStatus) || 'all';
+  const initialFilter = (searchParams.get('status') as WartungenStatus) || 'all';
 
-  const [heaters, setHeaters] = useState<Heater[]>([]);
-  const [stats, setStats] = useState<Stats>({ total: 0, overdue: 0, thisWeek: 0, thisMonth: 0 });
-  const [loading, setLoading] = useState(true);
-  const [filterStatus, setFilterStatus] = useState<FilterStatus>(initialFilter);
+  const [filterStatus, setFilterStatus] = useState<WartungenStatus>(initialFilter);
   const [timeRange, setTimeRange] = useState(30);
   const [showFilters, setShowFilters] = useState(false);
   const [displayLimit, setDisplayLimit] = useState(20);
@@ -72,36 +40,24 @@ export default function WartungenPage() {
   const [dateTo, setDateTo] = useState('');
   const [useCustomDateRange, setUseCustomDateRange] = useState(false);
 
-  const fetchWartungen = useCallback(async () => {
-    try {
-      setLoading(true);
-      let queryString = `status=${filterStatus}`;
-      if (useCustomDateRange && dateFrom && dateTo) {
-        queryString += `&dateFrom=${dateFrom}&dateTo=${dateTo}`;
-      } else {
-        queryString += `&days=${timeRange}`;
-      }
-      const response = await fetch(`/api/wartungen?${queryString}`);
-      const result = await response.json();
-      if (result.success) {
-        setHeaters(result.data);
-        setStats(result.stats);
-      } else {
-        toast.error(`Fehler: ${result.error}`);
-      }
-    } catch (err) {
-      console.error('Error fetching wartungen:', err);
-      toast.error('Fehler beim Laden der Wartungen');
-    } finally {
-      setLoading(false);
-    }
-  }, [filterStatus, timeRange, dateFrom, dateTo, useCustomDateRange]);
+  const useCustomRangeActive = useCustomDateRange && !!dateFrom && !!dateTo;
 
-  useEffect(() => {
-    if (!useCustomDateRange || (useCustomDateRange && dateFrom && dateTo)) {
-      fetchWartungen();
-    }
-  }, [fetchWartungen, useCustomDateRange, dateFrom, dateTo]);
+  const { data, isLoading, isError, error } = useWartungen({
+    status: filterStatus,
+    days: timeRange,
+    dateFrom: useCustomRangeActive ? dateFrom : null,
+    dateTo: useCustomRangeActive ? dateTo : null,
+  });
+
+  const systems = data?.systems ?? [];
+  const stats = data?.stats ?? { total: 0, overdue: 0, thisWeek: 0, thisMonth: 0 };
+
+  if (isError) {
+    toast.error(error instanceof Error ? error.message : 'Fehler beim Laden der Wartungen');
+  }
+
+  const getSystemLabel = (system: WartungSystem) =>
+    `${system.catalog.manufacturer} ${system.catalog.name}`.trim();
 
   const getMaintenanceUrgency = (dateString: string) => {
     const date = new Date(dateString);
@@ -155,8 +111,8 @@ export default function WartungenPage() {
     return `in ${diffDays} Tag${diffDays !== 1 ? 'en' : ''}`;
   };
 
-  const displayedHeaters = heaters.slice(0, displayLimit);
-  const hasMore = heaters.length > displayLimit;
+  const displayedSystems = systems.slice(0, displayLimit);
+  const hasMore = systems.length > displayLimit;
 
   const exportToCSV = () => {
     try {
@@ -165,22 +121,22 @@ export default function WartungenPage() {
         'Email', 'Nächste Wartung', 'Status', 'Tage bis Wartung',
         'Wartungsintervall (Monate)', 'Letzte Wartung',
       ];
-      const rows = heaters.map((heater) => {
-        const urgency = getMaintenanceUrgency(heater.nextMaintenance);
-        const date = new Date(heater.nextMaintenance);
+      const rows = systems.map((system) => {
+        const urgency = getMaintenanceUrgency(system.nextMaintenance);
+        const date = new Date(system.nextMaintenance);
         const now = new Date();
         const diffDays = Math.ceil((date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-        const lastMaintenance = heater.maintenances[0];
+        const lastMaintenance = system.maintenances[0];
         let status = 'Geplant';
         if (urgency === 'overdue') status = 'Überfällig';
         else if (urgency === 'urgent') status = 'Diese Woche';
         else if (urgency === 'soon') status = 'Bald fällig';
         return [
-          heater.model, heater.serialNumber || '', heater.customer.name,
-          heater.customer.street, heater.customer.city, heater.customer.phone,
-          heater.customer.email || '',
-          format(new Date(heater.nextMaintenance), 'dd.MM.yyyy', { locale: de }),
-          status, diffDays.toString(), heater.maintenanceInterval.toString(),
+          getSystemLabel(system), system.serialNumber || '', system.customer.name,
+          system.customer.street, system.customer.city, system.customer.phone,
+          system.customer.email || '',
+          format(new Date(system.nextMaintenance), 'dd.MM.yyyy', { locale: de }),
+          status, diffDays.toString(), system.maintenanceInterval.toString(),
           lastMaintenance ? format(new Date(lastMaintenance.date), 'dd.MM.yyyy', { locale: de }) : '',
         ];
       });
@@ -188,7 +144,7 @@ export default function WartungenPage() {
         headers.join(';'),
         ...rows.map((row) => row.map((cell) => `"${cell}"`).join(';')),
       ].join('\n');
-      const BOM = '\uFEFF';
+      const BOM = '﻿';
       const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement('a');
       const url = URL.createObjectURL(blob);
@@ -249,19 +205,19 @@ export default function WartungenPage() {
           <table>
             <thead><tr><th>Heizung</th><th>Kunde</th><th>Ort</th><th>Telefon</th><th>Nächste Wartung</th><th>Status</th><th>Intervall</th></tr></thead>
             <tbody>
-              ${heaters.map((heater) => {
-                const urgency = getMaintenanceUrgency(heater.nextMaintenance);
+              ${systems.map((system) => {
+                const urgency = getMaintenanceUrgency(system.nextMaintenance);
                 let badgeClass = 'badge-scheduled';
                 let statusText = 'Geplant';
                 if (urgency === 'overdue') { badgeClass = 'badge-overdue'; statusText = 'Überfällig'; }
                 else if (urgency === 'urgent') { badgeClass = 'badge-urgent'; statusText = 'Diese Woche'; }
                 else if (urgency === 'soon') { badgeClass = 'badge-soon'; statusText = 'Bald fällig'; }
                 return `<tr>
-                  <td><strong>${heater.model}</strong><br>${heater.serialNumber ? `<small>SN: ${heater.serialNumber}</small>` : ''}</td>
-                  <td>${heater.customer.name}</td><td>${heater.customer.city}</td><td>${heater.customer.phone}</td>
-                  <td>${format(new Date(heater.nextMaintenance), 'dd.MM.yyyy', { locale: de })}</td>
+                  <td><strong>${getSystemLabel(system)}</strong><br>${system.serialNumber ? `<small>SN: ${system.serialNumber}</small>` : ''}</td>
+                  <td>${system.customer.name}</td><td>${system.customer.city}</td><td>${system.customer.phone}</td>
+                  <td>${format(new Date(system.nextMaintenance), 'dd.MM.yyyy', { locale: de })}</td>
                   <td><span class="badge ${badgeClass}">${statusText}</span></td>
-                  <td>${heater.maintenanceInterval} ${heater.maintenanceInterval === 1 ? 'Monat' : 'Monate'}</td>
+                  <td>${system.maintenanceInterval} ${system.maintenanceInterval === 1 ? 'Monat' : 'Monate'}</td>
                 </tr>`;
               }).join('')}
             </tbody>
@@ -283,7 +239,7 @@ export default function WartungenPage() {
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2Icon className="h-6 w-6 animate-spin text-muted-foreground" />
@@ -301,7 +257,7 @@ export default function WartungenPage() {
             Übersicht aller anstehenden und überfälligen Wartungen
           </p>
         </div>
-        {heaters.length > 0 && (
+        {systems.length > 0 && (
           <div className="hidden sm:flex gap-2">
             <Button variant="outline" size="sm" onClick={exportToCSV}>
               <DownloadIcon className="h-4 w-4" />
@@ -454,7 +410,7 @@ export default function WartungenPage() {
       </div>
 
       {/* Wartungen List */}
-      {heaters.length === 0 ? (
+      {systems.length === 0 ? (
         <div className="bg-card rounded-xl border border-border p-12 text-center">
           <CalendarIcon className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
           <h3 className="text-base font-semibold text-foreground">Keine Wartungen gefunden</h3>
@@ -467,28 +423,28 @@ export default function WartungenPage() {
       ) : (
         <>
           <div className="space-y-2">
-            {displayedHeaters.map((heater) => {
-              const urgency = getMaintenanceUrgency(heater.nextMaintenance);
-              const lastMaintenance = heater.maintenances[0];
+            {displayedSystems.map((system) => {
+              const urgency = getMaintenanceUrgency(system.nextMaintenance);
+              const lastMaintenance = system.maintenances[0];
 
               return (
                 <div
-                  key={heater.id}
+                  key={system.id}
                   className="bg-card rounded-xl border border-border p-4 hover:shadow-md transition-all"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2">
                         <Link
-                          href={`/dashboard/systems/${heater.id}`}
+                          href={`/dashboard/systems/${system.id}`}
                           className="font-semibold text-foreground hover:text-primary transition-colors"
                         >
-                          {heater.model}
+                          {getSystemLabel(system)}
                         </Link>
                         {getUrgencyBadge(urgency)}
-                        {heater.serialNumber && (
+                        {system.serialNumber && (
                           <span className="text-xs text-muted-foreground hidden sm:inline">
-                            SN: {heater.serialNumber}
+                            SN: {system.serialNumber}
                           </span>
                         )}
                       </div>
@@ -497,25 +453,25 @@ export default function WartungenPage() {
                         <div className="space-y-1 text-muted-foreground">
                           <div className="flex items-center gap-1.5">
                             <UserIcon className="h-3 w-3" />
-                            <Link href={`/dashboard/customers/${heater.customer.id}`} className="hover:text-primary transition-colors">
-                              {heater.customer.name}
+                            <Link href={`/dashboard/customers/${system.customer.id}`} className="hover:text-primary transition-colors">
+                              {system.customer.name}
                             </Link>
                           </div>
                           <div className="flex items-center gap-1.5">
                             <MapPinIcon className="h-3 w-3" />
-                            <span>{heater.customer.street}, {heater.customer.city}</span>
+                            <span>{system.customer.street}, {system.customer.city}</span>
                           </div>
                           <div className="flex items-center gap-1.5">
                             <PhoneIcon className="h-3 w-3" />
-                            <a href={`tel:${heater.customer.phone}`} className="hover:text-primary transition-colors">
-                              {heater.customer.phone}
+                            <a href={`tel:${system.customer.phone}`} className="hover:text-primary transition-colors">
+                              {system.customer.phone}
                             </a>
                           </div>
                         </div>
                         <div className="space-y-1 text-muted-foreground">
                           <p>
                             <span className="font-medium">Intervall:</span>{' '}
-                            {heater.maintenanceInterval} {heater.maintenanceInterval === 1 ? 'Monat' : 'Monate'}
+                            {system.maintenanceInterval} {system.maintenanceInterval === 1 ? 'Monat' : 'Monate'}
                           </p>
                           {lastMaintenance && (
                             <p>
@@ -529,25 +485,25 @@ export default function WartungenPage() {
 
                     <div className="text-right shrink-0">
                       <p className="text-sm font-medium text-foreground">
-                        {format(new Date(heater.nextMaintenance), 'dd. MMM yyyy', { locale: de })}
+                        {format(new Date(system.nextMaintenance), 'dd. MMM yyyy', { locale: de })}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {format(new Date(heater.nextMaintenance), 'EEEE', { locale: de })}
+                        {format(new Date(system.nextMaintenance), 'EEEE', { locale: de })}
                       </p>
                       <p className={`text-xs font-medium mt-1 ${urgency === 'overdue' ? 'text-destructive' : 'text-muted-foreground'}`}>
-                        {getDaysUntil(heater.nextMaintenance)}
+                        {getDaysUntil(system.nextMaintenance)}
                       </p>
                     </div>
                   </div>
 
                   <div className="flex gap-2 mt-3 pt-3 border-t border-border">
-                    <Link href={`/dashboard/systems/${heater.id}`} className="flex-1">
+                    <Link href={`/dashboard/systems/${system.id}`} className="flex-1">
                       <Button variant="outline" size="sm" className="w-full">
                         <FlameIcon className="h-3.5 w-3.5" />
                         Heizsystem
                       </Button>
                     </Link>
-                    <Link href={`/dashboard/customers/${heater.customer.id}`} className="flex-1">
+                    <Link href={`/dashboard/customers/${system.customer.id}`} className="flex-1">
                       <Button variant="outline" size="sm" className="w-full">
                         <UserIcon className="h-3.5 w-3.5" />
                         Kunde
@@ -562,13 +518,13 @@ export default function WartungenPage() {
           {hasMore && (
             <div className="text-center">
               <Button variant="outline" onClick={() => setDisplayLimit(displayLimit + 20)}>
-                Mehr laden ({heaters.length - displayLimit} weitere)
+                Mehr laden ({systems.length - displayLimit} weitere)
               </Button>
             </div>
           )}
 
           <p className="text-xs text-muted-foreground text-center">
-            {displayedHeaters.length} von {heaters.length} Wartung{heaters.length !== 1 ? 'en' : ''} angezeigt
+            {displayedSystems.length} von {systems.length} Wartung{systems.length !== 1 ? 'en' : ''} angezeigt
           </p>
         </>
       )}

@@ -10,6 +10,7 @@ import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { ArrowLeftIcon } from 'lucide-react';
 import { z } from 'zod';
+import { useCustomer, useUpdateCustomer } from '@/hooks/useCustomers';
 
 interface FormData {
   name: string;
@@ -19,7 +20,7 @@ interface FormData {
   phone: string;
   email: string;
   suppressEmail: boolean;
-  emailOptIn: string;
+  emailOptIn: 'NONE' | 'CONFIRMED' | 'UNSUBSCRIBED';
   notes: string;
 }
 
@@ -32,8 +33,9 @@ export default function EditCustomerPage() {
   const params = useParams();
   const customerId = params.id as string;
 
-  const [loading, setLoading] = useState(false);
-  const [fetchLoading, setFetchLoading] = useState(true);
+  const { data: customer, isLoading: fetchLoading, isError: fetchError, error: fetchErrorObj } = useCustomer(customerId);
+  const updateMutation = useUpdateCustomer(customerId);
+
   const [errors, setErrors] = useState<FormErrors>({});
   const [formData, setFormData] = useState<FormData>({
     name: '',
@@ -48,40 +50,27 @@ export default function EditCustomerPage() {
   });
 
   useEffect(() => {
-    const fetchCustomer = async () => {
-      try {
-        setFetchLoading(true);
-        const response = await fetch(`/api/customers/${customerId}`);
-        const result = await response.json();
+    if (customer) {
+      setFormData({
+        name: customer.name || '',
+        street: customer.street || '',
+        zipCode: customer.zipCode || '',
+        city: customer.city || '',
+        phone: customer.phone || '',
+        email: customer.email || '',
+        suppressEmail: customer.emailOptIn === 'NONE' && !!customer.email,
+        emailOptIn: customer.emailOptIn || 'NONE',
+        notes: customer.notes || '',
+      });
+    }
+  }, [customer]);
 
-        if (result.success) {
-          const customer = result.data;
-          setFormData({
-            name: customer.name || '',
-            street: customer.street || '',
-            zipCode: customer.zipCode || '',
-            city: customer.city || '',
-            phone: customer.phone || '',
-            email: customer.email || '',
-            suppressEmail: customer.emailOptIn === 'NONE' && !!customer.email,
-            emailOptIn: customer.emailOptIn || 'NONE',
-            notes: customer.notes || '',
-          });
-        } else {
-          toast.error(`Fehler: ${result.error}`);
-          router.push('/dashboard/customers');
-        }
-      } catch (err) {
-        console.error('Error fetching customer:', err);
-        toast.error('Fehler beim Laden des Kunden');
-        router.push('/dashboard/customers');
-      } finally {
-        setFetchLoading(false);
-      }
-    };
-
-    fetchCustomer();
-  }, [customerId, router]);
+  useEffect(() => {
+    if (fetchError) {
+      toast.error(fetchErrorObj instanceof Error ? fetchErrorObj.message : 'Fehler beim Laden des Kunden');
+      router.push('/dashboard/customers');
+    }
+  }, [fetchError, fetchErrorObj, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -116,38 +105,28 @@ export default function EditCustomerPage() {
     e.preventDefault();
     if (!validateForm()) return;
 
-    setLoading(true);
     try {
-      const response = await fetch(`/api/customers/${customerId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      const result = await response.json();
-
-      if (result.success) {
-        toast.success('Kunde erfolgreich aktualisiert!');
-        router.push(`/dashboard/customers/${customerId}`);
-        router.refresh();
-      } else {
-        if (result.details) {
-          const apiErrors: FormErrors = {};
-          result.details.forEach((error: z.ZodIssue) => {
-            const field = error.path[0] as string;
-            apiErrors[field] = error.message;
-          });
-          setErrors(apiErrors);
-          toast.error('Bitte überprüfen Sie Ihre Eingaben');
-        } else {
-          toast.error(`Fehler: ${result.error}`);
+      await updateMutation.mutateAsync(formData);
+      router.push(`/dashboard/customers/${customerId}`);
+      router.refresh();
+    } catch (err) {
+      // Zod validation errors arrive as Error with details wrapped in message; fall back to field-level errors if present
+      if (err instanceof Error) {
+        try {
+          const parsed = JSON.parse(err.message) as { details?: z.ZodIssue[] };
+          if (parsed?.details) {
+            const apiErrors: FormErrors = {};
+            parsed.details.forEach((issue) => {
+              const field = issue.path[0] as string;
+              apiErrors[field] = issue.message;
+            });
+            setErrors(apiErrors);
+            return;
+          }
+        } catch {
+          // Not a structured error — toast already handled by hook
         }
       }
-    } catch (err) {
-      console.error('Error updating customer:', err);
-      toast.error('Fehler beim Aktualisieren des Kunden');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -161,6 +140,8 @@ export default function EditCustomerPage() {
       </div>
     );
   }
+
+  const loading = updateMutation.isPending;
 
   return (
     <div>
