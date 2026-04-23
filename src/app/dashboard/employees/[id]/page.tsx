@@ -391,4 +391,45 @@ function ReassignModal({
   );
 }
 
-function RecentActivitySection(_: { activity: EmployeeDetail['recentActivity'] }) { return null; }
+function RecentActivitySection({ activity }: { activity: EmployeeDetail['recentActivity'] }) {
+  if (activity.length === 0) {
+    return (
+      <div className="bg-card rounded-xl border border-border p-8 text-center">
+        <p className="text-sm text-muted-foreground">Keine Wartungen in den letzten 30 Tagen.</p>
+      </div>
+    );
+  }
+  return (
+    <div className="bg-card rounded-xl border border-border">
+      <div className="px-6 py-4 border-b border-border">
+        <h2 className="text-base font-semibold">Letzte Aktivität</h2>
+        <p className="text-xs text-muted-foreground mt-0.5">Die letzten 10 Wartungen dieses Mitarbeiters</p>
+      </div>
+      <div className="p-4 space-y-1">
+        {activity.map((m) => (
+          <Link
+            key={m.id}
+            href={`/dashboard/systems/${m.system.id}`}
+            className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 transition-colors"
+          >
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-brand-50 shrink-0">
+              <WrenchIcon className="h-4 w-4 text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium truncate">{m.customer.name}</p>
+              <p className="text-xs text-muted-foreground truncate">{m.system.label}</p>
+            </div>
+            <div className="shrink-0 text-right">
+              <p className="text-xs font-medium text-foreground">
+                {format(new Date(m.date), 'dd. MMM', { locale: de })}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {format(new Date(m.date), 'yyyy', { locale: de })}
+              </p>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
