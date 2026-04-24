@@ -366,6 +366,21 @@ export const followUpJobUpdateSchema = z.object({
 // MAINTENANCE SCHEMAS
 // ============================================================================
 
+// partsUsedEntrySchema is declared here (before maintenanceCreateSchema) so it
+// can be referenced by the maintenanceCreateSchema.partsUsed field below. The
+// rest of the Phase A (Wartungsteile) schemas live in a single block at the
+// end of this file.
+export const partsUsedEntrySchema = z.object({
+  sourceType: z.enum(['DEFAULT', 'OVERRIDE_ADD', 'AD_HOC']),
+  setItemId: z.string().uuid().optional(),
+  overrideId: z.string().uuid().optional(),
+  inventoryItemId: z.string().uuid().optional(),
+  description: z.string().min(1),
+  articleNumber: z.string().optional(),
+  quantity: z.coerce.number().min(0),
+  unit: z.string().min(1),
+});
+
 export const maintenanceCreateSchema = z.object({
   systemId: uuidSchema,
   date: dateStringSchema.optional(),
@@ -376,6 +391,7 @@ export const maintenanceCreateSchema = z.object({
     .nullable(),
   photos: z.array(z.string().url('Invalid photo URL')).max(10, 'Maximum 10 photos allowed').optional(),
   checklistData: checklistSnapshotSchema.optional().nullable(),
+  partsUsed: z.array(partsUsedEntrySchema).optional().default([]),
 });
 
 /**
@@ -514,3 +530,121 @@ export function safeValidateRequest<T>(
     })),
   };
 }
+
+// ============================================================================
+// MAINTENANCE SETS + INVENTORY (Phase A)
+// ============================================================================
+// Note: `partsUsedEntrySchema` is declared higher in this file (before
+// `maintenanceCreateSchema`) because the maintenance create schema references
+// it. All other Phase A (Wartungsteile & Materialmanagement) schemas live in
+// this single block.
+
+export const partCategoryEnum = z.enum(['SPARE_PART', 'CONSUMABLE', 'TOOL']);
+export const overrideActionEnum = z.enum(['ADD', 'EXCLUDE']);
+export const movementReasonEnum = z.enum([
+  'MAINTENANCE_USE',
+  'MANUAL_ADJUSTMENT',
+  'RESTOCK',
+  'CORRECTION',
+]);
+
+const decimalPositive = z.coerce.number().positive();
+const decimalNonZero = z.coerce.number().refine((v) => v !== 0, {
+  message: 'Menge darf nicht 0 sein',
+});
+
+// --- Maintenance sets -------------------------------------------------------
+
+export const maintenanceSetCreateSchema = z.object({
+  catalogId: z.string().uuid(),
+});
+
+const maintenanceSetItemBase = z.object({
+  category: partCategoryEnum,
+  description: z.string().min(1),
+  articleNumber: z.string().optional(),
+  quantity: decimalPositive.default(1),
+  unit: z.string().min(1).default('Stck'),
+  required: z.boolean().optional().default(true),
+  note: z.string().optional(),
+  sortOrder: z.number().int().optional().default(0),
+  inventoryItemId: z.string().uuid().optional(),
+});
+
+const toolRefineMessage: { message: string; path: PropertyKey[] } = {
+  message: 'Werkzeug darf nicht an ein Lagerteil gebunden sein',
+  path: ['inventoryItemId'],
+};
+
+export const maintenanceSetItemCreateSchema = maintenanceSetItemBase.refine(
+  (d) => !(d.category === 'TOOL' && d.inventoryItemId),
+  toolRefineMessage,
+);
+
+export const maintenanceSetItemUpdateSchema = maintenanceSetItemBase
+  .partial()
+  .refine((d) => !(d.category === 'TOOL' && d.inventoryItemId), toolRefineMessage);
+
+export const maintenanceSetItemsReorderSchema = z.object({
+  items: z.array(z.object({ id: z.string().uuid(), sortOrder: z.number().int() })),
+});
+
+// --- Customer-system overrides (discriminated union) -----------------------
+
+const overrideAddSchema = z
+  .object({
+    action: z.literal('ADD'),
+    category: partCategoryEnum,
+    description: z.string().min(1),
+    articleNumber: z.string().optional(),
+    quantity: decimalPositive,
+    unit: z.string().min(1),
+    required: z.boolean().optional().default(true),
+    note: z.string().optional(),
+    sortOrder: z.number().int().optional().default(0),
+    inventoryItemId: z.string().uuid().optional(),
+    excludedSetItemId: z.undefined(),
+  })
+  .refine((d) => !(d.category === 'TOOL' && d.inventoryItemId), {
+    message: 'Werkzeug darf nicht an ein Lagerteil gebunden sein',
+    path: ['inventoryItemId'],
+  });
+
+const overrideExcludeSchema = z.object({
+  action: z.literal('EXCLUDE'),
+  excludedSetItemId: z.string().uuid(),
+  // All ADD-fields must be absent.
+  category: z.undefined(),
+  description: z.undefined(),
+  articleNumber: z.undefined(),
+  quantity: z.undefined(),
+  unit: z.undefined(),
+  required: z.undefined(),
+  note: z.undefined(),
+  sortOrder: z.undefined(),
+  inventoryItemId: z.undefined(),
+});
+
+export const customerSystemOverrideSchema = z.discriminatedUnion('action', [
+  overrideAddSchema,
+  overrideExcludeSchema,
+]);
+
+// --- Inventory -------------------------------------------------------------
+
+export const inventoryItemCreateSchema = z.object({
+  description: z.string().min(1),
+  articleNumber: z.string().optional(),
+  unit: z.string().min(1).default('Stck'),
+  minStock: z.coerce.number().min(0).default(0),
+});
+
+export const inventoryItemUpdateSchema = inventoryItemCreateSchema.partial();
+
+export const inventoryMovementCreateSchema = z
+  .object({
+    reason: z.enum(['RESTOCK', 'CORRECTION']),
+    quantityChange: decimalNonZero,
+    note: z.string().optional(),
+  })
+  .strict();
