@@ -64,7 +64,7 @@ Per task, in order:
 
 ### Last committed SHA
 
-`0f6297c` (Task 8: MaintenanceSetItem PATCH/DELETE + bulk reorder)
+`7c45b16` (Session 3 fix-round: rate-limit inventory detail + movements per review)
 
 ### Session 1 (2026-04-24) — Foundation
 
@@ -95,30 +95,52 @@ Per task, in order:
 **Also committed to `main` during session start (state-cleanup, not feature work):**
 - `680c962` kundenwartungsteile data — user-curated Wartungsteile reference folder; cherry-picked to main after accidental commit on feature branch. See Session Protocol note below.
 
-**End-of-session health:**
+**Session 2 end-of-session health:**
 - Tests: 220/220 passing (179 baseline + 41 net new across Tasks 4–8)
 - `tsc --noEmit`: clean
-- Build: not yet run (deferred to Task 34)
 - Working tree: clean (except pre-existing `kundenaustausch/Wartungsteile/` untracked state)
-- Review status: Task 4 passed full sequential reviews (spec + code quality, 1 fix round). Tasks 5–8 passed a single combined batch review (see Decision §10) with Approved status; two minor non-blocking follow-ups captured in Decision §11.
 
-**Session start cleanup note:** Session 2 opened with an accidental commit on feature (`4451e97 kundenwartungsteile data`) bundling the user's Wartungsteile reference folder. User intent was main branch. Recovery: cherry-picked to main (as `680c962`), then `git reset --mixed HEAD~1` on feature to restore the runbook-documented untracked state. No feature-branch content lost.
+**Session 2 start cleanup note:** Session 2 opened with an accidental commit on feature (`4451e97 kundenwartungsteile data`) bundling the user's Wartungsteile reference folder. User intent was main branch. Recovery: cherry-picked to main (as `680c962`), then `git reset --mixed HEAD~1` on feature to restore the runbook-documented untracked state. No feature-branch content lost.
+
+### Session 3 (2026-04-24) — Inventory API
+
+| Task | Status | Commit SHA(s) | Notes |
+|------|--------|---------------|-------|
+| 9 — GET/POST /api/inventory | ✅ | `dddb8ce` | 8 tests. GET allowed to both OWNER and TECHNICIAN (`requireAuth`); POST OWNER-only. `?filter=low` exercises real `Prisma.Decimal.lt()` in tests. `articleNumber` dedup gated on truthy value (null allowed multiple times). |
+| 10 — GET/PATCH/DELETE /api/inventory/[id] | ✅ | `8631268` + `7c45b16` (fix-round, bundled with Task 11 fixes) | 11 tests. PATCH via `inventoryItemUpdateSchema.strict()` rejects `currentStock` at Zod layer (defense-in-depth for stock-via-movements invariant). DELETE reference-block via `Promise.all` of `maintenanceSetItem.count` + `customerSystemPartOverride.count`. |
+| 11 — InventoryMovement GET/POST | ✅ | `274330e` + `7c45b16` (fix-round) | 9 tests. Uses `prisma.$transaction(async (tx) => ...)` **callback form** (vs. array form in Task 8 reorder). Mock technique: callback receives `prisma as never` so nested `tx.inventoryMovement.create` / `tx.inventoryItem.update` are asserted against already-mocked prisma. `RESTOCK` adds `lastRestockedAt`, `CORRECTION` does not. `MAINTENANCE_USE` is NOT in `inventoryMovementCreateSchema.reason` enum (handled exclusively by maintenance POST flow). |
+
+**Session 3 full commit chain (most recent first):**
+- `7c45b16` fix(api): rate-limit inventory detail + movements per review
+- `274330e` feat(api): InventoryMovement list + manual create
+- `8631268` feat(api): GET/PATCH/DELETE /api/inventory/[id] with reference-block
+- `dddb8ce` feat(api): GET + POST /api/inventory
+
+**Session 3 end-of-session health:**
+- Tests: 255/255 passing (+35 net new across Tasks 9–11, after fix-round coverage updates)
+- `tsc --noEmit`: clean
+- Working tree: clean (except pre-existing `kundenaustausch/Wartungsteile/` untracked state)
+- Review status: all 3 tasks covered by a single combined batch review (Decision §10). **Approved-with-fixes.** Two "Important" fixes applied in `7c45b16`: rate-limiting added to Tasks 10 and 11 routes (plan pseudocode had omitted it); Task 10 `dup.id === id` guard test rewritten to exercise the actual branch (prior test short-circuited on the outer guard).
+
+**Session 3 observed flakiness (informational — no action needed):** On one `npm test` run during end-of-session verification, Vitest reported `25 failed (25)` with `no tests` loaded (`import 0ms, tests 0ms`) — clearly a startup-phase glitch, not a real failure. Immediate re-run: `25 passed, 255 passed`. This is consistent with the Task-4 implementer's earlier claim about vmThreads pool behavior on Windows. **Not blocking — but if this recurs in Session 4+ consistently**, consider adding `pool: 'vmForks'` to `vitest.config.ts`. Don't add it preemptively; the flaky run was one-off.
 
 ---
 
 ## Next Up
 
-**Start Session 3 with Task 9: `GET/POST /api/inventory`.**
+**Start Session 4 with Task 12: `POST /api/customer-systems/[id]/overrides`.**
 
-Substantive — inventory CRUD with stock-status filter (`?filter=low`). Unlike Tasks 5–8, inventory READs are accessible to both OWNER and TECHNICIAN (read-only for TECH); writes remain OWNER-only.
+Substantive — overrides are the per-system deviation layer (ADD / EXCLUDE) from the default MaintenanceSet. Task 12's POST has **two load-bearing cross-tenant guards** per Decision §4: `excludedSetItemId` must belong to a set owned by the caller's company AND matching the system's catalog; `inventoryItemId` (when set on ADD) must be from the caller's company.
 
-Full task text is in [plans/2026-04-24-wartungsteile-materialmanagement-phase-a.md](./2026-04-24-wartungsteile-materialmanagement-phase-a.md).
+Full task text in [plans/2026-04-24-wartungsteile-materialmanagement-phase-a.md](./2026-04-24-wartungsteile-materialmanagement-phase-a.md).
 
-**Suggested Session 3 chunk: Tasks 9 → 10 → 11** (complete Inventory API — list/create, detail/update/delete, movements).
+**Suggested Session 4 chunk: Tasks 12 → 13 → 14** (overrides POST, override DELETE, effective-parts GET route).
 
-**For Session 3+ — carry-forward minor cleanups from Session 2 code review (do NOT block Task 9 on these; fold in opportunistically when touching the same files):**
-- `src/app/api/maintenance-sets/[id]/route.ts` `handleError`: no ZodError branch (currently fine; add comment or branch if a PATCH handler is ever added to this file).
-- `src/app/api/maintenance-set-items/[id]/route.ts` `loadItem`: the `include: { maintenanceSet: { select: { companyId: true } } }` is unused post-load — the `where` clause already enforces scoping. Minor inefficiency (extra join); safe to drop in a cleanup pass.
+**Carry-forward non-blocking items from Session 2 reviews (do NOT block Session 4; fold in opportunistically):**
+- `src/app/api/maintenance-sets/[id]/route.ts` `handleError`: no ZodError branch. Fine for GET/DELETE-only; add `ZodError → 400` branch if a PATCH handler is ever added.
+- `src/app/api/maintenance-set-items/[id]/route.ts` `loadItem`: `include: { maintenanceSet: { select: { companyId: true } } }` unused post-load. Safe to drop when the file is next touched.
+
+**Rate-limiting reminder for Session 4+:** The plan's route pseudocode for later tasks may also omit `rateLimitByUser` (Session 3 review caught this on Tasks 10–11). **Rule:** every new authenticated route added by this feature MUST include `rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER)` immediately after the auth helper call in every handler, matching the codebase norm. Treat plan omissions as defects and fix them during implementation.
 
 ---
 
@@ -164,6 +186,15 @@ Decisions made during execution that future sessions MUST know about (beyond wha
 11. **Session 2 code-review carry-forward items (non-blocking, pick up opportunistically).**
     - **`src/app/api/maintenance-sets/[id]/route.ts` `handleError`** (Task 6): has no `ZodError` branch. Currently correct because GET/DELETE do not parse request bodies. If a PATCH handler is ever added to this file, add the `ZodError → 400` branch first.
     - **`src/app/api/maintenance-set-items/[id]/route.ts` `loadItem`** (Task 8): the `include: { maintenanceSet: { select: { companyId: true } } }` is fetched but never read post-load — the `where` clause already enforces scoping via the nested filter. One extra join per call, no security impact. Safe to drop `include` when the file is next touched.
+
+12. **Treat plan pseudocode as INCOMPLETE regarding rate-limiting (Session 3 learning).** Tasks 10 and 11's plan pseudocode omitted `rateLimitByUser` entirely. The Session 3 combined review caught it; fix bundled in `7c45b16`. **Standing rule for Sessions 4+:** every new authenticated API route MUST include:
+    ```ts
+    import { rateLimitByUser, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
+    // ...in each handler, immediately after requireAuth()/requireOwner():
+    const rate = await rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER);
+    if (rate) return rate;
+    ```
+    Even if the plan's copy-paste block omits it. Implementer dispatch prompts MUST remind the implementer of this rule. Applies to every remaining route task: 12, 13, 14, 15 (extension), 16 (extension), 17.
 
 ---
 
@@ -242,10 +273,10 @@ Decisions made during execution that future sessions MUST know about (beyond wha
 | 6 | GET/DELETE /api/maintenance-sets/[id] | ✅ `79d5d83` |
 | 7 | POST /api/maintenance-sets/[id]/items | ✅ `2fecb72` |
 | 8 | PATCH/DELETE item + reorder | ✅ `0f6297c` |
-| 9 | GET/POST /api/inventory | ⏸ **NEXT** |
-| 10 | GET/PATCH/DELETE /api/inventory/[id] | ⏳ |
-| 11 | GET/POST /api/inventory/[id]/movements | ⏳ |
-| 12 | POST /api/customer-systems/[id]/overrides (+ cross-tenant guards) | ⏳ |
+| 9 | GET/POST /api/inventory | ✅ `dddb8ce` |
+| 10 | GET/PATCH/DELETE /api/inventory/[id] | ✅ `8631268` + `7c45b16` |
+| 11 | GET/POST /api/inventory/[id]/movements | ✅ `274330e` + `7c45b16` |
+| 12 | POST /api/customer-systems/[id]/overrides (+ cross-tenant guards) | ⏸ **NEXT** |
 | 13 | DELETE /api/overrides/[id] | ⏳ |
 | 14 | GET effective-parts route (+ cross-tenant inventoryItemId guards) | ⏳ |
 | 15 | Extend POST /api/maintenances (+ cross-tenant inventoryItemId guards) | ⏳ |
