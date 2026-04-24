@@ -175,22 +175,25 @@ describe('PATCH /api/inventory/[id]', () => {
     expect(body.error).toBe('Artikelnummer existiert bereits im Lager');
   });
 
-  it('PATCH with same articleNumber as existing item → OK (no 409)', async () => {
+  it('PATCH allows articleNumber change if uniqueness hit is the same row (dup.id === id)', async () => {
     vi.mocked(requireOwner).mockResolvedValue(AUTH_OWNER);
-    // findFirst returns item with articleNumber ART-42
-    vi.mocked(prisma.inventoryItem.findFirst).mockResolvedValue(ITEM as never);
-    // findUnique returns SAME item (dup.id === id)
-    vi.mocked(prisma.inventoryItem.findUnique).mockResolvedValue({ ...ITEM } as never);
-    vi.mocked(prisma.inventoryItem.update).mockResolvedValue(ITEM as never);
+    // findFirst returns item with its CURRENT articleNumber (ART-OLD)
+    vi.mocked(prisma.inventoryItem.findFirst).mockResolvedValue({ ...ITEM, articleNumber: 'ART-OLD' } as never);
+    // findUnique returns the SAME row (same id) — outer guard evaluates true (ART-NEW !== ART-OLD),
+    // but dup.id === id so it is NOT treated as a conflict
+    vi.mocked(prisma.inventoryItem.findUnique).mockResolvedValue({ ...ITEM, articleNumber: 'ART-NEW' } as never);
+    vi.mocked(prisma.inventoryItem.update).mockResolvedValue({ ...ITEM, articleNumber: 'ART-NEW' } as never);
 
     const res = await PATCH(
-      makeRequest('PATCH', { articleNumber: 'ART-42' }) as never,
+      makeRequest('PATCH', { articleNumber: 'ART-NEW' }) as never,
       makeParams(),
     );
     const body = await res.json();
 
     expect(res.status).toBe(200);
     expect(body.success).toBe(true);
+    expect(vi.mocked(prisma.inventoryItem.findUnique)).toHaveBeenCalled();
+    expect(vi.mocked(prisma.inventoryItem.update)).toHaveBeenCalled();
   });
 
   it('PATCH as TECHNICIAN → 403', async () => {

@@ -3,14 +3,17 @@ import { z } from 'zod';
 import { requireAuth, requireOwner } from '@/lib/auth-helpers';
 import { prisma } from '@/lib/prisma';
 import { inventoryItemUpdateSchema } from '@/lib/validations';
+import { rateLimitByUser, RATE_LIMIT_PRESETS } from '@/lib/rate-limit';
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
-    const { companyId } = await requireAuth();
+    const { userId, companyId } = await requireAuth();
+    const rate = await rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER);
+    if (rate) return rate;
     const item = await prisma.inventoryItem.findFirst({ where: { id, companyId } });
     if (!item) {
       return NextResponse.json(
@@ -30,7 +33,9 @@ export async function PATCH(
 ) {
   try {
     const { id } = await params;
-    const { companyId } = await requireOwner();
+    const { userId, companyId } = await requireOwner();
+    const rate = await rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER);
+    if (rate) return rate;
     const body = await request.json();
     const data = inventoryItemUpdateSchema.parse(body);
 
@@ -68,12 +73,14 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
     const { id } = await params;
-    const { companyId } = await requireOwner();
+    const { userId, companyId } = await requireOwner();
+    const rate = await rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER);
+    if (rate) return rate;
 
     const item = await prisma.inventoryItem.findFirst({ where: { id, companyId } });
     if (!item) {
