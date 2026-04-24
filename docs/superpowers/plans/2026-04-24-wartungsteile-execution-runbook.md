@@ -1,0 +1,314 @@
+# Wartungsteile & Materialmanagement Phase A — Execution Runbook
+
+> **Read this at the start of every new session on this feature. Single source of truth for execution state, session protocol, and decisions made during implementation. Takes precedence over any remembered context from previous sessions.**
+
+**Spec:** [docs/superpowers/specs/2026-04-24-wartungsteile-materialmanagement-phase-a-design.md](../specs/2026-04-24-wartungsteile-materialmanagement-phase-a-design.md)
+**Plan:** [docs/superpowers/plans/2026-04-24-wartungsteile-materialmanagement-phase-a.md](./2026-04-24-wartungsteile-materialmanagement-phase-a.md)
+**Branch:** `feature/wartungsteile-phase-a`
+**Total tasks:** 37
+
+---
+
+## Why This Runbook Exists
+
+The plan has 37 tasks. Executing them all in one session exceeds the context window and leads to degraded review quality. Strategy: **work in small chunks with clean pauses**. Each session:
+
+1. Starts fresh (new Claude Code session, empty context)
+2. Reads this runbook first — everything relevant lives here
+3. Executes 2–6 tasks depending on complexity
+4. Ends cleanly: working tree clean, tests green, runbook updated, committed
+5. Hands off to the next session
+
+This runbook is the **cross-session memory**. The plan is the **what to build**. The spec is the **why and how**. Read them in that order on session start.
+
+---
+
+## Session Protocol
+
+### At session START (always, every time)
+
+1. `git checkout feature/wartungsteile-phase-a`
+2. `git status` — must be clean
+3. `git log --oneline -5` — confirm the top SHA matches this runbook's **Last committed SHA** below
+4. `npm test` — suite must be green as baseline (if not, STOP and investigate before new work)
+5. `npx tsc --noEmit` — must be clean
+6. Read this runbook top-to-bottom (especially: **Next up**, **Key Decisions & Deviations**, **Permanent Context**)
+7. Confirm the plan's corresponding task(s) by rereading them — the runbook only summarizes
+8. Invoke the skill: `superpowers:subagent-driven-development`
+
+### During session
+
+Per task, in order:
+1. Dispatch an **implementer** subagent with the full task text + context from this runbook
+2. Dispatch a **spec compliance reviewer** to verify the implementation matches the plan
+3. If spec OK, dispatch a **code quality reviewer** (`superpowers:code-reviewer`)
+4. If reviewer finds issues, re-dispatch implementer with the specific fixes; loop until both reviewers approve
+5. Mark task complete in TodoWrite
+
+**Substantive tasks** (Task 4 resolver, 15 maintenance POST, 16 delete reversal, 28 checklist integration, 35 manual verification) always get the full flow.
+**Repetitive-pattern tasks** (Tasks 5–13 CRUD, 19–21 hooks) can use parallel Spec + Quality reviews (read-only — no conflict). Only use this when task surface is ~50 LOC or less.
+
+### At session END (before pausing)
+
+1. Ensure working tree clean (no uncommitted or untracked files beyond the pre-existing `kundenaustausch/` state)
+2. `npm test` — green
+3. `npx tsc --noEmit` — clean
+4. Update this runbook's **Execution Log** + **Last committed SHA** + **Next up** + any new **Key Decisions & Deviations**
+5. Commit the runbook: `git commit -m "docs(runbook): session <N> progress — Tasks X through Y"`
+6. Do NOT merge to `main` until Task 35 passes
+7. Do NOT push (user handles push)
+
+---
+
+## Execution Log
+
+### Last committed SHA
+
+`7415042` (Task 3: `formatPartCategory` helper)
+
+### Session 1 (2026-04-24) — Foundation
+
+| Task | Status | Commit SHA(s) | Notes |
+|------|--------|---------------|-------|
+| 1 — Prisma schema + migration | ✅ | `d1432ae` | Migration `20260424082431_add_maintenance_sets_and_inventory` applied to Supabase `hwagqyywixhhorhjtydt` (eu-central-1). Incidental `ALTER TABLE "companies" ALTER COLUMN "updatedAt" DROP DEFAULT;` for pre-existing drift — kept in migration. `InventoryMovement.userId` gets default `ON DELETE RESTRICT` (consistent with other audit FKs). |
+| 2 — Zod schemas | ✅ | `0369aff` + `28da7ad` (fix-round) | 22 tests total (16 original + 6 from review-round). `partsUsedEntrySchema` extended with cross-field refines (DEFAULT → `setItemId` required, OVERRIDE_ADD → `overrideId` required). `inventoryItemCreateSchema` + `inventoryItemUpdateSchema` are `.strict()` (defends `currentStock` invariant). |
+| 3 — formatPartCategory | ✅ | `7415042` | Trivial. Parallel reviews. |
+
+**Session 1 full commit chain:**
+- `20915a9` docs(spec): Wartungsteile & Materialmanagement Phase A design *(from brainstorming session, before subagent work)*
+- `e1344b4` docs(plan): 37-task impl plan *(from writing-plans session)*
+- `d1432ae` feat(db): add MaintenanceSet, InventoryItem, and related models
+- `0369aff` feat(validations): add Zod schemas for sets, overrides, inventory, and partsUsed
+- `28da7ad` fix(validations): strengthen TOOL refine tests, add partsUsed cross-field refines, strict inventory item schemas
+- `7415042` feat(format): add formatPartCategory helper
+
+**End-of-session health:**
+- Tests: 170/170 passing
+- `tsc --noEmit`: clean
+- Build: not yet run (deferred to Task 34)
+- Working tree: clean (except pre-existing `kundenaustausch/Wartungsteile/` untracked state)
+
+---
+
+## Next Up
+
+**Start Session 2 with Task 4: `getEffectivePartsForSystem` resolver.**
+
+Substantive — use the full subagent-driven flow. Test-driven (write 6 test cases first, implement after).
+
+Full task text is in [plans/2026-04-24-wartungsteile-materialmanagement-phase-a.md](./2026-04-24-wartungsteile-materialmanagement-phase-a.md#task-4-effective-parts-resolver).
+
+**Suggested Session 2 chunk: Tasks 4 → 5 → 6 → 7 → 8** (resolver + MaintenanceSet CRUD API). These share the same area of the codebase; pattern familiarity compounds after Task 5. Pause after Task 8 if context is healthy, earlier if review cycles consume too much.
+
+---
+
+## Key Decisions & Deviations
+
+Decisions made during execution that future sessions MUST know about (beyond what's in the spec/plan).
+
+1. **Migration drift line kept (Task 1).** The additive migration contains an unrelated `ALTER TABLE "companies" ALTER COLUMN "updatedAt" DROP DEFAULT;` — Prisma emitted this to reconcile pre-existing drift between schema (`@updatedAt`, no DB default) and DB (`DEFAULT CURRENT_TIMESTAMP` from `company_multi_user` migration). Line is benign and was left in. **Task 36 TODO (carried in runbook):** when writing the drop-`requiredParts` migration, add a `-- NOTE:` comment above the drift line in `20260424082431_add_maintenance_sets_and_inventory/migration.sql` explaining it. See Task 36 todo text in the Task Progress table — already annotated with "+ add SQL NOTE above drift line".
+
+2. **`.strict()` on inventory item schemas (Task 2, beyond spec).** `inventoryItemCreateSchema` and `inventoryItemUpdateSchema` are `.strict()`. Defense-in-depth for the "stock mutates only via `InventoryMovement`" invariant — a client accidentally sending `{ description, currentStock: 99 }` is now rejected. Covered by test.
+
+3. **`partsUsedEntrySchema` cross-field refines (Task 2, beyond spec).** `sourceType: 'DEFAULT'` ⇒ `setItemId` required. `sourceType: 'OVERRIDE_ADD'` ⇒ `overrideId` required. `AD_HOC` has no linkage constraint. Task 15 (maintenance POST with partsUsed) can rely on these being present.
+
+4. **Cross-tenant FK validation reminder (Tasks 12, 14, 15).** Prisma cannot enforce same-tenant integrity on `CustomerSystemPartOverride.excludedSetItemId` or `CustomerSystemPartOverride.inventoryItemId` or `MaintenanceSetItem.inventoryItemId`. Tasks 12/14/15 MUST validate `companyId` match in application code before insertion/reference. The TodoWrite items for these tasks are annotated with "(+ cross-tenant guards)". Task 33 (tenant-isolation audit) MUST include these checks.
+
+5. **CLAUDE.md lists Jest; project actually uses Vitest.** All tests use `import from 'vitest'`. Spec/plan/runbook all assume Vitest. Task 37 may want to amend CLAUDE.md (optional cleanup).
+
+6. **Rate-limit preset choice.** All new API endpoints use the existing `RATE_LIMIT_PRESETS.API_USER` (100/min, defined in `src/lib/rate-limit.ts`). No new presets added in Phase A. The "30/min" / "120/min" figures in the plan are intent-labels, not enforced values — everything goes through the single `API_USER` preset. If pilot ops reveals throttling needs, add presets as a follow-up.
+
+7. **Parallel reviews for trivial tasks.** Task 3 used parallel spec + code-quality reviews (read-only, non-conflicting). Acceptable pragmatic deviation from the skill's sequential review flow. **Rule:** reserve this only for tasks with ≤ 50 LOC surface area AND no cross-file changes. If in doubt, sequential.
+
+8. **`kundenaustausch/Wartungsteile/` folder is user-curated — do not touch.** The folder contains:
+   - `Serviceteile 2026.pdf` (Grünbeck supplier list — user-provided)
+   - `Wartungsheft Bosch Junkers Kessel + Wartungsteile.pdf` (scan-only Bosch heft)
+   - `Serviceteile_2026.txt` (pdftotext artifact from Session 1)
+   - `maintenance_parts_extracted.json` (Session 1 partial Grünbeck extraction)
+   - `Bosch_raw.txt` (empty pdftotext attempt)
+   - **`wartungsheft_bosch_junkers.json` — user-curated manual OCR transcription (30 sets, 163 parts)** — valuable seed material for Phase B feature N-5 (PDF import). Future sessions should NOT commit or modify this folder unless user explicitly asks. Git shows the folder as untracked + the Bosch PDF as deleted from the root level (both are expected).
+
+---
+
+## Permanent Context (never changes session-to-session)
+
+### Working directory
+`c:\Users\y.dorth\Documents\torqr_app\torqr_app`
+
+### Branches
+- Work branch: `feature/wartungsteile-phase-a` (created from `main` at `e1344b4`)
+- Do NOT merge to `main` until Task 35 (manual verification) passes
+- Do NOT push to remote — user handles push separately
+- Main branch `main` is production for this repo; `development` exists per CLAUDE.md but is not used in this feature
+
+### Prisma workflow
+- Config: `config/prisma.config.ts`
+- **Always** pass `--config config/prisma.config.ts` to CLI commands
+- DB: Supabase project `hwagqyywixhhorhjtydt` (eu-central-1)
+- Env vars required in `.env`: `DATABASE_URL` (pool), `DIRECT_URL` (for migrate). Both are set.
+- Schema file: `prisma/schema.prisma`
+
+### Testing
+- Framework: **Vitest** (despite CLAUDE.md saying Jest)
+- Test files colocated in `__tests__/` subdirectories
+- Path alias `@/` → `src/`
+- Run: `npm test` (full) or `npm test -- <path>` (specific)
+- Type check: `npx tsc --noEmit`
+
+### Permissions pattern (enforced in every API route)
+- `requireAuth()` → returns `{ userId, companyId, role, email, name }`
+- `requireOwner()` → throws `Forbidden` if role !== OWNER
+- TECHNICIAN assignee-scoping for `/effective-parts` and `/packing-list`:
+  ```ts
+  if (role === 'TECHNICIAN' && resource.assignedToUserId !== userId) {
+    return NextResponse.json({ success: false, error: 'Zugriff verweigert' }, { status: 403 });
+  }
+  ```
+- All tenant-scoped queries use `companyId` from `requireAuth()` (never from client body, never `userId`)
+
+### Code organization (from CLAUDE.md)
+- API routes: `requireAuth()` first → Zod-validate → execute → respond
+- Response shape: `{ success: boolean, data?: T, error?: string, details?: z.issue[] }`
+- `src/lib/validations.ts` = single source of truth for input shapes
+- German for UI strings and error messages; English for code, comments, variable names
+- `src/types/api.ts` may define shared types — check before inventing new ones
+
+### Existing related skill prompt templates
+- Implementer: `C:\Users\y.dorth\.claude\plugins\cache\claude-plugins-official\superpowers\5.0.7\skills\subagent-driven-development\implementer-prompt.md`
+- Spec reviewer: `C:\Users\y.dorth\.claude\plugins\cache\claude-plugins-official\superpowers\5.0.7\skills\subagent-driven-development\spec-reviewer-prompt.md`
+- Code quality reviewer: `C:\Users\y.dorth\.claude\plugins\cache\claude-plugins-official\superpowers\5.0.7\skills\subagent-driven-development\code-quality-reviewer-prompt.md`
+
+### User preferences (from memory + session observation)
+- **Senior SAP/BTP developer** — frame explanations from backend/typed-system perspective. Wants precision, determinism, architecture over quick hacks.
+- **Commit freely without asking**; never push (user handles push).
+- **Structured decision framework**: when multiple options exist, recommend one with 2–4 bullet justification, don't dump all options.
+- **Responses in German** for feature discussion; code and technical content in English; user-facing UI strings in German.
+- CLAUDE.md `/backlog` workflow exists — use it at session start if relevant.
+- Timesheet auto-update rule exists — check `.claude/state/sessions.jsonl` at session start.
+
+### Pre-existing repo state (at start of Session 1)
+- Git shows `D "kundenaustausch/Wartungsheft Bosch Junkers Kessel + Wartungsteile.pdf"` — expected (user moved into subfolder, deletion hasn't been committed)
+- Git shows `?? kundenaustausch/Wartungsteile/` — expected (untracked folder with user-curated content)
+- These are pre-existing and should NOT be addressed by this feature's work
+
+---
+
+## Task Progress Overview
+
+| # | Task (summary) | Status |
+|---|----------------|--------|
+| 1 | Prisma schema + migration | ✅ `d1432ae` |
+| 2 | Zod schemas | ✅ `0369aff` + `28da7ad` |
+| 3 | formatPartCategory | ✅ `7415042` |
+| 4 | getEffectivePartsForSystem resolver | ⏸ **NEXT** |
+| 5 | GET/POST /api/maintenance-sets | ⏳ |
+| 6 | GET/DELETE /api/maintenance-sets/[id] | ⏳ |
+| 7 | POST /api/maintenance-sets/[id]/items | ⏳ |
+| 8 | PATCH/DELETE item + reorder | ⏳ |
+| 9 | GET/POST /api/inventory | ⏳ |
+| 10 | GET/PATCH/DELETE /api/inventory/[id] | ⏳ |
+| 11 | GET/POST /api/inventory/[id]/movements | ⏳ |
+| 12 | POST /api/customer-systems/[id]/overrides (+ cross-tenant guards) | ⏳ |
+| 13 | DELETE /api/overrides/[id] | ⏳ |
+| 14 | GET effective-parts route (+ cross-tenant inventoryItemId guards) | ⏳ |
+| 15 | Extend POST /api/maintenances (+ cross-tenant inventoryItemId guards) | ⏳ |
+| 16 | Extend DELETE /api/maintenances/[id] — R1 reversal | ⏳ |
+| 17 | GET /api/bookings/[id]/packing-list | ⏳ |
+| 18 | Extend dashboard/stats with inventoryBelowMinStockCount | ⏳ |
+| 19 | Hooks — sets + set-items | ⏳ |
+| 20 | Hooks — overrides + effective-parts | ⏳ |
+| 21 | Hooks — inventory + movements + packing | ⏳ |
+| 22 | Nav — Wartungssets + Lager entries | ⏳ |
+| 23 | /dashboard/wartungssets list | ⏳ |
+| 24 | /dashboard/wartungssets/[id] detail + item form | ⏳ |
+| 25 | /dashboard/lager list + status badge | ⏳ |
+| 26 | Inventory drawer + item form + movement form | ⏳ |
+| 27 | PartsListCard on system detail | ⏳ |
+| 28 | MaintenanceChecklistModal Step 2.5 Teileverbrauch | ⏳ |
+| 29 | Packing-list print view + BookingDetailsDrawer button | ⏳ |
+| 30 | LowStockDashboardCard on /dashboard | ⏳ |
+| 31 | Weekly summary email Lager section | ⏳ |
+| 32 | Data migration script (`scripts/migrate-required-parts.ts`) | ⏳ |
+| 33 | Tenant-isolation audit update (+ cross-tenant checks from Decisions §4) | ⏳ |
+| 34 | Full test suite + typecheck + build green | ⏳ |
+| 35 | Manual verification checklist (13 steps) | ⏳ |
+| 36 | Drop `requiredParts` column + add SQL NOTE above drift line | ⏳ |
+| 37 | BACKLOG.md — add N-1..N-11 + Sprint 28 sign-off | ⏳ |
+
+Legend: ✅ Done · ⏸ Next · ⏳ Pending
+
+---
+
+## Suggested Session Chunking
+
+Rough estimates based on task complexity. Adjust based on actual progress — if a session has cycles to spare, pull one extra task forward; if context is pressured, pause earlier.
+
+| Session | Tasks | Theme |
+|--|--|--|
+| 1 ✅ | 1, 2, 3 | Foundation |
+| 2 | **4, 5, 6, 7, 8** | Resolver + MaintenanceSet API |
+| 3 | 9, 10, 11 | Inventory API |
+| 4 | 12, 13, 14 | Overrides + effective-parts API |
+| 5 | 15, 16 | Maintenance extensions (substantive, full reviews) |
+| 6 | 17, 18 | Packing-list API + dashboard stats |
+| 7 | 19, 20, 21 | Hooks (all three files, can batch — similar shape) |
+| 8 | 22, 23, 24 | Nav + Wartungssets pages |
+| 9 | 25, 26 | Lager page + drawer/forms |
+| 10 | 27, 28 | PartsListCard + checklist integration (substantive) |
+| 11 | 29, 30, 31 | Packing print + low-stock card + weekly summary |
+| 12 | 32, 33, 34 | Data migration + audit + build green |
+| 13 | 35, 36, 37 | Manual verification + destructive migration + backlog close |
+| 14 | — | Merge + `superpowers:finishing-a-development-branch` |
+
+Total: ~13–14 sessions. This is a feasible cadence of 1 session / day or 2–3 / week.
+
+---
+
+## Definition of "Session Done"
+
+A session ends cleanly when ALL of these are true:
+
+- [x] Working tree clean (`git status` shows nothing unexpected)
+- [x] `npm test` → 100% pass
+- [x] `npx tsc --noEmit` → clean
+- [x] This runbook's **Execution Log** updated with tasks done + SHAs
+- [x] **Last committed SHA** section updated
+- [x] **Next up** section points to the correct next task
+- [x] Any new **Key Decisions & Deviations** captured
+- [x] Runbook committed with message `docs(runbook): session <N> progress — Tasks X through Y`
+
+If any of these is false, **either fix it before ending or explicitly note in the runbook that the session ended in a known-bad state** (include reason + recovery instructions).
+
+---
+
+## After Task 37 — Feature Completion
+
+When all 37 tasks are done:
+1. Run the skill `superpowers:finishing-a-development-branch`
+2. That skill guides: final integration check → branch integration decision (merge vs. PR) → cleanup
+3. Final entry in `docs/BACKLOG.md`: Sprint 28 — Wartungsteile Phase A section with all resolved items
+
+---
+
+## Quick Reference — Absolute Paths
+
+| What | Path |
+|------|------|
+| Working dir | `c:\Users\y.dorth\Documents\torqr_app\torqr_app` |
+| Spec | `docs/superpowers/specs/2026-04-24-wartungsteile-materialmanagement-phase-a-design.md` |
+| Plan | `docs/superpowers/plans/2026-04-24-wartungsteile-materialmanagement-phase-a.md` |
+| This runbook | `docs/superpowers/plans/2026-04-24-wartungsteile-execution-runbook.md` |
+| Schema | `prisma/schema.prisma` |
+| Validations | `src/lib/validations.ts` |
+| Auth helpers | `src/lib/auth-helpers.ts` |
+| Rate limit | `src/lib/rate-limit.ts` |
+| Backlog | `docs/BACKLOG.md` |
+| CLAUDE.md | `CLAUDE.md` |
+
+---
+
+## Resume Quick-Start for New Sessions
+
+Copy-paste this as the first prompt of each new session on this feature:
+
+> Wir setzen Wartungsteile Phase A fort. Lies zuerst `docs/superpowers/plans/2026-04-24-wartungsteile-execution-runbook.md` komplett — das ist das Session-Runbook. Folge dem "Session Protocol → At session START"-Block, bestätige den Baseline-Health-Check, und starte dann mit dem im Runbook unter "Next Up" genannten Task via `superpowers:subagent-driven-development`.
