@@ -42,6 +42,7 @@ const TENANT_ROUTES = [
   'maintenance-sets/[id]/items/reorder/route.ts',
   'maintenance-set-items/[id]/route.ts',
   'inventory/route.ts',
+  'inventory/[id]/route.ts',
 ];
 
 // Routes that scope by userId (user's own record, not tenant data).
