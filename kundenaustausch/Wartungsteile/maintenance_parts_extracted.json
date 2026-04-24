@@ -1,0 +1,104 @@
+{
+  "$schema_note": "Raw extraction from customer PDFs — input for MaintenanceSet brainstorming. Manual validation required before any seed/import use.",
+  "extraction_run": {
+    "date": "2026-04-24",
+    "method": "pdftotext -layout (poppler)",
+    "ocr_available": false,
+    "ocr_note": "Tesseract and ocrmypdf are NOT installed on this machine. Any scan-only PDF cannot be parsed automatically."
+  },
+  "documents": [
+    {
+      "filename": "Serviceteile 2026.pdf",
+      "status": "extracted",
+      "manufacturer_detected": "Grünbeck",
+      "document_type": "supplier_price_list",
+      "parse_confidence": "partial",
+      "parse_notes": [
+        "PDF is a multi-column price table. pdftotext flattens prices across rows — unitPrice / purchasePrice values in the raw text do not reliably line up with the correct article row.",
+        "Article number + description + quantity + unit parse cleanly. Prices are captured but marked as 'raw_uncertain'.",
+        "Some position numbers (pos 15–28) appear collapsed into adjacent rows in the pdftotext output — likely due to cells with vertically-stacked content.",
+        "German umlauts (ä/ö/ü/ß) were lost in pdftotext output; encoding fallbacks inserted ?-characters. The descriptions below are lightly cleaned."
+      ],
+      "device_groups": [
+        {
+          "group_name": "GSX 9 / 14 / 19 und VGX 9 / 14",
+          "items": [
+            { "pos": 1, "articleNumber": "128012e", "description": "Kohlehalter-Paar zu WWM (Weichwassermeister)", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": "42,00", "discountPct": 17, "purchasePrice": "80,51" } },
+            { "pos": 2, "articleNumber": "187628e", "description": "Injektor V2 natur (WWM 2, GSX, GS2, G2, VGC, VSC, VGR, VGX)", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": null, "discountPct": 17, "purchasePrice": "65,57" } },
+            { "pos": 3, "articleNumber": "187803", "description": "Wartungskit GSX 9/14/19, VGR", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": "115,00", "discountPct": 37, "purchasePrice": "26,46" } },
+            { "pos": 4, "articleNumber": "187804", "description": "Wartungskit VGX 9/14/19 (GS2, G2, VGC, VSC)", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": "132,00", "discountPct": 37, "purchasePrice": "17,64" } }
+          ]
+        },
+        {
+          "group_name": "GSX 5 / 10",
+          "items": [
+            { "pos": 5, "articleNumber": "187442e", "description": "Injektor GSX 5 (blau, Injektorgehäuse blau)", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": null, "discountPct": 17, "purchasePrice": "87,15" } },
+            { "pos": 6, "articleNumber": "187443e", "description": "Injektor GSX 10, 10-I, plus (grün, Injektorgehäuse grün)", "quantity": null, "unit": "Stck", "rawPricesNearRow": { "unitPrice": null, "discountPct": 17, "purchasePrice": "95,45" } },
+            { "pos": 7, "articleNumber": "188619e", "description": "Umrüstsatz Kohleelektrode (Chlorzelle)", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": null, "discountPct": 17, "purchasePrice": "142,76" } },
+            { "pos": 8, "articleNumber": "188097e", "description": "Chlorzelle mit Sicherungsbügel", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": null, "discountPct": 17, "purchasePrice": "109,56" } },
+            { "pos": 9, "articleNumber": "190201e", "description": "Turbineneinschub DN 20 DM (Inhalt 1 Stück)", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": null, "discountPct": 17, "purchasePrice": "68,06" } },
+            { "pos": 10, "articleNumber": "187650e", "description": "Servicekit GSX 5, 10, 10-I, plus", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": "27,00", "discountPct": 17, "purchasePrice": "51,46" } },
+            { "pos": 11, "articleNumber": "187446e", "description": "Soleanschlusswinkel GSX 5, 10, 10-I (inkl. Sicherungsbügel)", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": "105,00", "discountPct": 17, "purchasePrice": "18,26" } },
+            { "pos": 12, "articleNumber": "85773007", "description": "Schlauch di=4,35 / da=6,35 mm, PE", "quantity": 1, "unit": "m", "rawPricesNearRow": { "unitPrice": "35,00", "discountPct": null, "purchasePrice": "3,00" } }
+          ]
+        },
+        {
+          "group_name": "softliQ",
+          "parse_confidence": "low",
+          "parse_note": "Position numbers 13–28 appear collapsed in the pdftotext output. Several descriptions are spread across two rows in the raw text; items were reassembled heuristically. Recommend manual re-validation against the original PDF table.",
+          "items": [
+            { "pos": 13, "articleNumber": "188068e", "description": "Injektor softliQ:SC/SD/SE18, MC/MD32, ME28 (violett, Injektorgehäuse violett)", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": null, "discountPct": 17, "purchasePrice": "68,06" } },
+            { "pos": 14, "articleNumber": "187444e", "description": "Injektor softliQ:SD/SE21/MC/MD38, ME32+38 (grün)", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": "0,00", "discountPct": 17, "purchasePrice": "67,23" } },
+            { "pos": 15, "articleNumber": "188069e", "description": "(Injektorgehäuse grün)", "quantity": null, "unit": null, "rawPricesNearRow": null, "parse_note": "continuation of position 14 — uncertain if separate article" },
+            { "pos": 16, "articleNumber": "188097e", "description": "Injektor softliQ:SC/SD23/SE24 (orange)", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": null, "discountPct": 17, "purchasePrice": "65,57" } },
+            { "pos": 17, "articleNumber": "189619010001", "description": null, "quantity": null, "unit": null, "parse_note": "article number only, description not recovered" },
+            { "pos": 18, "articleNumber": "189607e", "description": "(Injektorgehäuse orange)", "quantity": null, "unit": null, "parse_note": "continuation / ambiguous" },
+            { "pos": 19, "articleNumber": "189608e", "description": null, "quantity": null, "unit": null },
+            { "pos": 20, "articleNumber": "189609e", "description": "Chlorzelle mit Sicherungsbügel", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": null, "discountPct": 17, "purchasePrice": "109,56" } },
+            { "pos": 21, "articleNumber": "187699010001", "description": null, "quantity": null, "unit": null },
+            { "pos": 22, "articleNumber": "187668e", "description": "Servicekit softliQ SC/SD/SE ohne Injektor", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": null, "discountPct": 17, "purchasePrice": "22,41" } },
+            { "pos": 23, "articleNumber": "187669e", "description": null, "quantity": null, "unit": null },
+            { "pos": 24, "articleNumber": "188549e", "description": "Servicekit Steuerventil softliQ:SC/SD/SE18", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": null, "discountPct": 17, "purchasePrice": "87,98" } },
+            { "pos": 25, "articleNumber": "163038", "description": "Servicekit Steuerventil softliQ:SD/SE21", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": null, "discountPct": 17, "purchasePrice": "87,15" } },
+            { "pos": 26, "articleNumber": "188219e", "description": null, "quantity": null, "unit": null },
+            { "pos": 27, "articleNumber": "188673e", "description": "Servicekit Steuerventil softliQ:SC/SD23 / SE24", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": null, "discountPct": 17, "purchasePrice": "86,32" } },
+            { "pos": 28, "articleNumber": "188674e", "description": null, "quantity": null, "unit": null }
+          ]
+        },
+        {
+          "group_name": "softliQ MC/MD/ME, PA/PB, EA/EB — Servicekits (positions not captured)",
+          "parse_confidence": "low",
+          "items": [
+            { "articleNumber": null, "description": "Servicekit softliQ MC/MD/ME, PA/PB, EA/EB ohne Injektor", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": null, "discountPct": 17, "purchasePrice": "29,05" } },
+            { "articleNumber": null, "description": "Servicekit Steuerventil softliQ:MC/MD32", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": null, "discountPct": 17, "purchasePrice": "165,17" } },
+            { "articleNumber": null, "description": "Servicekit Steuerventil softliQ:MC/MD38", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": null, "discountPct": 17, "purchasePrice": "165,17" } },
+            { "articleNumber": null, "description": "Bedienfolie SC", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": null, "discountPct": 17, "purchasePrice": "52,29" } }
+          ]
+        },
+        {
+          "group_name": "verschiedenes Zubehör",
+          "items": [
+            { "articleNumber": null, "description": "Dosierventil 2/4", "quantity": 1, "unit": "Stck", "rawPricesNearRow": { "unitPrice": null, "discountPct": 17, "purchasePrice": "24,07" } },
+            { "articleNumber": null, "description": "Stecktülle zu Kanalanschluss, 5 Stk", "quantity": 1, "unit": "VE", "rawPricesNearRow": { "unitPrice": null, "discountPct": null, "purchasePrice": "13,88" } },
+            { "articleNumber": null, "description": "Schaumdichtung Soleventil softliQ, 10 Stk", "quantity": 1, "unit": "VE", "rawPricesNearRow": { "unitPrice": null, "discountPct": null, "purchasePrice": "0,00" } },
+            { "articleNumber": null, "description": "Aufkleber Salztankreinigung softliQ, 10 Stk", "quantity": 1, "unit": "VE", "rawPricesNearRow": { "unitPrice": null, "discountPct": null, "purchasePrice": "0,00" } }
+          ]
+        }
+      ]
+    },
+    {
+      "filename": "Wartungsheft Bosch Junkers Kessel + Wartungsteile.pdf",
+      "status": "cannot_extract",
+      "reason": "PDF is scan-only (no text layer). pdftotext returned 9 bytes of whitespace.",
+      "size_bytes": 6916996,
+      "required_next_step": "Install OCR tooling (tesseract + ocrmypdf + poppler pdftoppm) OR have user manually transcribe key pages OR upload a digital-born PDF version from Bosch/Junkers service portal.",
+      "alternative": "If the customer has access to the Bosch Pro portal, the model-specific maintenance kit lists are available there as structured data and should be preferred over scraping a scanned paper heft."
+    }
+  ],
+  "seed_data_recommendation": {
+    "usable_for_seed": false,
+    "rationale": "Prices are unreliable after pdftotext flattening; the Bosch document could not be read at all. For Torqr's MaintenanceSet seed, either (a) install OCR and re-run, (b) ingest via a typed CSV/XLSX export from the manufacturer, or (c) have the pilot customer transcribe their top 5–10 most-serviced models into a simple spreadsheet.",
+    "high_confidence_fields": ["articleNumber", "description", "unit", "quantity"],
+    "low_confidence_fields": ["unitPrice", "purchasePrice", "discountPct", "position_numbers_in_softliQ_block"]
+  }
+}

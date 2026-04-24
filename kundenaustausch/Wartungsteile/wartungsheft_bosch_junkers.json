@@ -1,0 +1,2216 @@
+{
+  "schema_version": "1.0",
+  "source": {
+    "title": "Suchhilfe Wartungssätze — Bosch/Junkers",
+    "file": "Wartungsheft_Bosch_Junkers_Kessel___Wartungsteile.pdf",
+    "publisher": "Bosch Thermotechnik / Junkers",
+    "pages_covered": "2-21",
+    "transcribed_date": "2026-04-24",
+    "transcription_method": "manual_structured_from_ocr",
+    "language": "de",
+    "confidence_note": "Transkription aus gescanntem PDF. Bestellnummern und Modellbezeichnungen wurden vor Aufnahme in das System einzeln geprüft. Stichprobenweise Validierung gegen Herstellerkatalog empfohlen, insb. bei Öldüsen-Nummern (lange numerische IDs anfällig für Ziffernverwechslungen)."
+  },
+  "categories": {
+    "gas_heizwert_wand": "Gas-Heizwertgeräte, wandhängend (Junkers)",
+    "gas_brennwert_wand": "Gas-Brennwertgeräte, wandhängend (Bosch/Junkers/Sieger)",
+    "gas_brennwert_boden": "Gas-Brennwertgeräte, bodenstehend (Bosch/Junkers)",
+    "oel_brennwert_boden": "Öl-Brennwertgeräte, bodenstehend (Bosch/Junkers)",
+    "gas_warmwasserthermen": "Gas-Warmwasserthermen (Junkers)"
+  },
+  "item_categories": {
+    "SPARE_PART": "Ersatzteil (z. B. Dichtung, Elektrode)",
+    "CONSUMABLE": "Verbrauchsmaterial (z. B. Ölfilter, Einwegbürste)",
+    "ACCESSORY": "Kleinteile / Zubehör",
+    "TOOL": "Werkzeug",
+    "OPTIONAL": "Separat bestellbares Teil (nicht Bestandteil des Wartungssatzes)"
+  },
+  "statistics": {
+    "total_maintenance_sets": 30,
+    "total_parts_referenced": 163,
+    "total_cleaning_accessories": 17,
+    "total_service_cases": 3,
+    "sets_by_category": {
+      "gas_heizwert_wand": 3,
+      "gas_brennwert_wand": 13,
+      "gas_brennwert_boden": 3,
+      "oel_brennwert_boden": 9,
+      "gas_warmwasserthermen": 2
+    }
+  },
+  "maintenance_sets": [
+    {
+      "order_number": "7736901298",
+      "order_number_formatted": "7 736 901 298",
+      "category": "gas_heizwert_wand",
+      "brand": "Junkers",
+      "page_reference": 6,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "ZSR 5/11 -5 KE",
+        "ZSN 5/11 -5 KE",
+        "ZSR 7/11 -6 AE",
+        "ZSN 7/11 -6 AE",
+        "ZSN 11 -7 KE/AE",
+        "ZSR 5/10 -7 KE"
+      ],
+      "contents": [
+        {
+          "description": "Elektrodensatz",
+          "article_number": "87181070760",
+          "article_number_formatted": "8 718 107 076 0",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Brennerdichtung",
+          "article_number": "87110041990",
+          "article_number_formatted": "8 711 004 199 0",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Düsenstock",
+          "article_number": "87101030450",
+          "article_number_formatted": "8 710 103 045 0",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    },
+    {
+      "order_number": "7736901299",
+      "order_number_formatted": "7 736 901 299",
+      "category": "gas_heizwert_wand",
+      "brand": "Junkers",
+      "page_reference": 6,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "ZSR/ZWR 18 -5 KE/AE",
+        "ZSN/ZWN/ZSR/ZWR 18 -6 KE/A..E",
+        "ZSN/ZWN/ZSR/ZWR 18 -7 KE/A..E",
+        "ZWR 18 -8 KE"
+      ],
+      "contents": [
+        {
+          "description": "Elektrodensatz",
+          "article_number": "87181070760",
+          "article_number_formatted": "8 718 107 076 0",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true,
+          "notes": "alternativ 8 718 641 319 0"
+        },
+        {
+          "description": "Brennerdichtung",
+          "article_number": "87110041980",
+          "article_number_formatted": "8 711 004 198 0",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Düsenstock",
+          "article_number": "87101030450",
+          "article_number_formatted": "8 710 103 045 0",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    },
+    {
+      "order_number": "7736901300",
+      "order_number_formatted": "7 736 901 300",
+      "category": "gas_heizwert_wand",
+      "brand": "Junkers",
+      "page_reference": 6,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "ZSR/ZWR 24 -5 KE/AE",
+        "ZSN/ZWN/ZSR/ZWR 24 -6 KE/A..E",
+        "ZSN/ZWN/ZSR/ZWR 24 -7 KE/A..E",
+        "ZWR 24 -8 KE"
+      ],
+      "contents": [
+        {
+          "description": "Elektrodensatz",
+          "article_number": "87181070760",
+          "article_number_formatted": "8 718 107 076 0",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true,
+          "notes": "alternativ 8 718 641 319 0"
+        },
+        {
+          "description": "Brennerdichtung",
+          "article_number": "87110041970",
+          "article_number_formatted": "8 711 004 197 0",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Düsenstock",
+          "article_number": "87101030450",
+          "article_number_formatted": "8 710 103 045 0",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    },
+    {
+      "order_number": "8737712516",
+      "order_number_formatted": "8 737 712 516",
+      "category": "gas_brennwert_wand",
+      "brand": "Bosch/Junkers",
+      "page_reference": 7,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "ZSB 14..22 -3A/E",
+        "ZWB 28 -3A/E",
+        "ZBS 14..22 /...S -3M",
+        "ZWSB 22/28 -3A/E",
+        "CSW 14..24/75 -3A",
+        "CSW 30 -3A",
+        "ZSB 14..24 -4C...-5C",
+        "ZWB 24..28 -5C",
+        "ZWB 24..28 -5C/CR",
+        "GC7000iW 14..14.1..24..28"
+      ],
+      "contents": [
+        {
+          "description": "Brennerdichtung",
+          "article_number": "87110043250",
+          "article_number_formatted": "8 711 004 325 0",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Elektrodensatz (ohne Massefeder)",
+          "article_number": "87181070870",
+          "article_number_formatted": "8 718 107 087 0",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Elektrodensatz (mit Massefeder)",
+          "article_number": "8737602770",
+          "article_number_formatted": "8 737 602 770",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtungen Siphon, Abgas, Revisionsöffnung",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Kleinteile",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "ACCESSORY",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    },
+    {
+      "order_number": "8737707990",
+      "order_number_formatted": "8 737 707 990",
+      "category": "gas_brennwert_wand",
+      "brand": "Bosch/Junkers",
+      "page_reference": 8,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "ZSBR/ZWBR 3-12..7-25 A",
+        "ZSBR/ZWBR 3-16..7-28 A",
+        "ZB/ZSB/ZBS 3-16..7-22 A",
+        "ZBR 12-42 A",
+        "ZBR 11-42 A",
+        "ZBR 16..28..42 -3A",
+        "ZWB 7-26 A",
+        "ZSBR/ZSBE 16..28 -3A",
+        "ZBS 30/150S -3M",
+        "KBR/KBRC 3-12..7-25..12-42A",
+        "KBR/KSBR 3-16..7-30..11-42 A"
+      ],
+      "contents": [
+        {
+          "description": "Brennerdichtung",
+          "article_number": "87110041680",
+          "article_number_formatted": "8 711 004 168 0",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Elektrodensatz",
+          "article_number": "87186649200",
+          "article_number_formatted": "8 718 664 920 0",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Elektrode",
+          "article_number": "8737708824",
+          "article_number_formatted": "8 737 708 824",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Revision",
+          "article_number": "87101031530",
+          "article_number_formatted": "8 710 103 153 0",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtungen Siphon",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Kleinteile",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "ACCESSORY",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Einweg-Reinigungsbürste",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "CONSUMABLE",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    },
+    {
+      "order_number": "8737711853",
+      "order_number_formatted": "8 737 711 853",
+      "category": "gas_brennwert_wand",
+      "brand": "Bosch/Junkers",
+      "page_reference": 9,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "GC5300iWM 17..24/100S",
+        "GC5300iWM 24/120",
+        "GC5300iWM 24/210SO",
+        "GC5300iW 14..24 P",
+        "GC5300iW 20/24..30 C/CR",
+        "GC5700iWT 24/42S",
+        "GC5800iW 14..24 P",
+        "GC7800iW 15..24 P",
+        "GC7800iW 20/24..30 C"
+      ],
+      "contents": [
+        {
+          "description": "Brennerdichtung",
+          "article_number": "87186507890",
+          "article_number_formatted": "8 718 650 789 0",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Elektrodensatz",
+          "article_number": "87379035360",
+          "article_number_formatted": "8 737 903 536 0",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtungen Siphon, Abgas, Revisionsdeckel, Gebläse",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Kleinteile",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "ACCESSORY",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    },
+    {
+      "order_number": "8737708542",
+      "order_number_formatted": "8 737 708 542",
+      "category": "gas_brennwert_wand",
+      "brand": "Bosch/Junkers",
+      "page_reference": 10,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "GC9000iW 20..30..40 E/EB/H",
+        "GC9000iWM 20..30/...S/SB",
+        "GC7000iW 35..42",
+        "GC7800iW 30/35 C",
+        "GC7800iW 40 P",
+        "GC9800iW 20..30..40 H",
+        "GC9800iW 20..30 P"
+      ],
+      "contents": [
+        {
+          "description": "Brennerdichtung",
+          "article_number": "87186680640",
+          "article_number_formatted": "8 718 668 064 0",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Elektrodensatz",
+          "article_number": "87186630920",
+          "article_number_formatted": "8 718 663 092 0",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Elektrode",
+          "article_number": "8737708824",
+          "article_number_formatted": "8 737 708 824",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Revision",
+          "article_number": "87101031530",
+          "article_number_formatted": "8 710 103 153 0",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtungen Siphon",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Kleinteile",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "ACCESSORY",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Einweg-Reinigungsbürste",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "CONSUMABLE",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    },
+    {
+      "order_number": "8737708671",
+      "order_number_formatted": "8 737 708 671",
+      "category": "gas_brennwert_wand",
+      "brand": "Bosch/Junkers",
+      "page_reference": 11,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "GC9000iW 50 H",
+        "GC9800iW 50 H"
+      ],
+      "contents": [
+        {
+          "description": "Brennerdichtung",
+          "article_number": "87377018540",
+          "article_number_formatted": "8 737 701 854 0",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Elektrodensatz",
+          "article_number": "87186630920",
+          "article_number_formatted": "8 718 663 092 0",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Elektrode",
+          "article_number": "8737708824",
+          "article_number_formatted": "8 737 708 824",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Revision",
+          "article_number": "87377014500",
+          "article_number_formatted": "8 737 701 450 0",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Siphon",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Kleinteile",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "ACCESSORY",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Einweg-Reinigungsbürste",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "CONSUMABLE",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    },
+    {
+      "order_number": "8738901299",
+      "order_number_formatted": "8 738 901 299",
+      "category": "gas_brennwert_wand",
+      "brand": "Bosch/Junkers/Sieger",
+      "page_reference": 12,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "ZBR 65..98 -2A",
+        "ZBR 70..100 -3A",
+        "KBR 65..98 -3A",
+        "Sieger BK16W 65..98"
+      ],
+      "contents": [
+        {
+          "description": "Brennerdichtung",
+          "article_number": "7101446",
+          "article_number_formatted": "7101446",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Kondenswassersammler",
+          "article_number": "7746900152",
+          "article_number_formatted": "7746900152",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Kondensatablauf",
+          "article_number": "7100742",
+          "article_number_formatted": "7100742",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Gasarmatur",
+          "article_number": "8718600045",
+          "article_number_formatted": "8718600045",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [
+        {
+          "description": "Glühzünder-Set (8 738 901 633): Glühzünder, Ionisationselektrode mit Kabel, Dichtung, Adapter, Kleinteile",
+          "article_number": "8738901633",
+          "article_number_formatted": "8 738 901 633",
+          "category": "OPTIONAL",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": false,
+          "notes": "Bei Bedarf separat mitbestellen"
+        }
+      ],
+      "notes": []
+    },
+    {
+      "order_number": "8738903878",
+      "order_number_formatted": "8 738 903 878",
+      "category": "gas_brennwert_wand",
+      "brand": "Bosch/Junkers",
+      "page_reference": 12,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "GC7000WP 70..100"
+      ],
+      "contents": [
+        {
+          "description": "Zündelektrode",
+          "article_number": "8738901736",
+          "article_number_formatted": "8738901736",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Brennerdichtung",
+          "article_number": "7101446",
+          "article_number_formatted": "7101446",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Kondenswassersammler",
+          "article_number": "7746900152",
+          "article_number_formatted": "7746900152",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Siphon",
+          "article_number": "7100742",
+          "article_number_formatted": "7100742",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Lippendichtung",
+          "article_number": "8738901447",
+          "article_number_formatted": "8738901447",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Kleinteile",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "ACCESSORY",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    },
+    {
+      "order_number": "8738903879",
+      "order_number_formatted": "8 738 903 879",
+      "category": "gas_brennwert_wand",
+      "brand": "Bosch/Junkers",
+      "page_reference": 12,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "GC7000WP 150"
+      ],
+      "contents": [
+        {
+          "description": "Zündelektrode",
+          "article_number": "8738903188",
+          "article_number_formatted": "8738903188",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Brennerdichtung",
+          "article_number": "8738903177",
+          "article_number_formatted": "8738903177",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Kondenswassersammler",
+          "article_number": "7738903162",
+          "article_number_formatted": "7738903162",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Siphon",
+          "article_number": "7100742",
+          "article_number_formatted": "7100742",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Lippendichtung",
+          "article_number": "8738903166",
+          "article_number_formatted": "8738903166",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Kleinteile",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "ACCESSORY",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    },
+    {
+      "order_number": "8738901300",
+      "order_number_formatted": "8 738 901 300",
+      "category": "gas_brennwert_wand",
+      "brand": "Sieger",
+      "page_reference": 13,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "Sieger BK11W 11..24"
+      ],
+      "contents": [
+        {
+          "description": "Dichtung Kondenswassersammler",
+          "article_number": "7098834",
+          "article_number_formatted": "7098834",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Brennerdichtung",
+          "article_number": "7098916",
+          "article_number_formatted": "7098916",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Elektrode",
+          "article_number": "7098850",
+          "article_number_formatted": "7098850",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Gasdichtung",
+          "article_number": "7098778",
+          "article_number_formatted": "7098778",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Siphondichtung",
+          "article_number": "7100742",
+          "article_number_formatted": "7100742",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": [
+        "Glühzünder und Ionisationselektrode nicht im Wartungssatz enthalten. Bei Bedarf separat mitbestellen: Glühzünder 8 718 600 054, Ionisationselektrode 7100238"
+      ]
+    },
+    {
+      "order_number": "8738901301",
+      "order_number_formatted": "8 738 901 301",
+      "category": "gas_brennwert_wand",
+      "brand": "Sieger",
+      "page_reference": 13,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "Sieger BK11W 29"
+      ],
+      "contents": [
+        {
+          "description": "Dichtung Kondenswassersammler",
+          "article_number": "7098836",
+          "article_number_formatted": "7098836",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Brennerdichtung",
+          "article_number": "7098918",
+          "article_number_formatted": "7098918",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Elektrode",
+          "article_number": "7098850",
+          "article_number_formatted": "7098850",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Gasdichtung",
+          "article_number": "7098778",
+          "article_number_formatted": "7098778",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Siphondichtung",
+          "article_number": "7100742",
+          "article_number_formatted": "7100742",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": [
+        "Glühzünder und Ionisationselektrode nicht im Wartungssatz enthalten. Bei Bedarf separat mitbestellen: Glühzünder 8 718 600 054, Ionisationselektrode 7100238"
+      ]
+    },
+    {
+      "order_number": "8738901302",
+      "order_number_formatted": "8 738 901 302",
+      "category": "gas_brennwert_wand",
+      "brand": "Sieger",
+      "page_reference": 13,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "Sieger BK11W 43"
+      ],
+      "contents": [
+        {
+          "description": "Dichtung Kondenswassersammler",
+          "article_number": "7098838",
+          "article_number_formatted": "7098838",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Brennerdichtung",
+          "article_number": "7098920",
+          "article_number_formatted": "7098920",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Elektrode",
+          "article_number": "7098850",
+          "article_number_formatted": "7098850",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Gasdichtung",
+          "article_number": "7098778",
+          "article_number_formatted": "7098778",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Siphondichtung",
+          "article_number": "7100742",
+          "article_number_formatted": "7100742",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": [
+        "Glühzünder und Ionisationselektrode nicht im Wartungssatz enthalten. Bei Bedarf separat mitbestellen: Glühzünder 8 718 600 054, Ionisationselektrode 7100238"
+      ]
+    },
+    {
+      "order_number": "8738901303",
+      "order_number_formatted": "8 738 901 303",
+      "category": "gas_brennwert_wand",
+      "brand": "Sieger",
+      "page_reference": 13,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "Sieger BK11W 60"
+      ],
+      "contents": [
+        {
+          "description": "Dichtung Kondenswassersammler",
+          "article_number": "67900526",
+          "article_number_formatted": "67900526",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Brennerdichtung",
+          "article_number": "67900522",
+          "article_number_formatted": "67900522",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Elektrode",
+          "article_number": "7098850",
+          "article_number_formatted": "7098850",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Gasdichtung",
+          "article_number": "7098778",
+          "article_number_formatted": "7098778",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Siphondichtung",
+          "article_number": "7100742",
+          "article_number_formatted": "7100742",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": [
+        "Glühzünder und Ionisationselektrode nicht im Wartungssatz enthalten. Bei Bedarf separat mitbestellen: Glühzünder 8 718 600 054, Ionisationselektrode 7100238"
+      ]
+    },
+    {
+      "order_number": "8738901295",
+      "order_number_formatted": "8 738 901 295",
+      "category": "gas_brennwert_wand",
+      "brand": "Sieger",
+      "page_reference": 14,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "Sieger BK13W..",
+        "Sieger BK15W.."
+      ],
+      "contents": [
+        {
+          "description": "Dichtung Wärmetauscher",
+          "article_number": "8718600021",
+          "article_number_formatted": "8718600021",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Brennerdichtung",
+          "article_number": "7099544",
+          "article_number_formatted": "7099544",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Gasdichtung",
+          "article_number": "8718600045",
+          "article_number_formatted": "8718600045",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Siphondichtung",
+          "article_number": "7100742",
+          "article_number_formatted": "7100742",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Siphondichtung",
+          "article_number": "7100819",
+          "article_number_formatted": "7100819",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": [
+        "Glühzünder und Ionisationselektrode nicht im Wartungssatz enthalten. Bei Bedarf separat mitbestellen: Glühzünder 8 718 600 054, Ionisationselektrode 7100238"
+      ]
+    },
+    {
+      "order_number": "7736604314",
+      "order_number_formatted": "7 736 604 314",
+      "category": "gas_brennwert_boden",
+      "brand": "Bosch/Junkers",
+      "page_reference": 15,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "KBRC 22..30..40..50",
+        "KBRC 22..30..40..50 -1",
+        "GC7000F 15..22..30..40..50"
+      ],
+      "contents": [
+        {
+          "description": "Ionisationselektrode",
+          "article_number": "8738803648",
+          "article_number_formatted": "8738803648",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Zündelektrode",
+          "article_number": "8718595817",
+          "article_number_formatted": "8718595817",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Brennertür",
+          "article_number": "8718583004",
+          "article_number_formatted": "8718583004",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Siphon",
+          "article_number": "7100742",
+          "article_number_formatted": "7100742",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Siphon",
+          "article_number": "7100819",
+          "article_number_formatted": "7100819",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Kleinteile",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "ACCESSORY",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    },
+    {
+      "order_number": "7736604315",
+      "order_number_formatted": "7 736 604 315",
+      "category": "gas_brennwert_boden",
+      "brand": "Bosch/Junkers",
+      "page_reference": 15,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "GC8000iF 15..22..30..40..50"
+      ],
+      "contents": [
+        {
+          "description": "Ionisationselektrode",
+          "article_number": "8738804049",
+          "article_number_formatted": "8738804049",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Zündelektrode",
+          "article_number": "8718595817",
+          "article_number_formatted": "8718595817",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Brennertür",
+          "article_number": "8718583004",
+          "article_number_formatted": "8718583004",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Siphon",
+          "article_number": "7100742",
+          "article_number_formatted": "7100742",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Siphon",
+          "article_number": "7100819",
+          "article_number_formatted": "7100819",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Kleinteile",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "ACCESSORY",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    },
+    {
+      "order_number": "8738805303",
+      "order_number_formatted": "8 738 805 303",
+      "category": "gas_brennwert_boden",
+      "brand": "Bosch/Junkers",
+      "page_reference": 16,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "GC7000F 75..100..150..200..250..300"
+      ],
+      "contents": [
+        {
+          "description": "Ionisationselektrode",
+          "article_number": "8738804966",
+          "article_number_formatted": "8738804966",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Zündelektrode",
+          "article_number": "8738804967",
+          "article_number_formatted": "8738804967",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Brennstab",
+          "article_number": "8738804969",
+          "article_number_formatted": "8738804969",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtungen Kesselblock/Brenner",
+          "article_number": "8738804597",
+          "article_number_formatted": "8738804597",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Kleinteile",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "ACCESSORY",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [
+        {
+          "description": "Dichtungsset Revisionsdeckel (VPE 2 Stk.)",
+          "article_number": "8738804659",
+          "article_number_formatted": "8 738 804 659",
+          "category": "OPTIONAL",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": false,
+          "notes": "Tausch nach 5 Betriebsjahren empfohlen"
+        }
+      ],
+      "notes": [
+        "Laut Wartungsanleitung empfehlen wir den Tausch der Revisionsdeckeldichtungen nach 5 Betriebsjahren. Bei Bedarf bestellen Sie das Dichtungsset 8 738 804 659 separat (VPE 2 Stk.).",
+        "Mengenstaffel Revisionsdeckeldichtung: 75-100 kW = 1x, 150-200 kW = 2x, 250-300 kW = 3x"
+      ]
+    },
+    {
+      "order_number": "7736604316",
+      "order_number_formatted": "7 736 604 316",
+      "category": "oel_brennwert_boden",
+      "brand": "Bosch/Junkers",
+      "page_reference": 17,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "KUB 19 -3, 4",
+        "OC8000F 19"
+      ],
+      "contents": [
+        {
+          "description": "Zündelektrode",
+          "article_number": "63022655",
+          "article_number_formatted": "63022655",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Öldüse",
+          "article_number": "7747028974",
+          "article_number_formatted": "7747028974",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung",
+          "article_number": "7747004201",
+          "article_number_formatted": "7747004201",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung",
+          "article_number": "8718585504",
+          "article_number_formatted": "8718585504",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Ölfilter",
+          "article_number": "87185724960",
+          "article_number_formatted": "8718572496 0",
+          "category": "CONSUMABLE",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Ölpumpe",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Kleinteile",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "ACCESSORY",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    },
+    {
+      "order_number": "7736604317",
+      "order_number_formatted": "7 736 604 317",
+      "category": "oel_brennwert_boden",
+      "brand": "Bosch/Junkers",
+      "page_reference": 17,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "KUB 27 -3, 4",
+        "OC8000F 27"
+      ],
+      "contents": [
+        {
+          "description": "Zündelektrode",
+          "article_number": "8718585045",
+          "article_number_formatted": "8718585045",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung",
+          "article_number": "7747004201",
+          "article_number_formatted": "7747004201",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung",
+          "article_number": "8718585504",
+          "article_number_formatted": "8718585504",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Ölfilter",
+          "article_number": "87185724960",
+          "article_number_formatted": "8718572496 0",
+          "category": "CONSUMABLE",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Ölpumpe",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Kleinteile",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "ACCESSORY",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    },
+    {
+      "order_number": "7736604320",
+      "order_number_formatted": "7 736 604 320",
+      "category": "oel_brennwert_boden",
+      "brand": "Bosch/Junkers",
+      "page_reference": 18,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "KUB 18 / KUBC 18-1",
+        "OC7000F 18"
+      ],
+      "contents": [
+        {
+          "description": "Zündelektrode",
+          "article_number": "8718585036",
+          "article_number_formatted": "8718585036",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Öldüse",
+          "article_number": "7747028874",
+          "article_number_formatted": "7747028874",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung",
+          "article_number": "8718585504",
+          "article_number_formatted": "8718585504",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Ölfilter",
+          "article_number": "87185724960",
+          "article_number_formatted": "8718572496 0",
+          "category": "CONSUMABLE",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Ölpumpe",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Kleinteile",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "ACCESSORY",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    },
+    {
+      "order_number": "7736604321",
+      "order_number_formatted": "7 736 604 321",
+      "category": "oel_brennwert_boden",
+      "brand": "Bosch/Junkers",
+      "page_reference": 18,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "KUB 22 / KUBC 22-1",
+        "OC7000F 22"
+      ],
+      "contents": [
+        {
+          "description": "Zündelektrode",
+          "article_number": "8718585036",
+          "article_number_formatted": "8718585036",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Öldüse",
+          "article_number": "7747028943",
+          "article_number_formatted": "7747028943",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung",
+          "article_number": "8718585504",
+          "article_number_formatted": "8718585504",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Ölfilter",
+          "article_number": "87185724960",
+          "article_number_formatted": "8718572496 0",
+          "category": "CONSUMABLE",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Ölpumpe",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Kleinteile",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "ACCESSORY",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    },
+    {
+      "order_number": "7736604322",
+      "order_number_formatted": "7 736 604 322",
+      "category": "oel_brennwert_boden",
+      "brand": "Bosch/Junkers",
+      "page_reference": 18,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "KUB 30 / KUBC 30-1",
+        "OC7000F 30"
+      ],
+      "contents": [
+        {
+          "description": "Zündelektrode",
+          "article_number": "8718585036",
+          "article_number_formatted": "8718585036",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Öldüse",
+          "article_number": "7736604063",
+          "article_number_formatted": "7736604063",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung",
+          "article_number": "8718585504",
+          "article_number_formatted": "8718585504",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Ölfilter",
+          "article_number": "87185724960",
+          "article_number_formatted": "8718572496 0",
+          "category": "CONSUMABLE",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Ölpumpe",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Kleinteile",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "ACCESSORY",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    },
+    {
+      "order_number": "7736604323",
+      "order_number_formatted": "7 736 604 323",
+      "category": "oel_brennwert_boden",
+      "brand": "Bosch/Junkers",
+      "page_reference": 18,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "KUB 35 / KUBC 35-1",
+        "OC7000F 35"
+      ],
+      "contents": [
+        {
+          "description": "Zündelektrode",
+          "article_number": "8718585036",
+          "article_number_formatted": "8718585036",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Öldüse",
+          "article_number": "87185725040",
+          "article_number_formatted": "8718572 5040",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung",
+          "article_number": "8718585504",
+          "article_number_formatted": "8718585504",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Ölfilter",
+          "article_number": "87185724960",
+          "article_number_formatted": "8718572496 0",
+          "category": "CONSUMABLE",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Ölpumpe",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Kleinteile",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "ACCESSORY",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    },
+    {
+      "order_number": "7736604324",
+      "order_number_formatted": "7 736 604 324",
+      "category": "oel_brennwert_boden",
+      "brand": "Bosch/Junkers",
+      "page_reference": 18,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "KUBC 49-1",
+        "OC7000F 49"
+      ],
+      "contents": [
+        {
+          "description": "Zündelektrode",
+          "article_number": "8718585045",
+          "article_number_formatted": "8718585045",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Öldüse",
+          "article_number": "7747028862",
+          "article_number_formatted": "7747028862",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung",
+          "article_number": "8718585504",
+          "article_number_formatted": "8718585504",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Ölfilter",
+          "article_number": "87185724960",
+          "article_number_formatted": "8718572496 0",
+          "category": "CONSUMABLE",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Ölpumpe",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Kleinteile",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "ACCESSORY",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    },
+    {
+      "order_number": "7736604258",
+      "order_number_formatted": "7 736 604 258",
+      "category": "oel_brennwert_boden",
+      "brand": "Bosch/Junkers",
+      "page_reference": 19,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "OC8000iF/FM 19"
+      ],
+      "contents": [
+        {
+          "description": "Zündelektrode",
+          "article_number": "8738807293",
+          "article_number_formatted": "8738807293",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Öldüse",
+          "article_number": "8738807252",
+          "article_number_formatted": "8738807252",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung",
+          "article_number": "7747004201",
+          "article_number_formatted": "7747004201",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung",
+          "article_number": "8718585504",
+          "article_number_formatted": "8718585504",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Ölfilter",
+          "article_number": "87185724960",
+          "article_number_formatted": "8718572496 0",
+          "category": "CONSUMABLE",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Ölpumpe",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Kleinteile",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "ACCESSORY",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    },
+    {
+      "order_number": "7736604155",
+      "order_number_formatted": "7 736 604 155",
+      "category": "oel_brennwert_boden",
+      "brand": "Bosch/Junkers",
+      "page_reference": 19,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "OC8000iF/FM 25"
+      ],
+      "contents": [
+        {
+          "description": "Zündelektrode",
+          "article_number": "8738807293",
+          "article_number_formatted": "8738807293",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Öldüse",
+          "article_number": "8738807128",
+          "article_number_formatted": "8738807128",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung",
+          "article_number": "7747004201",
+          "article_number_formatted": "7747004201",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung",
+          "article_number": "8718585504",
+          "article_number_formatted": "8718585504",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Ölfilter",
+          "article_number": "87185724960",
+          "article_number_formatted": "8718572496 0",
+          "category": "CONSUMABLE",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Dichtung Ölpumpe",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Kleinteile",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "ACCESSORY",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    },
+    {
+      "order_number": "8738727168",
+      "order_number_formatted": "8 738 727 168",
+      "category": "gas_warmwasserthermen",
+      "brand": "Junkers",
+      "page_reference": 20,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "T4304 10..",
+        "T4304 10 D..",
+        "T4304 10 N 23 (Gerätebest.nr. 7735505966)",
+        "T4304 14 R 23 (Gerätebest.nr. 7736505702)",
+        "T4304 14 DR 23 (bis FD 174 = Jun.21)"
+      ],
+      "contents": [
+        {
+          "description": "Zündbolzen",
+          "article_number": "8738722869",
+          "article_number_formatted": "8738722869",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Ionisationselektrode",
+          "article_number": "8738722870",
+          "article_number_formatted": "8738722870",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Filter",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "CONSUMABLE",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Diverse O-Ringe",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    },
+    {
+      "order_number": "8738739204",
+      "order_number_formatted": "8 738 739 204",
+      "category": "gas_warmwasserthermen",
+      "brand": "Junkers",
+      "page_reference": 20,
+      "maintenance_type": "STANDARD",
+      "compatible_models": [
+        "T4304 10 N (Gerätebest.nr. 7736506258)",
+        "T4304 11 D..",
+        "T4304 14 R 23 (Gerätebest.nr. 7736506257)",
+        "T4304 14 DR 23 (ab FD 174 = Jul.21)"
+      ],
+      "contents": [
+        {
+          "description": "Elektrode",
+          "article_number": "8738720477",
+          "article_number_formatted": "8738720477",
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Filter",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "CONSUMABLE",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        },
+        {
+          "description": "Diverse O-Ringe",
+          "article_number": null,
+          "article_number_formatted": null,
+          "category": "SPARE_PART",
+          "quantity": 1.0,
+          "unit": "piece",
+          "required": true
+        }
+      ],
+      "optional_parts": [],
+      "notes": []
+    }
+  ],
+  "cleaning_accessories": [
+    {
+      "order_number": "8737708513",
+      "order_number_formatted": "8 737 708 513",
+      "description": "Dichtungsbox, Allgemein",
+      "type": "ACCESSORY",
+      "page_reference": 5
+    },
+    {
+      "order_number": "8737708514",
+      "order_number_formatted": "8 737 708 514",
+      "description": "Dichtungsbox, Kompakthydraulik",
+      "type": "ACCESSORY",
+      "page_reference": 5
+    },
+    {
+      "order_number": "7738111007",
+      "order_number_formatted": "7 738 111 007",
+      "description": "Smart Service Key",
+      "type": "TOOL",
+      "page_reference": null
+    },
+    {
+      "order_number": "7719003006",
+      "order_number_formatted": "7 719 003 006",
+      "description": "Rundbürste mit Aushebewerkzeug",
+      "type": "TOOL",
+      "page_reference": 7
+    },
+    {
+      "order_number": "7719003007",
+      "order_number_formatted": "7 719 003 007",
+      "description": "Rundbürste ohne Aushebewerkzeug",
+      "type": "TOOL",
+      "page_reference": 7
+    },
+    {
+      "order_number": "7719002404",
+      "order_number_formatted": "7 719 002 404",
+      "description": "Rundbürste mit Aushebewerkzeug spezial",
+      "type": "TOOL",
+      "page_reference": 7
+    },
+    {
+      "order_number": "7719002503",
+      "order_number_formatted": "7 719 002 503",
+      "description": "Reinigungsmesser",
+      "type": "TOOL",
+      "page_reference": 8
+    },
+    {
+      "order_number": "7738113398",
+      "order_number_formatted": "7 738 113 398",
+      "description": "Reinigungs-Set (Reinigungsbürste mit flexibler Welle und austauschbaren Bürstenköpfen)",
+      "type": "TOOL",
+      "page_reference": 9
+    },
+    {
+      "order_number": "7738113221",
+      "order_number_formatted": "7 738 113 221",
+      "description": "Ersatzbürste klein (VPE 5 Stk.)",
+      "type": "CONSUMABLE",
+      "page_reference": 9,
+      "parent_order_number": "7738113398"
+    },
+    {
+      "order_number": "7738113220",
+      "order_number_formatted": "7 738 113 220",
+      "description": "Ersatzbürste groß (VPE 1 Stk.)",
+      "type": "CONSUMABLE",
+      "page_reference": 9,
+      "parent_order_number": "7738113398"
+    },
+    {
+      "order_number": "8737711158",
+      "order_number_formatted": "8 737 711 158",
+      "description": "Ersatzwelle für Reinigungsset (Flexible Welle)",
+      "type": "SPARE_PART",
+      "page_reference": 9,
+      "parent_order_number": "7738113398"
+    },
+    {
+      "order_number": "7736700342",
+      "order_number_formatted": "7 736 700 342",
+      "description": "Reinigungskamm für Wärmetauscher",
+      "type": "TOOL",
+      "page_reference": 13
+    },
+    {
+      "order_number": "7747007899",
+      "order_number_formatted": "7 747 007 899",
+      "description": "Reinigungsbürste OC7000F",
+      "type": "TOOL",
+      "page_reference": 18
+    },
+    {
+      "order_number": "8718580838",
+      "order_number_formatted": "8 718 580 838",
+      "description": "Reinigungsbürste OC8000F",
+      "type": "TOOL",
+      "page_reference": 17
+    },
+    {
+      "order_number": "8718597854",
+      "order_number_formatted": "8 718 597 854",
+      "description": "Reinigungsmesser GC7000F (1 x 15 x 470)",
+      "type": "TOOL",
+      "page_reference": 16
+    },
+    {
+      "order_number": "8718581569",
+      "order_number_formatted": "8 718 581 569",
+      "description": "Reinigungsspachtel GC7000F",
+      "type": "TOOL",
+      "page_reference": 15
+    },
+    {
+      "order_number": "83570060",
+      "order_number_formatted": "8 357 006 0",
+      "description": "Reinigungsset Ölkessel (Nylonbürsten mit Stiel und Kurbelstange)",
+      "type": "TOOL",
+      "page_reference": 18
+    }
+  ],
+  "service_cases": [
+    {
+      "type": "Servicekoffer für Heizwertgeräte",
+      "page_reference": 21,
+      "customisation": "Individuell bestückt statt Standardinhalt",
+      "example": {
+        "compatible_models": [
+          "ZSN 11 -7 KE; ZSR 5/10 -7 KE",
+          "ZSN/ZSR/ZWN/ZWR 18..24 -7 KE"
+        ],
+        "baureihe": "Junkers Heizwertgeräte Baureihe -7",
+        "optional_box": "L-BOXX 374",
+        "contents": [
+          "Abgasüberwachung",
+          "Turbine",
+          "Elektroden",
+          "Manometer",
+          "Temperaturfühler",
+          "Brennerdichtung",
+          "Wartungssatz",
+          "Dichtungsbox",
+          "O-Ringbox",
+          "Umsteuerventil",
+          "Trafo",
+          "Platten-Wärmetauscher",
+          "Pumpe",
+          "Leiterplatte",
+          "Gasarmatur"
+        ]
+      },
+      "notes": [
+        "Individuelle Bestückung auf Anfrage beim Bosch Junkers Vertriebsbeauftragten."
+      ]
+    },
+    {
+      "type": "Servicekoffer für Brennwertgeräte",
+      "page_reference": 22,
+      "notes": [
+        "Details in Seite 22 des Katalogs; nicht in dieser Auszug-Transkription enthalten."
+      ]
+    },
+    {
+      "type": "Servicekoffer für Wärmepumpen",
+      "page_reference": 23,
+      "notes": [
+        "Details in Seite 23 des Katalogs; nicht in dieser Auszug-Transkription enthalten."
+      ]
+    }
+  ]
+}
