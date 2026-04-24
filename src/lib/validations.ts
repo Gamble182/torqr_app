@@ -370,16 +370,25 @@ export const followUpJobUpdateSchema = z.object({
 // can be referenced by the maintenanceCreateSchema.partsUsed field below. The
 // rest of the Phase A (Wartungsteile) schemas live in a single block at the
 // end of this file.
-export const partsUsedEntrySchema = z.object({
-  sourceType: z.enum(['DEFAULT', 'OVERRIDE_ADD', 'AD_HOC']),
-  setItemId: z.string().uuid().optional(),
-  overrideId: z.string().uuid().optional(),
-  inventoryItemId: z.string().uuid().optional(),
-  description: z.string().min(1),
-  articleNumber: z.string().optional(),
-  quantity: z.coerce.number().min(0),
-  unit: z.string().min(1),
-});
+export const partsUsedEntrySchema = z
+  .object({
+    sourceType: z.enum(['DEFAULT', 'OVERRIDE_ADD', 'AD_HOC']),
+    setItemId: z.string().uuid().optional(),
+    overrideId: z.string().uuid().optional(),
+    inventoryItemId: z.string().uuid().optional(),
+    description: z.string().min(1),
+    articleNumber: z.string().optional(),
+    quantity: z.coerce.number().min(0),
+    unit: z.string().min(1),
+  })
+  .refine((d) => d.sourceType !== 'DEFAULT' || !!d.setItemId, {
+    message: 'setItemId ist bei sourceType=DEFAULT erforderlich',
+    path: ['setItemId'],
+  })
+  .refine((d) => d.sourceType !== 'OVERRIDE_ADD' || !!d.overrideId, {
+    message: 'overrideId ist bei sourceType=OVERRIDE_ADD erforderlich',
+    path: ['overrideId'],
+  });
 
 export const maintenanceCreateSchema = z.object({
   systemId: uuidSchema,
@@ -632,14 +641,19 @@ export const customerSystemOverrideSchema = z.discriminatedUnion('action', [
 
 // --- Inventory -------------------------------------------------------------
 
-export const inventoryItemCreateSchema = z.object({
-  description: z.string().min(1),
-  articleNumber: z.string().optional(),
-  unit: z.string().min(1).default('Stck'),
-  minStock: z.coerce.number().min(0).default(0),
-});
+export const inventoryItemCreateSchema = z
+  .object({
+    description: z.string().min(1),
+    articleNumber: z.string().optional(),
+    unit: z.string().min(1).default('Stck'),
+    minStock: z.coerce.number().min(0).default(0),
+  })
+  .strict();
 
-export const inventoryItemUpdateSchema = inventoryItemCreateSchema.partial();
+// Note: `.partial()` on a strict object preserves strict mode in Zod 4.
+// We append `.strict()` again defensively in case the Zod version behaves
+// differently, ensuring unknown keys like `currentStock` stay rejected.
+export const inventoryItemUpdateSchema = inventoryItemCreateSchema.partial().strict();
 
 export const inventoryMovementCreateSchema = z
   .object({

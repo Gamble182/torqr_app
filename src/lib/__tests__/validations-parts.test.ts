@@ -14,9 +14,12 @@ describe('maintenanceSetItemCreateSchema', () => {
       description: 'Werkzeugkoffer',
       quantity: 1,
       unit: 'Stck',
-      inventoryItemId: 'abc-uuid',
+      inventoryItemId: 'acd8177d-6b22-4c82-82b4-331088095493',
     });
     expect(r.success).toBe(false);
+    if (!r.success) {
+      expect(r.error.issues.some((i) => i.message.includes('Werkzeug'))).toBe(true);
+    }
   });
 
   it('accepts TOOL without inventoryItemId', () => {
@@ -73,6 +76,9 @@ describe('customerSystemOverrideSchema (discriminated union)', () => {
       inventoryItemId: 'acd8177d-6b22-4c82-82b4-331088095493',
     });
     expect(r.success).toBe(false);
+    if (!r.success) {
+      expect(r.error.issues.some((i) => i.message.includes('Werkzeug'))).toBe(true);
+    }
   });
 
   it('accepts EXCLUDE with excludedSetItemId', () => {
@@ -104,6 +110,22 @@ describe('inventoryItemCreateSchema', () => {
   it('accepts minimal description-only entry', () => {
     const r = inventoryItemCreateSchema.safeParse({
       description: 'Dichtung',
+    });
+    expect(r.success).toBe(true);
+  });
+
+  it('rejects client-supplied currentStock (security: only movements mutate stock)', () => {
+    const r = inventoryItemCreateSchema.safeParse({
+      description: 'Injektor',
+      currentStock: 99,
+      minStock: 2,
+    });
+    expect(r.success).toBe(false);
+  });
+
+  it('accepts valid minimal input', () => {
+    const r = inventoryItemCreateSchema.safeParse({
+      description: 'Injektor',
     });
     expect(r.success).toBe(true);
   });
@@ -164,5 +186,46 @@ describe('partsUsedEntrySchema', () => {
       unit: 'Stck',
     });
     expect(r.success).toBe(false);
+  });
+
+  it('rejects DEFAULT without setItemId', () => {
+    const r = partsUsedEntrySchema.safeParse({
+      sourceType: 'DEFAULT',
+      description: 'x',
+      quantity: 1,
+      unit: 'Stck',
+    });
+    expect(r.success).toBe(false);
+  });
+
+  it('rejects OVERRIDE_ADD without overrideId', () => {
+    const r = partsUsedEntrySchema.safeParse({
+      sourceType: 'OVERRIDE_ADD',
+      description: 'x',
+      quantity: 1,
+      unit: 'Stck',
+    });
+    expect(r.success).toBe(false);
+  });
+
+  it('accepts DEFAULT with setItemId', () => {
+    const r = partsUsedEntrySchema.safeParse({
+      sourceType: 'DEFAULT',
+      setItemId: 'acd8177d-6b22-4c82-82b4-331088095493',
+      description: 'Injektor',
+      quantity: 2,
+      unit: 'Stck',
+    });
+    expect(r.success).toBe(true);
+  });
+
+  it('accepts AD_HOC without any linkage id', () => {
+    const r = partsUsedEntrySchema.safeParse({
+      sourceType: 'AD_HOC',
+      description: 'Zusatzteil',
+      quantity: 1,
+      unit: 'Stck',
+    });
+    expect(r.success).toBe(true);
   });
 });
