@@ -64,7 +64,7 @@ Per task, in order:
 
 ### Last committed SHA
 
-`7415042` (Task 3: `formatPartCategory` helper)
+`0f6297c` (Task 8: MaintenanceSetItem PATCH/DELETE + bulk reorder)
 
 ### Session 1 (2026-04-24) — Foundation
 
@@ -74,31 +74,51 @@ Per task, in order:
 | 2 — Zod schemas | ✅ | `0369aff` + `28da7ad` (fix-round) | 22 tests total (16 original + 6 from review-round). `partsUsedEntrySchema` extended with cross-field refines (DEFAULT → `setItemId` required, OVERRIDE_ADD → `overrideId` required). `inventoryItemCreateSchema` + `inventoryItemUpdateSchema` are `.strict()` (defends `currentStock` invariant). |
 | 3 — formatPartCategory | ✅ | `7415042` | Trivial. Parallel reviews. |
 
-**Session 1 full commit chain:**
-- `20915a9` docs(spec): Wartungsteile & Materialmanagement Phase A design *(from brainstorming session, before subagent work)*
-- `e1344b4` docs(plan): 37-task impl plan *(from writing-plans session)*
-- `d1432ae` feat(db): add MaintenanceSet, InventoryItem, and related models
-- `0369aff` feat(validations): add Zod schemas for sets, overrides, inventory, and partsUsed
-- `28da7ad` fix(validations): strengthen TOOL refine tests, add partsUsed cross-field refines, strict inventory item schemas
-- `7415042` feat(format): add formatPartCategory helper
+### Session 2 (2026-04-24) — Resolver + MaintenanceSet CRUD API
+
+| Task | Status | Commit SHA(s) | Notes |
+|------|--------|---------------|-------|
+| 4 — getEffectivePartsForSystem resolver | ✅ | `56f3e87` + `6426f2a` (fix-round) | TDD with 6 tests. Test strategy switched to `vi.mock('@/lib/prisma')` (see Decision §9) because `DATABASE_URL` points to production Supabase and no test DB exists — plan's real-DB code would have risked data loss. Review-round fixes: replaced 4 `!` non-null assertions on ADD-override fields with an explicit runtime guard (`throw new Error('ADD override {id} is missing required fields')`); added JSDoc to `getEffectivePartsForSystem`; replaced `parseFloat`-based `d()` helper in tests with `(v: string) => v as unknown as Prisma.Decimal`. |
+| 5 — GET/POST /api/maintenance-sets | ✅ | `4609da2` | 9 tests. OWNER-only (`requireOwner`). 404 on missing catalog, 409 on duplicate `(companyId, catalogId)`. Route also added to `TENANT_ROUTES` audit whitelist. Small pattern deviation: `new URL(request.url)` instead of plan's `request.nextUrl` — matches 7 other API routes in the codebase. |
+| 6 — GET/DELETE /api/maintenance-sets/[id] | ✅ | `79d5d83` | 6 tests. Cross-tenant returns 404 (not 403). `handleError` intentionally duplicated from Task 5 per plan. GET includes full catalog + items(sortOrder asc) with inventoryItem select. |
+| 7 — POST /api/maintenance-sets/[id]/items | ✅ | `2fecb72` | 5 tests. TOOL+inventoryItemId rejection happens in Zod schema (Session 1 Task 2). Cross-tenant `inventoryItem` guard via `findFirst({ where: { id, companyId } })` — load-bearing per Decision §4. Assertion style: test verifies the actual Prisma call args, not just response shape. |
+| 8 — MaintenanceSetItem PATCH/DELETE + reorder | ✅ | `0f6297c` | 11 tests (7 single-item + 4 reorder). `loadItem` helper uses nested Prisma relation filter `{ maintenanceSet: { companyId } }` — idiomatic for items that lack direct `companyId`. Reorder uses `prisma.$transaction([...updates])`. Bulk reorder verifies all item IDs belong to the parent set (400 on mismatch). |
+
+**Session 2 full commit chain (most recent first):**
+- `0f6297c` feat(api): MaintenanceSetItem PATCH/DELETE + bulk reorder
+- `2fecb72` feat(api): POST /api/maintenance-sets/[id]/items
+- `79d5d83` feat(api): GET + DELETE /api/maintenance-sets/[id]
+- `4609da2` feat(api): GET + POST /api/maintenance-sets
+- `6426f2a` fix(lib): harden getEffectivePartsForSystem per review
+- `56f3e87` feat(lib): add getEffectivePartsForSystem resolver
+
+**Also committed to `main` during session start (state-cleanup, not feature work):**
+- `680c962` kundenwartungsteile data — user-curated Wartungsteile reference folder; cherry-picked to main after accidental commit on feature branch. See Session Protocol note below.
 
 **End-of-session health:**
-- Tests: 170/170 passing
+- Tests: 220/220 passing (179 baseline + 41 net new across Tasks 4–8)
 - `tsc --noEmit`: clean
 - Build: not yet run (deferred to Task 34)
 - Working tree: clean (except pre-existing `kundenaustausch/Wartungsteile/` untracked state)
+- Review status: Task 4 passed full sequential reviews (spec + code quality, 1 fix round). Tasks 5–8 passed a single combined batch review (see Decision §10) with Approved status; two minor non-blocking follow-ups captured in Decision §11.
+
+**Session start cleanup note:** Session 2 opened with an accidental commit on feature (`4451e97 kundenwartungsteile data`) bundling the user's Wartungsteile reference folder. User intent was main branch. Recovery: cherry-picked to main (as `680c962`), then `git reset --mixed HEAD~1` on feature to restore the runbook-documented untracked state. No feature-branch content lost.
 
 ---
 
 ## Next Up
 
-**Start Session 2 with Task 4: `getEffectivePartsForSystem` resolver.**
+**Start Session 3 with Task 9: `GET/POST /api/inventory`.**
 
-Substantive — use the full subagent-driven flow. Test-driven (write 6 test cases first, implement after).
+Substantive — inventory CRUD with stock-status filter (`?filter=low`). Unlike Tasks 5–8, inventory READs are accessible to both OWNER and TECHNICIAN (read-only for TECH); writes remain OWNER-only.
 
-Full task text is in [plans/2026-04-24-wartungsteile-materialmanagement-phase-a.md](./2026-04-24-wartungsteile-materialmanagement-phase-a.md#task-4-effective-parts-resolver).
+Full task text is in [plans/2026-04-24-wartungsteile-materialmanagement-phase-a.md](./2026-04-24-wartungsteile-materialmanagement-phase-a.md).
 
-**Suggested Session 2 chunk: Tasks 4 → 5 → 6 → 7 → 8** (resolver + MaintenanceSet CRUD API). These share the same area of the codebase; pattern familiarity compounds after Task 5. Pause after Task 8 if context is healthy, earlier if review cycles consume too much.
+**Suggested Session 3 chunk: Tasks 9 → 10 → 11** (complete Inventory API — list/create, detail/update/delete, movements).
+
+**For Session 3+ — carry-forward minor cleanups from Session 2 code review (do NOT block Task 9 on these; fold in opportunistically when touching the same files):**
+- `src/app/api/maintenance-sets/[id]/route.ts` `handleError`: no ZodError branch (currently fine; add comment or branch if a PATCH handler is ever added to this file).
+- `src/app/api/maintenance-set-items/[id]/route.ts` `loadItem`: the `include: { maintenanceSet: { select: { companyId: true } } }` is unused post-load — the `where` clause already enforces scoping. Minor inefficiency (extra join); safe to drop in a cleanup pass.
 
 ---
 
@@ -120,13 +140,30 @@ Decisions made during execution that future sessions MUST know about (beyond wha
 
 7. **Parallel reviews for trivial tasks.** Task 3 used parallel spec + code-quality reviews (read-only, non-conflicting). Acceptable pragmatic deviation from the skill's sequential review flow. **Rule:** reserve this only for tasks with ≤ 50 LOC surface area AND no cross-file changes. If in doubt, sequential.
 
-8. **`kundenaustausch/Wartungsteile/` folder is user-curated — do not touch.** The folder contains:
+8. **`kundenaustausch/Wartungsteile/` folder is user-curated — now committed on main (Session 2 cleanup).** The folder contains:
    - `Serviceteile 2026.pdf` (Grünbeck supplier list — user-provided)
    - `Wartungsheft Bosch Junkers Kessel + Wartungsteile.pdf` (scan-only Bosch heft)
    - `Serviceteile_2026.txt` (pdftotext artifact from Session 1)
    - `maintenance_parts_extracted.json` (Session 1 partial Grünbeck extraction)
    - `Bosch_raw.txt` (empty pdftotext attempt)
-   - **`wartungsheft_bosch_junkers.json` — user-curated manual OCR transcription (30 sets, 163 parts)** — valuable seed material for Phase B feature N-5 (PDF import). Future sessions should NOT commit or modify this folder unless user explicitly asks. Git shows the folder as untracked + the Bosch PDF as deleted from the root level (both are expected).
+   - **`wartungsheft_bosch_junkers.json` — user-curated manual OCR transcription (30 sets, 163 parts)** — valuable seed material for Phase B feature N-5 (PDF import).
+   - **Session 2 state change:** the folder was accidentally committed on feature branch at session start (`4451e97`). Recovery: cherry-picked to main (`680c962`), then `git reset --mixed HEAD~1` on feature. Folder is now **tracked on `main`** (not on `feature/wartungsteile-phase-a`). On feature branch, `git status` shows the folder as untracked (expected). Future sessions on feature should NOT commit or modify this folder. When feature merges into main, the folder content will already be present — no merge conflict expected.
+
+9. **Test strategy: `vi.mock('@/lib/prisma')`, NOT real DB (Session 2, Task 4+).** The plan's TDD examples show `prisma.X.create()` / `deleteMany()` with a real database. This was **deliberately overridden** at Session 2 start because:
+   - No test DB infrastructure exists (no `TEST_DATABASE_URL`, no Vitest DB setup hooks)
+   - `.env`'s `DATABASE_URL` points to **production Supabase** (`hwagqyywixhhorhjtydt`)
+   - All 4 pre-existing Prisma-touching tests in the codebase use `vi.mock('@/lib/prisma', ...)`
+   - Running the plan's code verbatim would have created real rows and called `deleteMany()` across entire tables — catastrophic data loss risk.
+   
+   **Applies to all subsequent tasks with TDD** (Tasks 9, 10, 11, 12, 13, 14, 15, 16, 17 — anything the plan describes as "real DB, Sprint 26 pattern"). Use `vi.mock` and assert Prisma call args directly. Template: `src/app/api/employees/__tests__/route.test.ts` and the files in `src/app/api/maintenance-sets/__tests__/` from Session 2.
+   
+   **Trade-off accepted:** Prisma query-shape bugs (wrong field names in `include`, wrong relation names) are not caught by mocks. Compensating controls: (a) TypeScript catches most shape errors at compile time via `@prisma/client` types; (b) Task 35 manual verification will exercise real queries end-to-end; (c) a follow-up backlog item (**N-12: Integration-test DB provisioning**, to be added in Task 37 BACKLOG sign-off) can introduce a disposable Supabase test branch for Phase B if pilot ops justifies the setup cost.
+
+10. **Combined review instead of sequential spec+quality for CRUD batch (Session 2, Tasks 5–8).** The skill's default is: sequential spec review → fix → sequential code-quality review → fix, per task. For the 4 MaintenanceSet/Item CRUD tasks, that would have been 8 review dispatches. Because all 4 tasks follow the same proven pattern (mirroring Task 5, which got the full flow) and are individually ≤ 80 LOC per route, a single combined spec+quality review covering all 4 commits was dispatched after Task 8. Review returned **Approved** with 2 minor non-blocking follow-ups (captured in Decision §11). **Extension of Decision §7:** for tightly-patterned CRUD task groups (2+ consecutive tasks of the same shape), combined batch review is acceptable when: (a) the first task of the group passed full sequential flow, (b) each subsequent task ≤ 80 LOC route surface, (c) each subsequent task has no cross-cutting changes beyond its own directory + tenant-isolation audit whitelist. If any criterion fails, revert to sequential per task.
+
+11. **Session 2 code-review carry-forward items (non-blocking, pick up opportunistically).**
+    - **`src/app/api/maintenance-sets/[id]/route.ts` `handleError`** (Task 6): has no `ZodError` branch. Currently correct because GET/DELETE do not parse request bodies. If a PATCH handler is ever added to this file, add the `ZodError → 400` branch first.
+    - **`src/app/api/maintenance-set-items/[id]/route.ts` `loadItem`** (Task 8): the `include: { maintenanceSet: { select: { companyId: true } } }` is fetched but never read post-load — the `where` clause already enforces scoping via the nested filter. One extra join per call, no security impact. Safe to drop `include` when the file is next touched.
 
 ---
 
@@ -200,12 +237,12 @@ Decisions made during execution that future sessions MUST know about (beyond wha
 | 1 | Prisma schema + migration | ✅ `d1432ae` |
 | 2 | Zod schemas | ✅ `0369aff` + `28da7ad` |
 | 3 | formatPartCategory | ✅ `7415042` |
-| 4 | getEffectivePartsForSystem resolver | ⏸ **NEXT** |
-| 5 | GET/POST /api/maintenance-sets | ⏳ |
-| 6 | GET/DELETE /api/maintenance-sets/[id] | ⏳ |
-| 7 | POST /api/maintenance-sets/[id]/items | ⏳ |
-| 8 | PATCH/DELETE item + reorder | ⏳ |
-| 9 | GET/POST /api/inventory | ⏳ |
+| 4 | getEffectivePartsForSystem resolver | ✅ `56f3e87` + `6426f2a` |
+| 5 | GET/POST /api/maintenance-sets | ✅ `4609da2` |
+| 6 | GET/DELETE /api/maintenance-sets/[id] | ✅ `79d5d83` |
+| 7 | POST /api/maintenance-sets/[id]/items | ✅ `2fecb72` |
+| 8 | PATCH/DELETE item + reorder | ✅ `0f6297c` |
+| 9 | GET/POST /api/inventory | ⏸ **NEXT** |
 | 10 | GET/PATCH/DELETE /api/inventory/[id] | ⏳ |
 | 11 | GET/POST /api/inventory/[id]/movements | ⏳ |
 | 12 | POST /api/customer-systems/[id]/overrides (+ cross-tenant guards) | ⏳ |
