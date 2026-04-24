@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import type { Prisma } from '@prisma/client';
 
 vi.mock('@/lib/prisma', () => ({
   prisma: {
@@ -17,9 +18,11 @@ vi.mock('@/lib/prisma', () => ({
 import { getEffectivePartsForSystem } from '@/lib/maintenance-parts';
 import { prisma } from '@/lib/prisma';
 
-// Use plain numbers for mock data — Prisma.Decimal is structurally compatible
-// with numeric values in test mocks cast via `as never`
-const d = (v: string) => parseFloat(v);
+// Cast string literals to Prisma.Decimal for mock data — avoids parseFloat
+// precision loss. The `as unknown as` double-cast is intentional: Prisma.Decimal
+// is a class, not assignable from string directly, but test mocks don't
+// exercise arithmetic so the shape is sufficient.
+const d = (v: string) => v as unknown as Prisma.Decimal;
 
 const SYSTEM_ID = 'sys-1';
 const COMPANY_ID = 'co-1';

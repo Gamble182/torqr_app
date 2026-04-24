@@ -24,6 +24,18 @@ export type EffectivePart = {
   } | null;
 };
 
+/**
+ * Resolves the effective parts list for a customer system.
+ *
+ * Returns DEFAULT set items minus EXCLUDE overrides, plus ADD overrides,
+ * sorted ascending by sortOrder. Returns [] if the system does not exist
+ * or belongs to a different company (tenant safety), or if no MaintenanceSet
+ * has been configured for the system's catalog entry.
+ *
+ * @param customerSystemId - The customer system to resolve parts for
+ * @param companyId - Caller's tenant — used to scope both the system lookup
+ *                   and the maintenance set lookup
+ */
 export async function getEffectivePartsForSystem(
   customerSystemId: string,
   companyId: string,
@@ -95,19 +107,26 @@ export async function getEffectivePartsForSystem(
 
   const adds: EffectivePart[] = overrides
     .filter((o) => o.action === 'ADD')
-    .map((o) => ({
-      source: 'OVERRIDE_ADD',
-      overrideId: o.id,
-      category: o.category!,
-      description: o.description!,
-      articleNumber: o.articleNumber,
-      quantity: o.quantity!,
-      unit: o.unit!,
-      required: o.required,
-      note: o.note,
-      sortOrder: o.sortOrder,
-      inventoryItem: o.inventoryItem,
-    }));
+    .map((o) => {
+      if (!o.category || !o.description || !o.quantity || !o.unit) {
+        throw new Error(
+          `ADD override ${o.id} is missing required fields (category/description/quantity/unit)`,
+        );
+      }
+      return {
+        source: 'OVERRIDE_ADD' as const,
+        overrideId: o.id,
+        category: o.category,
+        description: o.description,
+        articleNumber: o.articleNumber,
+        quantity: o.quantity,
+        unit: o.unit,
+        required: o.required,
+        note: o.note,
+        sortOrder: o.sortOrder,
+        inventoryItem: o.inventoryItem,
+      };
+    });
 
   return [...defaults, ...adds].sort((a, b) => a.sortOrder - b.sortOrder);
 }
