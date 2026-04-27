@@ -64,7 +64,7 @@ Per task, in order:
 
 ### Last committed SHA
 
-`1b57c29` (Session 7 Task 21: inventory, movements, packing-list hooks)
+`8378a14` (Session 8 Task 24: /dashboard/wartungssets/[id] detail + item form)
 
 ### Session 1 (2026-04-24) — Foundation
 
@@ -222,6 +222,45 @@ Per task, in order:
 - `src/hooks/useEffectiveParts.ts:67` (Task 20): uses `30 * 1000` while peer hooks use `30_000` literal style. Cosmetic style inconsistency only.
 - `src/hooks/useInventoryMovements.ts` (Task 21): explicit `['inventory', itemId, 'movements']` invalidation alongside `['inventory']` is technically redundant (prefix-match covers it). Plan-driven; if cleaning, drop the explicit child.
 - `src/hooks/useMaintenanceSets.ts` `useCreateMaintenanceSet` (Task 19): If the API later adds `_count: { items: 0 }` to the POST response for symmetry, the `MaintenanceSetCreated = Omit<...>` type can be removed in favor of `MaintenanceSetSummary`. Track if a future task touches the POST handler.
+
+### Session 8 (2026-04-27) — Frontend kickoff: nav + Wartungssets pages
+
+| Task | Status | Commit SHA(s) | Notes |
+|------|--------|---------------|-------|
+| 22 — Nav: Wartungssets + Lager entries | ✅ | `0c83ebc` | +17/-2 LOC in `src/components/DashboardNav.tsx`. Trivial — parallel spec + quality reviews per Decision §7. Both reviews approved on first pass with only minor non-blocking notes (see carry-forward). Icons: `ClipboardListIcon` (Wartungssets, OWNER-only), `Package2Icon` (Lager, both roles). Low-stock badge approach: `useInventoryItems('low')` called unconditionally at top of component, displayed value zeroed for non-OWNER (`isOwner ? lowStockItems?.length ?? 0 : 0`) — accepts one extra GET per technician nav-mount (staleTime 30s) instead of extending the hook with an `enabled` option for a single consumer. Badge takes the `ml-auto` slot in place of the active-dot when shown (`active && !collapsed && !showBadge` — clean). Style copied verbatim from the existing Inhaber pill (`bg-sidebar-primary/20 text-sidebar-primary text-[10px] uppercase px-1.5 py-0.5 rounded`). Spec reviewer: ✅. Quality reviewer: ✅ Approved. |
+| 23 — `/dashboard/wartungssets` list page | ✅ | `75568e1` + `7f17da7` (fix-round) | 372 LOC across 3 new files: `page.tsx` (36) + `MaintenanceSetList.tsx` (160) + `CatalogPickerForSetCreation.tsx` (176). Sequential review per Decision §10 (372 LOC > 80 LOC threshold). Spec ✅ first pass. Quality returned **Approved-with-fixes**: I-1 = 409 race left `existingCatalogIds` stale (mutation never reaches `onSuccess` so list cache wasn't invalidated → user sees same now-taken row again); M-4 = `new Set(...)` on every parent render destabilized the picker's `useMemo` deps. Fix-round commit `7f17da7` (+11/-1) addressed both: unconditional `queryClient.invalidateQueries({ queryKey: ['maintenance-sets'] })` in the `catch` branch + `useMemo` wrap on `existingCatalogIds`. Implementer's beyond-plan choice (lifted the duplicate-filter Set construction from picker to parent) accepted as cleaner. OWNER guard placed in `page.tsx` (mirrors `employees/page.tsx`). Two-level grouping: outer `SYSTEM_TYPE_ORDER` `['HEATING','AC','WATER_TREATMENT','ENERGY_STORAGE']` → inner manufacturer alphabetical via `localeCompare('de')` → sets sorted by `catalog.name`. Reused `SYSTEM_TYPE_LABELS` from `src/lib/constants.ts`. Modal pattern: inline `fixed inset-0 z-50 ...` with `max-w-lg`. Item-count badge uses `ClipboardListIcon` + pluralized "Teil"/"Teile". 409 race surfaced via `toast.error` (sonner). |
+| 24 — `/dashboard/wartungssets/[id]` detail + item form | ✅ | `8378a14` | 788 LOC across 4 new files: `page.tsx` (9) + `MaintenanceSetDetail.tsx` (216) + `MaintenanceSetItemsTable.tsx` (242) + `MaintenanceSetItemForm.tsx` (321). Substantive — full sequential review (spec ✅ then quality ✅, no fix-round). Page wrapper uses `use(params)` exactly per plan's verbatim snippet. OWNER guard placed inside `MaintenanceSetDetail` (not the page wrapper) so the wrapper stays trivially thin. shadcn `<AlertDialog>` used for both delete-set + delete-item confirmations (with `e.preventDefault()` + `!isPending` gating to keep dialog open during async work). Reorder logic correctly swaps `sortOrder` *values* (NOT array indices): `[{a.id, b.sortOrder}, {b.id, a.sortOrder}]` per plan example. Server-driven (no optimistic update); rapid-double-click race gated by `if (reorderMutation.isPending) return`. Form: RHF + `zodResolver(maintenanceSetItemCreateSchema)` from `@/lib/validations` with one justified `as Resolver<FormValues>` cast (zod's `default()` chains diverge input/output types). TOOL → inventoryItemId clearing in three layers: `useEffect` clear + native-select disabled + server-side Zod refine. `<Switch>` controlled via `watch('required')` + `setValue`. `parseFloat(item.quantity)` for the Decimal-as-string edit-mode default. Native `<select>` for category and inventory picker (cleaner RHF binding than shadcn `<Select>`). Inventory picker has `__none__` sentinel option mapped to `undefined`, label `— Keine Verknüpfung —`. Category badges by tier: SPARE_PART=default, CONSUMABLE=secondary, TOOL=outline. Quality reviewer noted defense-in-depth on TOOL clearing (3 layers, each independent), confirmed server-side `requireOwner()` on `maintenance-sets/[id]` + `items/route.ts` (so client guard is correctly UX-only, no security dependency), confirmed AlertDialog mutation-gating soundness. |
+
+**Session 8 full commit chain (most recent first):**
+- `8378a14` feat(ui): /dashboard/wartungssets/[id] detail + item form
+- `7f17da7` fix(ui): invalidate maintenance-sets on 409 + memoize taken-catalogIds set
+- `75568e1` feat(ui): /dashboard/wartungssets list page
+- `0c83ebc` feat(nav): add Wartungssets + Lager entries
+
+**Session 8 end-of-session health:**
+- Tests: 313/313 passing across 32 files (no net new — UI components have no test infrastructure)
+- `tsc --noEmit`: clean
+- Working tree: `.claude/settings.json` modified (pre-existing user-level — leave alone), `graphify-out-{backbone,codemap}/` modified (auto-regenerated by post-commit hook, will ride along with the next commit per CLAUDE.md), `kundenaustausch/Wartungsteile/` untracked (pre-existing — leave alone).
+- Review status: Task 22 + 24 **Approved-without-fixes** on first review pass; Task 23 **Approved-with-fixes** (1 fix-round, 2 issues addressed in `7f17da7`).
+- **Browser verification: NOT performed this session.** Per Task 35 (manual verification checklist) the full UI flow will be exercised in browser at the end of Phase A. Individual UI tasks 22-24 verified via `tsc --noEmit` + the existing test suite only.
+
+**Cross-session deviation note:** Sessions 7 + 8 were chained in the same Claude Code context per user request ("continue working on the feature… Lift off!"). Fresh-context default still applies unless explicitly chained — user explicitly chained.
+
+**Session 8 carry-forward items (non-blocking — fold in opportunistically; from Task 22+23+24 quality reviews):**
+- **Task 22:** `useInventoryItems` could accept an `enabled` option to skip the fetch entirely for non-OWNER (saves 1 GET per technician nav-mount; staleTime caches subsequent renders). Backlog candidate.
+- **Task 22:** Badge in `DashboardNav.tsx` lacks `aria-label` (e.g., `aria-label={`${badgeCount} Artikel mit niedrigem Bestand`}`). Screen-reader users currently hear a bare number adjacent to "Lager". Easy add in next pass.
+- **Task 22:** Badge gating uses `item.href === '/dashboard/lager'` literal — coupling. If a third badge ever lands, refactor `NavItem` with `badge?: () => number`. YAGNI for now.
+- **Task 23 + 24:** Inline modal pattern (`CatalogPickerForSetCreation`, `MaintenanceSetItemForm`, plus existing `CreateEmployeeDialog` and other in-codebase modals) lacks Esc-to-close, backdrop-click-to-close, and focus trap. Repo-wide gap. Worth a future task to introduce a shared `<Dialog>` primitive (e.g., shadcn Radix-based) and migrate all callers in one pass.
+- **Task 23:** `MaintenanceSetList` and `CatalogPickerForSetCreation` both implement `groupBySystemTypeAndManufacturer` with the same sort rules (~25 LOC duplication). Extract to `src/lib/maintenance-sets/grouping.ts` if a third caller appears.
+- **Task 23:** Click-row pattern uses `role="button" tabIndex={0}` (matches `EmployeeCard`); a real `<button>` element would be slightly more correct semantically. Not regressing existing pattern, accept.
+- **Task 24:** AlertDialog destructive-confirm boilerplate is duplicated in `MaintenanceSetDetail` and `MaintenanceSetItemsTable` (~30 LOC). Extract a `<DestructiveConfirmDialog />` if a third caller lands.
+- **Task 24:** `MaintenanceSetItemsTable.isMutating` combines reorder + delete into one flag → all rows' Edit buttons disable while one row's delete is in flight. Functionally safe, slightly conservative UX.
+- **Task 24:** The `as Resolver<FormValues>` cast on `MaintenanceSetItemForm.tsx:86` deserves a 1-line comment explaining the zod `default()` input/output divergence; future maintainer might "fix" the cast and break compilation.
+
+**Session 7 carry-forward items (non-blocking — fold in opportunistically; from Task 19+20+21 quality reviews):**
+- `src/hooks/useEffectiveParts.ts:67` (Task 20): uses `30 * 1000` while peer hooks use `30_000` literal style. Cosmetic style inconsistency only.
+- `src/hooks/useInventoryMovements.ts` (Task 21): explicit `['inventory', itemId, 'movements']` invalidation alongside `['inventory']` is technically redundant (prefix-match covers it). Plan-driven; if cleaning, drop the explicit child.
+- `src/hooks/useMaintenanceSets.ts` `useCreateMaintenanceSet` (Task 19): If the API later adds `_count: { items: 0 }` to the POST response for symmetry, the `MaintenanceSetCreated = Omit<...>` type can be removed in favor of `MaintenanceSetSummary`. Track if a future task touches the POST handler.
 - **Lesson learned for future hook tasks:** when a list endpoint includes derived counts (`_count`), all detail-mutation hooks must invalidate the list prefix. Confirmed for sets in Task 19 fix-round; verified non-issue for inventory in Task 21 (the `['inventory']` prefix invalidation already cascades to movements and detail).
 - **Lesson learned for hook briefings:** the plan pseudocode uses `any` and `Record<string, unknown>` consistently — this is loose-typed. Future hook briefings should explicitly require codebase-strict typing (read `useEmployees.ts` first, define proper interfaces). Tasks 19-21 all required this departure from plan; document once in Decisions §13.
 
@@ -229,16 +268,13 @@ Per task, in order:
 
 ## Next Up
 
-**Start Session 8 with Task 22: Navigation — sidebar entries for Wartungssets + Lager.** Then Tasks 23 (`/dashboard/wartungssets` list page) and 24 (`/dashboard/wartungssets/[id]` detail + item form). All three are user-facing UI tasks — the first frontend-page batch of the feature.
+**Start Session 9 with Task 25: `/dashboard/lager` list + status badge.** Then Task 26 (Inventory drawer + item form + movement form). Both are UI tasks consuming the inventory hooks already in place from Session 7.
 
-This shifts the work mode from API/hook plumbing (Tasks 1–21, all done) to actual UI: sidebar nav additions, then list and detail pages. Expect:
-- Task 22 is trivial (a few sidebar nav-item additions in the existing layout file).
-- Task 23 is medium (list page using `useMaintenanceSets`, with create-set CTA).
-- Task 24 is substantive (detail page consuming `useMaintenanceSet`, `useMaintenanceSetItems`, with item form using `react-hook-form` + Zod).
+This continues the frontend-page work mode established in Session 8. Expect:
+- Task 25 is medium (list page using `useInventoryItems`, with status badge per row — ok / niedrig / leer based on `currentStock` vs `minStock`). OWNER + TECHNICIAN both read; OWNER also sees "+ Neuer Artikel" CTA.
+- Task 26 is substantive (detail drawer with movement history, item create/edit form, manual RESTOCK / CORRECTION movement form, all OWNER-only — TECHNICIAN sees read-only).
 
-UI tasks should be tested in the browser per CLAUDE.md ("For UI or frontend changes, start the dev server and use the feature in a browser before reporting the task as complete"). Plan accordingly: dev server start, manual click-through, screenshot of the UI in messages if context allows.
-
-**Suggested Session 8 chunk: Tasks 22 → 23 → 24.** Three tasks; if Task 24 grows large, pause after Task 23.
+**Suggested Session 9 chunk: Tasks 25 → 26.** Two tasks; if Task 26 grows large, pause after Task 25 and pick up Task 27 + 28 in Session 10 instead.
 
 **Carry-forward non-blocking items (cumulative — pick up opportunistically when touching the relevant files):**
 - `src/app/api/maintenance-sets/[id]/route.ts` `handleError`: no ZodError branch. Fine for GET/DELETE-only; add `ZodError → 400` branch if a PATCH handler is ever added.
@@ -403,10 +439,10 @@ Decisions made during execution that future sessions MUST know about (beyond wha
 | 19 | Hooks — sets + set-items | ✅ `19a1e13` + `45677b6` |
 | 20 | Hooks — overrides + effective-parts | ✅ `dbd34e5` |
 | 21 | Hooks — inventory + movements + packing | ✅ `1b57c29` |
-| 22 | Nav — Wartungssets + Lager entries | ⏸ **NEXT** |
-| 23 | /dashboard/wartungssets list | ⏳ |
-| 24 | /dashboard/wartungssets/[id] detail + item form | ⏳ |
-| 25 | /dashboard/lager list + status badge | ⏳ |
+| 22 | Nav — Wartungssets + Lager entries | ✅ `0c83ebc` |
+| 23 | /dashboard/wartungssets list | ✅ `75568e1` + `7f17da7` |
+| 24 | /dashboard/wartungssets/[id] detail + item form | ✅ `8378a14` |
+| 25 | /dashboard/lager list + status badge | ⏸ **NEXT** |
 | 26 | Inventory drawer + item form + movement form | ⏳ |
 | 27 | PartsListCard on system detail | ⏳ |
 | 28 | MaintenanceChecklistModal Step 2.5 Teileverbrauch | ⏳ |
