@@ -16,7 +16,10 @@ import {
   ClockIcon,
   ChevronLeftIcon,
   UserCogIcon,
+  ClipboardListIcon,
+  Package2Icon,
 } from 'lucide-react';
+import { useInventoryItems } from '@/hooks/useInventory';
 
 type NavItem = {
   name: string;
@@ -30,6 +33,8 @@ const navigation: NavItem[] = [
   { name: 'Kunden', href: '/dashboard/customers', icon: UsersIcon },
   { name: 'Systeme', href: '/dashboard/systems', icon: WrenchIcon },
   { name: 'Wartungen', href: '/dashboard/wartungen', icon: WrenchIcon },
+  { name: 'Wartungssets', href: '/dashboard/wartungssets', icon: ClipboardListIcon, ownerOnly: true },
+  { name: 'Lager', href: '/dashboard/lager', icon: Package2Icon },
   { name: 'Termine', href: '/dashboard/termine', icon: CalendarIcon },
   { name: 'Mitarbeiter', href: '/dashboard/employees', icon: UserCogIcon, ownerOnly: true },
 ];
@@ -37,6 +42,9 @@ const navigation: NavItem[] = [
 export function DashboardNav() {
   const pathname = usePathname();
   const { data: session } = useSession();
+  const { data: lowStockItems } = useInventoryItems('low');
+  const isOwner = session?.user?.role === 'OWNER';
+  const lowStockCount = isOwner ? (lowStockItems?.length ?? 0) : 0;
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [currentDateTime, setCurrentDateTime] = useState(new Date());
@@ -104,8 +112,10 @@ export function DashboardNav() {
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {navigation.filter((item) => !item.ownerOnly || session?.user?.role === 'OWNER').map((item) => {
+        {navigation.filter((item) => !item.ownerOnly || isOwner).map((item) => {
           const active = isActive(item.href);
+          const badgeCount = item.href === '/dashboard/lager' ? lowStockCount : 0;
+          const showBadge = badgeCount > 0 && !collapsed;
           return (
             <Link
               key={item.name}
@@ -123,7 +133,12 @@ export function DashboardNav() {
                 }`}
               />
               {!collapsed && <span>{item.name}</span>}
-              {active && !collapsed && (
+              {showBadge && (
+                <span className="ml-auto shrink-0 text-[10px] font-medium uppercase tracking-wide px-1.5 py-0.5 rounded bg-sidebar-primary/20 text-sidebar-primary">
+                  {badgeCount}
+                </span>
+              )}
+              {active && !collapsed && !showBadge && (
                 <div className="ml-auto w-1.5 h-1.5 rounded-full bg-sidebar-primary" />
               )}
             </Link>
