@@ -64,7 +64,7 @@ Per task, in order:
 
 ### Last committed SHA
 
-`1c14453` (Session 5 Task 16: DELETE /api/maintenances/[id] auto-reverses stock movements / R1)
+`a8c4d74` (Session 6 Task 18: dashboard stats include inventoryBelowMinStockCount for OWNER)
 
 ### Session 1 (2026-04-24) — Foundation
 
@@ -172,15 +172,39 @@ Per task, in order:
 - `src/app/api/maintenances/[id]/__tests__/route.test.ts` case 6 (Task 16): could additionally assert `expect(prisma.inventoryItem.update).not.toHaveBeenCalled()` to lock against a `create`/`update` reorder regression. Cheap, non-blocking.
 - `src/app/api/maintenances/[id]/__tests__/route.test.ts` `mockDecimal` (Task 16): stubs only `.neg()`, `.abs()`, `.toString()`, `.valueOf()`. Add a 1-line comment near the stub clarifying that adding new Decimal calls in the route requires extending the stub.
 
+### Session 6 (2026-04-27) — Packing-list API + dashboard stats extension
+
+| Task | Status | Commit SHA(s) | Notes |
+|------|--------|---------------|-------|
+| 17 — GET /api/bookings/[id]/packing-list | ✅ | `e47c566` | 8 tests. Substantive — full sequential review (spec ✅ then quality ✅, no fix-round). Mirrors Task 14 `effective-parts` route shape: requireAuth → rate-limit → findFirst → 404 if null → 403 if TECHNICIAN-not-assigned → resolver delegation. TECHNICIAN check happens AFTER the findFirst lookup so cross-tenant existence cannot be probed via 404-vs-403 oracle. Plan pseudocode omitted `rateLimitByUser` — fixed per Decision §12 (signature changed `_request` → `request`, test mocks `@/lib/rate-limit`). Booking-without-systemId case relies on Prisma's `include: { system: ... }` returning `null` when the FK is null — both `system: null` and `effectiveParts: []` returned in that branch. TECHNICIAN scope intentionally narrower than `bookings/[id]/route.ts` GET (only `booking.assignedToUserId === userId`, NOT also `system.assignedToUserId`) per plan. Audit whitelist updated. Two strongly-recommended pin tests added beyond the 5 plan cases: `findFirst` `where`/`include` shape pin + resolver-delegation arg pin. |
+| 18 — Dashboard stats include `inventoryBelowMinStockCount` | ✅ | `a8c4d74` | 5 tests. Trivial — parallel spec + quality reviews per Decision §7. In-memory filter approach per plan (`findMany` with `select: { currentStock: true, minStock: true }`, then `.filter((i) => i.currentStock.lt(i.minStock)).length`); explicitly NOT raw SQL or Prisma field-comparison. Spread idiom `...(isOwner ? { inventoryBelowMinStockCount } : {})` so TECHNICIAN response truly omits the field (asserted via `not.toHaveProperty` + `findMany NOT called`). Tests use real `Prisma.Decimal` from `@prisma/client/runtime/library` — exercises actual `.lt()` semantics including the boundary case `5 lt 5 → false`. Out-of-scope items deliberately preserved: `unassignedSystemsCount` always-included pattern untouched; rate-limit NOT added (existing route was pre-Decision-§12). |
+
+**Session 6 full commit chain (most recent first):**
+- `a8c4d74` feat(api): dashboard stats include inventoryBelowMinStockCount for OWNER
+- `e47c566` feat(api): GET /api/bookings/[id]/packing-list
+
+**Session 6 end-of-session health:**
+- Tests: 313/313 passing across 32 files (+15 net new across Tasks 17–18: 8 + 5 + 2 audit auto-generated)
+- `tsc --noEmit`: clean
+- Working tree: clean (except pre-existing `kundenaustausch/Wartungsteile/` untracked state)
+- Review status: both tasks **Approved-without-fixes** on first review pass. No fix-round required for Session 6. Task 17 went sequential per substantive-task rule; Task 18 went parallel per Decision §7 (≤50 LOC, no cross-cutting changes).
+
+**Session 6 audit whitelist additions to `src/__tests__/audit/tenant-isolation.test.ts`:**
+- `'bookings/[id]/packing-list/route.ts'`
+
+**Session 6 carry-forward items (non-blocking — fold in opportunistically; from Task 18 quality review):**
+- `src/app/api/dashboard/stats/route.ts` line 83 (Task 18): the new `findMany` for inventoryBelowMinStockCount runs **serially** after `unassignedSystemsCount` inside the `if (isOwner)` block, rather than joining the upstream `Promise.all` (lines 36–80). Mirrors the existing `unassignedSystemsCount` placement; pilot scale makes this trivial. If the OWNER stats path ever shows latency, fold both into a single `Promise.all`. Cosmetic.
+- `src/app/api/dashboard/stats/route.ts` line 83 (Task 18): outer-scope declaration `let inventoryBelowMinStockCount = 0` is dead in the non-OWNER path because the spread idiom omits it. Harmless, but the variable could be inlined into the `if (isOwner)` block since the spread is the only consumer. Cleanup-only; touch when refactoring.
+
 ---
 
 ## Next Up
 
-**Start Session 6 with Task 17: GET /api/bookings/[id]/packing-list.**
+**Start Session 7 with Task 19: Hooks — sets + set-items.** Then Tasks 20 (overrides + effective-parts hooks) and 21 (inventory + movements + packing hooks) — same shape, can batch in one session per the suggested chunking (line 374 of this runbook).
 
-Trivial-to-medium scope — first packing-list endpoint. Likely substantive enough for sequential review (cross-tenant guard on booking lookup + assignedToUserId TECHNICIAN role-scope + delegating to the resolver from Task 4). Followed by Task 18: extend dashboard stats with `inventoryBelowMinStockCount` (very small — likely parallel reviews per Decision §7).
+This is the first front-end-adjacent batch of the feature. All three are React Query hook files in `src/hooks/`. Task 21 will also create the `useBookingPackingList` hook that consumes the Task 17 endpoint. Expect repetitive pattern: each hook follows the `useCustomers`/`useHeaters` template already in `src/hooks/`. Likely all three can use parallel reviews per Decision §7 (each hook ≤ 50 LOC, single file per task), but watch surface size — if Task 21's three hooks exceed ~150 LOC combined, fall back to sequential.
 
-**Suggested Session 6 chunk: Tasks 17 → 18.** Two tasks max — Task 17 is read-only but slightly more involved (loads booking + customer + system + technician + effective parts), Task 18 is a counter add to the existing dashboard stats route.
+**Suggested Session 7 chunk: Tasks 19 → 20 → 21.** Three hook tasks. If context pressure rises, pause after Task 20 — that still wraps the API-side hooks neatly.
 
 **Carry-forward non-blocking items (cumulative — pick up opportunistically when touching the relevant files):**
 - `src/app/api/maintenance-sets/[id]/route.ts` `handleError`: no ZodError branch. Fine for GET/DELETE-only; add `ZodError → 400` branch if a PATCH handler is ever added.
@@ -333,9 +357,9 @@ Decisions made during execution that future sessions MUST know about (beyond wha
 | 14 | GET effective-parts route (+ cross-tenant inventoryItemId guards) | ✅ `ce8e767` |
 | 15 | Extend POST /api/maintenances (+ cross-tenant inventoryItemId guards) | ✅ `50f5c30` |
 | 16 | Extend DELETE /api/maintenances/[id] — R1 reversal | ✅ `1c14453` |
-| 17 | GET /api/bookings/[id]/packing-list | ⏸ **NEXT** |
-| 18 | Extend dashboard/stats with inventoryBelowMinStockCount | ⏳ |
-| 19 | Hooks — sets + set-items | ⏳ |
+| 17 | GET /api/bookings/[id]/packing-list | ✅ `e47c566` |
+| 18 | Extend dashboard/stats with inventoryBelowMinStockCount | ✅ `a8c4d74` |
+| 19 | Hooks — sets + set-items | ⏸ **NEXT** |
 | 20 | Hooks — overrides + effective-parts | ⏳ |
 | 21 | Hooks — inventory + movements + packing | ⏳ |
 | 22 | Nav — Wartungssets + Lager entries | ⏳ |
