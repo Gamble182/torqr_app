@@ -3,7 +3,7 @@
 **Projekt:** Torqr — Kundenverwaltungs- und Wartungsplattform
 **Entwickler:** Y. Dorth
 **Stundensatz:** 95 €/Std — *günstig für Senior Full-Stack (Marktüblich 90–130 €/h)*
-**Stand:** 2026-04-23
+**Stand:** 2026-04-27
 
 ---
 
@@ -11,10 +11,10 @@
 
 | Metrik | Wert |
 |---|---|
-| Echtzeit gesamt (deine Arbeit mit Claude) | **~75 h** (Teil 1: ~20 h · Teil 2: ~50 h · Teil 3: ~5 h) |
-| Solo-Dev-Äquivalenz gesamt (Senior Full-Stack, ohne KI) | **~489 h** (Teil 1: 145 h · Teil 2: 312 h · Teil 3: 32 h) |
-| Effizienzfaktor (Solo / Echtzeit) | **~6.5 ×** |
-| MVP-Wert @ 95 €/h | **~46.455 €** |
+| Echtzeit gesamt (deine Arbeit mit Claude) | **~77 h** (Teil 1: ~20 h · Teil 2: ~50 h · Teil 3: ~7.3 h) |
+| Solo-Dev-Äquivalenz gesamt (Senior Full-Stack, ohne KI) | **~523 h** (Teil 1: 145 h · Teil 2: 312 h · Teil 3: 66 h) |
+| Effizienzfaktor (Solo / Echtzeit) | **~6.8 ×** |
+| MVP-Wert @ 95 €/h | **~49.685 €** |
 
 *95 €/h ist auf der günstigen Seite des marktüblichen Bands für Senior Full-Stack-Entwicklung (90–130 €/h). Der Effizienzfaktor zeigt, welchen Solo-Dev-Aufwand dieselbe Leistung konventionell gebunden hätte.*
 
@@ -330,4 +330,6 @@ Tier-Referenz:
 | Datum | Tier | Echtzeit (gem.) | Solo-Dev-Äquiv. | Sprint / Bereich | Aktivitäten | Commits |
 |---|---|---|---|---|---|---|
 | 2026-04-23 | XL | 5 h | 32 h | Sprints 24 + 25 + 26 + 27 | **Sprint 24** Technician Workload Management (AssigneeBadge, Employee-Detail-Page, URL-driven Assignee-Filter, Auto-Reassign bei Deaktivierung, 8 neue Tests). **Sprint 25** Termine-Page + Cal.com Reschedule/Cancel (volle `/dashboard/termine` Seite mit List+Kalender, Booking-Details-Drawer, Reschedule+Cancel-Modals, Cal.com v2 API-Client, 2 neue Email-Templates, Booking-Status-Metadaten + Migration, HMAC-Fail-Closed-Fix). **Sprint 26** React-Query-Konsistenz + Permission-Hardening + Rate-Limiting (wartungen + customer-edit Pages auf useQuery, 3 Components auf useMutation, DELETE-Routes auf requireOwner #57, Upstash-Redis-Rate-Limiter #59/#66). **Sprint 27** System-Photos (up to 5 photos pro CustomerSystem, Variant-B-Permissions, SystemPhotosCard, 12 neue Tests, Migration live auf Prod-Supabase). **Bugfixes** Termine-Dropdown-Clip + FileList-live-Reference. Hook-Sessions nur fragmentarisch erfasst (11 Min in 3 Konsultations-Blips) — Hauptarbeit per Git-Timespan rekonstruiert. | 66 |
+| 2026-04-24 | S | 0 h | 2 h | Sprint 28 — Wartungsteile Phase A (Foundation) | Versehentlicher `kundenwartungsteile`-Reference-Folder-Commit auf Feature-Branch korrigiert (cherry-pick → main als `680c962`, anschließend `git reset --mixed HEAD~1` auf Feature). Pre-Session-2-Cleanup ohne Feature-Code-Änderung. Hauptarbeit dieses Sprints findet in chained Sessions am 04-27 statt. | 1 |
+| 2026-04-27 | XL | 2.3 h | 32 h | Sprint 28 — Wartungsteile Phase A (Tasks 12–31) | Wartungsteile-Materialmanagement Phase A in 8 chained Sessions (4–11) via subagent-driven-development executiert. **API-Schicht (Tasks 12–18):** POST/DELETE Customer-System-Overrides mit Cross-Tenant-FK-Guards (Decision §4); GET effective-parts mit TECHNICIAN-Assignee-Scoping; POST /api/maintenances erweitert um partsUsed (transaktional, MAINTENANCE_USE-Movements + negativeStockWarnings, N3-Policy); DELETE mit R1-Reversal über CORRECTION-Movements; GET /api/bookings/[id]/packing-list; dashboard/stats inventoryBelowMinStockCount (OWNER-only). **Hooks (Tasks 19–21):** 11 React Query Hooks über 5 Files (Decimal-as-string, ApiResponse-Envelope, Decision §13). **UI-Schicht (Tasks 22–31):** Sidebar-Nav-Erweiterung mit OWNER-Low-Stock-Badge; volle `/dashboard/wartungssets` List- + Detail-Pages (RHF + zodResolver, TOOL→inventoryItemId-Clearing); `/dashboard/lager`-Page mit Status-Badge + Filter; InventoryDrawer mit Bewegungshistorie + RESTOCK/CORRECTION-Forms + shadcn AlertDialog; PartsListCard auf System-Detail mit ADD/EXCLUDE-Override-Management (Server-GET-Include-Erweiterung + Sleeper-queryKey-Bug-Fix); MaintenanceChecklistModal um Step 2.5 "Teileverbrauch" erweitert (4-Step-Wizard, partsUsed-Submit-Flow, negativeStockWarnings-Toasts); Packing-List Print-View mit Drawer-Button; LowStockDashboardCard auf `/dashboard`; WeeklySummaryEmail Lager-Section. ~6 Fix-Rounds aus Code-Quality-Reviews (badge-variants, mounted-step, sibling-card-layout, queryKey-Invalidation, 409-cache-invalidation, set-reference-stability). **Cross-cutting:** Decision §13 (Strict-Hook-Typing) etabliert; Decision §4 durchgehend angewandt; Vitest-Startup-Flakiness auf Windows mehrfach beobachtet (Re-Run-Workaround dokumentiert). Echtzeit: 1.2 h hook-erfasst (Sessions 6–8) + ~1.1 h per Commit-Timestamps geschätzt (Sessions 9–11 chained, 13:55–15:02). | 37 |
 <!-- Auto-appended at session start by CLAUDE.md "Timesheet Auto-Update" rule -->
