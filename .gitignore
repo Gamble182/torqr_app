@@ -49,3 +49,10 @@ next-env.d.ts
 
 # Claude Code session state for timesheet auto-tracking
 .claude/state/
+
+# graphify session artifacts (machine-specific Python path + temp extraction files)
+.graphify_python
+.graphify_*.json
+.graphify_*.txt
+graphify-out/
+**/graphify-out/cache/.graphify_chunk_*.json
