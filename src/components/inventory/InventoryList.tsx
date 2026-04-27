@@ -6,6 +6,8 @@ import { Loader2Icon, PlusIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useInventoryItems } from '@/hooks/useInventory';
 import { InventoryStatusBadge } from './InventoryStatusBadge';
+import { InventoryDrawer } from './InventoryDrawer';
+import { InventoryItemForm } from './InventoryItemForm';
 
 type InventoryFilter = 'all' | 'low';
 
@@ -129,11 +131,20 @@ export function InventoryList() {
         </div>
       )}
 
-      {/* TODO Task 26: <InventoryDrawer itemId={selectedItemId} onClose={() => setSelectedItemId(null)} /> */}
-      {/* TODO Task 26: <InventoryItemForm open={showCreateForm} onClose={() => setShowCreateForm(false)} /> */}
-      {/* Suppress unused-state lint until Task 26 wires the drawer / form. */}
-      {selectedItemId !== null && null}
-      {showCreateForm && null}
+      {selectedItemId && (
+        <InventoryDrawer
+          itemId={selectedItemId}
+          isOwner={isOwner}
+          onClose={() => setSelectedItemId(null)}
+        />
+      )}
+
+      {showCreateForm && (
+        <InventoryItemForm
+          open={showCreateForm}
+          onClose={() => setShowCreateForm(false)}
+        />
+      )}
     </div>
   );
 }
