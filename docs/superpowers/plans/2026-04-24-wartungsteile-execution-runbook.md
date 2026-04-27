@@ -64,7 +64,7 @@ Per task, in order:
 
 ### Last committed SHA
 
-`ce8e767` (Session 4 Task 14: GET /api/customer-systems/[id]/effective-parts)
+`1c14453` (Session 5 Task 16: DELETE /api/maintenances/[id] auto-reverses stock movements / R1)
 
 ### Session 1 (2026-04-24) — Foundation
 
@@ -148,32 +148,51 @@ Per task, in order:
 - `'overrides/[id]/route.ts'`
 - `'customer-systems/[id]/effective-parts/route.ts'`
 
+### Session 5 (2026-04-27) — Maintenance route extensions (substantive)
+
+| Task | Status | Commit SHA(s) | Notes |
+|------|--------|---------------|-------|
+| 15 — Extend POST /api/maintenances with `partsUsed` | ✅ | `50f5c30` | 8 tests. Substantive — full sequential review. First task in feature to MODIFY an existing route. POST handler `$transaction` callback extended with parts-loop: per-entry cross-tenant guard via `tx.inventoryItem.findFirst({ id, companyId })` (Decision §4); creates `MAINTENANCE_USE` movement with `quantityChange: -Math.abs(entry.quantity)`; decrements stock; pushes `negativeStockWarnings` if `currentStock.lt(0)` (N3 policy — stock allowed negative). Snapshot of all entries (linked + AD_HOC) merged into `checklistData.partsUsed`. Response wrapper extended with `negativeStockWarnings` field. GET handler verbatim untouched. Implementer also tightened test fixtures: strict UUID v4 + ISO datetime to satisfy Zod — no behavior change. |
+| 16 — Extend DELETE /api/maintenances/[id] with R1 reversal | ✅ | `1c14453` | 7 tests. Substantive — full sequential review. Plan pseudocode was INCOMPLETE (omitted photo cleanup); implementer integrated correctly. Photo cleanup placed POST-transaction (rationale in JSDoc: rollback would orphan row from files on retry). New `$transaction` does findMany→loop(create CORRECTION + increment stock)→updateMany(maintenanceId=null)→delete in correct order. CORRECTION movements use Decimal `.neg()` and `.abs()` methods (NOT JS `Math.abs`); German note pinned exactly: `'Rückbuchung: Wartung gelöscht'`; `userId` from `requireOwner` flows into audit. `companyId` filter added defense-in-depth to both findMany and updateMany even though parent maintenance is already tenant-verified (Decision §4 spirit). `updateMany` step kept despite schema `onDelete: SetNull` — pinned by test to prevent silent removal under future schema drift. |
+
+**Session 5 full commit chain (most recent first):**
+- `1c14453` feat(api): DELETE /api/maintenances/[id] auto-reverses stock movements (R1)
+- `50f5c30` feat(api): extend POST /api/maintenances with partsUsed transactional handling
+
+**Session 5 end-of-session health:**
+- Tests: 298/298 passing across 30 files (+15 net new across Tasks 15–16: 8 + 7)
+- `tsc --noEmit`: clean
+- Working tree: clean (except pre-existing `kundenaustausch/Wartungsteile/` untracked state)
+- Review status: both tasks **Approved-without-fixes** on first review pass. No fix-round required for Session 5. Both substantive tasks went through full sequential spec→quality flow per Session Protocol.
+- **Cross-session deviation note:** Sessions 4 + 5 were executed in the SAME Claude Code context (user requested chained execution of Session 5 immediately after Session 4 ended). The runbook's "fresh session per chunk" guideline was relaxed; review quality remained high (zero fix-rounds across 5 tasks), but for Session 6+ revert to fresh-context default unless user explicitly chains.
+
+**Session 5 carry-forward items (non-blocking — fold in opportunistically; from Task 15+16 quality reviews):**
+- `src/app/api/maintenances/route.ts` line 83 (Task 15): the stock decrement uses `decrement: entry.quantity` (raw) while the movement uses `-Math.abs(entry.quantity)`. Asymmetric defense-in-depth. Zod schema enforces `quantity >= 0` so functionally equivalent today; if file is next touched, mirror the `Math.abs` to line 83 for consistency. Cosmetic.
+- `src/app/api/maintenances/[id]/__tests__/route.test.ts` case 6 (Task 16): atomicity-rollback test lacks the explicit comment that mock-mode propagates throws but does NOT exercise real Postgres rollback (Task 35 covers that). Task 15's case 6 has this disclaimer; Task 16 does not. Add the comment when the file is next touched.
+- `src/app/api/maintenances/[id]/__tests__/route.test.ts` case 6 (Task 16): could additionally assert `expect(prisma.inventoryItem.update).not.toHaveBeenCalled()` to lock against a `create`/`update` reorder regression. Cheap, non-blocking.
+- `src/app/api/maintenances/[id]/__tests__/route.test.ts` `mockDecimal` (Task 16): stubs only `.neg()`, `.abs()`, `.toString()`, `.valueOf()`. Add a 1-line comment near the stub clarifying that adding new Decimal calls in the route requires extending the stub.
+
 ---
 
 ## Next Up
 
-**Start Session 5 with Task 15: extend POST `/api/maintenances` with `partsUsed`.**
+**Start Session 6 with Task 17: GET /api/bookings/[id]/packing-list.**
 
-**Substantive — full sequential review per Session Protocol** (one of the five flagged substantive tasks alongside Task 4 resolver, Task 16 delete reversal, Task 28 checklist integration, Task 35 manual verification). This task **modifies an existing route** — first such task in the feature — so the implementer must:
-1. Read the current `src/app/api/maintenances/route.ts` end-to-end before editing
-2. Identify the discriminated `partsUsed` array shape from `partsUsedEntrySchema` (Decision §3 — DEFAULT requires `setItemId`, OVERRIDE_ADD requires `overrideId`, AD_HOC has no linkage)
-3. Apply the **cross-tenant guard from Decision §4** to every `inventoryItemId` reference in `partsUsed` (validate they belong to `companyId` before insert) — this is per-entry, not per-request
-4. Wrap the maintenance create + InventoryMovement creates + InventoryItem stock decrements in a single `prisma.$transaction(async tx => …)` (callback form, mirroring Task 11)
-5. Reuse the resolver to validate that DEFAULT/OVERRIDE_ADD entries actually map to currently effective items (avoid recording usage of an excluded part)
+Trivial-to-medium scope — first packing-list endpoint. Likely substantive enough for sequential review (cross-tenant guard on booking lookup + assignedToUserId TECHNICIAN role-scope + delegating to the resolver from Task 4). Followed by Task 18: extend dashboard stats with `inventoryBelowMinStockCount` (very small — likely parallel reviews per Decision §7).
 
-Full task text: [plans/2026-04-24-wartungsteile-materialmanagement-phase-a.md](./2026-04-24-wartungsteile-materialmanagement-phase-a.md) lines 1867+.
-
-**Suggested Session 5 chunk: Tasks 15 → 16** (POST extension, then DELETE-reversal extension). Both are substantive route extensions of `/api/maintenances`. Two tasks max for Session 5 — they touch the same file, so context-switching would be wasteful; they also both modify existing tests. Don't try to pull Task 17 forward.
+**Suggested Session 6 chunk: Tasks 17 → 18.** Two tasks max — Task 17 is read-only but slightly more involved (loads booking + customer + system + technician + effective parts), Task 18 is a counter add to the existing dashboard stats route.
 
 **Carry-forward non-blocking items (cumulative — pick up opportunistically when touching the relevant files):**
 - `src/app/api/maintenance-sets/[id]/route.ts` `handleError`: no ZodError branch. Fine for GET/DELETE-only; add `ZodError → 400` branch if a PATCH handler is ever added.
 - `src/app/api/maintenance-set-items/[id]/route.ts` `loadItem`: `include: { maintenanceSet: { select: { companyId: true } } }` unused post-load. Safe to drop when the file is next touched.
+- (Session 5 carry-forward items listed in the Session 5 block above.)
 
 **Standing rules already learned (do not re-discover):**
 - Decision §12: every new/extended authenticated route MUST include `rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER)` immediately after the auth helper. Plan pseudocode omits it consistently — treat as defect.
 - Decision §9: `vi.mock('@/lib/prisma')` for tests. NEVER real DB.
-- Decision §4: cross-tenant FK guards on every `inventoryItemId`, `excludedSetItemId`, `setItemId`, `overrideId` reference — they are load-bearing, NOT defensive coding.
+- Decision §4: cross-tenant FK guards on every `inventoryItemId`, `excludedSetItemId`, `setItemId`, `overrideId` reference — they are load-bearing, NOT defensive coding. Apply spirit (defense-in-depth) even where the parent record is already tenant-verified.
 - Audit whitelist: add every new/touched route file in `src/__tests__/audit/tenant-isolation.test.ts` `TENANT_ROUTES`.
+- TECHNICIAN role-scoping pattern (read access only): `if (role === 'TECHNICIAN' && resource.assignedToUserId !== userId) return 403 'Zugriff verweigert'`. Required for Task 17 packing-list.
 
 ---
 
@@ -312,9 +331,9 @@ Decisions made during execution that future sessions MUST know about (beyond wha
 | 12 | POST /api/customer-systems/[id]/overrides (+ cross-tenant guards) | ✅ `6e9da50` |
 | 13 | DELETE /api/overrides/[id] | ✅ `b660b4a` |
 | 14 | GET effective-parts route (+ cross-tenant inventoryItemId guards) | ✅ `ce8e767` |
-| 15 | Extend POST /api/maintenances (+ cross-tenant inventoryItemId guards) | ⏸ **NEXT** |
-| 16 | Extend DELETE /api/maintenances/[id] — R1 reversal | ⏳ |
-| 17 | GET /api/bookings/[id]/packing-list | ⏳ |
+| 15 | Extend POST /api/maintenances (+ cross-tenant inventoryItemId guards) | ✅ `50f5c30` |
+| 16 | Extend DELETE /api/maintenances/[id] — R1 reversal | ✅ `1c14453` |
+| 17 | GET /api/bookings/[id]/packing-list | ⏸ **NEXT** |
 | 18 | Extend dashboard/stats with inventoryBelowMinStockCount | ⏳ |
 | 19 | Hooks — sets + set-items | ⏳ |
 | 20 | Hooks — overrides + effective-parts | ⏳ |
