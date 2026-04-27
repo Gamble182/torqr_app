@@ -23,6 +23,7 @@ const TENANT_ROUTES = [
   'customers/[id]/email-logs/route.ts',
   'customer-systems/route.ts',
   'customer-systems/[id]/route.ts',
+  'customer-systems/[id]/overrides/route.ts',
   'maintenances/route.ts',
   'maintenances/[id]/route.ts',
   'bookings/route.ts',
