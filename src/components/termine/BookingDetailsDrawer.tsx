@@ -165,23 +165,36 @@ export function BookingDetailsDrawer({
 
             {/* Actions */}
             {booking.status === 'CONFIRMED' && (
-              <div className="flex gap-2 pt-3 border-t border-border">
-                {isOwner && (
-                  <Button
-                    variant="outline"
-                    className="flex-1"
-                    onClick={() => onReschedule(booking.id)}
-                  >
-                    Umplanen
+              <div className="space-y-2 pt-3 border-t border-border">
+                {booking.system && (
+                  <Button variant="outline" className="w-full" asChild>
+                    <a
+                      href={`/dashboard/termine/${booking.id}/packliste`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Packliste drucken
+                    </a>
                   </Button>
                 )}
-                <Button
-                  variant="destructive"
-                  className="flex-1"
-                  onClick={() => onCancel(booking.id)}
-                >
-                  Stornieren
-                </Button>
+                <div className="flex gap-2">
+                  {isOwner && (
+                    <Button
+                      variant="outline"
+                      className="flex-1"
+                      onClick={() => onReschedule(booking.id)}
+                    >
+                      Umplanen
+                    </Button>
+                  )}
+                  <Button
+                    variant="destructive"
+                    className="flex-1"
+                    onClick={() => onCancel(booking.id)}
+                  >
+                    Stornieren
+                  </Button>
+                </div>
               </div>
             )}
           </div>
