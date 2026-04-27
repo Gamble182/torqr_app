@@ -60,6 +60,18 @@ const USER_ROUTES = [
   'user/account/route.ts',
 ];
 
+// Routes that accept cross-tenant FKs in user input — every route MUST
+// validate same-tenant ownership of the FK before insert/update via
+// `findFirst({ where: { id: <fkId>, companyId } })` before referencing it.
+// See: runbook Decision §4 (docs/superpowers/plans/2026-04-24-wartungsteile-execution-runbook.md)
+//      spec (docs/superpowers/plans/2026-04-24-wartungsteile-materialmanagement-phase-a.md)
+const CROSS_TENANT_FK_GUARDED_ROUTES: Record<string, string[]> = {
+  'customer-systems/[id]/overrides/route.ts': ['inventoryItemId', 'excludedSetItemId'],
+  'maintenance-sets/[id]/items/route.ts': ['inventoryItemId'],
+  'maintenance-set-items/[id]/route.ts': ['inventoryItemId'],
+  'maintenances/route.ts': ['inventoryItemId'],
+};
+
 // Routes intentionally exempt from companyId scoping — document why.
 // Updating this list requires a corresponding decision record update.
 const EXEMPT_ROUTES: Record<string, string> = {
@@ -129,6 +141,42 @@ describe('Tenant isolation audit', () => {
           `Exempt route not found: src/app/api/${route} — update EXEMPT_ROUTES if this route was renamed or deleted`
         ).toBe(true);
       });
+    }
+  });
+
+  describe('CROSS_TENANT_FK_GUARDED_ROUTES contain ownership guards', () => {
+    for (const [route, fkFields] of Object.entries(CROSS_TENANT_FK_GUARDED_ROUTES)) {
+      for (const fk of fkFields) {
+        it(`${route} references ${fk}`, () => {
+          const content = readRoute(route);
+          expect(
+            content,
+            `\n\nROUTE MISSING FK FIELD: src/app/api/${route}\n` +
+            `Expected to find FK field "${fk}" in route source — has the schema or input shape changed?\n` +
+            `Update CROSS_TENANT_FK_GUARDED_ROUTES if the FK was renamed or removed.\n` +
+            `See: runbook Decision §4 (docs/superpowers/plans/2026-04-24-wartungsteile-execution-runbook.md)\n`
+          ).toContain(fk);
+        });
+
+        it(`${route} guards ${fk} with same-tenant findFirst + companyId`, () => {
+          const content = readRoute(route);
+          // Sanity: the canonical guard pattern is `findFirst({ where: { id: <fkId>, companyId } })`.
+          // We assert both tokens exist; the per-FK test above pins which FK we're auditing.
+          expect(
+            content,
+            `\n\nROUTE MISSING FK GUARD: src/app/api/${route}\n` +
+            `FK "${fk}" must be validated with prisma.<table>.findFirst({ where: { id, companyId } })\n` +
+            `before being referenced in create/update — otherwise a cross-tenant FK leak is possible.\n` +
+            `See: runbook Decision §4 (docs/superpowers/plans/2026-04-24-wartungsteile-execution-runbook.md)\n` +
+            `     spec (docs/superpowers/plans/2026-04-24-wartungsteile-materialmanagement-phase-a.md)\n`
+          ).toContain('findFirst');
+          expect(
+            content,
+            `\n\nROUTE MISSING companyId IN FK GUARD: src/app/api/${route}\n` +
+            `FK "${fk}" guard must include companyId in the where clause.\n`
+          ).toContain('companyId');
+        });
+      }
     }
   });
 
