@@ -15,7 +15,7 @@ Goal: **precision, consistency, and decision quality** — not verbosity.
 - **Domain language:** German (UI texts, emails, error messages always in German)
 - **Live at:** torqr.de (Vercel)
 - **Database:** Supabase PostgreSQL (eu-west-1)
-- **Repo branch model:** `main` = production, `development` = active work
+- **Repo branch model:** `main` is the only long-lived branch (production + active work). Feature work happens on `feature/<slug>` branches, then merges directly into `main`. There is no separate `development` / `staging` branch yet — re-introduce one when a staged Dev → Test → Prod flow is needed.
 
 ### Tech Stack
 
@@ -122,13 +122,10 @@ For cross-graph lookups, swap the JSON path. For docs-specific rationale lookups
 
 ### Keeping graphs fresh
 
-The graphs are read-only artifacts committed to `main`; they reflect the state at the last `/graphify` run.
+- **Code Map + Backbone** are **auto-rebuilt by the `.git/hooks/post-commit` hook** on every commit that touches `src/**/*.{ts,tsx,js,jsx}`. The hook re-runs AST extraction (0 LLM tokens, ~5–10s) and updates `graphify-out-codemap/` and `graphify-out-backbone/` in place. The regenerated files become part of the *next* commit, so the graphs trail HEAD by exactly one commit — accurate enough for navigation.
+- **Docs graph** is stale when new specs/plans land or decisions are superseded. Rebuild manually with `/graphify docs/ --update` (the `--update` flag re-extracts only changed files, so the LLM cost stays small). Typically once per sprint or after each new spec lands.
 
-- **Code Map** stale when: new files added to `src/`, large refactor, function/file renames. Rebuild via `/graphify src/`.
-- **Backbone** stale when: API routes / lib / hooks change materially. Rebuild via `/graphify` on those scopes.
-- **Docs** stale when: new specs/plans added, decisions superseded. Rebuild via `/graphify docs/` (uses LLM subagents — costs tokens).
-
-Rebuild workflow: branch from `main` → `graphify` → run `/graphify <path>` → rename `graphify-out/` to the scoped name → commit → merge back to `main`. Do not commit graph artifacts directly to feature branches.
+If you need to rebuild a graph from scratch (not just incremental update): branch from `main` → `graphify` → run `/graphify <scope>` → rename `graphify-out/` to the scoped name → commit → merge back to `main`.
 
 ---
 
