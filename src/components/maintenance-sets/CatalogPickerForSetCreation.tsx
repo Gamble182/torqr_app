@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { Loader2Icon, SearchIcon, XIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -31,6 +32,7 @@ export function CatalogPickerForSetCreation({
   onClose,
 }: CatalogPickerForSetCreationProps) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { data: entries = [], isLoading } = useCatalog();
   const createSet = useCreateMaintenanceSet();
   const [search, setSearch] = useState('');
@@ -81,6 +83,9 @@ export function CatalogPickerForSetCreation({
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Unbekannter Fehler';
       toast.error(`Fehler beim Anlegen des Wartungssets: ${message}`);
+      // Refresh the parent list so a now-taken catalog row (e.g. after a 409
+      // race with another OWNER) disappears from this picker on next render.
+      queryClient.invalidateQueries({ queryKey: ['maintenance-sets'] });
       setPendingCatalogId(null);
     }
   };

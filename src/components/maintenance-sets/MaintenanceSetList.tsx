@@ -25,6 +25,11 @@ export function MaintenanceSetList() {
   const { data: sets, isLoading, error } = useMaintenanceSets();
   const [showPicker, setShowPicker] = useState(false);
 
+  const existingCatalogIds = useMemo(
+    () => new Set((sets ?? []).map((s) => s.catalogId)),
+    [sets]
+  );
+
   const groups = useMemo<SystemTypeGroup[]>(() => {
     if (!sets) return [];
     const bySystemType = new Map<SystemType, Map<string, MaintenanceSetSummary[]>>();
@@ -115,7 +120,7 @@ export function MaintenanceSetList() {
 
       {showPicker && (
         <CatalogPickerForSetCreation
-          existingCatalogIds={new Set((sets ?? []).map((s) => s.catalogId))}
+          existingCatalogIds={existingCatalogIds}
           onClose={() => setShowPicker(false)}
         />
       )}
