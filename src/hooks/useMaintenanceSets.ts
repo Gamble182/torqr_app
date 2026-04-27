@@ -60,6 +60,12 @@ export interface MaintenanceSetSummary {
 }
 
 /**
+ * Shape returned by POST /api/maintenance-sets.
+ * The create handler does NOT include `_count` in the response.
+ */
+export type MaintenanceSetCreated = Omit<MaintenanceSetSummary, '_count'>;
+
+/**
  * Detail-view shape returned by GET /api/maintenance-sets/:id.
  * Full `catalog` and ordered `items` (with `inventoryItem`) are included.
  */
@@ -119,14 +125,14 @@ export function useMaintenanceSet(id: string | undefined) {
 export function useCreateMaintenanceSet() {
   const queryClient = useQueryClient();
 
-  return useMutation<MaintenanceSetSummary, Error, CreateMaintenanceSetInput>({
+  return useMutation<MaintenanceSetCreated, Error, CreateMaintenanceSetInput>({
     mutationFn: async (input) => {
       const res = await fetch('/api/maintenance-sets', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(input),
       });
-      const result: ApiResponse<MaintenanceSetSummary> = await res.json();
+      const result: ApiResponse<MaintenanceSetCreated> = await res.json();
       if (!result.success || !result.data) {
         throw new Error(result.error || 'Fehler beim Anlegen des Wartungssets');
       }

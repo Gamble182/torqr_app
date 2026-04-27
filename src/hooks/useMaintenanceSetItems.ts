@@ -44,7 +44,7 @@ export function useCreateSetItem(setId: string) {
       return result.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['maintenance-sets', setId] });
+      queryClient.invalidateQueries({ queryKey: ['maintenance-sets'] });
     },
   });
 }
@@ -52,12 +52,12 @@ export function useCreateSetItem(setId: string) {
 export function useUpdateSetItem(setId: string) {
   const queryClient = useQueryClient();
 
-  return useMutation<MaintenanceSetItem, Error, { id: string; data: UpdateSetItemInput }>({
-    mutationFn: async ({ id, data }) => {
+  return useMutation<MaintenanceSetItem, Error, { id: string; body: UpdateSetItemInput }>({
+    mutationFn: async ({ id, body }) => {
       const res = await fetch(`/api/maintenance-set-items/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify(body),
       });
       const result: ApiResponse<MaintenanceSetItem> = await res.json();
       if (!result.success || !result.data) {
@@ -66,7 +66,7 @@ export function useUpdateSetItem(setId: string) {
       return result.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['maintenance-sets', setId] });
+      queryClient.invalidateQueries({ queryKey: ['maintenance-sets'] });
     },
   });
 }
@@ -84,7 +84,7 @@ export function useDeleteSetItem(setId: string) {
       return null;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['maintenance-sets', setId] });
+      queryClient.invalidateQueries({ queryKey: ['maintenance-sets'] });
     },
   });
 }
@@ -106,7 +106,7 @@ export function useReorderSetItems(setId: string) {
       return null;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['maintenance-sets', setId] });
+      queryClient.invalidateQueries({ queryKey: ['maintenance-sets'] });
     },
   });
 }
