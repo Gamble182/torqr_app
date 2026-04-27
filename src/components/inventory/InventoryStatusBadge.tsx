@@ -21,7 +21,12 @@ export function InventoryStatusBadge({
 }) {
   const curr = Number(currentStock);
   const min = Number(minStock);
-  if (curr <= 0) return <Badge className="bg-red-100 text-red-800">Leer</Badge>;
-  if (curr < min) return <Badge className="bg-amber-100 text-amber-800">Niedrig</Badge>;
+  if (curr <= 0) return <Badge variant="destructive">Leer</Badge>;
+  if (curr < min)
+    return (
+      <Badge className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 border-transparent">
+        Niedrig
+      </Badge>
+    );
   return <Badge variant="outline">OK</Badge>;
 }
