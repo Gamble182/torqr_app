@@ -64,7 +64,7 @@ Per task, in order:
 
 ### Last committed SHA
 
-`3ce3781` (Session 9 Task 26: inventory drawer + forms)
+`5fac106` (Session 10 Task 28 fix-round: PartsUsageStep mounted + dead prop dropped)
 
 ### Session 1 (2026-04-24) — Foundation
 
@@ -287,6 +287,38 @@ Per task, in order:
 - **Task 26 (M-5):** `Number(mv.quantityChange) > 0 ? text-emerald-600 : text-destructive` paints zero as destructive. Server-rejected unreachable case but `=== 0 → text-muted-foreground` would be more correct defensively.
 - **Resolver-cast comment style:** Task 26 used a 3-line block (vs Session 8's "1-line" suggestion). Both are acceptable; future tasks can pick whichever feels cleaner — content > line count.
 
+### Session 10 (2026-04-27) — System-detail integration + checklist Step 2.5 (substantive)
+
+| Task | Status | Commit SHA(s) | Notes |
+|------|--------|---------------|-------|
+| 27 — `PartsListCard` on system detail | ✅ | `26b88ae` | 920 LOC across 3 new + 4 modified files. Sequential review per Decision §10. Spec ✅ first pass; quality **Approved-without-fixes**. **Authorized scope expansion:** the briefing flagged that `useCustomerSystem(systemId)` did NOT return `partOverrides`, and option (a) authorized extending the GET handler include + the hook type. Implementer added `partOverrides: { orderBy: { sortOrder: 'asc' } }` to the GET include at `src/app/api/customer-systems/[id]/route.ts:32` (tenant isolation preserved via parent `findFirst({ where: { id, companyId } })` — Prisma includes are constrained by parent filter, audit whitelist already covers this route). **Bonus bug-fix bundled:** `useCreateOverride` and `useDeleteOverride` had been invalidating `['customer-systems', customerSystemId]` (plural-list queryKey shape) which never matched the singular detail key `['customer-system', systemId]` from `useCustomerSystems.ts:70`. Fixed to use the singular key + added `effective-parts` invalidation to the delete path. Was a Session 4 / Task 12+13 sleeper — acceptable to bundle since the new component would have surfaced the symptom. **Card design:** three sections — (1) Standard-Wartungsset preview with OWNER edit/create CTAs; (2) `<CustomerSystemOverrideList>` with Hinzugefügt + Ausgeschlossen sub-groups, OWNER actions bar (+ Teil hinzufügen / + Standard ausschließen), shadcn `<AlertDialog>` for delete; (3) Effektive Liste collapsed-by-default, expand via stateful toggle (not `<details>` — chosen so `(N)` count badge sits next to heading). EXCLUDE picker is an inline modal that filters out already-excluded items via `Set<excludedSetItemId>`. Override form uses local `overrideAddFormSchema` (NOT the union) — RHF can't cleanly handle the discriminator + `excludedSetItemId: z.undefined()` constraint. Decimal-as-string rendering (`{quantity} {unit}`) is consistent with the rest of the new code; locale-aware German formatting is repo-wide carry-forward. |
+| 28 — `MaintenanceChecklistModal` Step 2.5 Teileverbrauch | ✅ | `34a18cf` + `5fac106` (fix-round) | Substantive — 668 LOC across 1 new + 2 modified files. Full sequential review. Spec ✅ first pass; quality **Approved-with-fixes** flagging two material issues sharing one root cause. Implemented Step 3 "Teileverbrauch" between existing Step 2 (Notes+Photos) and what is now Step 4 (Abschließen). **Step renumbering 1→2→3→4** applied throughout: state type, progress indicator iteration, "Schritt X von 4" header text, `step < 4` Weiter gating, `step === 4` Abschließen rendering. **Hook return-shape break:** `useCreateMaintenance` no longer returns bare `Maintenance` — now `{ maintenance, negativeStockWarnings }`. Server returns warnings as a TOP-LEVEL field next to `data` (`{ success, data, negativeStockWarnings }`), so the hook's mutationFn was extended to parse the full response body. Single-caller verified via Grep — only `MaintenanceChecklistModal.tsx` consumes it; updated to destructure. `MaintenancePayload` extended with optional `partsUsed?: PartsUsageEntry[]` (discriminated union by `sourceType` mirroring server's `partsUsedEntrySchema`). `SHARED_INVALIDATION_KEYS` extended with `['inventory']` + `['effective-parts']`. **`PartsUsageStep` design:** initializes from `useEffectiveParts(customerSystemId)` filtered to non-TOOL category; main "Teileverbrauch" rows with verwendet checkbox + quantity input + "nicht verbraucht" link (resets BOTH state slots); read-only "Werkzeug" section for TOOL category (confirmation checkboxes never persisted); collapsible "+ Zusatzteil erfassen" inline form with description / quantity / unit / articleNumber / inventory picker showing `"<articleNumber> · <description> · Bestand <currentStock> <unit>"`. Internal-state-driven (`rows`, `adHocRows`); emits filtered `PartsUsageEntry[]` via `onChange` — only `used && quantity > 0` rows make the cut. **Negative-stock warning UX:** modal calls `useInventoryItems()` once, builds `Map<inventoryItemId, InventoryItem>` in `handleSubmit`, iterates `negativeStockWarnings` array → `toast.warning("Lager für „X" unterschritten — Bestand Y")` per warning with German „..." quotes. `itemMap` falls back to inventoryItemId on cache miss (defensive). **Quality reviewer flagged:** (1) `value` prop was renamed to `_value` and never read — uncontrolled child masquerading as controlled; (2) Step 3 conditional rendering `{step === 3 && <PartsUsageStep>}` caused child to UNMOUNT on Zurück/Weiter, dropping all user toggles + AD_HOC entries on return to Step 3, then silently overwriting parent's `partsUsed` with all-defaults via the emit-effect. **Fix-round commit `5fac106`:** dropped the dead `value` prop entirely (component is internally state-driven by design — adding controlled-mode would be a much larger refactor); replaced conditional rendering with CSS visibility wrapper (`<div style={{ display: step === 3 ? 'block' : 'none' }}>`) so the child stays mounted across step navigation. Added 4-line header comment to PartsUsageStep documenting the contract (parent must keep mounted). Net `+10/-6` LOC. |
+
+**Session 10 full commit chain (most recent first):**
+- `5fac106` fix(ui): keep PartsUsageStep mounted across step navigation + drop dead value prop
+- `34a18cf` feat(ui): MaintenanceChecklistModal Step 2.5 — Teileverbrauch
+- `26b88ae` feat(ui): PartsListCard on system detail page
+
+**Session 10 end-of-session health:**
+- Tests: 313/313 passing across 32 files (no net new — UI components have no test infrastructure)
+- `tsc --noEmit`: clean
+- Working tree: `.claude/settings.json` modified (pre-existing user-level — leave alone), `graphify-out-{backbone,codemap}/` modified (auto-regenerated by post-commit hook, will ride along with the next runbook commit per CLAUDE.md), `kundenaustausch/Wartungsteile/` untracked (pre-existing — leave alone).
+- Review status: Task 27 **Approved-without-fixes** on first review pass; Task 28 needed 1 fix-round (mounted step + dead-prop drop).
+- **Browser verification: NOT performed this session.** Same as Sessions 8 + 9 — Task 35 (manual verification checklist) covers the full UI flow at end of Phase A. **Note:** Task 28 specifically calls for a manual check (start a maintenance, prefill effective parts, "nicht verbraucht" + AD_HOC, verify stock decrement + snapshot in checklistData). This is critical UX validation — must happen at Task 35 latest, ideally sooner if a pilot test environment is available.
+
+**Cross-session deviation note:** Sessions 9 + 10 chained in the same Claude Code context per user request. Fresh-context default still applies unless explicitly chained.
+
+**Session 10 carry-forward items (non-blocking — fold in opportunistically; from Task 27+28 quality reviews):**
+- **Task 27:** Schema duplication: `validations.ts:603` defines `overrideAddSchema` (file-local) and `CustomerSystemOverrideForm.tsx` defines a near-identical local `overrideAddFormSchema`. Future cleanup: export an `overrideAddBaseSchema` (no `excludedSetItemId` constraint, no `action` literal) and have both `customerSystemOverrideSchema` and the form derive from it via `.extend()`.
+- **Task 27:** `CustomerSystemOverrideList` at 399 LOC conflates four concerns (list rendering, OWNER actions bar, EXCLUDE picker modal, delete confirmation). Extract `<ExcludePickerModal>` (~63 LOC, lines 288–351) when next touched.
+- **Task 27 + general:** Locale-aware Decimal formatting (`Intl.NumberFormat('de-DE')` with comma decimal separator) repo-wide. Currently rendering raw `Decimal.toString()` strings (e.g., `"1.50"`) in German UI — pre-existing repo gap, NOT Task 27 specific.
+- **Task 27:** API include change has no test coverage. The new `partOverrides` Prisma include in `customer-systems/[id]/route.ts` GET handler is unverified by tests. Test infrastructure for that route should add a `partOverrides` presence assertion when next touched.
+- **Task 27:** Bug-fix bundling — `fix(hooks): correct override invalidation key` would have been a cleaner standalone commit for blame-archaeology. Bundling acceptable here since the bug surfaced from the new component, but flag for future tasks: separate bug fixes into their own commits when feasible.
+- **Task 28 (Minor #4):** Negative-stock toasts are unbatched — `toast.warning` fires once per warning. If 8 parts go negative simultaneously, user gets 8 stacked toasts. Consider grouping into a single multi-line toast or capping at 3 + "(+N weitere)".
+- **Task 28 (Minor #5):** `parseFloat` on quantity inputs has no locale handling. `parseFloat("1,5")` (German decimal comma) returns `1`. Browser `<input type="number">` typically forces `.` separator, but mobile German keyboards may slip through. Consider `value.replace(',', '.')` before parse, or add a Zod refinement.
+- **Task 28 (Minor #6):** Re-checking a row after "nicht verbraucht" doesn't restore the original quantity from `EffectivePart` (it stays at 0 until user types). Accepted UX — flag in case product wants different behavior.
+- **Task 28 (Minor #8):** `itemMap` build is fine at current scale but flag if inventory > 5000 items.
+
 **Session 7 carry-forward items (non-blocking — fold in opportunistically; from Task 19+20+21 quality reviews):**
 - `src/hooks/useEffectiveParts.ts:67` (Task 20): uses `30 * 1000` while peer hooks use `30_000` literal style. Cosmetic style inconsistency only.
 - `src/hooks/useInventoryMovements.ts` (Task 21): explicit `['inventory', itemId, 'movements']` invalidation alongside `['inventory']` is technically redundant (prefix-match covers it). Plan-driven; if cleaning, drop the explicit child.
@@ -298,15 +330,14 @@ Per task, in order:
 
 ## Next Up
 
-**Start Session 10 with Task 27: PartsListCard on `/dashboard/systems/[id]`.** Then Task 28 (MaintenanceChecklistModal Step 2.5 Teileverbrauch — substantive, the main technician-facing flow integration of the feature).
+**Start Session 11 with Task 29: Packing-list print view page.** Then Tasks 30 (LowStockDashboardCard on `/dashboard`) and 31 (Weekly summary email Lager section). All three are smaller integration tasks consuming hooks already in place from Sessions 6–7.
 
-This shifts from list/detail UI tasks to **integration into existing flows**:
-- Task 27 medium: insert a `PartsListCard` into the existing system-detail page, consuming `useEffectiveParts(systemId)` + the override hooks. OWNER can ADD/EXCLUDE overrides; TECHNICIAN read-only.
-- Task 28 substantive: hook a new "Teileverbrauch" step into the existing `MaintenanceChecklistModal` (the multi-step modal technicians use to complete a maintenance). This is the primary write path for `MAINTENANCE_USE` movements — it's the FIRST consumer of the `partsUsed[]` extension to POST `/api/maintenances` (Task 15).
+This continues the integration mode established in Session 10:
+- Task 29 medium: print-formatted page consuming `usePackingList(bookingId)` + a "Packliste drucken" button on `BookingDetailsDrawer`. Technician-facing read-only view. Print stylesheet considerations (`@media print`).
+- Task 30 small: a low-stock card (OWNER-only) on `/dashboard`. Reuses existing `useInventoryItems('low')`. Renders alongside the existing dashboard stats.
+- Task 31 medium: extend `WeeklySummaryEmail` template + `email/service.tsx` to include a Lager section listing low-stock items (OWNER recipient only). Backend-only change to a React Email template; no new UI work.
 
-Expect Task 28 to be the densest UI work of the feature: existing modal integration, multi-source effective-parts list (DEFAULT, OVERRIDE_ADD, AD_HOC), inventory linkage, transactional submit.
-
-**Suggested Session 10 chunk: Tasks 27 → 28.** Two tasks; if Task 28 grows large, pause after Task 27 and pick up Task 28 alone in Session 11.
+**Suggested Session 11 chunk: Tasks 29 → 30 → 31.** Three small/medium tasks; together less work than Session 10's Task 28 alone. If context allows, pull Task 32 (data migration script) forward; otherwise pause cleanly after Task 31.
 
 **Carry-forward non-blocking items (cumulative — pick up opportunistically when touching the relevant files):**
 - `src/app/api/maintenance-sets/[id]/route.ts` `handleError`: no ZodError branch. Fine for GET/DELETE-only; add `ZodError → 400` branch if a PATCH handler is ever added.
@@ -476,9 +507,9 @@ Decisions made during execution that future sessions MUST know about (beyond wha
 | 24 | /dashboard/wartungssets/[id] detail + item form | ✅ `8378a14` |
 | 25 | /dashboard/lager list + status badge | ✅ `67ff35f` + `045a639` |
 | 26 | Inventory drawer + item form + movement form | ✅ `3ce3781` |
-| 27 | PartsListCard on system detail | ⏸ **NEXT** |
-| 28 | MaintenanceChecklistModal Step 2.5 Teileverbrauch | ⏳ |
-| 29 | Packing-list print view + BookingDetailsDrawer button | ⏳ |
+| 27 | PartsListCard on system detail | ✅ `26b88ae` |
+| 28 | MaintenanceChecklistModal Step 2.5 Teileverbrauch | ✅ `34a18cf` + `5fac106` |
+| 29 | Packing-list print view + BookingDetailsDrawer button | ⏸ **NEXT** |
 | 30 | LowStockDashboardCard on /dashboard | ⏳ |
 | 31 | Weekly summary email Lager section | ⏳ |
 | 32 | Data migration script (`scripts/migrate-required-parts.ts`) | ⏳ |
