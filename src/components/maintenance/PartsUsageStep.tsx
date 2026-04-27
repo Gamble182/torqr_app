@@ -20,7 +20,6 @@ import type { PartsUsageEntry } from '@/hooks/useMaintenances';
 
 interface PartsUsageStepProps {
   customerSystemId: string;
-  value: PartsUsageEntry[];
   onChange: (v: PartsUsageEntry[]) => void;
   inventoryItems: InventoryItem[];
 }
@@ -67,6 +66,11 @@ function formatPartCategoryLabel(cat: 'SPARE_PART' | 'CONSUMABLE' | 'TOOL'): str
   }
 }
 
+// PartsUsageStep is internally state-driven. Parent receives the filtered
+// `PartsUsageEntry[]` via `onChange`. To preserve user state across step
+// navigation, the parent must keep this component mounted (use CSS visibility
+// rather than conditional rendering).
+
 /**
  * Build the initial row state from the resolver result. Skips TOOL entries —
  * they are surfaced separately in the read-only "Werkzeug" section.
@@ -92,7 +96,6 @@ function buildInitialRows(parts: EffectivePart[]): EffectiveRow[] {
 
 export function PartsUsageStep({
   customerSystemId,
-  value: _value,
   onChange,
   inventoryItems,
 }: PartsUsageStepProps) {

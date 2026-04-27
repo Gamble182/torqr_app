@@ -481,15 +481,16 @@ export function MaintenanceChecklistModal({
             </div>
           )}
 
-          {/* ── Step 3: Teileverbrauch ── */}
-          {step === 3 && (
+          {/* ── Step 3: Teileverbrauch ──
+              Always mounted (CSS visibility toggle) so internal row/adHoc state
+              survives Step 2/4 navigation. See PartsUsageStep header comment. */}
+          <div style={{ display: step === 3 ? 'block' : 'none' }}>
             <PartsUsageStep
               customerSystemId={systemId}
-              value={partsUsed}
               onChange={setPartsUsed}
               inventoryItems={inventoryItems}
             />
-          )}
+          </div>
 
           {/* ── Step 4: Abschließen ── */}
           {step === 4 && (
