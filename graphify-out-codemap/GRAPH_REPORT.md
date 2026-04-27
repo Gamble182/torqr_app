@@ -1,12 +1,12 @@
 # Graph Report - src/ (Code Map)  (2026-04-27)
 
 ## Corpus Check
-- 206 files · ~92,931 words
+- 209 files · ~93,953 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 473 nodes · 470 edges · 120 communities detected
-- Extraction: 87% EXTRACTED · 13% INFERRED · 0% AMBIGUOUS · INFERRED: 59 edges (avg confidence: 0.8)
+- 479 nodes · 474 edges · 120 communities detected
+- Extraction: 88% EXTRACTED · 12% INFERRED · 0% AMBIGUOUS · INFERRED: 59 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
@@ -144,8 +144,6 @@
 10. `requireOwner()` - 6 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `handleSubmit()` --calls--> `GET()`  [INFERRED]
-  src\components\MaintenanceChecklistModal.tsx → src\app\api\wartungen\route.ts
 - `setAssignee()` --calls--> `DELETE()`  [INFERRED]
   src\app\dashboard\systems\page.tsx → src\app\api\user\account\route.ts
 - `middleware()` --calls--> `rateLimitMiddleware()`  [INFERRED]
@@ -154,16 +152,18 @@
   src\app\api\wartungen\route.ts → src\lib\admin-auth.ts
 - `GET()` --calls--> `requireAuth()`  [INFERRED]
   src\app\api\wartungen\route.ts → src\lib\auth-helpers.ts
+- `GET()` --calls--> `getEffectivePartsForSystem()`  [INFERRED]
+  src\app\api\wartungen\route.ts → src\lib\maintenance-parts.ts
 
 ## Communities
 
 ### Community 0 - "Community 0"
-Cohesion: 0.06
-Nodes (14): getEffectivePartsForSystem(), parseFilters(), deriveStatus(), GET(), getEligibleSystemIds(), handleBookingCancelled(), handleBookingCreated(), handleBookingRescheduled() (+6 more)
+Cohesion: 0.04
+Nodes (24): getEffectivePartsForSystem(), handleSubmit(), middleware(), computeOptInData(), parseFilters(), buildLimitResponse(), getClientIdentifier(), getLimiter() (+16 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.11
-Nodes (13): requireAuth(), requireOwner(), requireRole(), computeOptInData(), DELETE(), errorJson(), inventoryErr(), isManual() (+5 more)
+Cohesion: 0.12
+Nodes (12): requireAuth(), requireOwner(), requireRole(), DELETE(), errorJson(), inventoryErr(), isManual(), loadItem() (+4 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.09
@@ -186,80 +186,80 @@ Cohesion: 0.18
 Nodes (5): EmailActionsCard(), register(), NotificationsCard(), ProfileCard(), useUser()
 
 ### Community 7 - "Community 7"
-Cohesion: 0.31
-Nodes (8): middleware(), buildLimitResponse(), getClientIdentifier(), getLimiter(), inMemoryCheck(), rateLimit(), rateLimitByUser(), rateLimitMiddleware()
-
-### Community 8 - "Community 8"
 Cohesion: 0.2
 Nodes (0): 
 
-### Community 9 - "Community 9"
+### Community 8 - "Community 8"
 Cohesion: 0.22
 Nodes (1): handleDelete()
 
-### Community 10 - "Community 10"
+### Community 9 - "Community 9"
 Cohesion: 0.25
 Nodes (2): NewCustomerPage(), useCreateCustomer()
 
-### Community 11 - "Community 11"
+### Community 10 - "Community 10"
 Cohesion: 0.36
 Nodes (6): apiKey(), base(), CalComApiError, callJson(), cancelCalBooking(), rescheduleCalBooking()
 
-### Community 12 - "Community 12"
-Cohesion: 0.29
-Nodes (1): handleSubmit()
-
-### Community 13 - "Community 13"
+### Community 11 - "Community 11"
 Cohesion: 0.33
 Nodes (2): addAdHoc(), resetAdHocDraft()
 
-### Community 14 - "Community 14"
+### Community 12 - "Community 12"
 Cohesion: 0.29
 Nodes (0): 
 
-### Community 15 - "Community 15"
+### Community 13 - "Community 13"
+Cohesion: 0.33
+Nodes (3): requireAdmin(), isAdminEmail(), AdminLayout()
+
+### Community 14 - "Community 14"
 Cohesion: 0.4
 Nodes (2): handleAdd(), handleKeyDown()
+
+### Community 15 - "Community 15"
+Cohesion: 0.33
+Nodes (0): 
 
 ### Community 16 - "Community 16"
 Cohesion: 0.33
 Nodes (0): 
 
 ### Community 17 - "Community 17"
-Cohesion: 0.33
+Cohesion: 0.4
 Nodes (0): 
 
 ### Community 18 - "Community 18"
-Cohesion: 0.33
-Nodes (3): requireAdmin(), isAdminEmail(), AdminLayout()
-
-### Community 19 - "Community 19"
 Cohesion: 0.4
 Nodes (0): 
+
+### Community 19 - "Community 19"
+Cohesion: 0.5
+Nodes (3): CatalogPicker(), useCatalog(), useCreateCatalogEntry()
 
 ### Community 20 - "Community 20"
 Cohesion: 0.4
 Nodes (0): 
 
 ### Community 21 - "Community 21"
-Cohesion: 0.5
-Nodes (3): CatalogPicker(), useCatalog(), useCreateCatalogEntry()
+Cohesion: 0.4
+Nodes (0): 
 
 ### Community 22 - "Community 22"
 Cohesion: 0.4
 Nodes (0): 
 
 ### Community 23 - "Community 23"
-Cohesion: 0.4
-Nodes (0): 
+Cohesion: 0.67
+Nodes (2): handleSubmit(), validateForm()
 
 ### Community 24 - "Community 24"
-Cohesion: 0.4
+Cohesion: 0.5
 Nodes (0): 
 
 ### Community 25 - "Community 25"
-Cohesion: 0.67
-Nodes (2): handleSubmit(), validateForm()
+Cohesion: 0.5
+Nodes (0): 
 
 ### Community 26 - "Community 26"
 Cohesion: 0.5
@@ -282,28 +282,28 @@ Cohesion: 0.5
 Nodes (0): 
 
 ### Community 31 - "Community 31"
-Cohesion: 0.5
-Nodes (0): 
-
-### Community 32 - "Community 32"
-Cohesion: 0.5
-Nodes (0): 
-
-### Community 33 - "Community 33"
 Cohesion: 0.67
 Nodes (1): onSubmit()
 
-### Community 34 - "Community 34"
+### Community 32 - "Community 32"
 Cohesion: 0.67
 Nodes (1): StatusBadge()
 
-### Community 35 - "Community 35"
+### Community 33 - "Community 33"
+Cohesion: 0.67
+Nodes (1): Page()
+
+### Community 34 - "Community 34"
 Cohesion: 0.67
 Nodes (0): 
 
-### Community 36 - "Community 36"
+### Community 35 - "Community 35"
 Cohesion: 1.0
 Nodes (2): formatDate(), handleDelete()
+
+### Community 36 - "Community 36"
+Cohesion: 0.67
+Nodes (0): 
 
 ### Community 37 - "Community 37"
 Cohesion: 0.67
@@ -656,23 +656,23 @@ Nodes (0):
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 57`** (2 nodes): `WartungssetsPage()`, `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 58`** (2 nodes): `Page()`, `page.tsx`
+- **Thin community `Community 58`** (2 nodes): `handleSubmit()`, `CompanyNameSetupModal.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 59`** (2 nodes): `handleSubmit()`, `CompanyNameSetupModal.tsx`
+- **Thin community `Community 59`** (2 nodes): `ProtectedRoute()`, `ProtectedRoute.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 60`** (2 nodes): `ProtectedRoute()`, `ProtectedRoute.tsx`
+- **Thin community `Community 60`** (2 nodes): `Providers()`, `Providers.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 61`** (2 nodes): `Providers()`, `Providers.tsx`
+- **Thin community `Community 61`** (2 nodes): `onSubmit()`, `EmailTemplateCard.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 62`** (2 nodes): `onSubmit()`, `EmailTemplateCard.tsx`
+- **Thin community `Community 62`** (2 nodes): `TorqrIcon.tsx`, `TorqrIcon()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 63`** (2 nodes): `TorqrIcon.tsx`, `TorqrIcon()`
+- **Thin community `Community 63`** (2 nodes): `onSubmit()`, `InventoryItemForm.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 64`** (2 nodes): `onSubmit()`, `InventoryItemForm.tsx`
+- **Thin community `Community 64`** (2 nodes): `onSubmit()`, `InventoryMovementForm.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 65`** (2 nodes): `onSubmit()`, `InventoryMovementForm.tsx`
+- **Thin community `Community 65`** (2 nodes): `InventoryStatusBadge()`, `InventoryStatusBadge.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 66`** (2 nodes): `InventoryStatusBadge()`, `InventoryStatusBadge.tsx`
+- **Thin community `Community 66`** (2 nodes): `LowStockDashboardCard()`, `LowStockDashboardCard.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 67`** (2 nodes): `handlePick()`, `CatalogPickerForSetCreation.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
@@ -784,12 +784,12 @@ Nodes (0):
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `GET()` connect `Community 0` to `Community 1`, `Community 3`, `Community 7`, `Community 12`, `Community 18`?**
-  _High betweenness centrality (0.044) - this node is a cross-community bridge._
-- **Why does `POST()` connect `Community 0` to `Community 1`, `Community 3`, `Community 7`?**
-  _High betweenness centrality (0.025) - this node is a cross-community bridge._
-- **Why does `DELETE()` connect `Community 1` to `Community 0`, `Community 3`, `Community 11`, `Community 7`?**
-  _High betweenness centrality (0.018) - this node is a cross-community bridge._
+- **Why does `GET()` connect `Community 0` to `Community 1`, `Community 3`, `Community 13`?**
+  _High betweenness centrality (0.043) - this node is a cross-community bridge._
+- **Why does `POST()` connect `Community 0` to `Community 1`, `Community 3`?**
+  _High betweenness centrality (0.024) - this node is a cross-community bridge._
+- **Why does `DELETE()` connect `Community 1` to `Community 0`, `Community 10`, `Community 3`?**
+  _High betweenness centrality (0.017) - this node is a cross-community bridge._
 - **Are the 13 inferred relationships involving `GET()` (e.g. with `requireAdmin()` and `requireAuth()`) actually correct?**
   _`GET()` has 13 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 11 inferred relationships involving `POST()` (e.g. with `rateLimitMiddleware()` and `safeValidateRequest()`) actually correct?**

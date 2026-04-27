@@ -1,11 +1,11 @@
 # Graph Report - src/app + src/lib + src/hooks (Backbone)  (2026-04-27)
 
 ## Corpus Check
-- 147 files · ~69,572 words
+- 148 files · ~69,916 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 321 nodes · 357 edges · 73 communities detected
+- 322 nodes · 358 edges · 73 communities detected
 - Extraction: 88% EXTRACTED · 12% INFERRED · 0% AMBIGUOUS · INFERRED: 42 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
@@ -216,7 +216,7 @@ Nodes (1): parseFilters()
 
 ### Community 26 - "Community 26"
 Cohesion: 0.67
-Nodes (0): 
+Nodes (1): Page()
 
 ### Community 27 - "Community 27"
 Cohesion: 0.67
@@ -243,7 +243,7 @@ Cohesion: 0.67
 Nodes (0): 
 
 ### Community 33 - "Community 33"
-Cohesion: 1.0
+Cohesion: 0.67
 Nodes (0): 
 
 ### Community 34 - "Community 34"
@@ -403,25 +403,23 @@ Cohesion: 1.0
 Nodes (0): 
 
 ## Knowledge Gaps
-- **Thin community `Community 33`** (2 nodes): `GlobalError()`, `global-error.tsx`
+- **Thin community `Community 34`** (2 nodes): `GlobalError()`, `global-error.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 34`** (2 nodes): `RootLayout()`, `layout.tsx`
+- **Thin community `Community 35`** (2 nodes): `RootLayout()`, `layout.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 35`** (2 nodes): `AdminLayoutShell()`, `AdminLayoutShell.tsx`
+- **Thin community `Community 36`** (2 nodes): `AdminLayoutShell()`, `AdminLayoutShell.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 36`** (2 nodes): `handleType()`, `page.tsx`
+- **Thin community `Community 37`** (2 nodes): `handleType()`, `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 37`** (2 nodes): `handleSearch()`, `page.tsx`
+- **Thin community `Community 38`** (2 nodes): `handleSearch()`, `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 38`** (2 nodes): `makeRequest()`, `filter.test.ts`
+- **Thin community `Community 39`** (2 nodes): `makeRequest()`, `filter.test.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 39`** (2 nodes): `DashboardLayout()`, `layout.tsx`
+- **Thin community `Community 40`** (2 nodes): `DashboardLayout()`, `layout.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 40`** (2 nodes): `LagerPage()`, `page.tsx`
+- **Thin community `Community 41`** (2 nodes): `LagerPage()`, `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 41`** (2 nodes): `WartungssetsPage()`, `page.tsx`
-  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 42`** (2 nodes): `Page()`, `page.tsx`
+- **Thin community `Community 42`** (2 nodes): `WartungssetsPage()`, `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 43`** (2 nodes): `formatPartCategory()`, `format.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
@@ -490,7 +488,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `GET()` connect `Community 0` to `Community 1`, `Community 7`, `Community 10`, `Community 12`, `Community 25`?**
   _High betweenness centrality (0.074) - this node is a cross-community bridge._
 - **Why does `POST()` connect `Community 0` to `Community 24`, `Community 1`, `Community 10`, `Community 7`?**
-  _High betweenness centrality (0.044) - this node is a cross-community bridge._
+  _High betweenness centrality (0.043) - this node is a cross-community bridge._
 - **Why does `DELETE()` connect `Community 1` to `Community 0`, `Community 6`, `Community 7`, `Community 8`, `Community 10`?**
   _High betweenness centrality (0.042) - this node is a cross-community bridge._
 - **Are the 12 inferred relationships involving `GET()` (e.g. with `requireAdmin()` and `requireAuth()`) actually correct?**

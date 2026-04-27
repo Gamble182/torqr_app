@@ -36,7 +36,7 @@
       "source_file": "src\\middleware.ts",
       "source_location": "L1",
       "id": "src_middleware_ts",
-      "community": 7,
+      "community": 0,
       "norm_label": "middleware.ts"
     },
     {
@@ -45,7 +45,7 @@
       "source_file": "src\\middleware.ts",
       "source_location": "L5",
       "id": "middleware_middleware",
-      "community": 7,
+      "community": 0,
       "norm_label": "middleware()"
     },
     {
@@ -99,7 +99,7 @@
       "source_file": "src\\app\\(auth)\\login\\page.tsx",
       "source_location": "L1",
       "id": "src_app_auth_login_page_tsx",
-      "community": 33,
+      "community": 31,
       "norm_label": "page.tsx"
     },
     {
@@ -108,7 +108,7 @@
       "source_file": "src\\app\\(auth)\\register\\page.tsx",
       "source_location": "L50",
       "id": "page_onsubmit",
-      "community": 33,
+      "community": 31,
       "norm_label": "onsubmit()"
     },
     {
@@ -117,7 +117,7 @@
       "source_file": "src\\app\\(auth)\\register\\page.tsx",
       "source_location": "L1",
       "id": "src_app_auth_register_page_tsx",
-      "community": 33,
+      "community": 31,
       "norm_label": "page.tsx"
     },
     {
@@ -144,7 +144,7 @@
       "source_file": "src\\app\\admin\\layout.tsx",
       "source_location": "L1",
       "id": "src_app_admin_layout_tsx",
-      "community": 18,
+      "community": 13,
       "norm_label": "layout.tsx"
     },
     {
@@ -153,7 +153,7 @@
       "source_file": "src\\app\\admin\\layout.tsx",
       "source_location": "L5",
       "id": "layout_adminlayout",
-      "community": 18,
+      "community": 13,
       "norm_label": "adminlayout()"
     },
     {
@@ -162,7 +162,7 @@
       "source_file": "src\\app\\admin\\page.tsx",
       "source_location": "L1",
       "id": "src_app_admin_page_tsx",
-      "community": 34,
+      "community": 32,
       "norm_label": "page.tsx"
     },
     {
@@ -171,7 +171,7 @@
       "source_file": "src\\app\\admin\\crons\\page.tsx",
       "source_location": "L12",
       "id": "page_statusbadge",
-      "community": 34,
+      "community": 32,
       "norm_label": "statusbadge()"
     },
     {
@@ -180,7 +180,7 @@
       "source_file": "src\\app\\admin\\crons\\page.tsx",
       "source_location": "L1",
       "id": "src_app_admin_crons_page_tsx",
-      "community": 34,
+      "community": 32,
       "norm_label": "page.tsx"
     },
     {
@@ -1123,7 +1123,7 @@
       "label": "DashboardPage()",
       "file_type": "code",
       "source_file": "src\\app\\dashboard\\page.tsx",
-      "source_location": "L26",
+      "source_location": "L27",
       "id": "page_dashboardpage",
       "community": 4,
       "norm_label": "dashboardpage()"
@@ -1152,7 +1152,7 @@
       "source_file": "src\\app\\dashboard\\customers\\new\\page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_customers_new_page_tsx",
-      "community": 10,
+      "community": 9,
       "norm_label": "page.tsx"
     },
     {
@@ -1161,7 +1161,7 @@
       "source_file": "src\\app\\dashboard\\customers\\new\\page.tsx",
       "source_location": "L28",
       "id": "page_newcustomerpage",
-      "community": 10,
+      "community": 9,
       "norm_label": "newcustomerpage()"
     },
     {
@@ -1170,7 +1170,7 @@
       "source_file": "src\\app\\dashboard\\customers\\[id]\\page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_customers_id_page_tsx",
-      "community": 9,
+      "community": 8,
       "norm_label": "page.tsx"
     },
     {
@@ -1179,7 +1179,7 @@
       "source_file": "src\\app\\dashboard\\customers\\[id]\\page.tsx",
       "source_location": "L42",
       "id": "page_getemailoptindisplay",
-      "community": 9,
+      "community": 8,
       "norm_label": "getemailoptindisplay()"
     },
     {
@@ -1188,7 +1188,7 @@
       "source_file": "src\\app\\dashboard\\customers\\[id]\\page.tsx",
       "source_location": "L69",
       "id": "page_handlesendreminder",
-      "community": 9,
+      "community": 8,
       "norm_label": "handlesendreminder()"
     },
     {
@@ -1197,7 +1197,7 @@
       "source_file": "src\\app\\dashboard\\systems\\[id]\\page.tsx",
       "source_location": "L49",
       "id": "page_handledelete",
-      "community": 9,
+      "community": 8,
       "norm_label": "handledelete()"
     },
     {
@@ -1206,7 +1206,7 @@
       "source_file": "src\\app\\dashboard\\customers\\[id]\\page.tsx",
       "source_location": "L104",
       "id": "page_formatdate",
-      "community": 9,
+      "community": 8,
       "norm_label": "formatdate()"
     },
     {
@@ -1215,7 +1215,7 @@
       "source_file": "src\\app\\dashboard\\customers\\[id]\\page.tsx",
       "source_location": "L107",
       "id": "page_getmaintenancestatus",
-      "community": 9,
+      "community": 8,
       "norm_label": "getmaintenancestatus()"
     },
     {
@@ -1224,7 +1224,7 @@
       "source_file": "src\\app\\dashboard\\customers\\[id]\\page.tsx",
       "source_location": "L118",
       "id": "page_handleeditsystem",
-      "community": 9,
+      "community": 8,
       "norm_label": "handleeditsystem()"
     },
     {
@@ -1233,7 +1233,7 @@
       "source_file": "src\\app\\dashboard\\customers\\[id]\\page.tsx",
       "source_location": "L123",
       "id": "page_handledeletesystem",
-      "community": 9,
+      "community": 8,
       "norm_label": "handledeletesystem()"
     },
     {
@@ -1242,7 +1242,7 @@
       "source_file": "src\\app\\dashboard\\customers\\[id]\\edit\\page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_customers_id_edit_page_tsx",
-      "community": 25,
+      "community": 23,
       "norm_label": "page.tsx"
     },
     {
@@ -1251,7 +1251,7 @@
       "source_file": "src\\app\\dashboard\\customers\\[id]\\edit\\page.tsx",
       "source_location": "L75",
       "id": "page_handlechange",
-      "community": 25,
+      "community": 23,
       "norm_label": "handlechange()"
     },
     {
@@ -1260,7 +1260,7 @@
       "source_file": "src\\app\\dashboard\\customers\\[id]\\edit\\page.tsx",
       "source_location": "L87",
       "id": "page_validateform",
-      "community": 25,
+      "community": 23,
       "norm_label": "validateform()"
     },
     {
@@ -1269,7 +1269,7 @@
       "source_file": "src\\app\\dashboard\\customers\\[id]\\edit\\page.tsx",
       "source_location": "L104",
       "id": "page_handlesubmit",
-      "community": 25,
+      "community": 23,
       "norm_label": "handlesubmit()"
     },
     {
@@ -1278,7 +1278,7 @@
       "source_file": "src\\app\\dashboard\\employees\\page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_employees_page_tsx",
-      "community": 26,
+      "community": 24,
       "norm_label": "page.tsx"
     },
     {
@@ -1287,7 +1287,7 @@
       "source_file": "src\\app\\dashboard\\employees\\page.tsx",
       "source_location": "L60",
       "id": "page_handlecreate",
-      "community": 26,
+      "community": 24,
       "norm_label": "handlecreate()"
     },
     {
@@ -1296,7 +1296,7 @@
       "source_file": "src\\app\\dashboard\\employees\\page.tsx",
       "source_location": "L70",
       "id": "page_handletoggle",
-      "community": 26,
+      "community": 24,
       "norm_label": "handletoggle()"
     },
     {
@@ -1305,7 +1305,7 @@
       "source_file": "src\\app\\dashboard\\employees\\page.tsx",
       "source_location": "L77",
       "id": "page_copypassword",
-      "community": 26,
+      "community": 24,
       "norm_label": "copypassword()"
     },
     {
@@ -1404,7 +1404,7 @@
       "source_file": "src\\app\\dashboard\\systems\\[id]\\page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_systems_id_page_tsx",
-      "community": 9,
+      "community": 8,
       "norm_label": "page.tsx"
     },
     {
@@ -1433,6 +1433,24 @@
       "id": "page_setview",
       "community": 0,
       "norm_label": "setview()"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\dashboard\\termine\\[id]\\packliste\\page.tsx",
+      "source_location": "L1",
+      "id": "src_app_dashboard_termine_id_packliste_page_tsx",
+      "community": 33,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "Page()",
+      "file_type": "code",
+      "source_file": "src\\app\\dashboard\\wartungssets\\[id]\\page.tsx",
+      "source_location": "L6",
+      "id": "page_page",
+      "community": 33,
+      "norm_label": "page()"
     },
     {
       "label": "page.tsx",
@@ -1512,17 +1530,8 @@
       "source_file": "src\\app\\dashboard\\wartungssets\\[id]\\page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_wartungssets_id_page_tsx",
-      "community": 58,
+      "community": 33,
       "norm_label": "page.tsx"
-    },
-    {
-      "label": "Page()",
-      "file_type": "code",
-      "source_file": "src\\app\\dashboard\\wartungssets\\[id]\\page.tsx",
-      "source_location": "L6",
-      "id": "page_page",
-      "community": 58,
-      "norm_label": "page()"
     },
     {
       "label": "AssigneeBadge.tsx",
@@ -1530,7 +1539,7 @@
       "source_file": "src\\components\\AssigneeBadge.tsx",
       "source_location": "L1",
       "id": "src_components_assigneebadge_tsx",
-      "community": 35,
+      "community": 34,
       "norm_label": "assigneebadge.tsx"
     },
     {
@@ -1539,7 +1548,7 @@
       "source_file": "src\\components\\AssigneeBadge.tsx",
       "source_location": "L9",
       "id": "assigneebadge_getinitials",
-      "community": 35,
+      "community": 34,
       "norm_label": "getinitials()"
     },
     {
@@ -1548,7 +1557,7 @@
       "source_file": "src\\components\\AssigneeBadge.tsx",
       "source_location": "L16",
       "id": "assigneebadge_assigneebadge",
-      "community": 35,
+      "community": 34,
       "norm_label": "assigneebadge()"
     },
     {
@@ -1575,7 +1584,7 @@
       "source_file": "src\\components\\CompanyNameSetupModal.tsx",
       "source_location": "L1",
       "id": "src_components_companynamesetupmodal_tsx",
-      "community": 59,
+      "community": 58,
       "norm_label": "companynamesetupmodal.tsx"
     },
     {
@@ -1584,7 +1593,7 @@
       "source_file": "src\\components\\CompanyNameSetupModal.tsx",
       "source_location": "L28",
       "id": "companynamesetupmodal_handlesubmit",
-      "community": 59,
+      "community": 58,
       "norm_label": "handlesubmit()"
     },
     {
@@ -1593,7 +1602,7 @@
       "source_file": "src\\components\\DashboardNav.tsx",
       "source_location": "L1",
       "id": "src_components_dashboardnav_tsx",
-      "community": 27,
+      "community": 25,
       "norm_label": "dashboardnav.tsx"
     },
     {
@@ -1602,7 +1611,7 @@
       "source_file": "src\\components\\DashboardNav.tsx",
       "source_location": "L64",
       "id": "dashboardnav_isactive",
-      "community": 27,
+      "community": 25,
       "norm_label": "isactive()"
     },
     {
@@ -1611,7 +1620,7 @@
       "source_file": "src\\components\\DashboardNav.tsx",
       "source_location": "L69",
       "id": "dashboardnav_formatdate",
-      "community": 27,
+      "community": 25,
       "norm_label": "formatdate()"
     },
     {
@@ -1620,7 +1629,7 @@
       "source_file": "src\\components\\DashboardNav.tsx",
       "source_location": "L76",
       "id": "dashboardnav_formattime",
-      "community": 27,
+      "community": 25,
       "norm_label": "formattime()"
     },
     {
@@ -1629,7 +1638,7 @@
       "source_file": "src\\components\\ErrorBoundary.tsx",
       "source_location": "L1",
       "id": "src_components_errorboundary_tsx",
-      "community": 28,
+      "community": 26,
       "norm_label": "errorboundary.tsx"
     },
     {
@@ -1638,7 +1647,7 @@
       "source_file": "src\\components\\ErrorBoundary.tsx",
       "source_location": "L25",
       "id": "errorboundary_constructor",
-      "community": 28,
+      "community": 26,
       "norm_label": "constructor()"
     },
     {
@@ -1647,7 +1656,7 @@
       "source_file": "src\\components\\ErrorBoundary.tsx",
       "source_location": "L33",
       "id": "errorboundary_getderivedstatefromerror",
-      "community": 28,
+      "community": 26,
       "norm_label": "getderivedstatefromerror()"
     },
     {
@@ -1656,7 +1665,7 @@
       "source_file": "src\\components\\ErrorBoundary.tsx",
       "source_location": "L41",
       "id": "errorboundary_componentdidcatch",
-      "community": 28,
+      "community": 26,
       "norm_label": "componentdidcatch()"
     },
     {
@@ -1665,7 +1674,7 @@
       "source_file": "src\\components\\FollowUpSection.tsx",
       "source_location": "L1",
       "id": "src_components_followupsection_tsx",
-      "community": 15,
+      "community": 14,
       "norm_label": "followupsection.tsx"
     },
     {
@@ -1674,7 +1683,7 @@
       "source_file": "src\\components\\FollowUpSection.tsx",
       "source_location": "L37",
       "id": "followupsection_handleadd",
-      "community": 15,
+      "community": 14,
       "norm_label": "handleadd()"
     },
     {
@@ -1683,7 +1692,7 @@
       "source_file": "src\\components\\FollowUpSection.tsx",
       "source_location": "L44",
       "id": "followupsection_handlekeydown",
-      "community": 15,
+      "community": 14,
       "norm_label": "handlekeydown()"
     },
     {
@@ -1692,7 +1701,7 @@
       "source_file": "src\\components\\FollowUpSection.tsx",
       "source_location": "L51",
       "id": "followupsection_handletoggle",
-      "community": 15,
+      "community": 14,
       "norm_label": "handletoggle()"
     },
     {
@@ -1701,7 +1710,7 @@
       "source_file": "src\\components\\FollowUpSection.tsx",
       "source_location": "L55",
       "id": "followupsection_handledelete",
-      "community": 15,
+      "community": 14,
       "norm_label": "handledelete()"
     },
     {
@@ -1710,7 +1719,7 @@
       "source_file": "src\\components\\FollowUpSection.tsx",
       "source_location": "L148",
       "id": "followupsection_format",
-      "community": 15,
+      "community": 14,
       "norm_label": "format()"
     },
     {
@@ -1719,7 +1728,7 @@
       "source_file": "src\\components\\MaintenanceChecklistModal.tsx",
       "source_location": "L1",
       "id": "src_components_maintenancechecklistmodal_tsx",
-      "community": 12,
+      "community": 0,
       "norm_label": "maintenancechecklistmodal.tsx"
     },
     {
@@ -1728,7 +1737,7 @@
       "source_file": "src\\components\\MaintenanceChecklistModal.tsx",
       "source_location": "L92",
       "id": "maintenancechecklistmodal_toggleentry",
-      "community": 12,
+      "community": 0,
       "norm_label": "toggleentry()"
     },
     {
@@ -1737,7 +1746,7 @@
       "source_file": "src\\components\\MaintenanceChecklistModal.tsx",
       "source_location": "L100",
       "id": "maintenancechecklistmodal_handlephotoselect",
-      "community": 12,
+      "community": 0,
       "norm_label": "handlephotoselect()"
     },
     {
@@ -1746,7 +1755,7 @@
       "source_file": "src\\components\\MaintenanceChecklistModal.tsx",
       "source_location": "L121",
       "id": "maintenancechecklistmodal_removephoto",
-      "community": 12,
+      "community": 0,
       "norm_label": "removephoto()"
     },
     {
@@ -1755,7 +1764,7 @@
       "source_file": "src\\components\\MaintenanceChecklistModal.tsx",
       "source_location": "L125",
       "id": "maintenancechecklistmodal_addfollowup",
-      "community": 12,
+      "community": 0,
       "norm_label": "addfollowup()"
     },
     {
@@ -1764,7 +1773,7 @@
       "source_file": "src\\components\\MaintenanceChecklistModal.tsx",
       "source_location": "L133",
       "id": "maintenancechecklistmodal_removefollowup",
-      "community": 12,
+      "community": 0,
       "norm_label": "removefollowup()"
     },
     {
@@ -1773,7 +1782,7 @@
       "source_file": "src\\components\\MaintenanceChecklistModal.tsx",
       "source_location": "L137",
       "id": "maintenancechecklistmodal_handlesubmit",
-      "community": 12,
+      "community": 0,
       "norm_label": "handlesubmit()"
     },
     {
@@ -1782,7 +1791,7 @@
       "source_file": "src\\components\\MaintenanceHistory.tsx",
       "source_location": "L1",
       "id": "src_components_maintenancehistory_tsx",
-      "community": 36,
+      "community": 35,
       "norm_label": "maintenancehistory.tsx"
     },
     {
@@ -1791,7 +1800,7 @@
       "source_file": "src\\components\\MaintenanceHistory.tsx",
       "source_location": "L24",
       "id": "maintenancehistory_formatdate",
-      "community": 36,
+      "community": 35,
       "norm_label": "formatdate()"
     },
     {
@@ -1800,7 +1809,7 @@
       "source_file": "src\\components\\MaintenanceHistory.tsx",
       "source_location": "L32",
       "id": "maintenancehistory_handledelete",
-      "community": 36,
+      "community": 35,
       "norm_label": "handledelete()"
     },
     {
@@ -1809,7 +1818,7 @@
       "source_file": "src\\components\\ProtectedRoute.tsx",
       "source_location": "L1",
       "id": "src_components_protectedroute_tsx",
-      "community": 60,
+      "community": 59,
       "norm_label": "protectedroute.tsx"
     },
     {
@@ -1818,7 +1827,7 @@
       "source_file": "src\\components\\ProtectedRoute.tsx",
       "source_location": "L7",
       "id": "protectedroute_protectedroute",
-      "community": 60,
+      "community": 59,
       "norm_label": "protectedroute()"
     },
     {
@@ -1827,7 +1836,7 @@
       "source_file": "src\\components\\Providers.tsx",
       "source_location": "L1",
       "id": "src_components_providers_tsx",
-      "community": 61,
+      "community": 60,
       "norm_label": "providers.tsx"
     },
     {
@@ -1836,7 +1845,7 @@
       "source_file": "src\\components\\Providers.tsx",
       "source_location": "L8",
       "id": "providers_providers",
-      "community": 61,
+      "community": 60,
       "norm_label": "providers()"
     },
     {
@@ -1845,7 +1854,7 @@
       "source_file": "src\\components\\SystemChecklistManager.tsx",
       "source_location": "L1",
       "id": "src_components_systemchecklistmanager_tsx",
-      "community": 37,
+      "community": 36,
       "norm_label": "systemchecklistmanager.tsx"
     },
     {
@@ -1854,7 +1863,7 @@
       "source_file": "src\\components\\SystemChecklistManager.tsx",
       "source_location": "L35",
       "id": "systemchecklistmanager_handleadd",
-      "community": 37,
+      "community": 36,
       "norm_label": "handleadd()"
     },
     {
@@ -1863,7 +1872,7 @@
       "source_file": "src\\components\\SystemChecklistManager.tsx",
       "source_location": "L54",
       "id": "systemchecklistmanager_handledelete",
-      "community": 37,
+      "community": 36,
       "norm_label": "handledelete()"
     },
     {
@@ -1872,7 +1881,7 @@
       "source_file": "src\\components\\SystemPhotosCard.tsx",
       "source_location": "L1",
       "id": "src_components_systemphotoscard_tsx",
-      "community": 29,
+      "community": 27,
       "norm_label": "systemphotoscard.tsx"
     },
     {
@@ -1881,7 +1890,7 @@
       "source_file": "src\\components\\SystemPhotosCard.tsx",
       "source_location": "L34",
       "id": "systemphotoscard_handlepickfiles",
-      "community": 29,
+      "community": 27,
       "norm_label": "handlepickfiles()"
     },
     {
@@ -1890,7 +1899,7 @@
       "source_file": "src\\components\\SystemPhotosCard.tsx",
       "source_location": "L36",
       "id": "systemphotoscard_handlefiles",
-      "community": 29,
+      "community": 27,
       "norm_label": "handlefiles()"
     },
     {
@@ -1899,7 +1908,7 @@
       "source_file": "src\\components\\SystemPhotosCard.tsx",
       "source_location": "L84",
       "id": "systemphotoscard_handledelete",
-      "community": 29,
+      "community": 27,
       "norm_label": "handledelete()"
     },
     {
@@ -1908,7 +1917,7 @@
       "source_file": "src\\components\\account\\DangerZoneCard.tsx",
       "source_location": "L1",
       "id": "src_components_account_dangerzonecard_tsx",
-      "community": 38,
+      "community": 37,
       "norm_label": "dangerzonecard.tsx"
     },
     {
@@ -1917,7 +1926,7 @@
       "source_file": "src\\components\\account\\DangerZoneCard.tsx",
       "source_location": "L28",
       "id": "dangerzonecard_handledelete",
-      "community": 38,
+      "community": 37,
       "norm_label": "handledelete()"
     },
     {
@@ -1926,7 +1935,7 @@
       "source_file": "src\\components\\account\\DangerZoneCard.tsx",
       "source_location": "L43",
       "id": "dangerzonecard_handleopenchange",
-      "community": 38,
+      "community": 37,
       "norm_label": "handleopenchange()"
     },
     {
@@ -1953,7 +1962,7 @@
       "source_file": "src\\components\\account\\EmailTemplateCard.tsx",
       "source_location": "L1",
       "id": "src_components_account_emailtemplatecard_tsx",
-      "community": 62,
+      "community": 61,
       "norm_label": "emailtemplatecard.tsx"
     },
     {
@@ -1962,7 +1971,7 @@
       "source_file": "src\\components\\account\\EmailTemplateCard.tsx",
       "source_location": "L37",
       "id": "emailtemplatecard_onsubmit",
-      "community": 62,
+      "community": 61,
       "norm_label": "onsubmit()"
     },
     {
@@ -2007,7 +2016,7 @@
       "source_file": "src\\components\\brand\\TorqrIcon.tsx",
       "source_location": "L1",
       "id": "src_components_brand_torqricon_tsx",
-      "community": 63,
+      "community": 62,
       "norm_label": "torqricon.tsx"
     },
     {
@@ -2016,7 +2025,7 @@
       "source_file": "src\\components\\brand\\TorqrIcon.tsx",
       "source_location": "L28",
       "id": "torqricon_torqricon",
-      "community": 63,
+      "community": 62,
       "norm_label": "torqricon()"
     },
     {
@@ -2025,7 +2034,7 @@
       "source_file": "src\\components\\inventory\\InventoryDrawer.tsx",
       "source_location": "L1",
       "id": "src_components_inventory_inventorydrawer_tsx",
-      "community": 39,
+      "community": 38,
       "norm_label": "inventorydrawer.tsx"
     },
     {
@@ -2034,7 +2043,7 @@
       "source_file": "src\\components\\inventory\\InventoryDrawer.tsx",
       "source_location": "L60",
       "id": "inventorydrawer_formatsignedquantity",
-      "community": 39,
+      "community": 38,
       "norm_label": "formatsignedquantity()"
     },
     {
@@ -2043,7 +2052,7 @@
       "source_file": "src\\components\\inventory\\InventoryDrawer.tsx",
       "source_location": "L76",
       "id": "inventorydrawer_handledelete",
-      "community": 39,
+      "community": 38,
       "norm_label": "handledelete()"
     },
     {
@@ -2052,7 +2061,7 @@
       "source_file": "src\\components\\inventory\\InventoryItemForm.tsx",
       "source_location": "L1",
       "id": "src_components_inventory_inventoryitemform_tsx",
-      "community": 64,
+      "community": 63,
       "norm_label": "inventoryitemform.tsx"
     },
     {
@@ -2061,7 +2070,7 @@
       "source_file": "src\\components\\inventory\\InventoryItemForm.tsx",
       "source_location": "L75",
       "id": "inventoryitemform_onsubmit",
-      "community": 64,
+      "community": 63,
       "norm_label": "onsubmit()"
     },
     {
@@ -2079,7 +2088,7 @@
       "source_file": "src\\components\\inventory\\InventoryMovementForm.tsx",
       "source_location": "L1",
       "id": "src_components_inventory_inventorymovementform_tsx",
-      "community": 65,
+      "community": 64,
       "norm_label": "inventorymovementform.tsx"
     },
     {
@@ -2088,7 +2097,7 @@
       "source_file": "src\\components\\inventory\\InventoryMovementForm.tsx",
       "source_location": "L66",
       "id": "inventorymovementform_onsubmit",
-      "community": 65,
+      "community": 64,
       "norm_label": "onsubmit()"
     },
     {
@@ -2097,7 +2106,7 @@
       "source_file": "src\\components\\inventory\\InventoryStatusBadge.tsx",
       "source_location": "L1",
       "id": "src_components_inventory_inventorystatusbadge_tsx",
-      "community": 66,
+      "community": 65,
       "norm_label": "inventorystatusbadge.tsx"
     },
     {
@@ -2106,8 +2115,26 @@
       "source_file": "src\\components\\inventory\\InventoryStatusBadge.tsx",
       "source_location": "L15",
       "id": "inventorystatusbadge_inventorystatusbadge",
-      "community": 66,
+      "community": 65,
       "norm_label": "inventorystatusbadge()"
+    },
+    {
+      "label": "LowStockDashboardCard.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\inventory\\LowStockDashboardCard.tsx",
+      "source_location": "L1",
+      "id": "src_components_inventory_lowstockdashboardcard_tsx",
+      "community": 66,
+      "norm_label": "lowstockdashboardcard.tsx"
+    },
+    {
+      "label": "LowStockDashboardCard()",
+      "file_type": "code",
+      "source_file": "src\\components\\inventory\\LowStockDashboardCard.tsx",
+      "source_location": "L10",
+      "id": "lowstockdashboardcard_lowstockdashboardcard",
+      "community": 66,
+      "norm_label": "lowstockdashboardcard()"
     },
     {
       "label": "PartsUsageStep.tsx",
@@ -2115,7 +2142,7 @@
       "source_file": "src\\components\\maintenance\\PartsUsageStep.tsx",
       "source_location": "L1",
       "id": "src_components_maintenance_partsusagestep_tsx",
-      "community": 13,
+      "community": 11,
       "norm_label": "partsusagestep.tsx"
     },
     {
@@ -2124,7 +2151,7 @@
       "source_file": "src\\components\\maintenance\\PartsUsageStep.tsx",
       "source_location": "L58",
       "id": "partsusagestep_formatpartcategorylabel",
-      "community": 13,
+      "community": 11,
       "norm_label": "formatpartcategorylabel()"
     },
     {
@@ -2133,7 +2160,7 @@
       "source_file": "src\\components\\maintenance\\PartsUsageStep.tsx",
       "source_location": "L78",
       "id": "partsusagestep_buildinitialrows",
-      "community": 13,
+      "community": 11,
       "norm_label": "buildinitialrows()"
     },
     {
@@ -2142,7 +2169,7 @@
       "source_file": "src\\components\\maintenance\\PartsUsageStep.tsx",
       "source_location": "L190",
       "id": "partsusagestep_updaterow",
-      "community": 13,
+      "community": 11,
       "norm_label": "updaterow()"
     },
     {
@@ -2151,7 +2178,7 @@
       "source_file": "src\\components\\maintenance\\PartsUsageStep.tsx",
       "source_location": "L194",
       "id": "partsusagestep_removeadhoc",
-      "community": 13,
+      "community": 11,
       "norm_label": "removeadhoc()"
     },
     {
@@ -2160,7 +2187,7 @@
       "source_file": "src\\components\\maintenance\\PartsUsageStep.tsx",
       "source_location": "L198",
       "id": "partsusagestep_resetadhocdraft",
-      "community": 13,
+      "community": 11,
       "norm_label": "resetadhocdraft()"
     },
     {
@@ -2169,7 +2196,7 @@
       "source_file": "src\\components\\maintenance\\PartsUsageStep.tsx",
       "source_location": "L208",
       "id": "partsusagestep_addadhoc",
-      "community": 13,
+      "community": 11,
       "norm_label": "addadhoc()"
     },
     {
@@ -2196,7 +2223,7 @@
       "source_file": "src\\components\\maintenance-sets\\MaintenanceSetDetail.tsx",
       "source_location": "L1",
       "id": "src_components_maintenance_sets_maintenancesetdetail_tsx",
-      "community": 19,
+      "community": 17,
       "norm_label": "maintenancesetdetail.tsx"
     },
     {
@@ -2205,7 +2232,7 @@
       "source_file": "src\\components\\maintenance-sets\\MaintenanceSetDetail.tsx",
       "source_location": "L83",
       "id": "maintenancesetdetail_opencreateform",
-      "community": 19,
+      "community": 17,
       "norm_label": "opencreateform()"
     },
     {
@@ -2214,7 +2241,7 @@
       "source_file": "src\\components\\maintenance-sets\\MaintenanceSetDetail.tsx",
       "source_location": "L88",
       "id": "maintenancesetdetail_openeditform",
-      "community": 19,
+      "community": 17,
       "norm_label": "openeditform()"
     },
     {
@@ -2223,7 +2250,7 @@
       "source_file": "src\\components\\maintenance-sets\\MaintenanceSetDetail.tsx",
       "source_location": "L93",
       "id": "maintenancesetdetail_closeform",
-      "community": 19,
+      "community": 17,
       "norm_label": "closeform()"
     },
     {
@@ -2232,7 +2259,7 @@
       "source_file": "src\\components\\maintenance-sets\\MaintenanceSetDetail.tsx",
       "source_location": "L98",
       "id": "maintenancesetdetail_handledeleteset",
-      "community": 19,
+      "community": 17,
       "norm_label": "handledeleteset()"
     },
     {
@@ -2259,7 +2286,7 @@
       "source_file": "src\\components\\maintenance-sets\\MaintenanceSetItemsTable.tsx",
       "source_location": "L1",
       "id": "src_components_maintenance_sets_maintenancesetitemstable_tsx",
-      "community": 40,
+      "community": 39,
       "norm_label": "maintenancesetitemstable.tsx"
     },
     {
@@ -2268,7 +2295,7 @@
       "source_file": "src\\components\\maintenance-sets\\MaintenanceSetItemsTable.tsx",
       "source_location": "L51",
       "id": "maintenancesetitemstable_handleswap",
-      "community": 40,
+      "community": 39,
       "norm_label": "handleswap()"
     },
     {
@@ -2277,7 +2304,7 @@
       "source_file": "src\\components\\maintenance-sets\\MaintenanceSetItemsTable.tsx",
       "source_location": "L69",
       "id": "maintenancesetitemstable_handledeleteconfirmed",
-      "community": 40,
+      "community": 39,
       "norm_label": "handledeleteconfirmed()"
     },
     {
@@ -2290,12 +2317,39 @@
       "norm_label": "maintenancesetlist.tsx"
     },
     {
+      "label": "PackingListPrintView.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\packing-list\\PackingListPrintView.tsx",
+      "source_location": "L1",
+      "id": "src_components_packing_list_packinglistprintview_tsx",
+      "community": 40,
+      "norm_label": "packinglistprintview.tsx"
+    },
+    {
+      "label": "stockStatus()",
+      "file_type": "code",
+      "source_file": "src\\components\\packing-list\\PackingListPrintView.tsx",
+      "source_location": "L12",
+      "id": "packinglistprintview_stockstatus",
+      "community": 40,
+      "norm_label": "stockstatus()"
+    },
+    {
+      "label": "format()",
+      "file_type": "code",
+      "source_file": "src\\components\\packing-list\\PackingListPrintView.tsx",
+      "source_location": "L97",
+      "id": "packinglistprintview_format",
+      "community": 40,
+      "norm_label": "format()"
+    },
+    {
       "label": "CatalogPicker.tsx",
       "file_type": "code",
       "source_file": "src\\components\\system-form\\CatalogPicker.tsx",
       "source_location": "L1",
       "id": "src_components_system_form_catalogpicker_tsx",
-      "community": 21,
+      "community": 19,
       "norm_label": "catalogpicker.tsx"
     },
     {
@@ -2304,7 +2358,7 @@
       "source_file": "src\\components\\system-form\\CatalogPicker.tsx",
       "source_location": "L27",
       "id": "catalogpicker_catalogpicker",
-      "community": 21,
+      "community": 19,
       "norm_label": "catalogpicker()"
     },
     {
@@ -2313,7 +2367,7 @@
       "source_file": "src\\components\\system-form\\SystemAssignmentModal.tsx",
       "source_location": "L1",
       "id": "src_components_system_form_systemassignmentmodal_tsx",
-      "community": 20,
+      "community": 18,
       "norm_label": "systemassignmentmodal.tsx"
     },
     {
@@ -2322,7 +2376,7 @@
       "source_file": "src\\components\\system-form\\SystemAssignmentModal.tsx",
       "source_location": "L56",
       "id": "systemassignmentmodal_handlecatalogchange",
-      "community": 20,
+      "community": 18,
       "norm_label": "handlecatalogchange()"
     },
     {
@@ -2331,7 +2385,7 @@
       "source_file": "src\\components\\system-form\\SystemAssignmentModal.tsx",
       "source_location": "L60",
       "id": "systemassignmentmodal_handlecopyinstalldatetoggle",
-      "community": 20,
+      "community": 18,
       "norm_label": "handlecopyinstalldatetoggle()"
     },
     {
@@ -2340,7 +2394,7 @@
       "source_file": "src\\components\\system-form\\SystemAssignmentModal.tsx",
       "source_location": "L70",
       "id": "systemassignmentmodal_handleinstallationdatechange",
-      "community": 20,
+      "community": 18,
       "norm_label": "handleinstallationdatechange()"
     },
     {
@@ -2349,7 +2403,7 @@
       "source_file": "src\\components\\system-form\\SystemAssignmentModal.tsx",
       "source_location": "L77",
       "id": "systemassignmentmodal_handlesubmit",
-      "community": 20,
+      "community": 18,
       "norm_label": "handlesubmit()"
     },
     {
@@ -2601,7 +2655,7 @@
       "source_file": "src\\components\\ui\\card.tsx",
       "source_location": "L1",
       "id": "src_components_ui_card_tsx",
-      "community": 30,
+      "community": 28,
       "norm_label": "card.tsx"
     },
     {
@@ -2610,7 +2664,7 @@
       "source_file": "src\\components\\ui\\card.tsx",
       "source_location": "L9",
       "id": "card_cn",
-      "community": 30,
+      "community": 28,
       "norm_label": "cn()"
     },
     {
@@ -2619,7 +2673,7 @@
       "source_file": "src\\components\\ui\\card.tsx",
       "source_location": "L41",
       "id": "card_carddescription",
-      "community": 30,
+      "community": 28,
       "norm_label": "carddescription()"
     },
     {
@@ -2628,7 +2682,7 @@
       "source_file": "src\\components\\ui\\card.tsx",
       "source_location": "L74",
       "id": "card_cardfooter",
-      "community": 30,
+      "community": 28,
       "norm_label": "cardfooter()"
     },
     {
@@ -2673,7 +2727,7 @@
       "source_file": "src\\components\\ui\\select.tsx",
       "source_location": "L1",
       "id": "src_components_ui_select_tsx",
-      "community": 8,
+      "community": 7,
       "norm_label": "select.tsx"
     },
     {
@@ -2682,7 +2736,7 @@
       "source_file": "src\\components\\ui\\select.tsx",
       "source_location": "L9",
       "id": "select_select",
-      "community": 8,
+      "community": 7,
       "norm_label": "select()"
     },
     {
@@ -2691,7 +2745,7 @@
       "source_file": "src\\components\\ui\\select.tsx",
       "source_location": "L15",
       "id": "select_selectgroup",
-      "community": 8,
+      "community": 7,
       "norm_label": "selectgroup()"
     },
     {
@@ -2700,7 +2754,7 @@
       "source_file": "src\\components\\ui\\select.tsx",
       "source_location": "L21",
       "id": "select_selectvalue",
-      "community": 8,
+      "community": 7,
       "norm_label": "selectvalue()"
     },
     {
@@ -2709,7 +2763,7 @@
       "source_file": "src\\components\\ui\\select.tsx",
       "source_location": "L27",
       "id": "select_selecttrigger",
-      "community": 8,
+      "community": 7,
       "norm_label": "selecttrigger()"
     },
     {
@@ -2718,7 +2772,7 @@
       "source_file": "src\\components\\ui\\select.tsx",
       "source_location": "L90",
       "id": "select_selectlabel",
-      "community": 8,
+      "community": 7,
       "norm_label": "selectlabel()"
     },
     {
@@ -2727,7 +2781,7 @@
       "source_file": "src\\components\\ui\\select.tsx",
       "source_location": "L103",
       "id": "select_selectitem",
-      "community": 8,
+      "community": 7,
       "norm_label": "selectitem()"
     },
     {
@@ -2736,7 +2790,7 @@
       "source_file": "src\\components\\ui\\select.tsx",
       "source_location": "L127",
       "id": "select_selectseparator",
-      "community": 8,
+      "community": 7,
       "norm_label": "selectseparator()"
     },
     {
@@ -2745,7 +2799,7 @@
       "source_file": "src\\components\\ui\\select.tsx",
       "source_location": "L140",
       "id": "select_selectscrollupbutton",
-      "community": 8,
+      "community": 7,
       "norm_label": "selectscrollupbutton()"
     },
     {
@@ -2754,7 +2808,7 @@
       "source_file": "src\\components\\ui\\select.tsx",
       "source_location": "L158",
       "id": "select_selectscrolldownbutton",
-      "community": 8,
+      "community": 7,
       "norm_label": "selectscrolldownbutton()"
     },
     {
@@ -2790,7 +2844,7 @@
       "source_file": "src\\hooks\\useAdmin.ts",
       "source_location": "L1",
       "id": "src_hooks_useadmin_ts",
-      "community": 14,
+      "community": 12,
       "norm_label": "useadmin.ts"
     },
     {
@@ -2799,7 +2853,7 @@
       "source_file": "src\\hooks\\useAdmin.ts",
       "source_location": "L3",
       "id": "useadmin_fetchadmin",
-      "community": 14,
+      "community": 12,
       "norm_label": "fetchadmin()"
     },
     {
@@ -2808,7 +2862,7 @@
       "source_file": "src\\hooks\\useAdmin.ts",
       "source_location": "L80",
       "id": "useadmin_useadminstats",
-      "community": 14,
+      "community": 12,
       "norm_label": "useadminstats()"
     },
     {
@@ -2817,7 +2871,7 @@
       "source_file": "src\\hooks\\useAdmin.ts",
       "source_location": "L88",
       "id": "useadmin_useadminusers",
-      "community": 14,
+      "community": 12,
       "norm_label": "useadminusers()"
     },
     {
@@ -2826,7 +2880,7 @@
       "source_file": "src\\hooks\\useAdmin.ts",
       "source_location": "L103",
       "id": "useadmin_useadminuser",
-      "community": 14,
+      "community": 12,
       "norm_label": "useadminuser()"
     },
     {
@@ -2835,7 +2889,7 @@
       "source_file": "src\\hooks\\useAdmin.ts",
       "source_location": "L111",
       "id": "useadmin_useadminemails",
-      "community": 14,
+      "community": 12,
       "norm_label": "useadminemails()"
     },
     {
@@ -2844,7 +2898,7 @@
       "source_file": "src\\hooks\\useAdmin.ts",
       "source_location": "L126",
       "id": "useadmin_useadmincrons",
-      "community": 14,
+      "community": 12,
       "norm_label": "useadmincrons()"
     },
     {
@@ -2916,7 +2970,7 @@
       "source_file": "src\\hooks\\useCatalog.ts",
       "source_location": "L1",
       "id": "src_hooks_usecatalog_ts",
-      "community": 21,
+      "community": 19,
       "norm_label": "usecatalog.ts"
     },
     {
@@ -2925,7 +2979,7 @@
       "source_file": "src\\hooks\\useCatalog.ts",
       "source_location": "L25",
       "id": "usecatalog_usecatalog",
-      "community": 21,
+      "community": 19,
       "norm_label": "usecatalog()"
     },
     {
@@ -2934,7 +2988,7 @@
       "source_file": "src\\hooks\\useCatalog.ts",
       "source_location": "L41",
       "id": "usecatalog_usecreatecatalogentry",
-      "community": 21,
+      "community": 19,
       "norm_label": "usecreatecatalogentry()"
     },
     {
@@ -2943,7 +2997,7 @@
       "source_file": "src\\hooks\\useChecklistItems.ts",
       "source_location": "L1",
       "id": "src_hooks_usechecklistitems_ts",
-      "community": 31,
+      "community": 29,
       "norm_label": "usechecklistitems.ts"
     },
     {
@@ -2952,7 +3006,7 @@
       "source_file": "src\\hooks\\useChecklistItems.ts",
       "source_location": "L10",
       "id": "usechecklistitems_usechecklistitems",
-      "community": 31,
+      "community": 29,
       "norm_label": "usechecklistitems()"
     },
     {
@@ -2961,7 +3015,7 @@
       "source_file": "src\\hooks\\useChecklistItems.ts",
       "source_location": "L23",
       "id": "usechecklistitems_useaddchecklistitem",
-      "community": 31,
+      "community": 29,
       "norm_label": "useaddchecklistitem()"
     },
     {
@@ -2970,7 +3024,7 @@
       "source_file": "src\\hooks\\useChecklistItems.ts",
       "source_location": "L42",
       "id": "usechecklistitems_usedeletechecklistitem",
-      "community": 31,
+      "community": 29,
       "norm_label": "usedeletechecklistitem()"
     },
     {
@@ -2979,7 +3033,7 @@
       "source_file": "src\\hooks\\useCustomers.ts",
       "source_location": "L1",
       "id": "src_hooks_usecustomers_ts",
-      "community": 10,
+      "community": 9,
       "norm_label": "usecustomers.ts"
     },
     {
@@ -2988,7 +3042,7 @@
       "source_file": "src\\hooks\\useCustomers.ts",
       "source_location": "L28",
       "id": "usecustomers_usecustomers",
-      "community": 10,
+      "community": 9,
       "norm_label": "usecustomers()"
     },
     {
@@ -2997,7 +3051,7 @@
       "source_file": "src\\hooks\\useCustomers.ts",
       "source_location": "L48",
       "id": "usecustomers_usecustomer",
-      "community": 10,
+      "community": 9,
       "norm_label": "usecustomer()"
     },
     {
@@ -3006,7 +3060,7 @@
       "source_file": "src\\hooks\\useCustomers.ts",
       "source_location": "L71",
       "id": "usecustomers_usecreatecustomer",
-      "community": 10,
+      "community": 9,
       "norm_label": "usecreatecustomer()"
     },
     {
@@ -3015,7 +3069,7 @@
       "source_file": "src\\hooks\\useCustomers.ts",
       "source_location": "L103",
       "id": "usecustomers_useupdatecustomer",
-      "community": 10,
+      "community": 9,
       "norm_label": "useupdatecustomer()"
     },
     {
@@ -3024,7 +3078,7 @@
       "source_file": "src\\hooks\\useCustomers.ts",
       "source_location": "L136",
       "id": "usecustomers_usedeletecustomer",
-      "community": 10,
+      "community": 9,
       "norm_label": "usedeletecustomer()"
     },
     {
@@ -3060,7 +3114,7 @@
       "source_file": "src\\hooks\\useCustomerSystems.ts",
       "source_location": "L1",
       "id": "src_hooks_usecustomersystems_ts",
-      "community": 16,
+      "community": 15,
       "norm_label": "usecustomersystems.ts"
     },
     {
@@ -3069,7 +3123,7 @@
       "source_file": "src\\hooks\\useCustomerSystems.ts",
       "source_location": "L48",
       "id": "usecustomersystems_usecustomersystems",
-      "community": 16,
+      "community": 15,
       "norm_label": "usecustomersystems()"
     },
     {
@@ -3078,7 +3132,7 @@
       "source_file": "src\\hooks\\useCustomerSystems.ts",
       "source_location": "L68",
       "id": "usecustomersystems_usecustomersystem",
-      "community": 16,
+      "community": 15,
       "norm_label": "usecustomersystem()"
     },
     {
@@ -3087,7 +3141,7 @@
       "source_file": "src\\hooks\\useCustomerSystems.ts",
       "source_location": "L85",
       "id": "usecustomersystems_usecreatecustomersystem",
-      "community": 16,
+      "community": 15,
       "norm_label": "usecreatecustomersystem()"
     },
     {
@@ -3096,7 +3150,7 @@
       "source_file": "src\\hooks\\useCustomerSystems.ts",
       "source_location": "L106",
       "id": "usecustomersystems_useupdatecustomersystem",
-      "community": 16,
+      "community": 15,
       "norm_label": "useupdatecustomersystem()"
     },
     {
@@ -3105,7 +3159,7 @@
       "source_file": "src\\hooks\\useCustomerSystems.ts",
       "source_location": "L128",
       "id": "usecustomersystems_usedeletecustomersystem",
-      "community": 16,
+      "community": 15,
       "norm_label": "usedeletecustomersystem()"
     },
     {
@@ -3121,7 +3175,7 @@
       "label": "useDashboardStats()",
       "file_type": "code",
       "source_file": "src\\hooks\\useDashboard.ts",
-      "source_location": "L61",
+      "source_location": "L62",
       "id": "usedashboard_usedashboardstats",
       "community": 4,
       "norm_label": "usedashboardstats()"
@@ -3240,7 +3294,7 @@
       "source_file": "src\\hooks\\useFollowUpJobs.ts",
       "source_location": "L1",
       "id": "src_hooks_usefollowupjobs_ts",
-      "community": 22,
+      "community": 20,
       "norm_label": "usefollowupjobs.ts"
     },
     {
@@ -3249,7 +3303,7 @@
       "source_file": "src\\hooks\\useFollowUpJobs.ts",
       "source_location": "L23",
       "id": "usefollowupjobs_usefollowupjobs",
-      "community": 22,
+      "community": 20,
       "norm_label": "usefollowupjobs()"
     },
     {
@@ -3258,7 +3312,7 @@
       "source_file": "src\\hooks\\useFollowUpJobs.ts",
       "source_location": "L38",
       "id": "usefollowupjobs_usecreatefollowupjob",
-      "community": 22,
+      "community": 20,
       "norm_label": "usecreatefollowupjob()"
     },
     {
@@ -3267,7 +3321,7 @@
       "source_file": "src\\hooks\\useFollowUpJobs.ts",
       "source_location": "L68",
       "id": "usefollowupjobs_useupdatefollowupjob",
-      "community": 22,
+      "community": 20,
       "norm_label": "useupdatefollowupjob()"
     },
     {
@@ -3276,7 +3330,7 @@
       "source_file": "src\\hooks\\useFollowUpJobs.ts",
       "source_location": "L99",
       "id": "usefollowupjobs_usedeletefollowupjob",
-      "community": 22,
+      "community": 20,
       "norm_label": "usedeletefollowupjob()"
     },
     {
@@ -3285,7 +3339,7 @@
       "source_file": "src\\hooks\\useInventory.ts",
       "source_location": "L1",
       "id": "src_hooks_useinventory_ts",
-      "community": 17,
+      "community": 16,
       "norm_label": "useinventory.ts"
     },
     {
@@ -3294,7 +3348,7 @@
       "source_file": "src\\hooks\\useInventory.ts",
       "source_location": "L59",
       "id": "useinventory_useinventoryitems",
-      "community": 17,
+      "community": 16,
       "norm_label": "useinventoryitems()"
     },
     {
@@ -3303,7 +3357,7 @@
       "source_file": "src\\hooks\\useInventory.ts",
       "source_location": "L78",
       "id": "useinventory_useinventoryitem",
-      "community": 17,
+      "community": 16,
       "norm_label": "useinventoryitem()"
     },
     {
@@ -3312,7 +3366,7 @@
       "source_file": "src\\hooks\\useInventory.ts",
       "source_location": "L98",
       "id": "useinventory_usecreateinventoryitem",
-      "community": 17,
+      "community": 16,
       "norm_label": "usecreateinventoryitem()"
     },
     {
@@ -3321,7 +3375,7 @@
       "source_file": "src\\hooks\\useInventory.ts",
       "source_location": "L128",
       "id": "useinventory_useupdateinventoryitem",
-      "community": 17,
+      "community": 16,
       "norm_label": "useupdateinventoryitem()"
     },
     {
@@ -3330,7 +3384,7 @@
       "source_file": "src\\hooks\\useInventory.ts",
       "source_location": "L157",
       "id": "useinventory_usedeleteinventoryitem",
-      "community": 17,
+      "community": 16,
       "norm_label": "usedeleteinventoryitem()"
     },
     {
@@ -3366,7 +3420,7 @@
       "source_file": "src\\hooks\\useMaintenances.ts",
       "source_location": "L1",
       "id": "src_hooks_usemaintenances_ts",
-      "community": 32,
+      "community": 30,
       "norm_label": "usemaintenances.ts"
     },
     {
@@ -3375,7 +3429,7 @@
       "source_file": "src\\hooks\\useMaintenances.ts",
       "source_location": "L79",
       "id": "usemaintenances_invalidaterelated",
-      "community": 32,
+      "community": 30,
       "norm_label": "invalidaterelated()"
     },
     {
@@ -3384,7 +3438,7 @@
       "source_file": "src\\hooks\\useMaintenances.ts",
       "source_location": "L85",
       "id": "usemaintenances_usecreatemaintenance",
-      "community": 32,
+      "community": 30,
       "norm_label": "usecreatemaintenance()"
     },
     {
@@ -3393,7 +3447,7 @@
       "source_file": "src\\hooks\\useMaintenances.ts",
       "source_location": "L107",
       "id": "usemaintenances_usedeletemaintenance",
-      "community": 32,
+      "community": 30,
       "norm_label": "usedeletemaintenance()"
     },
     {
@@ -3402,7 +3456,7 @@
       "source_file": "src\\hooks\\useMaintenanceSetItems.ts",
       "source_location": "L1",
       "id": "src_hooks_usemaintenancesetitems_ts",
-      "community": 23,
+      "community": 21,
       "norm_label": "usemaintenancesetitems.ts"
     },
     {
@@ -3411,7 +3465,7 @@
       "source_file": "src\\hooks\\useMaintenanceSetItems.ts",
       "source_location": "L30",
       "id": "usemaintenancesetitems_usecreatesetitem",
-      "community": 23,
+      "community": 21,
       "norm_label": "usecreatesetitem()"
     },
     {
@@ -3420,7 +3474,7 @@
       "source_file": "src\\hooks\\useMaintenanceSetItems.ts",
       "source_location": "L52",
       "id": "usemaintenancesetitems_useupdatesetitem",
-      "community": 23,
+      "community": 21,
       "norm_label": "useupdatesetitem()"
     },
     {
@@ -3429,7 +3483,7 @@
       "source_file": "src\\hooks\\useMaintenanceSetItems.ts",
       "source_location": "L74",
       "id": "usemaintenancesetitems_usedeletesetitem",
-      "community": 23,
+      "community": 21,
       "norm_label": "usedeletesetitem()"
     },
     {
@@ -3438,7 +3492,7 @@
       "source_file": "src\\hooks\\useMaintenanceSetItems.ts",
       "source_location": "L92",
       "id": "usemaintenancesetitems_usereordersetitems",
-      "community": 23,
+      "community": 21,
       "norm_label": "usereordersetitems()"
     },
     {
@@ -3447,7 +3501,7 @@
       "source_file": "src\\hooks\\useMaintenanceSets.ts",
       "source_location": "L1",
       "id": "src_hooks_usemaintenancesets_ts",
-      "community": 24,
+      "community": 22,
       "norm_label": "usemaintenancesets.ts"
     },
     {
@@ -3456,7 +3510,7 @@
       "source_file": "src\\hooks\\useMaintenanceSets.ts",
       "source_location": "L92",
       "id": "usemaintenancesets_usemaintenancesets",
-      "community": 24,
+      "community": 22,
       "norm_label": "usemaintenancesets()"
     },
     {
@@ -3465,7 +3519,7 @@
       "source_file": "src\\hooks\\useMaintenanceSets.ts",
       "source_location": "L108",
       "id": "usemaintenancesets_usemaintenanceset",
-      "community": 24,
+      "community": 22,
       "norm_label": "usemaintenanceset()"
     },
     {
@@ -3474,7 +3528,7 @@
       "source_file": "src\\hooks\\useMaintenanceSets.ts",
       "source_location": "L125",
       "id": "usemaintenancesets_usecreatemaintenanceset",
-      "community": 24,
+      "community": 22,
       "norm_label": "usecreatemaintenanceset()"
     },
     {
@@ -3483,7 +3537,7 @@
       "source_file": "src\\hooks\\useMaintenanceSets.ts",
       "source_location": "L147",
       "id": "usemaintenancesets_usedeletemaintenanceset",
-      "community": 24,
+      "community": 22,
       "norm_label": "usedeletemaintenanceset()"
     },
     {
@@ -3591,7 +3645,7 @@
       "source_file": "src\\lib\\admin-auth.ts",
       "source_location": "L1",
       "id": "src_lib_admin_auth_ts",
-      "community": 18,
+      "community": 13,
       "norm_label": "admin-auth.ts"
     },
     {
@@ -3600,7 +3654,7 @@
       "source_file": "src\\lib\\admin-auth.ts",
       "source_location": "L9",
       "id": "admin_auth_requireadmin",
-      "community": 18,
+      "community": 13,
       "norm_label": "requireadmin()"
     },
     {
@@ -3609,7 +3663,7 @@
       "source_file": "src\\lib\\admin-email.ts",
       "source_location": "L1",
       "id": "src_lib_admin_email_ts",
-      "community": 18,
+      "community": 13,
       "norm_label": "admin-email.ts"
     },
     {
@@ -3618,7 +3672,7 @@
       "source_file": "src\\lib\\admin-email.ts",
       "source_location": "L7",
       "id": "admin_email_isadminemail",
-      "community": 18,
+      "community": 13,
       "norm_label": "isadminemail()"
     },
     {
@@ -3735,7 +3789,7 @@
       "source_file": "src\\lib\\rate-limit.ts",
       "source_location": "L1",
       "id": "src_lib_rate_limit_ts",
-      "community": 7,
+      "community": 0,
       "norm_label": "rate-limit.ts"
     },
     {
@@ -3744,7 +3798,7 @@
       "source_file": "src\\lib\\rate-limit.ts",
       "source_location": "L39",
       "id": "rate_limit_resolveupstashcredentials",
-      "community": 7,
+      "community": 0,
       "norm_label": "resolveupstashcredentials()"
     },
     {
@@ -3753,7 +3807,7 @@
       "source_file": "src\\lib\\rate-limit.ts",
       "source_location": "L66",
       "id": "rate_limit_getlimiter",
-      "community": 7,
+      "community": 0,
       "norm_label": "getlimiter()"
     },
     {
@@ -3762,7 +3816,7 @@
       "source_file": "src\\lib\\rate-limit.ts",
       "source_location": "L82",
       "id": "rate_limit_inmemorycheck",
-      "community": 7,
+      "community": 0,
       "norm_label": "inmemorycheck()"
     },
     {
@@ -3771,7 +3825,7 @@
       "source_file": "src\\lib\\rate-limit.ts",
       "source_location": "L109",
       "id": "rate_limit_ratelimit",
-      "community": 7,
+      "community": 0,
       "norm_label": "ratelimit()"
     },
     {
@@ -3780,7 +3834,7 @@
       "source_file": "src\\lib\\rate-limit.ts",
       "source_location": "L130",
       "id": "rate_limit_getclientidentifier",
-      "community": 7,
+      "community": 0,
       "norm_label": "getclientidentifier()"
     },
     {
@@ -3789,7 +3843,7 @@
       "source_file": "src\\lib\\rate-limit.ts",
       "source_location": "L144",
       "id": "rate_limit_buildlimitresponse",
-      "community": 7,
+      "community": 0,
       "norm_label": "buildlimitresponse()"
     },
     {
@@ -3798,7 +3852,7 @@
       "source_file": "src\\lib\\rate-limit.ts",
       "source_location": "L169",
       "id": "rate_limit_ratelimitmiddleware",
-      "community": 7,
+      "community": 0,
       "norm_label": "ratelimitmiddleware()"
     },
     {
@@ -3807,7 +3861,7 @@
       "source_file": "src\\lib\\rate-limit.ts",
       "source_location": "L184",
       "id": "rate_limit_ratelimitbyuser",
-      "community": 7,
+      "community": 0,
       "norm_label": "ratelimitbyuser()"
     },
     {
@@ -3906,7 +3960,7 @@
       "source_file": "src\\lib\\cal-com\\client.ts",
       "source_location": "L1",
       "id": "src_lib_cal_com_client_ts",
-      "community": 11,
+      "community": 10,
       "norm_label": "client.ts"
     },
     {
@@ -3915,7 +3969,7 @@
       "source_file": "src\\lib\\cal-com\\client.ts",
       "source_location": "L10",
       "id": "client_calcomapierror",
-      "community": 11,
+      "community": 10,
       "norm_label": "calcomapierror"
     },
     {
@@ -3924,7 +3978,7 @@
       "source_file": "src\\lib\\cal-com\\client.ts",
       "source_location": "L11",
       "id": "client_calcomapierror_constructor",
-      "community": 11,
+      "community": 10,
       "norm_label": ".constructor()"
     },
     {
@@ -3933,7 +3987,7 @@
       "source_file": "src\\lib\\cal-com\\client.ts",
       "source_location": "L21",
       "id": "client_apikey",
-      "community": 11,
+      "community": 10,
       "norm_label": "apikey()"
     },
     {
@@ -3942,7 +3996,7 @@
       "source_file": "src\\lib\\cal-com\\client.ts",
       "source_location": "L29",
       "id": "client_base",
-      "community": 11,
+      "community": 10,
       "norm_label": "base()"
     },
     {
@@ -3951,7 +4005,7 @@
       "source_file": "src\\lib\\cal-com\\client.ts",
       "source_location": "L33",
       "id": "client_calljson",
-      "community": 11,
+      "community": 10,
       "norm_label": "calljson()"
     },
     {
@@ -3960,7 +4014,7 @@
       "source_file": "src\\lib\\cal-com\\client.ts",
       "source_location": "L61",
       "id": "client_reschedulecalbooking",
-      "community": 11,
+      "community": 10,
       "norm_label": "reschedulecalbooking()"
     },
     {
@@ -3969,7 +4023,7 @@
       "source_file": "src\\lib\\cal-com\\client.ts",
       "source_location": "L80",
       "id": "client_cancelcalbooking",
-      "community": 11,
+      "community": 10,
       "norm_label": "cancelcalbooking()"
     },
     {
@@ -3996,7 +4050,7 @@
       "source_file": "src\\lib\\email\\opt-in.ts",
       "source_location": "L1",
       "id": "src_lib_email_opt_in_ts",
-      "community": 1,
+      "community": 0,
       "norm_label": "opt-in.ts"
     },
     {
@@ -4005,7 +4059,7 @@
       "source_file": "src\\lib\\email\\opt-in.ts",
       "source_location": "L15",
       "id": "opt_in_computeoptindata",
-      "community": 1,
+      "community": 0,
       "norm_label": "computeoptindata()"
     },
     {
@@ -4048,7 +4102,7 @@
       "label": "sendWeeklySummaryToAll()",
       "file_type": "code",
       "source_file": "src\\lib\\email\\service.tsx",
-      "source_location": "L348",
+      "source_location": "L378",
       "id": "service_sendweeklysummarytoall",
       "community": 3,
       "norm_label": "sendweeklysummarytoall()"
@@ -4057,7 +4111,7 @@
       "label": "sendBookingReschedule()",
       "file_type": "code",
       "source_file": "src\\lib\\email\\service.tsx",
-      "source_location": "L378",
+      "source_location": "L408",
       "id": "service_sendbookingreschedule",
       "community": 3,
       "norm_label": "sendbookingreschedule()"
@@ -4066,7 +4120,7 @@
       "label": "sendBookingCancellation()",
       "file_type": "code",
       "source_file": "src\\lib\\email\\service.tsx",
-      "source_location": "L451",
+      "source_location": "L481",
       "id": "service_sendbookingcancellation",
       "community": 3,
       "norm_label": "sendbookingcancellation()"
@@ -6726,7 +6780,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\app\\dashboard\\page.tsx",
-      "source_location": "L26",
+      "source_location": "L27",
       "weight": 1.0,
       "_src": "src_app_dashboard_page_tsx",
       "_tgt": "page_dashboardpage",
@@ -6739,7 +6793,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src\\app\\dashboard\\page.tsx",
-      "source_location": "L29",
+      "source_location": "L30",
       "weight": 1.0,
       "_src": "page_dashboardpage",
       "_tgt": "usedashboard_usedashboardstats",
@@ -6751,7 +6805,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src\\app\\dashboard\\page.tsx",
-      "source_location": "L30",
+      "source_location": "L31",
       "weight": 1.0,
       "_src": "page_dashboardpage",
       "_tgt": "usebookings_usebookings",
@@ -7097,6 +7151,30 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "src\\app\\dashboard\\termine\\[id]\\packliste\\page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "src_app_dashboard_termine_id_packliste_page_tsx",
+      "_tgt": "page_page",
+      "source": "src_app_dashboard_termine_id_packliste_page_tsx",
+      "target": "page_page",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\dashboard\\wartungssets\\[id]\\page.tsx",
+      "source_location": "L6",
+      "weight": 1.0,
+      "_src": "src_app_dashboard_wartungssets_id_page_tsx",
+      "_tgt": "page_page",
+      "source": "page_page",
+      "target": "src_app_dashboard_wartungssets_id_page_tsx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "src\\app\\dashboard\\wartungen\\page.tsx",
       "source_location": "L59",
       "weight": 1.0,
@@ -7188,18 +7266,6 @@
       "_tgt": "page_wartungssetspage",
       "source": "src_app_dashboard_wartungssets_page_tsx",
       "target": "page_wartungssetspage",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src\\app\\dashboard\\wartungssets\\[id]\\page.tsx",
-      "source_location": "L6",
-      "weight": 1.0,
-      "_src": "src_app_dashboard_wartungssets_id_page_tsx",
-      "_tgt": "page_page",
-      "source": "src_app_dashboard_wartungssets_id_page_tsx",
-      "target": "page_page",
       "confidence_score": 1.0
     },
     {
@@ -7781,6 +7847,18 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "src\\components\\inventory\\LowStockDashboardCard.tsx",
+      "source_location": "L10",
+      "weight": 1.0,
+      "_src": "src_components_inventory_lowstockdashboardcard_tsx",
+      "_tgt": "lowstockdashboardcard_lowstockdashboardcard",
+      "source": "src_components_inventory_lowstockdashboardcard_tsx",
+      "target": "lowstockdashboardcard_lowstockdashboardcard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "src\\components\\maintenance\\PartsUsageStep.tsx",
       "source_location": "L58",
       "weight": 1.0,
@@ -7956,6 +8034,30 @@
       "_tgt": "maintenancesetitemstable_handledeleteconfirmed",
       "source": "src_components_maintenance_sets_maintenancesetitemstable_tsx",
       "target": "maintenancesetitemstable_handledeleteconfirmed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\packing-list\\PackingListPrintView.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "_src": "src_components_packing_list_packinglistprintview_tsx",
+      "_tgt": "packinglistprintview_stockstatus",
+      "source": "src_components_packing_list_packinglistprintview_tsx",
+      "target": "packinglistprintview_stockstatus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\components\\packing-list\\PackingListPrintView.tsx",
+      "source_location": "L97",
+      "weight": 1.0,
+      "_src": "src_components_packing_list_packinglistprintview_tsx",
+      "_tgt": "packinglistprintview_format",
+      "source": "src_components_packing_list_packinglistprintview_tsx",
+      "target": "packinglistprintview_format",
       "confidence_score": 1.0
     },
     {
@@ -8155,7 +8257,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src\\lib\\email\\service.tsx",
-      "source_location": "L308",
+      "source_location": "L336",
       "weight": 1.0,
       "_src": "service_sendweeklysummary",
       "_tgt": "cancelbookingmodal_format",
@@ -8167,7 +8269,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src\\lib\\email\\service.tsx",
-      "source_location": "L402",
+      "source_location": "L432",
       "weight": 1.0,
       "_src": "service_sendbookingreschedule",
       "_tgt": "cancelbookingmodal_format",
@@ -8179,7 +8281,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "src\\lib\\email\\service.tsx",
-      "source_location": "L474",
+      "source_location": "L504",
       "weight": 1.0,
       "_src": "service_sendbookingcancellation",
       "_tgt": "cancelbookingmodal_format",
@@ -8802,7 +8904,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\hooks\\useDashboard.ts",
-      "source_location": "L61",
+      "source_location": "L62",
       "weight": 1.0,
       "_src": "src_hooks_usedashboard_ts",
       "_tgt": "usedashboard_usedashboardstats",
@@ -9822,7 +9924,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\lib\\email\\service.tsx",
-      "source_location": "L348",
+      "source_location": "L378",
       "weight": 1.0,
       "_src": "src_lib_email_service_tsx",
       "_tgt": "service_sendweeklysummarytoall",
@@ -9834,7 +9936,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\lib\\email\\service.tsx",
-      "source_location": "L378",
+      "source_location": "L408",
       "weight": 1.0,
       "_src": "src_lib_email_service_tsx",
       "_tgt": "service_sendbookingreschedule",
@@ -9846,7 +9948,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\lib\\email\\service.tsx",
-      "source_location": "L451",
+      "source_location": "L481",
       "weight": 1.0,
       "_src": "src_lib_email_service_tsx",
       "_tgt": "service_sendbookingcancellation",
@@ -9858,7 +9960,7 @@
       "relation": "calls",
       "confidence": "EXTRACTED",
       "source_file": "src\\lib\\email\\service.tsx",
-      "source_location": "L359",
+      "source_location": "L389",
       "weight": 1.0,
       "_src": "service_sendweeklysummarytoall",
       "_tgt": "service_sendweeklysummary",

@@ -64,7 +64,7 @@ Per task, in order:
 
 ### Last committed SHA
 
-`5fac106` (Session 10 Task 28 fix-round: PartsUsageStep mounted + dead prop dropped)
+`bc5487c` (Session 11 Task 31: weekly summary Lager section for OWNER)
 
 ### Session 1 (2026-04-24) — Foundation
 
@@ -319,6 +319,38 @@ Per task, in order:
 - **Task 28 (Minor #6):** Re-checking a row after "nicht verbraucht" doesn't restore the original quantity from `EffectivePart` (it stays at 0 until user types). Accepted UX — flag in case product wants different behavior.
 - **Task 28 (Minor #8):** `itemMap` build is fine at current scale but flag if inventory > 5000 items.
 
+### Session 11 (2026-04-27) — Packing-list print + dashboard card + email Lager section
+
+| Task | Status | Commit SHA(s) | Notes |
+|------|--------|---------------|-------|
+| 29 — Packing-list print view + drawer button | ✅ | `ffe4726` | 207 LOC across 2 new + 1 modified files: `PackingListPrintView.tsx` (174) + `page.tsx` wrapper (9) + `BookingDetailsDrawer.tsx` (+24/-10). Parallel reviews per Decision §7 (small surface). Both **Approved-without-fixes** on first review pass. **Strict typing** beyond plan: plan example used `(p: any)` casts; implementer correctly imported `EffectivePart` from `@/hooks/useEffectiveParts` and typed `stockStatus(p: EffectivePart): string`. **Dropped `formatPartCategory` import** (unused — section grouping makes per-row category labels redundant). **Inline `<style>` block** scoped to `.packing-list-print` class with `@media print` rules; `globals.css` had no existing print rules. **`<Button asChild>` confirmed:** `src/components/ui/button.tsx` uses `@radix-ui/react-slot`; the pattern `<Button variant="outline" asChild><a href={...} target="_blank" rel="noreferrer">` works correctly. **Drawer button placement:** separate row above the existing Umplanen/Stornieren flex-row, full-width, wrapped together in a `space-y-2` container. **Visibility gate:** `booking.system && booking.status === 'CONFIRMED'` (controller-authorized — printing for cancelled bookings is unhelpful). Used `booking.system` (truthy) instead of `booking.systemId` because `useBooking` returns nested system, not top-level systemId. **UX bonus:** added a "Drucken" button at top of print view that calls `window.print()`, hidden in print mode via `.no-print { display: none !important; }` inside `@media print`. **Carry-forward:** dashboard sidebar bleeds into printed page — Phase B fix via route group `(print)` with bare layout, or `nav { display: none }` inside `@media print`; controller briefing accepted this for Phase A. **Carry-forward:** TECHNICIAN-not-assigned gets a 403 from `usePackingList`, surfaced as a generic error toast — quality reviewer suggested hiding the drawer button for unassigned technicians (would need `currentUserId` context). |
+| 30 — `LowStockDashboardCard` on `/dashboard` | ✅ | `63f792a` + `e78e4c6` (controller-applied fix-round) | Initial commit 39 LOC; fix-round +17/-16. Trivial — parallel reviews. Spec ✅. Quality flagged **Important** layout inconsistency: the new card used plan's verbatim `<Card className="p-4 ...">` shadcn primitive while the sibling `unassignedSystemsCount` card at `dashboard/page.tsx:163` uses raw `bg-card rounded-xl border border-status-overdue-border bg-status-overdue-bg p-5` divs with a 9×9 icon tile + `ArrowRightIcon` hover affordance + `text-2xl font-bold` count. Side-by-side in the same grid the cards looked visibly different. **Controller-applied fix `e78e4c6`:** rewrote the card to mirror the sibling pattern (raw `<Link>` with `group bg-card rounded-xl border ${cardClasses} p-5 hover:shadow-md transition-all`, `w-9 h-9 icon tile`, `ArrowRightIcon`, `text-2xl font-bold`). Color scheme switched from raw Tailwind (`bg-red-50` / `bg-amber-50`) to status tokens (`border-status-overdue-border bg-status-overdue-bg` for ≥5; `border-status-due-border bg-status-due-bg` for 1–4) — matches the sibling card and avoids design-token drift. **Authorized scope expansion:** `inventoryBelowMinStockCount?: number` added to `DashboardStats` interface in `src/hooks/useDashboard.ts` (server returned it from Task 18 but the type wasn't extended). Same pattern as Tasks 27 + 28: server side ahead of client type. **Lucide convention:** used `Package2Icon` (codebase `Icon` suffix pattern) instead of plan's bare `Package2`. |
+| 31 — Weekly summary email — Lager section | ✅ | `bc5487c` | 76 LOC across 2 modified files: template (+44) + service (+32). Parallel reviews. Both **Approved-without-fixes**. **Section placement:** between Overdue (Section 3) and Retro (Section 4); comment marker `Section 3b`. **Color scheme:** amber (`#FEF3C7` / `#D97706` / `#92400E`) — matches the existing "Due but unbooked" amber panel; consistent with low-stock as a non-critical warning (red kept for genuine overdue). **Query placement:** inside the existing `Promise.all` array as 8th entry, with `isOwner ? prisma.inventoryItem.findMany({ where: { companyId: user.companyId } }) : Promise.resolve([])` — keeps queries parallel; TECHNICIAN runs pay only the no-op resolve cost. **Decimal arithmetic:** filter via `i.currentStock.lt(i.minStock)`, sort by deficit descending via `Number(b.minStock.sub(b.currentStock)) - Number(a.minStock.sub(a.currentStock))` (Decimal `.lt()` / `.sub()` methods, `Number()` boundary conversion safe at Phase A scale). **Top-5 visible** (`LOW_STOCK_VISIBLE = 5` constant; separate from `LIST_LIMIT = 10` used elsewhere — different product decisions). **Boundary `.toString()`:** template prop type is `string`; service does `i.currentStock.toString()` at the boundary so the template stays presentational and decoupled from Prisma's Decimal. **TECHNICIAN code path:** `lowStockItems` is `undefined` (not `[]`); template's `lowStockItems && lowStockItems.length > 0` guard short-circuits cleanly either way. **Did NOT touch the cron route** — query lives entirely in `service.tsx`'s `sendWeeklySummary()`. **Test impact:** zero — `email/__tests__/` only contains `opt-in.test.ts` and `unsubscribe-token.test.ts`, neither references `sendWeeklySummary` or `WeeklySummaryEmail`. Carry-forward: snapshot tests for the new section (a) OWNER+low-stock renders, (b) TECHNICIAN absent, (c) OWNER+empty inventory absent — cheap insurance, but not in scope here. |
+
+**Session 11 full commit chain (most recent first):**
+- `bc5487c` feat(email): weekly summary Lager section for OWNER
+- `e78e4c6` fix(ui): align LowStockDashboardCard layout with sibling OWNER warning card
+- `63f792a` feat(ui): dashboard LowStockDashboardCard for OWNER
+- `ffe4726` feat(ui): packing-list print view
+
+**Session 11 end-of-session health:**
+- Tests: 313/313 passing across 32 files (no net new — UI/email components have no test infrastructure)
+- `tsc --noEmit`: clean
+- Working tree: `.claude/settings.json` modified (pre-existing user-level — leave alone), `graphify-out-{backbone,codemap}/` modified (auto-regenerated, will roll into the runbook commit), `kundenaustausch/Wartungsteile/` untracked (pre-existing — leave alone).
+- Review status: Tasks 29 + 31 **Approved-without-fixes** on first review pass; Task 30 needed 1 controller-applied fix-round (sibling card layout consistency).
+- **Browser verification: NOT performed this session.** Same as Sessions 8–10 — Task 35 covers it. Specifically pending: print preview of the packing list page (Task 29's `window.print()` flow), dashboard low-stock card visual confirmation (Task 30), and an actual weekly-summary email render with low-stock items (Task 31 — could be triggered via `curl -X POST http://localhost:3000/api/cron/weekly-summary -H "x-cron-secret: <CRON_SECRET>"`).
+- **Vitest startup-flakiness** recurred on Tasks 25 (Session 9) and 30 + final-session-check (Session 11) — re-runs always green. Pattern documented since Session 3; persistent enough to consider `pool: 'vmForks'` in `vitest.config.ts` if it surfaces in Session 12 too.
+
+**Cross-session deviation note:** Sessions 10 + 11 chained in the same Claude Code context per user request. Fresh-context default still applies unless explicitly chained.
+
+**Session 11 carry-forward items (non-blocking — fold in opportunistically; from Task 29+30+31 quality reviews):**
+- **Task 29:** Drawer "Packliste drucken" button is rendered for TECHNICIAN regardless of system assignment, then fails on click with a 403 "Zugriff verweigert" message. Hide the button when `booking.assignedToUserId !== currentUserId` for technicians. Needs `currentUserId` from `useSession` in the drawer.
+- **Task 29:** Print view inherits the dashboard layout's sidebar; the printed PDF includes nav chrome. Phase B fix: introduce a route group `(print)` outside `app/dashboard/` with a bare layout, OR add `print:hidden` to `DashboardNav` so the sidebar disappears in `@media print`.
+- **Task 30:** Visual minor — `LowStockDashboardCard` uses `Package2Icon` color via parent `${accentText}` cascade. Explicit per-element color would be slightly clearer; cosmetic.
+- **Task 31:** `prisma.inventoryItem.findMany` with no projection returns every column for every inventory row per tenant per week. At ≤500 items/tenant fine; for 5k+ wasteful. Cheap mitigations: (a) add `select: { description: true, articleNumber: true, currentStock: true, minStock: true }` to narrow the row; (b) raw SQL `WHERE current_stock < min_stock`. Track post-pilot.
+- **Task 31:** Add snapshot test for the Lager section in the email template — three cases (OWNER+low-stock present, TECHNICIAN absent, OWNER+empty inventory absent). Cheap insurance against regression.
+- **Task 31:** `Number()` conversion of Decimal deficit in the sort comparator is safe at Phase A scale (small integer/decimal stocks, <2^53). Document the assumption inline if/when stocks become fractional or large.
+
 **Session 7 carry-forward items (non-blocking — fold in opportunistically; from Task 19+20+21 quality reviews):**
 - `src/hooks/useEffectiveParts.ts:67` (Task 20): uses `30 * 1000` while peer hooks use `30_000` literal style. Cosmetic style inconsistency only.
 - `src/hooks/useInventoryMovements.ts` (Task 21): explicit `['inventory', itemId, 'movements']` invalidation alongside `['inventory']` is technically redundant (prefix-match covers it). Plan-driven; if cleaning, drop the explicit child.
@@ -330,14 +362,18 @@ Per task, in order:
 
 ## Next Up
 
-**Start Session 11 with Task 29: Packing-list print view page.** Then Tasks 30 (LowStockDashboardCard on `/dashboard`) and 31 (Weekly summary email Lager section). All three are smaller integration tasks consuming hooks already in place from Sessions 6–7.
+**Start Session 12 with Task 32: Data migration script for legacy `requiredParts`.** Then Tasks 33 (tenant-isolation audit update) and 34 (full test suite + typecheck + build green).
 
-This continues the integration mode established in Session 10:
-- Task 29 medium: print-formatted page consuming `usePackingList(bookingId)` + a "Packliste drucken" button on `BookingDetailsDrawer`. Technician-facing read-only view. Print stylesheet considerations (`@media print`).
-- Task 30 small: a low-stock card (OWNER-only) on `/dashboard`. Reuses existing `useInventoryItems('low')`. Renders alongside the existing dashboard stats.
-- Task 31 medium: extend `WeeklySummaryEmail` template + `email/service.tsx` to include a Lager section listing low-stock items (OWNER recipient only). Backend-only change to a React Email template; no new UI work.
+This is the **back-half cleanup arc** before manual verification:
+- Task 32 medium: one-shot script `scripts/migrate-required-parts.ts` to convert `CustomerSystem.requiredParts` text → `CustomerSystemPartOverride` ADD rows. Read existing `requiredParts` strings, parse them (best-effort heuristic — German free text), generate ADD overrides per system, log the conversion. The script must be idempotent (safe to re-run). NOT a Prisma migration — runs as `tsx scripts/migrate-required-parts.ts`.
+- Task 33 small: extend `src/__tests__/audit/tenant-isolation.test.ts` `TENANT_ROUTES` with all new feature routes (already mostly added incrementally — verify nothing is missing). Add the cross-tenant FK guard checks from Decision §4 if the audit doesn't already cover them.
+- Task 34 small: full sweep — `npm test` 313/313, `npx tsc --noEmit` clean, `npm run build` (production build with Turbopack) green. If build fails, fix.
 
-**Suggested Session 11 chunk: Tasks 29 → 30 → 31.** Three small/medium tasks; together less work than Session 10's Task 28 alone. If context allows, pull Task 32 (data migration script) forward; otherwise pause cleanly after Task 31.
+**Suggested Session 12 chunk: Tasks 32 → 33 → 34.** Three smaller tasks; together less work than the largest single Session 10 task.
+
+**After Session 12:** Session 13 = Tasks 35 (manual verification — the user-facing browser/email checks deferred from Sessions 8–11), 36 (drop `requiredParts` column — the destructive migration), 37 (BACKLOG.md sign-off + Sprint 28 close).
+
+**After Session 13:** Session 14 = `superpowers:finishing-a-development-branch` to merge to `main`.
 
 **Carry-forward non-blocking items (cumulative — pick up opportunistically when touching the relevant files):**
 - `src/app/api/maintenance-sets/[id]/route.ts` `handleError`: no ZodError branch. Fine for GET/DELETE-only; add `ZodError → 400` branch if a PATCH handler is ever added.
@@ -509,10 +545,10 @@ Decisions made during execution that future sessions MUST know about (beyond wha
 | 26 | Inventory drawer + item form + movement form | ✅ `3ce3781` |
 | 27 | PartsListCard on system detail | ✅ `26b88ae` |
 | 28 | MaintenanceChecklistModal Step 2.5 Teileverbrauch | ✅ `34a18cf` + `5fac106` |
-| 29 | Packing-list print view + BookingDetailsDrawer button | ⏸ **NEXT** |
-| 30 | LowStockDashboardCard on /dashboard | ⏳ |
-| 31 | Weekly summary email Lager section | ⏳ |
-| 32 | Data migration script (`scripts/migrate-required-parts.ts`) | ⏳ |
+| 29 | Packing-list print view + BookingDetailsDrawer button | ✅ `ffe4726` |
+| 30 | LowStockDashboardCard on /dashboard | ✅ `63f792a` + `e78e4c6` |
+| 31 | Weekly summary email Lager section | ✅ `bc5487c` |
+| 32 | Data migration script (`scripts/migrate-required-parts.ts`) | ⏸ **NEXT** |
 | 33 | Tenant-isolation audit update (+ cross-tenant checks from Decisions §4) | ⏳ |
 | 34 | Full test suite + typecheck + build green | ⏳ |
 | 35 | Manual verification checklist (13 steps) | ⏳ |
