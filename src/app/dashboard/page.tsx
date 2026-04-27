@@ -21,6 +21,7 @@ import { de } from 'date-fns/locale';
 import { useDashboardStats } from '@/hooks/useDashboard';
 import { useBookings } from '@/hooks/useBookings';
 import { MaintenanceChecklistModal } from '@/components/MaintenanceChecklistModal';
+import { LowStockDashboardCard } from '@/components/inventory/LowStockDashboardCard';
 import { Button } from '@/components/ui/button';
 
 export default function DashboardPage() {
@@ -173,6 +174,10 @@ export default function DashboardPage() {
             <p className="text-2xl font-bold text-status-overdue-text">{stats.unassignedSystemsCount}</p>
             <p className="text-xs text-muted-foreground mt-0.5">Nicht zugewiesen</p>
           </Link>
+        )}
+
+        {stats?.role === 'OWNER' && (stats.inventoryBelowMinStockCount ?? 0) > 0 && (
+          <LowStockDashboardCard count={stats.inventoryBelowMinStockCount ?? 0} />
         )}
 
         <div className="bg-card rounded-xl border border-border p-5">
