@@ -30,6 +30,7 @@ const TENANT_ROUTES = [
   'maintenances/[id]/route.ts',
   'bookings/route.ts',
   'bookings/[id]/route.ts',
+  'bookings/[id]/packing-list/route.ts',
   'dashboard/stats/route.ts',
   'wartungen/route.ts',
   'systems/[id]/follow-ups/route.ts',
