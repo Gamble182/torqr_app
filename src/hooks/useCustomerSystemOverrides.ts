@@ -89,7 +89,7 @@ export function useCreateOverride(customerSystemId: string) {
         queryKey: ['effective-parts', customerSystemId],
       });
       queryClient.invalidateQueries({
-        queryKey: ['customer-systems', customerSystemId],
+        queryKey: ['customer-system', customerSystemId],
       });
     },
   });
@@ -110,6 +110,9 @@ export function useDeleteOverride(customerSystemId: string) {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ['effective-parts', customerSystemId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['customer-system', customerSystemId],
       });
     },
   });

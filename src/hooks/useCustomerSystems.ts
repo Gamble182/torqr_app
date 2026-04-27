@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import type { CatalogEntry } from './useCatalog';
+import type { CustomerSystemPartOverride } from './useCustomerSystemOverrides';
 
 export interface CustomerSystem {
   id: string;
@@ -31,6 +32,11 @@ export interface CustomerSystem {
   _count?: { maintenances: number; followUpJobs?: number };
   maintenances?: Array<{ id: string; date: string; notes: string | null; photos: string[] }>;
   bookings?: Array<{ id: string; startTime: string; endTime: string | null; calBookingUid: string }>;
+  /**
+   * Tenant-scoped part overrides (added via Wartungsteile Phase A).
+   * Only present on the detail GET response, not on list responses.
+   */
+  partOverrides?: CustomerSystemPartOverride[];
 }
 
 interface ApiResponse<T> {

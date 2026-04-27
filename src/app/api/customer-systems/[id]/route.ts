@@ -29,6 +29,7 @@ export async function GET(
           take: 1,
           select: { id: true, startTime: true, endTime: true, calBookingUid: true },
         },
+        partOverrides: { orderBy: { sortOrder: 'asc' } },
       },
     });
 
