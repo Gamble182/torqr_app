@@ -64,7 +64,7 @@ Per task, in order:
 
 ### Last committed SHA
 
-`8378a14` (Session 8 Task 24: /dashboard/wartungssets/[id] detail + item form)
+`3ce3781` (Session 9 Task 26: inventory drawer + forms)
 
 ### Session 1 (2026-04-24) — Foundation
 
@@ -257,6 +257,36 @@ Per task, in order:
 - **Task 24:** `MaintenanceSetItemsTable.isMutating` combines reorder + delete into one flag → all rows' Edit buttons disable while one row's delete is in flight. Functionally safe, slightly conservative UX.
 - **Task 24:** The `as Resolver<FormValues>` cast on `MaintenanceSetItemForm.tsx:86` deserves a 1-line comment explaining the zod `default()` input/output divergence; future maintainer might "fix" the cast and break compilation.
 
+### Session 9 (2026-04-27) — Lager page + inventory drawer/forms
+
+| Task | Status | Commit SHA(s) | Notes |
+|------|--------|---------------|-------|
+| 25 — `/dashboard/lager` list + status badge | ✅ | `67ff35f` + `045a639` (fix-round, controller-applied) | 183 LOC across 3 new files: `InventoryStatusBadge.tsx` (27) + `InventoryList.tsx` (139) + `page.tsx` (17). Sequential review per Decision §10 (>80 LOC). Spec ✅ first pass with two approved minor deviations: (a) badge prop type is `string \| number` rather than plan's verbatim `Prisma.Decimal \| number` because `useInventoryItems` returns Decimal-as-string (JSDoc justifies); (b) page shell adds subtitle (matches sibling pages — Mitarbeiter / Wartungssets). Quality returned **Approved-with-fixes** flagging Badge color drift: plan's verbatim raw Tailwind `bg-red-100 text-red-800` / `bg-amber-100 text-amber-800` bypassed the shadcn variant system (Badge has `default | secondary | destructive | outline`). Controller-applied tiny fix `045a639`: "Leer" → `<Badge variant="destructive">` (existing variant, dark-mode safe); "Niedrig" kept amber per plan but added `dark:bg-amber-900/30 dark:text-amber-300 border-transparent` for dark-mode contrast. Adding a `warning` Badge variant left as future polish. **TECHNICIAN can VIEW the page** (Decision §6 — GET `/api/inventory` allows both roles); only the "+ Neues Lagerteil" CTA is `isOwner`-gated. Plug-in placeholders `selectedItemId` / `showCreateForm` wired with TODO comments + `&& null` no-op (lint-bridge for Task 26). Filter toggle as segmented `<Button>` group. Empty state differentiated by filter ("Noch keine Lagerteile angelegt" vs "Keine Artikel mit niedrigem Bestand"). `useInventoryItems(filter === 'low' ? 'low' : undefined)` — passes `undefined` not `'all'` to match the hook's `filter?: 'low'` signature. **Vitest startup-flakiness recurrence:** the implementer hit the documented Session 3 flakiness pattern (`Tests no tests, 0ms`) and incorrectly concluded tests were broken on the branch — controller verified by re-running once → 313/313 green. Documented in Session 9 carry-forward: implementer briefings for future UI tasks must explicitly call out the flakiness pattern + re-run instruction (added to this Task 26's briefing successfully). |
+| 26 — Inventory drawer + item form + movement form | ✅ | `3ce3781` | 707 LOC across 3 new files + 1 modified: `InventoryDrawer.tsx` (338) + `InventoryItemForm.tsx` (198) + `InventoryMovementForm.tsx` (171); `InventoryList.tsx` 139→150 (placeholders replaced). Substantive — full sequential review (spec ✅ then quality ✅, no fix-round). Drawer mirrors `BookingDetailsDrawer` pattern (`fixed inset-0 z-40 bg-black/40 flex justify-end` + `<aside class="w-full sm:max-w-md ...">`). Z-index layering: drawer overlay z-40, form modals z-50, AlertDialog z-50 (above forms) — chosen so child forms layer above the drawer. **Drawer fetches fresh item via `useInventoryItem(itemId)`** (NOT list snapshot) so stock counter + lastRestockedAt refresh in-place after each movement (relies on React Query prefix-match cascade: `useCreateMovement` invalidates `['inventory']` → cascades to `['inventory', id]` and `['inventory', id, 'movements']`). Single `<InventoryMovementForm reason="RESTOCK"\|"CORRECTION">` (plan's preferred shape) with reason-conditional title/label/helper-text/min-validation. Movement form does NOT use `zodResolver` (plan didn't require it for this form — minimal payload, reason fixed by prop, inline guard against `0`/NaN/negative-on-RESTOCK is sufficient; server is the truth). Item form uses `zodResolver(inventoryItemCreateSchema) as Resolver<FormValues>` with documented zod-default-divergence comment (Session 8 carry-forward addressed). Item form fields: description / articleNumber (optional) / unit (default 'Stck') / minStock — `currentStock` correctly NOT exposed (server `.strict()` rejects). Drawer state `editing` / `movementMode` / `confirmDelete` lives drawer-local; conditionally-mounted via `{selectedItemId && <InventoryDrawer/>}` in parent so close fully unmounts → state discarded → no stale-state flash. shadcn `<AlertDialog>` for delete confirmation with `e.preventDefault()` + `disabled` during pending (matches Task 24). Reference-block 400 from server surfaced via `toast.error` and drawer stays open (preserves user context). Bewegungshistorie row format: `dd.MM.yy HH:mm` date · user (or "Unbekannt") · German reason badge (Zugang/Korrektur/Wartung/Manuell) · signed quantity (text-emerald-600 if positive, text-destructive if negative) · note. `MovementReasonInput` (write subset) vs `MovementReason` (full read enum) types correctly used. TECHNICIAN can OPEN drawer (read access) but action section (`{isOwner && ...}`) is fully hidden — server-enforced anyway. Quality reviewer flagged 5 minor non-blocking items (carry-forward below). |
+
+**Session 9 full commit chain (most recent first):**
+- `3ce3781` feat(ui): inventory drawer + forms
+- `045a639` fix(ui): align inventory status badge with shadcn variants
+- `67ff35f` feat(ui): /dashboard/lager list + status badge
+
+**Session 9 end-of-session health:**
+- Tests: 313/313 passing across 32 files (no net new — UI components have no test infrastructure)
+- `tsc --noEmit`: clean
+- Working tree: `.claude/settings.json` modified (pre-existing user-level — leave alone), `graphify-out-{backbone,codemap}/` modified (auto-regenerated by post-commit hook, will ride along with the next runbook commit per CLAUDE.md), `kundenaustausch/Wartungsteile/` untracked (pre-existing — leave alone).
+- Review status: Task 25 needed 1 controller-applied fix-round (badge variants); Task 26 **Approved-without-fixes** on first review pass.
+- **Browser verification: NOT performed this session.** Same as Session 8 — Task 35 (manual verification checklist) covers the full UI flow at end of Phase A.
+
+**Cross-session deviation note:** Sessions 8 + 9 were chained in the same Claude Code context per user request ("Lift off!" → user signaled continue with Session 9 immediately after Session 8 close). Fresh-context default still applies unless explicitly chained — user explicitly chained.
+
+**Session 9 carry-forward items (non-blocking — fold in opportunistically; from Task 25+26 quality reviews):**
+- **Task 25:** Add a `warning` variant to `src/components/ui/badge.tsx` (`bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 border-transparent`) so `<Badge variant="warning">` works for all future "low/warning" states; then migrate `InventoryStatusBadge` "Niedrig" path to use it. Cosmetic, ~5 LOC.
+- **Task 25 + general:** Vitest startup-flakiness on Windows (`Tests no tests, 0ms` on first run) recurs sporadically (Session 3 → Session 9). Implementer briefings must call out the pattern + re-run instruction so implementers don't misread it as a real failure. Persistent (3+ consecutive sessions) recurrence would justify adding `pool: 'vmForks'` to `vitest.config.ts`; not yet warranted.
+- **Task 26 (I-1):** `InventoryDrawer.tsx:91-96` overlay `onClick={onClose}` does not gate on `deleteMutation.isPending` — clicking outside during a pending delete unmounts the drawer mid-flight (mutation completes but the success toast / state-reset is unreachable). The inner `<AlertDialog>` already gates its own close while pending, but the outer overlay does not. Cheap 1-line fix when next touched: `onClick={() => { if (!deleteMutation.isPending) onClose(); }}`.
+- **Task 26 (I-4):** `InventoryItemForm` PATCH body sends `articleNumber: undefined` when user clears the field → JSON.stringify drops it → server-side it's a no-op (column NOT cleared). If "clear to null" is the desired UX, the form needs to send explicit `null` and the schema needs to accept `null` in `articleNumber`. Verify intended product behavior before fixing.
+- **Task 26 (M-2):** `InventoryDrawer.tsx` is 338 LOC. Bewegungshistorie (lines 219–270) is a self-contained pure-render block ideal for extraction to `InventoryMovementHistory.tsx` if the section grows (filtering, pagination beyond 30).
+- **Task 26 (M-5):** `Number(mv.quantityChange) > 0 ? text-emerald-600 : text-destructive` paints zero as destructive. Server-rejected unreachable case but `=== 0 → text-muted-foreground` would be more correct defensively.
+- **Resolver-cast comment style:** Task 26 used a 3-line block (vs Session 8's "1-line" suggestion). Both are acceptable; future tasks can pick whichever feels cleaner — content > line count.
+
 **Session 7 carry-forward items (non-blocking — fold in opportunistically; from Task 19+20+21 quality reviews):**
 - `src/hooks/useEffectiveParts.ts:67` (Task 20): uses `30 * 1000` while peer hooks use `30_000` literal style. Cosmetic style inconsistency only.
 - `src/hooks/useInventoryMovements.ts` (Task 21): explicit `['inventory', itemId, 'movements']` invalidation alongside `['inventory']` is technically redundant (prefix-match covers it). Plan-driven; if cleaning, drop the explicit child.
@@ -268,13 +298,15 @@ Per task, in order:
 
 ## Next Up
 
-**Start Session 9 with Task 25: `/dashboard/lager` list + status badge.** Then Task 26 (Inventory drawer + item form + movement form). Both are UI tasks consuming the inventory hooks already in place from Session 7.
+**Start Session 10 with Task 27: PartsListCard on `/dashboard/systems/[id]`.** Then Task 28 (MaintenanceChecklistModal Step 2.5 Teileverbrauch — substantive, the main technician-facing flow integration of the feature).
 
-This continues the frontend-page work mode established in Session 8. Expect:
-- Task 25 is medium (list page using `useInventoryItems`, with status badge per row — ok / niedrig / leer based on `currentStock` vs `minStock`). OWNER + TECHNICIAN both read; OWNER also sees "+ Neuer Artikel" CTA.
-- Task 26 is substantive (detail drawer with movement history, item create/edit form, manual RESTOCK / CORRECTION movement form, all OWNER-only — TECHNICIAN sees read-only).
+This shifts from list/detail UI tasks to **integration into existing flows**:
+- Task 27 medium: insert a `PartsListCard` into the existing system-detail page, consuming `useEffectiveParts(systemId)` + the override hooks. OWNER can ADD/EXCLUDE overrides; TECHNICIAN read-only.
+- Task 28 substantive: hook a new "Teileverbrauch" step into the existing `MaintenanceChecklistModal` (the multi-step modal technicians use to complete a maintenance). This is the primary write path for `MAINTENANCE_USE` movements — it's the FIRST consumer of the `partsUsed[]` extension to POST `/api/maintenances` (Task 15).
 
-**Suggested Session 9 chunk: Tasks 25 → 26.** Two tasks; if Task 26 grows large, pause after Task 25 and pick up Task 27 + 28 in Session 10 instead.
+Expect Task 28 to be the densest UI work of the feature: existing modal integration, multi-source effective-parts list (DEFAULT, OVERRIDE_ADD, AD_HOC), inventory linkage, transactional submit.
+
+**Suggested Session 10 chunk: Tasks 27 → 28.** Two tasks; if Task 28 grows large, pause after Task 27 and pick up Task 28 alone in Session 11.
 
 **Carry-forward non-blocking items (cumulative — pick up opportunistically when touching the relevant files):**
 - `src/app/api/maintenance-sets/[id]/route.ts` `handleError`: no ZodError branch. Fine for GET/DELETE-only; add `ZodError → 400` branch if a PATCH handler is ever added.
@@ -442,9 +474,9 @@ Decisions made during execution that future sessions MUST know about (beyond wha
 | 22 | Nav — Wartungssets + Lager entries | ✅ `0c83ebc` |
 | 23 | /dashboard/wartungssets list | ✅ `75568e1` + `7f17da7` |
 | 24 | /dashboard/wartungssets/[id] detail + item form | ✅ `8378a14` |
-| 25 | /dashboard/lager list + status badge | ⏸ **NEXT** |
-| 26 | Inventory drawer + item form + movement form | ⏳ |
-| 27 | PartsListCard on system detail | ⏳ |
+| 25 | /dashboard/lager list + status badge | ✅ `67ff35f` + `045a639` |
+| 26 | Inventory drawer + item form + movement form | ✅ `3ce3781` |
+| 27 | PartsListCard on system detail | ⏸ **NEXT** |
 | 28 | MaintenanceChecklistModal Step 2.5 Teileverbrauch | ⏳ |
 | 29 | Packing-list print view + BookingDetailsDrawer button | ⏳ |
 | 30 | LowStockDashboardCard on /dashboard | ⏳ |
