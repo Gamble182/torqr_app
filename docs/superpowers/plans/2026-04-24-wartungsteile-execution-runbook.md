@@ -64,7 +64,7 @@ Per task, in order:
 
 ### Last committed SHA
 
-`a8c4d74` (Session 6 Task 18: dashboard stats include inventoryBelowMinStockCount for OWNER)
+`1b57c29` (Session 7 Task 21: inventory, movements, packing-list hooks)
 
 ### Session 1 (2026-04-24) — Foundation
 
@@ -196,15 +196,49 @@ Per task, in order:
 - `src/app/api/dashboard/stats/route.ts` line 83 (Task 18): the new `findMany` for inventoryBelowMinStockCount runs **serially** after `unassignedSystemsCount` inside the `if (isOwner)` block, rather than joining the upstream `Promise.all` (lines 36–80). Mirrors the existing `unassignedSystemsCount` placement; pilot scale makes this trivial. If the OWNER stats path ever shows latency, fold both into a single `Promise.all`. Cosmetic.
 - `src/app/api/dashboard/stats/route.ts` line 83 (Task 18): outer-scope declaration `let inventoryBelowMinStockCount = 0` is dead in the non-OWNER path because the spread idiom omits it. Harmless, but the variable could be inlined into the `if (isOwner)` block since the spread is the only consumer. Cleanup-only; touch when refactoring.
 
+### Session 7 (2026-04-27) — React Query hooks (sets, overrides, inventory, packing-list)
+
+| Task | Status | Commit SHA(s) | Notes |
+|------|--------|---------------|-------|
+| 19 — Hooks: useMaintenanceSets + useMaintenanceSetItems | ✅ | `19a1e13` + `45677b6` (fix-round) | 8 hooks across 2 files. Plan pseudocode used loose typing (`any`, `Record<string, unknown>`) — implementer correctly mirrored stricter `useEmployees`-style typing instead (typed `MaintenanceSetSummary`, `MaintenanceSetDetail`, `MaintenanceSetItem`, `InventoryItemMini`, `PartCategory` enum). Plan's `if (!res.ok)` HTTP-only check replaced with codebase's `ApiResponse<T>` envelope check. Decimal-as-string convention applied to `currentStock`, `minStock`, `quantity`. Fix-round addressed: (1) **material** — all 4 item-mutation hooks now invalidate `['maintenance-sets']` prefix instead of only `['maintenance-sets', setId]`, so list `_count.items` badge refreshes after item create/delete; (2) tightened `useCreateMaintenanceSet` return type via `MaintenanceSetCreated = Omit<MaintenanceSetSummary, '_count'>` (POST handler doesn't return `_count`); (3) renamed `data` → `body` in `useUpdateSetItem` mutationFn arg to match plan. Test count unchanged (313/313) — hooks have no test infrastructure in this codebase (zero `__tests__` dirs in `src/hooks/`), and plan does not require tests for these tasks. |
+| 20 — Hooks: useEffectiveParts + useCustomerSystemOverrides | ✅ | `dbd34e5` | 3 hooks across 2 files. Approved on first review pass (parallel spec + quality, both clean). `EffectivePart` typed as discriminated union with `source: 'DEFAULT' \| 'OVERRIDE_ADD'` (NOT `'AD_HOC'` — confirmed in `src/lib/maintenance-parts.ts`). `CreateOverrideInput` is a 2-variant discriminated union (`ADD` and `EXCLUDE`) discriminated by `action` literal — matches `customerSystemOverrideSchema` in `validations.ts` (the briefing initially overestimated 5 variants; implementer correctly read the schema). `useDeleteOverride` invalidates only `['effective-parts', cid]` per plan — implementer verified via grep that customer-systems detail GET does NOT include `partOverrides`, so narrower invalidation is correct. `useCreateOverride` adds `['customer-systems', cid]` invalidation as forward-compat (cheap, harmless). |
+| 21 — Hooks: useInventory + useInventoryMovements + usePackingList | ✅ | `1b57c29` | 8 hooks across 3 files. Approved on first review pass (parallel spec + quality). Key typing decision: split `MovementReason` (full enum incl. `MAINTENANCE_USE`/`MANUAL_ADJUSTMENT` for read responses) from `MovementReasonInput` (`'RESTOCK' \| 'CORRECTION'` for create-input only, matching `inventoryMovementCreateSchema`). `useCreateMovement` invalidates `['inventory']` (prefix-match catches movements automatically) plus the explicit `['inventory', itemId, 'movements']` per plan — the second is technically redundant but harmless. `useUpdateInventoryItem` mutation arg is `{ id, body }` matching plan; `UpdateInventoryItemInput = Partial<CreateInventoryItemInput>` correctly excludes `currentStock` (Zod schema is `.strict()`). `usePackingList` reuses `EffectivePart` from Task 20 export — no type duplication. `staleTime`: list/detail hooks `30_000`, packing-list `60_000` per plan. Decimal serialization: persisted `quantityChange` is `string`, input `quantityChange` is `number`. |
+
+**Session 7 full commit chain (most recent first):**
+- `1b57c29` feat(hooks): inventory, movements, packing-list
+- `dbd34e5` feat(hooks): useEffectiveParts + useCustomerSystemOverrides
+- `45677b6` fix(hooks): broaden invalidation to list + tighten createSet return type
+- `19a1e13` feat(hooks): maintenance-sets + items React Query hooks
+
+**Session 7 end-of-session health:**
+- Tests: 313/313 passing across 32 files (no net new — hooks have no test infrastructure in `src/hooks/`)
+- `tsc --noEmit`: clean
+- Working tree: clean (except pre-existing `kundenaustausch/Wartungsteile/` untracked state)
+- Review status: Task 19 needed 1 fix-round on quality (material invalidation gap); Tasks 20 and 21 **Approved-without-fixes** on first parallel review pass.
+
+**Cross-session deviation note:** Sessions 6 + 7 were chained in the same Claude Code context per user request ("Tackle it!"). Per Session 5 carry-forward note, fresh-context default applies unless explicitly chained — user explicitly chained.
+
+**Session 7 carry-forward items (non-blocking — fold in opportunistically; from Task 19+20+21 quality reviews):**
+- `src/hooks/useEffectiveParts.ts:67` (Task 20): uses `30 * 1000` while peer hooks use `30_000` literal style. Cosmetic style inconsistency only.
+- `src/hooks/useInventoryMovements.ts` (Task 21): explicit `['inventory', itemId, 'movements']` invalidation alongside `['inventory']` is technically redundant (prefix-match covers it). Plan-driven; if cleaning, drop the explicit child.
+- `src/hooks/useMaintenanceSets.ts` `useCreateMaintenanceSet` (Task 19): If the API later adds `_count: { items: 0 }` to the POST response for symmetry, the `MaintenanceSetCreated = Omit<...>` type can be removed in favor of `MaintenanceSetSummary`. Track if a future task touches the POST handler.
+- **Lesson learned for future hook tasks:** when a list endpoint includes derived counts (`_count`), all detail-mutation hooks must invalidate the list prefix. Confirmed for sets in Task 19 fix-round; verified non-issue for inventory in Task 21 (the `['inventory']` prefix invalidation already cascades to movements and detail).
+- **Lesson learned for hook briefings:** the plan pseudocode uses `any` and `Record<string, unknown>` consistently — this is loose-typed. Future hook briefings should explicitly require codebase-strict typing (read `useEmployees.ts` first, define proper interfaces). Tasks 19-21 all required this departure from plan; document once in Decisions §13.
+
 ---
 
 ## Next Up
 
-**Start Session 7 with Task 19: Hooks — sets + set-items.** Then Tasks 20 (overrides + effective-parts hooks) and 21 (inventory + movements + packing hooks) — same shape, can batch in one session per the suggested chunking (line 374 of this runbook).
+**Start Session 8 with Task 22: Navigation — sidebar entries for Wartungssets + Lager.** Then Tasks 23 (`/dashboard/wartungssets` list page) and 24 (`/dashboard/wartungssets/[id]` detail + item form). All three are user-facing UI tasks — the first frontend-page batch of the feature.
 
-This is the first front-end-adjacent batch of the feature. All three are React Query hook files in `src/hooks/`. Task 21 will also create the `useBookingPackingList` hook that consumes the Task 17 endpoint. Expect repetitive pattern: each hook follows the `useCustomers`/`useHeaters` template already in `src/hooks/`. Likely all three can use parallel reviews per Decision §7 (each hook ≤ 50 LOC, single file per task), but watch surface size — if Task 21's three hooks exceed ~150 LOC combined, fall back to sequential.
+This shifts the work mode from API/hook plumbing (Tasks 1–21, all done) to actual UI: sidebar nav additions, then list and detail pages. Expect:
+- Task 22 is trivial (a few sidebar nav-item additions in the existing layout file).
+- Task 23 is medium (list page using `useMaintenanceSets`, with create-set CTA).
+- Task 24 is substantive (detail page consuming `useMaintenanceSet`, `useMaintenanceSetItems`, with item form using `react-hook-form` + Zod).
 
-**Suggested Session 7 chunk: Tasks 19 → 20 → 21.** Three hook tasks. If context pressure rises, pause after Task 20 — that still wraps the API-side hooks neatly.
+UI tasks should be tested in the browser per CLAUDE.md ("For UI or frontend changes, start the dev server and use the feature in a browser before reporting the task as complete"). Plan accordingly: dev server start, manual click-through, screenshot of the UI in messages if context allows.
+
+**Suggested Session 8 chunk: Tasks 22 → 23 → 24.** Three tasks; if Task 24 grows large, pause after Task 23.
 
 **Carry-forward non-blocking items (cumulative — pick up opportunistically when touching the relevant files):**
 - `src/app/api/maintenance-sets/[id]/route.ts` `handleError`: no ZodError branch. Fine for GET/DELETE-only; add `ZodError → 400` branch if a PATCH handler is ever added.
@@ -213,10 +247,11 @@ This is the first front-end-adjacent batch of the feature. All three are React Q
 
 **Standing rules already learned (do not re-discover):**
 - Decision §12: every new/extended authenticated route MUST include `rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER)` immediately after the auth helper. Plan pseudocode omits it consistently — treat as defect.
+- Decision §13: hooks must use codebase-strict typing (`ApiResponse<T>` envelope, no `any`, Decimals as `string`). Read `useEmployees.ts` as canonical template, NOT plan pseudocode. List-mutation invalidations must cover list-key prefix when list shows derived counts.
 - Decision §9: `vi.mock('@/lib/prisma')` for tests. NEVER real DB.
 - Decision §4: cross-tenant FK guards on every `inventoryItemId`, `excludedSetItemId`, `setItemId`, `overrideId` reference — they are load-bearing, NOT defensive coding. Apply spirit (defense-in-depth) even where the parent record is already tenant-verified.
 - Audit whitelist: add every new/touched route file in `src/__tests__/audit/tenant-isolation.test.ts` `TENANT_ROUTES`.
-- TECHNICIAN role-scoping pattern (read access only): `if (role === 'TECHNICIAN' && resource.assignedToUserId !== userId) return 403 'Zugriff verweigert'`. Required for Task 17 packing-list.
+- TECHNICIAN role-scoping pattern (read access only): `if (role === 'TECHNICIAN' && resource.assignedToUserId !== userId) return 403 'Zugriff verweigert'`. Established by Task 14 (effective-parts) and Task 17 (packing-list).
 
 ---
 
@@ -271,6 +306,12 @@ Decisions made during execution that future sessions MUST know about (beyond wha
     if (rate) return rate;
     ```
     Even if the plan's copy-paste block omits it. Implementer dispatch prompts MUST remind the implementer of this rule. Applies to every remaining route task: 12, 13, 14, 15 (extension), 16 (extension), 17.
+
+13. **Hooks: plan pseudocode is loose-typed; codebase requires strict typing (Session 7 learning).** Tasks 19–21's plan pseudocode used `Array<any>`, `Record<string, unknown>`, and HTTP-only `if (!res.ok)` checks. The codebase (`src/hooks/useEmployees.ts`, `src/hooks/useBookings.ts`) uses zero `any`, defines explicit `ApiResponse<T>` envelopes, and operation-specific German error fallbacks. **Standing rule for any future hook tasks:** read `useEmployees.ts` first as the canonical template; define typed interfaces mirroring the API response shape; reject the plan's loose types. Specific type rules:
+    - Prisma `Decimal` fields serialize as STRING over JSON — type as `string`, not `number`. Exception: numeric inputs (e.g., `quantityChange` on `useCreateMovement`) stay `number`.
+    - When a list endpoint returns derived counts (e.g., `_count.items`), all hooks that mutate items must invalidate the list-key prefix — not just the detail key. Task 19 fix-round caught this for maintenance-sets; verified non-issue for inventory (movements share the `['inventory']` prefix automatically).
+    - When two endpoints accept/return overlapping enums, model the asymmetry: e.g., `MovementReasonInput` (write: `'RESTOCK' | 'CORRECTION'`) vs. `MovementReason` (read: full 4-variant enum). The schema is the truth, not the union of all possible values.
+    - Reuse types across hook files via export rather than redefining. Task 21's `usePackingList` correctly imports `EffectivePart` from Task 20's `useEffectiveParts` and `CatalogEntry` from `useCatalog`.
 
 ---
 
@@ -359,10 +400,10 @@ Decisions made during execution that future sessions MUST know about (beyond wha
 | 16 | Extend DELETE /api/maintenances/[id] — R1 reversal | ✅ `1c14453` |
 | 17 | GET /api/bookings/[id]/packing-list | ✅ `e47c566` |
 | 18 | Extend dashboard/stats with inventoryBelowMinStockCount | ✅ `a8c4d74` |
-| 19 | Hooks — sets + set-items | ⏸ **NEXT** |
-| 20 | Hooks — overrides + effective-parts | ⏳ |
-| 21 | Hooks — inventory + movements + packing | ⏳ |
-| 22 | Nav — Wartungssets + Lager entries | ⏳ |
+| 19 | Hooks — sets + set-items | ✅ `19a1e13` + `45677b6` |
+| 20 | Hooks — overrides + effective-parts | ✅ `dbd34e5` |
+| 21 | Hooks — inventory + movements + packing | ✅ `1b57c29` |
+| 22 | Nav — Wartungssets + Lager entries | ⏸ **NEXT** |
 | 23 | /dashboard/wartungssets list | ⏳ |
 | 24 | /dashboard/wartungssets/[id] detail + item form | ⏳ |
 | 25 | /dashboard/lager list + status badge | ⏳ |
