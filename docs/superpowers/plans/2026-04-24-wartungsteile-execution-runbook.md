@@ -64,7 +64,7 @@ Per task, in order:
 
 ### Last committed SHA
 
-`7c45b16` (Session 3 fix-round: rate-limit inventory detail + movements per review)
+`ce8e767` (Session 4 Task 14: GET /api/customer-systems/[id]/effective-parts)
 
 ### Session 1 (2026-04-24) — Foundation
 
@@ -122,25 +122,58 @@ Per task, in order:
 - Working tree: clean (except pre-existing `kundenaustausch/Wartungsteile/` untracked state)
 - Review status: all 3 tasks covered by a single combined batch review (Decision §10). **Approved-with-fixes.** Two "Important" fixes applied in `7c45b16`: rate-limiting added to Tasks 10 and 11 routes (plan pseudocode had omitted it); Task 10 `dup.id === id` guard test rewritten to exercise the actual branch (prior test short-circuited on the outer guard).
 
-**Session 3 observed flakiness (informational — no action needed):** On one `npm test` run during end-of-session verification, Vitest reported `25 failed (25)` with `no tests` loaded (`import 0ms, tests 0ms`) — clearly a startup-phase glitch, not a real failure. Immediate re-run: `25 passed, 255 passed`. This is consistent with the Task-4 implementer's earlier claim about vmThreads pool behavior on Windows. **Not blocking — but if this recurs in Session 4+ consistently**, consider adding `pool: 'vmForks'` to `vitest.config.ts`. Don't add it preemptively; the flaky run was one-off.
+**Session 3 observed flakiness (informational — no action needed):** On one `npm test` run during end-of-session verification, Vitest reported `25 failed (25)` with `no tests` loaded (`import 0ms, tests 0ms`) — clearly a startup-phase glitch, not a real failure. Immediate re-run: `25 passed, 255 passed`. This is consistent with the Task-4 implementer's earlier claim about vmThreads pool behavior on Windows. **Not blocking — but if this recurs in Session 4+ consistently**, consider adding `pool: 'vmForks'` to `vitest.config.ts`. Don't add it preemptively; the flaky run was one-off. **Session 4 update:** zero flakiness observed across 4 separate `npm test` runs (1 baseline + 3 per-task verifications + 1 final). Pool config left untouched.
+
+### Session 4 (2026-04-27) — Overrides + effective-parts API
+
+| Task | Status | Commit SHA(s) | Notes |
+|------|--------|---------------|-------|
+| 12 — POST /api/customer-systems/[id]/overrides | ✅ | `6e9da50` | 11 tests. Substantive — full sequential review (spec ✅ then quality ✅, no fix-round). Both load-bearing cross-tenant guards from Decision §4 in place: EXCLUDE checks `maintenanceSet: { companyId, catalogId: system.catalogId }`; ADD with `inventoryItemId` checks `inventoryItem.findFirst({ id, companyId })`. Catalog-mismatch test pins the full where-clause shape so future refactors can't silently drop `catalogId`. Rate-limiting added per Decision §12 (plan omitted). Audit whitelist updated. |
+| 13 — DELETE /api/overrides/[id] | ✅ | `b660b4a` | 4 tests. Trivial — parallel spec + quality reviews per Decision §7. Tenant scoping via relational filter `customerSystem: { companyId }` (override has no direct `companyId` column). Cross-tenant 404 test pins where-clause shape. Audit whitelist updated. Underscore prefix on `request` dropped (now used by rate-limiter). |
+| 14 — GET /api/customer-systems/[id]/effective-parts | ✅ | `ce8e767` | 7 tests. Trivial — parallel reviews. Uses `requireAuth` (not `requireOwner`) since both roles read; TECHNICIAN role-scope gates non-assigned systems with 403 "Zugriff verweigert". Resolver `getEffectivePartsForSystem` mocked at module boundary in tests. SELECT-shape test (`{ id: true, assignedToUserId: true }`) pins the over-fetch invariant. Audit whitelist updated. |
+
+**Session 4 full commit chain (most recent first):**
+- `ce8e767` feat(api): GET /api/customer-systems/[id]/effective-parts
+- `b660b4a` feat(api): DELETE /api/overrides/[id]
+- `6e9da50` feat(api): POST /api/customer-systems/[id]/overrides
+
+**Session 4 end-of-session health:**
+- Tests: 283/283 passing across 28 files (+22 net new across Tasks 12–14: 11 + 4 + 7)
+- `tsc --noEmit`: clean
+- Working tree: clean (except pre-existing `kundenaustausch/Wartungsteile/` untracked state)
+- Review status: all 3 tasks **Approved-without-fixes** on first review pass. No fix-round required for Session 4.
+
+**Session 4 audit whitelist additions to `src/__tests__/audit/tenant-isolation.test.ts`:**
+- `'customer-systems/[id]/overrides/route.ts'`
+- `'overrides/[id]/route.ts'`
+- `'customer-systems/[id]/effective-parts/route.ts'`
 
 ---
 
 ## Next Up
 
-**Start Session 4 with Task 12: `POST /api/customer-systems/[id]/overrides`.**
+**Start Session 5 with Task 15: extend POST `/api/maintenances` with `partsUsed`.**
 
-Substantive — overrides are the per-system deviation layer (ADD / EXCLUDE) from the default MaintenanceSet. Task 12's POST has **two load-bearing cross-tenant guards** per Decision §4: `excludedSetItemId` must belong to a set owned by the caller's company AND matching the system's catalog; `inventoryItemId` (when set on ADD) must be from the caller's company.
+**Substantive — full sequential review per Session Protocol** (one of the five flagged substantive tasks alongside Task 4 resolver, Task 16 delete reversal, Task 28 checklist integration, Task 35 manual verification). This task **modifies an existing route** — first such task in the feature — so the implementer must:
+1. Read the current `src/app/api/maintenances/route.ts` end-to-end before editing
+2. Identify the discriminated `partsUsed` array shape from `partsUsedEntrySchema` (Decision §3 — DEFAULT requires `setItemId`, OVERRIDE_ADD requires `overrideId`, AD_HOC has no linkage)
+3. Apply the **cross-tenant guard from Decision §4** to every `inventoryItemId` reference in `partsUsed` (validate they belong to `companyId` before insert) — this is per-entry, not per-request
+4. Wrap the maintenance create + InventoryMovement creates + InventoryItem stock decrements in a single `prisma.$transaction(async tx => …)` (callback form, mirroring Task 11)
+5. Reuse the resolver to validate that DEFAULT/OVERRIDE_ADD entries actually map to currently effective items (avoid recording usage of an excluded part)
 
-Full task text in [plans/2026-04-24-wartungsteile-materialmanagement-phase-a.md](./2026-04-24-wartungsteile-materialmanagement-phase-a.md).
+Full task text: [plans/2026-04-24-wartungsteile-materialmanagement-phase-a.md](./2026-04-24-wartungsteile-materialmanagement-phase-a.md) lines 1867+.
 
-**Suggested Session 4 chunk: Tasks 12 → 13 → 14** (overrides POST, override DELETE, effective-parts GET route).
+**Suggested Session 5 chunk: Tasks 15 → 16** (POST extension, then DELETE-reversal extension). Both are substantive route extensions of `/api/maintenances`. Two tasks max for Session 5 — they touch the same file, so context-switching would be wasteful; they also both modify existing tests. Don't try to pull Task 17 forward.
 
-**Carry-forward non-blocking items from Session 2 reviews (do NOT block Session 4; fold in opportunistically):**
+**Carry-forward non-blocking items (cumulative — pick up opportunistically when touching the relevant files):**
 - `src/app/api/maintenance-sets/[id]/route.ts` `handleError`: no ZodError branch. Fine for GET/DELETE-only; add `ZodError → 400` branch if a PATCH handler is ever added.
 - `src/app/api/maintenance-set-items/[id]/route.ts` `loadItem`: `include: { maintenanceSet: { select: { companyId: true } } }` unused post-load. Safe to drop when the file is next touched.
 
-**Rate-limiting reminder for Session 4+:** The plan's route pseudocode for later tasks may also omit `rateLimitByUser` (Session 3 review caught this on Tasks 10–11). **Rule:** every new authenticated route added by this feature MUST include `rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER)` immediately after the auth helper call in every handler, matching the codebase norm. Treat plan omissions as defects and fix them during implementation.
+**Standing rules already learned (do not re-discover):**
+- Decision §12: every new/extended authenticated route MUST include `rateLimitByUser(request, userId, RATE_LIMIT_PRESETS.API_USER)` immediately after the auth helper. Plan pseudocode omits it consistently — treat as defect.
+- Decision §9: `vi.mock('@/lib/prisma')` for tests. NEVER real DB.
+- Decision §4: cross-tenant FK guards on every `inventoryItemId`, `excludedSetItemId`, `setItemId`, `overrideId` reference — they are load-bearing, NOT defensive coding.
+- Audit whitelist: add every new/touched route file in `src/__tests__/audit/tenant-isolation.test.ts` `TENANT_ROUTES`.
 
 ---
 
@@ -276,10 +309,10 @@ Decisions made during execution that future sessions MUST know about (beyond wha
 | 9 | GET/POST /api/inventory | ✅ `dddb8ce` |
 | 10 | GET/PATCH/DELETE /api/inventory/[id] | ✅ `8631268` + `7c45b16` |
 | 11 | GET/POST /api/inventory/[id]/movements | ✅ `274330e` + `7c45b16` |
-| 12 | POST /api/customer-systems/[id]/overrides (+ cross-tenant guards) | ⏸ **NEXT** |
-| 13 | DELETE /api/overrides/[id] | ⏳ |
-| 14 | GET effective-parts route (+ cross-tenant inventoryItemId guards) | ⏳ |
-| 15 | Extend POST /api/maintenances (+ cross-tenant inventoryItemId guards) | ⏳ |
+| 12 | POST /api/customer-systems/[id]/overrides (+ cross-tenant guards) | ✅ `6e9da50` |
+| 13 | DELETE /api/overrides/[id] | ✅ `b660b4a` |
+| 14 | GET effective-parts route (+ cross-tenant inventoryItemId guards) | ✅ `ce8e767` |
+| 15 | Extend POST /api/maintenances (+ cross-tenant inventoryItemId guards) | ⏸ **NEXT** |
 | 16 | Extend DELETE /api/maintenances/[id] — R1 reversal | ⏳ |
 | 17 | GET /api/bookings/[id]/packing-list | ⏳ |
 | 18 | Extend dashboard/stats with inventoryBelowMinStockCount | ⏳ |
