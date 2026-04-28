@@ -16,6 +16,7 @@ import { useCreateOverride } from '@/hooks/useCustomerSystemOverrides';
 import { useInventoryItems } from '@/hooks/useInventory';
 import { formatPartCategory } from '@/lib/format';
 import type { PartCategory } from '@/hooks/useEffectiveParts';
+import { COMMON_UNITS } from '@/lib/units';
 
 interface CustomerSystemOverrideFormProps {
   systemId: string;
@@ -213,7 +214,17 @@ export function CustomerSystemOverrideForm({
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="unit">Einheit *</Label>
-              <Input id="unit" {...register('unit')} placeholder="Stck" />
+              <Input
+                id="unit"
+                list="common-units-override"
+                {...register('unit')}
+                placeholder="Stck"
+              />
+              <datalist id="common-units-override">
+                {COMMON_UNITS.map((u) => (
+                  <option key={u} value={u} />
+                ))}
+              </datalist>
               {errors.unit && (
                 <p className="text-sm text-destructive">{errors.unit.message}</p>
               )}

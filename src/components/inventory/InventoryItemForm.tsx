@@ -15,6 +15,7 @@ import {
   useUpdateInventoryItem,
   type InventoryItem,
 } from '@/hooks/useInventory';
+import { COMMON_UNITS } from '@/lib/units';
 
 interface InventoryItemFormProps {
   open: boolean;
@@ -142,7 +143,17 @@ export function InventoryItemForm({ open, onClose, item }: InventoryItemFormProp
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="unit">Einheit *</Label>
-              <Input id="unit" {...register('unit')} placeholder="Stck" />
+              <Input
+                id="unit"
+                list="common-units-inventory"
+                {...register('unit')}
+                placeholder="Stck"
+              />
+              <datalist id="common-units-inventory">
+                {COMMON_UNITS.map((u) => (
+                  <option key={u} value={u} />
+                ))}
+              </datalist>
               {errors.unit && (
                 <p className="text-sm text-destructive">{errors.unit.message}</p>
               )}

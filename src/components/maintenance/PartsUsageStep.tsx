@@ -17,6 +17,7 @@ import { useEffectiveParts } from '@/hooks/useEffectiveParts';
 import type { EffectivePart } from '@/hooks/useEffectiveParts';
 import type { InventoryItem } from '@/hooks/useInventory';
 import type { PartsUsageEntry } from '@/hooks/useMaintenances';
+import { COMMON_UNITS } from '@/lib/units';
 
 interface PartsUsageStepProps {
   customerSystemId: string;
@@ -449,6 +450,7 @@ export function PartsUsageStep({
                   </Label>
                   <Input
                     id="adhoc-unit"
+                    list="common-units-adhoc"
                     value={adHocDraft.unit}
                     onChange={(e) =>
                       setAdHocDraft((d) => ({ ...d, unit: e.target.value }))
@@ -456,6 +458,11 @@ export function PartsUsageStep({
                     placeholder="Stck"
                     className="text-sm"
                   />
+                  <datalist id="common-units-adhoc">
+                    {COMMON_UNITS.map((u) => (
+                      <option key={u} value={u} />
+                    ))}
+                  </datalist>
                 </div>
               </div>
 
