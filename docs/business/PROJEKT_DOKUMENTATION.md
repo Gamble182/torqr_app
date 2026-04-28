@@ -1,9 +1,29 @@
 # Torqr - Wartungsmanagement App
 ## Vollständige Projekt-Dokumentation für Max
 
+> ⚠️ **HINWEIS — Dokumentstand veraltet (Januar 2026).**
+> Dieses Dokument bildet den **MVP-Übergabestand für den Pilotkunden** ab und beschreibt das damalige `Heater`-Datenmodell, eine **noch nicht implementierte** Email-Automatisierung (hier als "Phase 7 Q1 2026" geplant) sowie eine ausschließliche Single-User-Architektur.
+>
+> **Tatsächlicher Stand 2026-04-28:**
+> - `Heater` wurde durch `SystemCatalog` + `CustomerSystem` ersetzt (Sprint 11, 4 Anlagentypen).
+> - Email-Automatisierung (Reminder + Wochenübersicht + Booking-Mails) ist seit Sprint 4 (April 2026) live.
+> - Multi-User mit OWNER/TECHNICIAN-Rollen ist seit Sprint 23 live.
+> - Cal.com-Buchungs-Integration + Termine-Page (Reschedule/Cancel) seit Sprint 25.
+> - System-Fotos seit Sprint 27.
+> - Wartungsteile- & Lager-Management (Phase A) seit Sprint 28.
+>
+> Aktuelle Wahrheit:
+> - Feature-Liste & Sprint-Historie: [`docs/BACKLOG.md`](../BACKLOG.md)
+> - Produkt-/Marketing-Sicht: [`docs/marketing/MARKETING_BRIEFING.md`](../marketing/MARKETING_BRIEFING.md)
+> - Datenmodell: [`prisma/schema.prisma`](../../prisma/schema.prisma)
+>
+> Dieses Dokument bleibt als **historische Referenz für die Pilotkunden-Übergabe** im Repo, nicht als Marketing-Quelle.
+
+---
+
 **Stand**: 13. Januar 2026
-**Version**: 1.0.0 (Production Ready)
-**Entwicklungsstatus**: ✅ Produktionsreif
+**Version**: 1.0.0 (Production Ready, MVP-Übergabe)
+**Entwicklungsstatus**: ✅ Produktionsreif (zum Stichtag — siehe Hinweis oben)
 
 ---
 

@@ -46,8 +46,12 @@ Test cases and credentials
 
 ### `/business`
 Client-facing and business documentation
-- [PROJEKT_DOKUMENTATION.md](./business/PROJEKT_DOKUMENTATION.md) — Full project documentation for client (Max)
-- [KOSTENAUFSTELLUNG_TORQR.md](./business/KOSTENAUFSTELLUNG_TORQR.md) — Cost breakdown
+- [PROJEKT_DOKUMENTATION.md](./business/PROJEKT_DOKUMENTATION.md) — ⚠️ Pilot-Übergabe-Snapshot (Jan 2026, veraltet — siehe Banner im Dokument)
+- [KOSTENAUFSTELLUNG_TORQR.md](./business/KOSTENAUFSTELLUNG_TORQR.md) — Pilotkunden-Vertragspreis (kein SaaS-Pricing)
+
+### `/marketing`
+Outward-facing positioning and brand assets
+- [MARKETING_BRIEFING.md](./marketing/MARKETING_BRIEFING.md) — **Single source of truth** für Marketing-Agenten / Brand-Management / Landingpage / Pricing
 
 ### `/archive`
 Outdated snapshots kept for historical reference
@@ -64,4 +68,4 @@ AI-generated specs and implementation plans
 
 ---
 
-**Last Updated:** 2026-04-15
+**Last Updated:** 2026-04-28

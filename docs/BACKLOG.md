@@ -84,6 +84,31 @@ _(no open items)_
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
 
+### Marketing & Go-to-Market
+
+Marketing-Briefing als Single Source of Truth: [`docs/marketing/MARKETING_BRIEFING.md`](./marketing/MARKETING_BRIEFING.md). Items hier sind die operativen Folge-Tasks, die der Marketing-Agent oder ein externer Partner umsetzen kann.
+
+| # | Area | Description | Priority | Found |
+|---|------|-------------|----------|-------|
+| 67 | Marketing | **Landingpage `torqr.de`** — heute zeigt die Domain direkt das Login. Konzept + Hero + Features + Pricing-Tier-Karten + Trust-Signale + CTA "Beta beitreten" / "Demo anfragen". | High | 2026-04-28 |
+| 68 | Marketing | **Pricing-Seite mit 3 Tiers bauen** — Tier-Struktur und Trial-Modell entschieden (Solo €29 / Professional €49 / Enterprise €99, 30-Tage Free Trial, Tier-Gating siehe `MARKETING_BRIEFING.md` §7.2). Aufgabe ist nur noch UI/UX + Copy + Annual-Toggle (2 Monate gratis). | High | 2026-04-28 |
+| 69 | Compliance | **Datenschutzerklärung + Impressum + Cookie-Banner** für `torqr.de`. Pflicht vor öffentlichem Marketing-Launch. | Critical (vor Launch) | 2026-04-28 |
+| 70 | Compliance | **AVV-Vertragsvorlage** (Art. 28 DSGVO) als PDF-Download im Onboarding. Voraussetzung für seriöse B2B-Akquise. | High | 2026-04-28 |
+| 71 | Marketing | **Self-Service-Signup + Billing-Integration** (Stripe oder Paddle). Voraussetzung für SaaS-Phase. Aktuell sind Kundenanlage + Bezahlung manuell. | High | 2026-04-28 |
+| 72 | Marketing | **Pitchdeck + One-Pager** für Innungs-/Handwerkskammer-Termine. PDF, brand-konform. | Medium | 2026-04-28 |
+| 73 | Marketing | **Demo-Video** (~90 s, Smartphone-Hand-Recording) für Landingpage und Outbound. | Medium | 2026-04-28 |
+| 74 | Marketing | **3 SEO-Cornerstone-Artikel** veröffentlichen: "Heizungswartung-Pflicht 2026", "Wartungsintervalle nach Gerätetyp", "DSGVO-konforme Kundenkommunikation für Heizungsbauer". | Medium | 2026-04-28 |
+| 75 | Marketing | **Lead-Magnet-Tools**: Wartungsintervall-Rechner + Wartungsprotokoll-PDF-Vorlage als kostenloser Download (Email-Capture). | Medium | 2026-04-28 |
+| 76 | Marketing | **Pilotkunden-Case-Study** (nach 6 Monaten Daten — ab Mitte 2026): Zeitersparnis-Quote, Zitat, Foto. Voraussetzung: Pilotkunden-Freigabe + Daten-Tracking. | Medium | 2026-04-28 |
+| 77 | Marketing | **DSGVO-konforme Analytics** einrichten (Plausible oder Vercel Analytics + Posthog) — vor Launch der Landingpage. | Medium | 2026-04-28 |
+| 78 | Brand | **Wordmark-Variationen** (horizontal, vertikal, monochrom, Negativ) als SVG-Set. | Medium | 2026-04-28 |
+| 79 | Brand | **Social-Media-Asset-Pack** (LinkedIn, Instagram, Facebook) im Brand-Stil. | Low | 2026-04-28 |
+| 80 | Brand | **Tagline-Validierung** — Hauptkandidat *"Die Wartungsakte für Heizungsbauer."* (Decision D-2) mit Pilotkunden + 3 Kollegen testen. Backup-Optionen siehe Briefing §11.1. | Medium | 2026-04-28 |
+| 83 | Decision | **White-Label-Strategie**: Innungen aktiv ansprechen oder nur on-demand? Pricing-Modell klären (500 €/Monat pro Partner aus BMC). | Low | 2026-04-28 |
+| 84 | Marketing | **CRM-Light für Lead-Management** (Outbound an Innungen, Pilotkunden-Funnel, Beta-Liste). Optionen: HubSpot Free, Notion-Datenbank, Airtable. | Low | 2026-04-28 |
+| 85 | Marketing | **Email-Drip-Onboarding-Strecke** für Self-Service-Signups. Voraussetzung: #71 + #82. | Medium (nach #71) | 2026-04-28 |
+| 86 | Marketing | **Daten-Export für DSGVO-Pflicht (Art. 20)** als Self-Service-Funktion (kein Marketing-Item per se, aber FAQ-relevant: "Was passiert mit meinen Daten beim Kündigen?"). Aktuell nur per DB-Dump möglich. | Medium | 2026-04-28 |
+
 ---
 
 ## Maybe / Future
@@ -113,6 +138,18 @@ Ideas worth keeping in mind but not planned for current sprints. No implementati
 ## Completed / Resolved
 
 Items are grouped by sprint / work session, ordered newest first.
+
+### Marketing-Decisions (2026-04-28)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 81 | Decision | **Marken-Strategie:** Torqr beibehalten — Domain läuft, Wordmark + Brand-Spec ausgearbeitet, internationalisierbar. (Decision D-1, dokumentiert in `MARKETING_BRIEFING.md` §0.5) | 2026-04-28 |
+| 82 | Decision | **Trial-Modell:** 30 Tage Free Trial ohne Kreditkarte für alle Tiers. Begründung: Wartungs-Saisonalität, User braucht ≥1 Reminder-Zyklus. Annual-Discount: 2 Monate gratis. (Decision D-3, `MARKETING_BRIEFING.md` §7.3) | 2026-04-28 |
+| — | Decision | **Tier-Gating:** Solo single-user / Professional Multi-User+Wartungsteile / Enterprise +API+Custom-Branding+Priority-Support. Cal.com-Buchung in allen Tiers (Kern-USP). (Decision D-4, `MARKETING_BRIEFING.md` §7.2) | 2026-04-28 |
+| — | Decision | **Zielregion:** Phase 1–3 ausschließlich Deutschland, Sprache nur Deutsch. DACH/EN frühestens 2027. (Decision D-5) | 2026-04-28 |
+| — | Decision | **Anrede:** "Du" auf Landingpage / Marketing / Outbound an Heizungsbauer; "Sie" in Endkunden-Mails (Reminder, Booking-Confirmation). (Decision D-6) | 2026-04-28 |
+| — | Decision | **Pilotkunden-Testimonials anonymisiert als Standard** (Branche + Betriebsgröße + Zitat, kein Name, kein Foto). Volle Freigabe nur bei expliziter schriftlicher Zustimmung. (Decision D-7) | 2026-04-28 |
+| — | Decision | **Tagline-Hauptkandidat:** *"Die Wartungsakte für Heizungsbauer."* — Validierung mit Pilotkunden + 3 Kollegen offen (siehe #80). (Decision D-2) | 2026-04-28 |
 
 ### Sprint 28 — Wartungsteile & Materialmanagement Phase A (2026-04-28)
 
