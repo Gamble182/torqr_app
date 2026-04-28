@@ -52,6 +52,7 @@ export function CustomerSystemOverrideList({
 
   const [showAddForm, setShowAddForm] = useState(false);
   const [showExcludePicker, setShowExcludePicker] = useState(false);
+  const [excludeSelection, setExcludeSelection] = useState<Set<string>>(new Set());
   const [pendingDelete, setPendingDelete] = useState<CustomerSystemPartOverride | null>(
     null,
   );
@@ -97,14 +98,46 @@ export function CustomerSystemOverrideList({
     }
   };
 
-  const handleExcludeClick = async (setItemId: string) => {
+  const toggleExcludeSelection = (setItemId: string) => {
+    setExcludeSelection((prev) => {
+      const next = new Set(prev);
+      if (next.has(setItemId)) next.delete(setItemId);
+      else next.add(setItemId);
+      return next;
+    });
+  };
+
+  const closeExcludePicker = () => {
+    setShowExcludePicker(false);
+    setExcludeSelection(new Set());
+  };
+
+  const handleExcludeConfirm = async () => {
+    const ids = Array.from(excludeSelection);
+    if (ids.length === 0) return;
     try {
-      await createOverride.mutateAsync({
-        action: 'EXCLUDE',
-        excludedSetItemId: setItemId,
-      });
-      toast.success('Standard-Teil ausgeschlossen');
-      setShowExcludePicker(false);
+      const results = await Promise.allSettled(
+        ids.map((id) =>
+          createOverride.mutateAsync({
+            action: 'EXCLUDE',
+            excludedSetItemId: id,
+          }),
+        ),
+      );
+      const failed = results.filter((r) => r.status === 'rejected').length;
+      const succeeded = ids.length - failed;
+      if (succeeded > 0 && failed === 0) {
+        toast.success(
+          succeeded === 1
+            ? 'Standard-Teil ausgeschlossen'
+            : `${succeeded} Standard-Teile ausgeschlossen`,
+        );
+      } else if (succeeded > 0) {
+        toast.warning(`${succeeded} ausgeschlossen, ${failed} fehlgeschlagen`);
+      } else {
+        toast.error('Ausschluss fehlgeschlagen');
+      }
+      closeExcludePicker();
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Unbekannter Fehler';
       toast.error(`Fehler: ${message}`);
@@ -292,7 +325,7 @@ export function CustomerSystemOverrideList({
               <h3 className="text-lg font-semibold">Standard-Teil ausschließen</h3>
               <button
                 type="button"
-                onClick={() => setShowExcludePicker(false)}
+                onClick={closeExcludePicker}
                 className="text-muted-foreground hover:text-foreground"
                 aria-label="Schließen"
               >
@@ -304,47 +337,77 @@ export function CustomerSystemOverrideList({
                 Keine weiteren Standard-Teile zum Ausschließen vorhanden.
               </p>
             ) : (
-              <ul className="divide-y divide-border rounded-md border border-border">
-                {excludablePicks.map((it) => (
-                  <li key={it.id}>
-                    <button
-                      type="button"
-                      onClick={() => handleExcludeClick(it.id)}
-                      disabled={createOverride.isPending}
-                      className="flex w-full items-start justify-between gap-3 px-3 py-2.5 text-left hover:bg-muted/30 transition-colors disabled:opacity-50"
-                    >
-                      <div className="min-w-0 flex-1 space-y-0.5">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <Badge variant="outline">
-                            {formatPartCategory(it.category)}
-                          </Badge>
-                          <span className="text-sm font-medium text-foreground truncate">
-                            {it.description}
-                          </span>
-                        </div>
-                        {it.articleNumber && (
-                          <div className="text-xs text-muted-foreground">
-                            Art-Nr. {it.articleNumber}
+              <>
+                <p className="mb-2 text-xs text-muted-foreground">
+                  Wähle ein oder mehrere Teile zum Ausschließen.
+                </p>
+                <ul className="divide-y divide-border rounded-md border border-border">
+                  {excludablePicks.map((it) => {
+                    const checked = excludeSelection.has(it.id);
+                    return (
+                      <li key={it.id}>
+                        <label
+                          className={`flex w-full cursor-pointer items-start gap-3 px-3 py-2.5 text-left transition-colors hover:bg-accent/40 hover:ring-1 hover:ring-inset hover:ring-primary/40 ${
+                            checked ? 'bg-accent/60 ring-1 ring-inset ring-primary/60' : ''
+                          } ${createOverride.isPending ? 'pointer-events-none opacity-50' : ''}`}
+                        >
+                          <input
+                            type="checkbox"
+                            checked={checked}
+                            onChange={() => toggleExcludeSelection(it.id)}
+                            disabled={createOverride.isPending}
+                            className="mt-1 h-4 w-4 cursor-pointer accent-primary"
+                          />
+                          <div className="min-w-0 flex-1 space-y-0.5">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <Badge variant="outline">
+                                {formatPartCategory(it.category)}
+                              </Badge>
+                              <span className="text-sm font-medium text-foreground truncate">
+                                {it.description}
+                              </span>
+                            </div>
+                            {it.articleNumber && (
+                              <div className="text-xs text-muted-foreground">
+                                Art-Nr. {it.articleNumber}
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
-                      <span className="text-sm text-muted-foreground whitespace-nowrap">
-                        {it.quantity} {it.unit}
-                      </span>
-                    </button>
-                  </li>
-                ))}
-              </ul>
+                          <span className="text-sm text-muted-foreground whitespace-nowrap">
+                            {it.quantity} {it.unit}
+                          </span>
+                        </label>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </>
             )}
-            <div className="mt-4 flex justify-end">
+            <div className="mt-4 flex justify-end gap-2">
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => setShowExcludePicker(false)}
+                onClick={closeExcludePicker}
                 disabled={createOverride.isPending}
               >
-                Schließen
+                Abbrechen
               </Button>
+              {excludablePicks.length > 0 && (
+                <Button
+                  type="button"
+                  onClick={handleExcludeConfirm}
+                  disabled={excludeSelection.size === 0 || createOverride.isPending}
+                >
+                  {createOverride.isPending ? (
+                    <>
+                      <Loader2Icon className="h-4 w-4 animate-spin mr-2" />
+                      Schließt aus…
+                    </>
+                  ) : (
+                    `Ausschließen${excludeSelection.size > 0 ? ` (${excludeSelection.size})` : ''}`
+                  )}
+                </Button>
+              )}
             </div>
           </div>
         </div>
