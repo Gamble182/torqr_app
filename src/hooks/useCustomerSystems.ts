@@ -119,6 +119,9 @@ export function useUpdateCustomerSystem(systemId: string) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['customer-systems'] });
       queryClient.invalidateQueries({ queryKey: ['customer-system', systemId] });
+      // Reassignment changes employee workload + assigned-systems list — bust both caches.
+      queryClient.invalidateQueries({ queryKey: ['employees'] });
+      queryClient.invalidateQueries({ queryKey: ['employee'] });
       toast.success('System erfolgreich aktualisiert!');
     },
     onError: (error: Error) => toast.error(`Fehler: ${error.message}`),
