@@ -64,7 +64,7 @@ Per task, in order:
 
 ### Last committed SHA
 
-`e9d37f0` (Session 12 Task 33: cross-tenant FK guard audit for Phase A routes)
+`7566a6f` (Session 13 Task 37: BACKLOG.md — N-1..N-12 + Sprint 28 sign-off)
 
 ### Session 1 (2026-04-24) — Foundation
 
@@ -319,6 +319,34 @@ Per task, in order:
 - **Task 28 (Minor #6):** Re-checking a row after "nicht verbraucht" doesn't restore the original quantity from `EffectivePart` (it stays at 0 until user types). Accepted UX — flag in case product wants different behavior.
 - **Task 28 (Minor #8):** `itemMap` build is fine at current scale but flag if inventory > 5000 items.
 
+### Session 13 (2026-04-28) — Pilot-test follow-ups + Tasks 36 + 37
+
+| Task | Status | Commit SHA(s) | Notes |
+|------|--------|---------------|-------|
+| Pilot-test feedback (6 issues) — pre-Task-36 fixes | ✅ | `115e81c` + `e0abc9b` + `c9fa95b` + `be4a1fd` + `137e2a6` | User ran a partial pass of the manual checklist (Tasks 35) before kickoff and reported 6 concrete bugs/UX gaps. Resolved as a batch before Task 36 to give the pilot customer a clean tree to test against: (1+6) `<datalist>` unit suggestions in 4 forms (`MaintenanceSetItemForm`, `InventoryItemForm`, `CustomerSystemOverrideForm`, `PartsUsageStep` ad-hoc) backed by a new `src/lib/units.ts` constant — free text still accepted. (2) `CustomerSystemOverrideList` EXCLUDE-picker rebuilt: row-level checkboxes, accent-ring hover/selected highlight, footer button with live counter, batched `Promise.allSettled` over the picks. (3) `useUpdateCustomerSystem` now invalidates `['employee']` + `['employees']` so reassignment from the system-detail page no longer leaves the employee detail/list pages stale. (4) Manual `POST /api/bookings` now copies `system.assignedToUserId` onto the new `Booking` (mirroring Cal.com bookings); `GET /api/bookings/[id]/packing-list` ACL accepts either booking-level OR system-level assignment for TECHNICIAN — legacy/manual rows without `Booking.assignedToUserId` print correctly. New vitest case pins the system-fallback path; existing 403 test pinned to BOTH assignments belonging to the OTHER user. (5) `maintenance-photos` Supabase bucket was missing on the new project (`hwagqyywixhhorhjtydt`). Added idempotent setup script `scripts/create-storage-buckets.ts` (lists existing buckets, skips if found, otherwise creates with the right MIME/size limits); ran it locally — bucket created. **Test count:** 323 → 324 (one new fallback test). |
+| 36 — Drop `requiredParts` column + SQL NOTE on drift line | ✅ | `ec373a4` | Schema field removed; new migration `20260428061650_drop_customer_systems_required_parts` (single `ALTER TABLE customer_systems DROP COLUMN "requiredParts"`). Code references purged: `validations.ts` (2 schemas), `customer-systems` POST + PATCH, `useCustomerSystems` + `usePackingList` hook types. `migrate-required-parts.ts` deleted (one-shot script's job done — Task 32 already ran on this Supabase project, all legacy text safely lives in `customerSystemPartOverride` ADD-rows). SQL NOTE comment added above the `companies.updatedAt DROP DEFAULT` line in the original additive migration (`20260424082431_add_maintenance_sets_and_inventory/migration.sql`) per Decision §1. **Operational deviation from plan:** because the user's local `.env DATABASE_URL` and the deployed Vercel app share the same Supabase project (single-project POC topology — no separate dev DB), `npx prisma migrate dev` ran the migration against the same DB the deployed app talks to. Net data effect: zero — Task 32 had already migrated all legacy `requiredParts` text into ADD overrides on this Supabase project (its commit was `6ac66a4`, well before today). The deployed app code still selects the dropped column though, so an immediate Vercel deploy of this branch is REQUIRED to bring app code and DB schema back in sync. **Lesson logged for the next destructive migration:** in single-project POC topologies, always confirm the user wants to run schema mutations *now* vs. *at deploy time* before invoking `prisma migrate dev`. Verification: 324/324 tests, tsc clean, build green, `grep -rn "requiredParts" src/ scripts/` returns zero. |
+| 37 — BACKLOG.md — N-1..N-12 + Sprint 28 sign-off | ✅ | `7566a6f` | N-1..N-11 added verbatim from plan lines 3405–3415 under `## Maybe / Future`. N-12 added (integration-test DB provisioning — Decision §9 carry-forward; not in original plan). Sprint 28 completion block under `## Completed / Resolved`, dated `2026-04-28`, single roll-up entry covering the full feature plus the Session 13 pilot-test follow-ups. |
+
+**Session 13 full commit chain (most recent first):**
+- `7566a6f` docs(backlog): add Wartungsteile Phase B+ items (N-1..N-12); mark Phase A complete
+- `ec373a4` chore(db): drop CustomerSystem.requiredParts — legacy data migrated to overrides
+- `137e2a6` chore(scripts): idempotent Supabase storage bucket setup
+- `be4a1fd` fix(bookings): inherit assignedToUserId + system-fallback in packing-list ACL
+- `c9fa95b` fix(hooks): invalidate employee caches after system reassignment
+- `e0abc9b` feat(systems): multi-select EXCLUDE picker with checkboxes + hover highlight
+- `115e81c` feat(units): unit dropdown via datalist for set items, inventory, overrides, ad-hoc
+
+**Session 13 end-of-session health:**
+- Tests: 324/324 passing across 32 files (+1 net from packing-list system-fallback test)
+- `tsc --noEmit`: clean
+- `npm run build`: green
+- Working tree: `.claude/settings.json` modified (pre-existing user-level — leave alone), `graphify-out-{backbone,codemap}/` modified (auto-regenerated, will roll into a follow-up commit), `package.json` / `package-lock.json` modified (transitive `baseline-browser-mapping` added by tooling outside Phase A — deliberately not folded into Session 13 commits).
+- **DB state:** column dropped on the live Supabase project. App code in `feature/wartungsteile-phase-a` is already aligned with this state. Live deployment on Vercel is NOT yet aligned — deploy of this branch is the immediate next step.
+
+**Session 13 carry-forward items:**
+- **Operational:** deploy `feature/wartungsteile-phase-a` to Vercel ASAP to re-align prod app code with the prod DB schema. The branch can either be merged to `main` directly (per CLAUDE.md, `main` is the only long-lived branch) or pushed and deployed as a feature preview first; both unblock the live app from the dropped-column SELECT failures.
+- **Task 35 sign-off:** still pending — pilot customer testing continues. The 13-step checklist `2026-04-27-wartungsteile-phase-a-manual-verification-checklist.md` remains the source of truth for sign-off; pre-Task-36 fixes covered Steps 1, 2, 3, 5, 6, 9, 10 implicitly.
+
 ### Session 12 (2026-04-27) — Migration script + audit FK guards + green sweep
 
 | Task | Status | Commit SHA(s) | Notes |
@@ -396,21 +424,11 @@ Per task, in order:
 
 ## Next Up
 
-**Session 12 is complete.** Tasks 32 (migration script), 33 (audit FK guards), 34 (full sweep — tests + tsc + build) are all green.
+**Session 13 is essentially complete.** Tasks 36 (column drop) and 37 (BACKLOG sign-off) are committed. Task 32's production run is implicitly satisfied — the user's `.env` and the deployed app share a single Supabase project, so the original Task 32 commit (`6ac66a4`) already migrated all legacy `requiredParts` data on prod when it ran. Task 35 manual verification is partial: the user passed the steps that map onto the issues fixed in Session 13's pilot-test follow-ups (1, 2, 3, 5, 6, 9, 10); the pilot customer is now exercising the rest.
 
-**Start Session 13 (user-interactive) with Task 35: Manual verification checklist.** This MUST be driven by a human in a browser — automated tooling cannot click through the 13 spec-defined flows. A comprehensive handoff doc has been generated:
+**Immediate next step (operational, NOT a runbook task):** **Deploy `feature/wartungsteile-phase-a` to Vercel.** Today's Task 36 ran `prisma migrate dev` against the live Supabase project, so the column is gone from the DB but the production app on Vercel still references it via its older Prisma client — every `customer-systems` SELECT will fail with a 500. The branch in its current state is already aligned with the dropped column. Either merge to `main` and let Vercel auto-deploy, or create a preview deployment first; both routes restore code/DB alignment.
 
-→ **`docs/superpowers/plans/2026-04-27-wartungsteile-phase-a-manual-verification-checklist.md`**
-
-The handoff doc walks through all 13 steps with pre-conditions, exact actions, expected outcomes, and pass/fail checkboxes. It also contains the production migration sequence for Task 32 (run on production) and the Task 36 + Task 37 commands.
-
-**Session 13 plan (in order):**
-- Task 35 (~30–60 min interactive): walk the 13 steps in the handoff doc, capture pass/fail.
-- Task 32 production run (~5 min): `npx tsx scripts/migrate-required-parts.ts` against the production DB after `.env` swap. Spot-check on prod OWNER dashboard.
-- Task 36 (~10 min): edit `prisma/schema.prisma`, generate destructive migration, `npm test && npm run build`, grep for stragglers, commit. Add the SQL NOTE comment above the drift line in the original additive migration per Decision §1.
-- Task 37 (~10 min): apply BACKLOG entries (verbatim from plan lines 3395–3434), commit.
-
-**After Session 13:** Session 14 = `superpowers:finishing-a-development-branch` to merge `feature/wartungsteile-phase-a` → `main`.
+**After deploy + pilot sign-off:** Session 14 = `superpowers:finishing-a-development-branch` to formally merge `feature/wartungsteile-phase-a` → `main` (if a preview deploy was used) and run the post-merge cleanup checklist.
 
 **Carry-forward non-blocking items (cumulative — pick up opportunistically when touching the relevant files):**
 - `src/app/api/maintenance-sets/[id]/route.ts` `handleError`: no ZodError branch. Fine for GET/DELETE-only; add `ZodError → 400` branch if a PATCH handler is ever added.
@@ -588,9 +606,9 @@ Decisions made during execution that future sessions MUST know about (beyond wha
 | 32 | Data migration script (`scripts/migrate-required-parts.ts`) | ✅ `6ac66a4` |
 | 33 | Tenant-isolation audit update (+ cross-tenant checks from Decisions §4) | ✅ `e9d37f0` |
 | 34 | Full test suite + typecheck + build green | ✅ (verification only) |
-| 35 | Manual verification checklist (13 steps) | ⏸ **NEXT (Session 13, user-interactive)** |
-| 36 | Drop `requiredParts` column + add SQL NOTE above drift line | ⏳ |
-| 37 | BACKLOG.md — add N-1..N-11 + Sprint 28 sign-off | ⏳ |
+| 35 | Manual verification checklist (13 steps) | ⏸ **partial — pilot testing in progress (Session 13)** |
+| 36 | Drop `requiredParts` column + add SQL NOTE above drift line | ✅ `ec373a4` |
+| 37 | BACKLOG.md — add N-1..N-12 + Sprint 28 sign-off | ✅ `7566a6f` |
 
 Legend: ✅ Done · ⏸ Next · ⏳ Pending
 
