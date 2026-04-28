@@ -11,7 +11,9 @@
       "Bash(rm -f .claude/state/session-current.json .claude/state/sessions.jsonl)",
       "Bash(bash .claude/hooks/session-start.sh)",
       "Bash(rm -f .git/hooks/post-checkout)",
-      "Bash(chmod +x .git/hooks/post-commit)"
+      "Bash(chmod +x .git/hooks/post-commit)",
+      "Read(//c/Users/y.dorth/.claude/plugins/**)",
+      "Read(//c/Users/y.dorth/.claude/plugins/repos/**)"
     ],
     "additionalDirectories": [
       "c:\\Users\\y.dorth\\Documents\\torqr_app\\torqr_app\\src\\app\\api\\customers\\[id]",
