@@ -95,12 +95,30 @@ Ideas worth keeping in mind but not planned for current sprints. No implementati
 | M-1 | Feature | PDF / Arbeitsbericht — export a completed maintenance checklist as a PDF work report for the customer. Would require a PDF generation library (e.g. `@react-pdf/renderer`) or a server-side rendering approach. | Requested by pilot customer context. Deferred until checklist feature is validated in production. |
 | M-2 | Feature | Measurement fields on checklist — allow custom checklist items to capture numeric values (e.g. flue gas temperature, pressure reading) instead of just checkboxes. | Revisit after pilot feedback. |
 | M-3 | Feature | Drag-and-drop reordering of custom checklist items per `CustomerSystem`. | Low priority; `sortOrder` field is already in the schema to support this later. |
+| N-1 | Feature | **Packliste per E-Mail senden** (L2 variant) — owner requests packing list via email button; new `PackingListEmail` React-Email template. | Phase B. |
+| N-2 | Feature | **Bestellworkflow** — order suggestions from low-stock alerts, supplier link templates, order status tracking. | Phase B. |
+| N-3 | Feature | **Echtzeit-Lager-Alert-Mail** — S3 variant; per-event email on first threshold breach with debounce. | Phase B. |
+| N-4 | Feature | **Multi-Wartungstyp** — add `maintenanceType: STANDARD \| INSPECTION \| EMERGENCY` to `MaintenanceSet`. | Additive schema change. |
+| N-5 | Feature | **PDF-Import für Wartungssets** — install tesseract/ocrmypdf/poppler; parse manufacturer service-parts PDFs. | Phase B; requires OCR toolchain. Seed material exists at `kundenaustausch/Wartungsteile/wartungsheft_bosch_junkers.json` (30 sets / 163 parts, manually transcribed). |
+| N-6 | Feature | **Per-Item-Foto** auf MaintenanceSetItem für Vor-Ort-Identifikation. | Phase B. |
+| N-7 | Feature | **CSV/XLSX-Bulk-Import** for InventoryItems and MaintenanceSetItems. | Combine with #25. |
+| N-8 | Integration | **Drittanbieter-Lager-Integration** (Sortly / Doron / Fifo). | Phase C. |
+| N-9 | Integration | **Hersteller-Teile-Kataloge** (Bosch Pro, Grünbeck). | Phase D. |
+| N-10 | Architecture | **Community-Wartungssets** — global defaults + tenant overrides (Variante C aus Spec Q1). | Phase D. |
+| N-11 | UX | **Drag-and-Drop Reorder** für MaintenanceSetItems (Phase A ↑↓ only). | Pair with M-3. |
+| N-12 | Testing | **Integration-test DB provisioning** — disposable Supabase test branch so Prisma query-shape bugs (relation names, include shapes) get caught before runtime. Phase A used `vi.mock('@/lib/prisma')` everywhere; trade-off documented in runbook Decision §9. | Phase B; revisit if pilot ops uncovers query-shape regressions. |
 
 ---
 
 ## Completed / Resolved
 
 Items are grouped by sprint / work session, ordered newest first.
+
+### Sprint 28 — Wartungsteile & Materialmanagement Phase A (2026-04-28)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| — | Feature | MaintenanceSet library (tenant-scoped) + CustomerSystem ADD/EXCLUDE overrides + InventoryItem with movements (RESTOCK/CORRECTION/MAINTENANCE_USE/MANUAL_ADJUSTMENT) + MaintenanceChecklistModal Step 2.5 Teileverbrauch + on-demand packing-list print view + Dashboard `LowStockDashboardCard` + WeeklySummary Lager section. Migration: legacy `CustomerSystem.requiredParts` text lifted to ADD overrides, then column dropped. Pilot-test follow-ups: unit dropdown via `<datalist>` in 4 forms; multi-select EXCLUDE picker with checkboxes + accent-ring hover; employee-cache invalidation on system reassignment; `assignedToUserId` inheritance for manual bookings + system-fallback in packing-list ACL; `maintenance-photos` Supabase bucket auto-provisioned via `scripts/create-storage-buckets.ts`. Spec: `docs/superpowers/specs/2026-04-24-wartungsteile-materialmanagement-phase-a-design.md`. Plan: `docs/superpowers/plans/2026-04-24-wartungsteile-materialmanagement-phase-a.md`. Runbook: `docs/superpowers/plans/2026-04-24-wartungsteile-execution-runbook.md`. | 2026-04-28 |
 
 ### Sprint 27 — System Photos (2026-04-23)
 
