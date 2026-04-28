@@ -55,7 +55,6 @@ export interface PackingListSystem {
   lastMaintenance: string | null;
   nextMaintenance: string | null;
   storageCapacityLiters: number | null;
-  requiredParts: string | null;
   photos: string[];
   catalogId: string;
   customerId: string;

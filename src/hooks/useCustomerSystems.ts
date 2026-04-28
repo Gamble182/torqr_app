@@ -16,7 +16,6 @@ export interface CustomerSystem {
   lastMaintenance: string | null;
   nextMaintenance: string | null;
   storageCapacityLiters: number | null;
-  requiredParts: string | null;
   photos: string[];
   assignedToUserId: string | null;
   assignedTo?: { id: string; name: string } | null;

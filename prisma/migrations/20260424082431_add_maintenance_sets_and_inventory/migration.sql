@@ -7,6 +7,13 @@ CREATE TYPE "OverrideAction" AS ENUM ('ADD', 'EXCLUDE');
 -- CreateEnum
 CREATE TYPE "MovementReason" AS ENUM ('MAINTENANCE_USE', 'MANUAL_ADJUSTMENT', 'RESTOCK', 'CORRECTION');
 
+-- NOTE: The line below is unrelated drift from `company_multi_user`,
+--       not part of the Wartungsteile feature. The `companies.updatedAt`
+--       column had `DEFAULT CURRENT_TIMESTAMP` in the production DB but
+--       no `@default(...)` in `prisma/schema.prisma` (Prisma manages
+--       updates via `@updatedAt`). Prisma reconciled the drift while
+--       generating this additive migration. Decision §1 in the
+--       Wartungsteile execution runbook records the call to leave it.
 -- AlterTable
 ALTER TABLE "companies" ALTER COLUMN "updatedAt" DROP DEFAULT;
 

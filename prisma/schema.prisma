@@ -186,7 +186,6 @@ model CustomerSystem {
   lastMaintenance       DateTime?
   nextMaintenance       DateTime?
   storageCapacityLiters Int?
-  requiredParts         String?
   photos                String[]  @default([])
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt

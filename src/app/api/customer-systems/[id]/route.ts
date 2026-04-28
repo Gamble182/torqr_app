@@ -126,7 +126,6 @@ export async function PATCH(
           lastMaintenance: validated.lastMaintenance ? new Date(validated.lastMaintenance) : null,
         }),
         ...(validated.storageCapacityLiters !== undefined && { storageCapacityLiters: validated.storageCapacityLiters }),
-        ...(validated.requiredParts !== undefined && { requiredParts: validated.requiredParts }),
         ...(validated.assignedToUserId !== undefined && {
           assignedToUserId: validated.assignedToUserId,
         }),

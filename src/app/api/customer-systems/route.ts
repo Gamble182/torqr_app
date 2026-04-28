@@ -139,7 +139,6 @@ export async function POST(request: NextRequest) {
         lastMaintenance,
         nextMaintenance,
         storageCapacityLiters: validated.storageCapacityLiters ?? null,
-        requiredParts: validated.requiredParts ?? null,
       },
       include: {
         catalog: true,
