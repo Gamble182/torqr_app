@@ -13,8 +13,9 @@ import { getEffectivePartsForSystem } from '@/lib/maintenance-parts';
  *
  * Authorization:
  * - OWNER: any booking in their tenant.
- * - TECHNICIAN: only bookings assigned to them (assignedToUserId === userId);
- *   otherwise 403 "Zugriff verweigert".
+ * - TECHNICIAN: bookings assigned to them OR bookings whose system is
+ *   assigned to them (system-level assignment is the durable signal —
+ *   booking-level assignment may be missing on legacy/manual rows).
  *
  * Tenant scoping is enforced via companyId on the booking lookup
  * and inside getEffectivePartsForSystem.
@@ -51,11 +52,15 @@ export async function GET(
       );
     }
 
-    if (role === 'TECHNICIAN' && booking.assignedToUserId !== userId) {
-      return NextResponse.json(
-        { success: false, error: 'Zugriff verweigert' },
-        { status: 403 },
-      );
+    if (role === 'TECHNICIAN') {
+      const bookingAssigned = booking.assignedToUserId === userId;
+      const systemAssigned = booking.system?.assignedToUserId === userId;
+      if (!bookingAssigned && !systemAssigned) {
+        return NextResponse.json(
+          { success: false, error: 'Zugriff verweigert' },
+          { status: 403 },
+        );
+      }
     }
 
     const effectiveParts = booking.systemId

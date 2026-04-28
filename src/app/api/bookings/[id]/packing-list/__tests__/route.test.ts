@@ -75,6 +75,7 @@ const SENTINEL_SYSTEM = {
   id: SYSTEM_ID,
   serialNumber: 'SN-1',
   catalog: { manufacturer: 'Viessmann', name: 'Vitodens 200', systemType: 'GAS' },
+  assignedToUserId: TECH_ID,
   assignedTo: { id: TECH_ID, name: 'Tech' },
 };
 
@@ -152,10 +153,13 @@ describe('GET /api/bookings/[id]/packing-list', () => {
     expect(vi.mocked(getEffectivePartsForSystem)).toHaveBeenCalledWith(SYSTEM_ID, 'co-1');
   });
 
-  it('TECHNICIAN GET booking assigned to other user → 403 "Zugriff verweigert", resolver not called', async () => {
+  it('TECHNICIAN GET booking assigned to other user (and system to other user) → 403 "Zugriff verweigert", resolver not called', async () => {
     vi.mocked(requireAuth).mockResolvedValue(AUTH_TECH);
     vi.mocked(prisma.booking.findFirst).mockResolvedValue(
-      makeBooking({ assignedToUserId: OTHER_USER_ID }) as never,
+      makeBooking({
+        assignedToUserId: OTHER_USER_ID,
+        system: { ...SENTINEL_SYSTEM, assignedToUserId: OTHER_USER_ID },
+      }) as never,
     );
 
     const res = await GET(makeRequest() as never, makeParams());
@@ -165,6 +169,24 @@ describe('GET /api/bookings/[id]/packing-list', () => {
     expect(body.success).toBe(false);
     expect(body.error).toBe('Zugriff verweigert');
     expect(vi.mocked(getEffectivePartsForSystem)).not.toHaveBeenCalled();
+  });
+
+  it('TECHNICIAN GET booking unassigned but system assigned to them → 200 (system-level fallback)', async () => {
+    vi.mocked(requireAuth).mockResolvedValue(AUTH_TECH);
+    vi.mocked(prisma.booking.findFirst).mockResolvedValue(
+      makeBooking({
+        assignedToUserId: null,
+        system: { ...SENTINEL_SYSTEM, assignedToUserId: TECH_ID },
+      }) as never,
+    );
+    vi.mocked(getEffectivePartsForSystem).mockResolvedValue(SENTINEL_PARTS as never);
+
+    const res = await GET(makeRequest() as never, makeParams());
+    const body = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(body.success).toBe(true);
+    expect(body.data.effectiveParts).toEqual(SENTINEL_PARTS);
   });
 
   it('Cross-tenant booking (findFirst returns null) → 404 "Termin nicht gefunden", resolver not called', async () => {
