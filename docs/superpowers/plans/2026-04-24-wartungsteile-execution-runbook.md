@@ -64,7 +64,41 @@ Per task, in order:
 
 ### Last committed SHA
 
-`7566a6f` (Session 13 Task 37: BACKLOG.md — N-1..N-12 + Sprint 28 sign-off)
+`03514de` (Session 14 finish: Sprint 28 rollback plan + reverse-migration SQL on `main`)
+
+### Session 14 (2026-04-28) — Branch finish + rollback insurance
+
+| Task | Status | Commit SHA(s) | Notes |
+|------|--------|---------------|-------|
+| Bundle session-13 leftovers + transitive dep + graphify refresh | ✅ | `fe7c8c5` + `8e8981c` | `.claude/settings.json` permission additions (rm-f post-checkout, chmod +x post-commit), `package.json` + lock pulled in `baseline-browser-mapping` (transitive dev-dep), and the auto-regenerated `graphify-out-{codemap,backbone}/` directories rolled into the branch. |
+| Merge `feature/wartungsteile-phase-a` → `main` (no-ff) | ✅ | `c8ffe0c` | 96 files changed, +18,439 / −1,590 LOC, 65 feature commits. Detailed merge message captures the full feature surface plus session-13 pilot-test follow-ups + the destructive `requiredParts` drop note. Style precedent followed (sibling `merge: feature/<slug>` commits already on `main`). |
+| Restoration anchor — git tag at pre-merge SHA | ✅ | tag `pre-sprint-28-2026-04-28` → `668523c` | Annotated tag points at the last `main` commit before Sprint 28 landed. Durable reference for any future rollback. Pushable to `origin` as `git push origin --tags`. |
+| Rollback insurance — operations playbook + reverse-SQL | ✅ | `03514de` | New `docs/operations/sprint-28-rollback-plan.md` (~470 lines): two-path plan — Path A (soft, feature-flag-driven UI hide, schema retained, zero data loss) recommended once pilot data accumulates; Path B (hard, full revert via Vercel-promote → reverse SQL → git revert -m 1 → prisma migrate resolve --rolled-back) destructive after Supabase backup window closes. Pre-rollback safety checklist (Supabase backup, targeted pg_dump of all 5 feature tables, pilot sign-off) is mandatory for Path B. New `docs/operations/sprint-28-rollback.sql`: idempotent reverse migration in transaction with verification asserts (re-adds requiredParts column, lifts text from override marker rows back, drops 5 tables in FK-safe order, drops 3 enums, RAISE EXCEPTIONs on inconsistencies, COMMITs only on full pass). |
+| Branch retention — keep `feature/wartungsteile-phase-a` per user request | ✅ | (no commit — local branch state) | Default `finishing-a-development-branch` flow would have deleted the merged feature branch after merge. User explicitly asked to retain it. Branch left at SHA `8e8981c` (its tip) for traceability and any future cherry-pick needs. |
+| Final verification on main | ✅ | (no commit — verification only) | `npm test` → 324/324 across 32 files; `npx tsc --noEmit` → exit 0; working tree clean; on `main` at `03514de`; tag `pre-sprint-28-2026-04-28` resolves to `668523c`. |
+| Timesheet auto-update — 2026-04-28 row | ✅ | (committed alongside this runbook update) | Per CLAUDE.md "Timesheet Auto-Update" session-end fallback. 2.7 h Echtzeit, Tier L (16 h Solo-Dev-Äquiv.), 12 commits. Executive Summary recomputed: ~80 h total Echtzeit, ~539 h Solo, factor 6.7×, MVP-Wert ~51.205 €. |
+
+**Session 14 full commit chain (most recent first, all on `main`):**
+- `03514de` docs(operations): Sprint 28 rollback plan + reverse-migration SQL
+- `c8ffe0c` merge: feature/wartungsteile-phase-a — Wartungsteile & Materialmanagement Phase A (Sprint 28)
+- `8e8981c` chore(graphify): refresh codemap + backbone after session 13 (last commit on feature branch before merge)
+- `fe7c8c5` chore: bundle session 13 settings + transitive dep
+
+**Session 14 end-of-session health:**
+- On branch `main`, 73 commits ahead of `origin/main` until user's push completes.
+- Tests 324/324 green, tsc clean, working tree clean.
+- Feature branch `feature/wartungsteile-phase-a` retained locally per user — not pushed yet, can be deleted any time later via `git branch -d feature/wartungsteile-phase-a` once the user is comfortable.
+- Tag `pre-sprint-28-2026-04-28` exists locally — needs `git push origin --tags` to land on the remote.
+- **Production status:** the Supabase project's `requiredParts` column is dropped (Session 13 lapsus). Once the user pushes `main` and Vercel auto-deploys, the deployed Prisma client will be re-aligned with the dropped column.
+
+**Pending external steps (user-driven, not runbook tasks):**
+1. `git push origin main && git push origin --tags`
+2. Wait for Vercel auto-deploy of `main` to complete.
+3. Smoke-test the deployed app: `/dashboard/systems` should load (the SELECT failure goes away once new Prisma client ships).
+4. Hand the pilot customer the manual-verification checklist (`docs/superpowers/plans/2026-04-27-wartungsteile-phase-a-manual-verification-checklist.md`); collect their pass/fail per step.
+5. **Decision gate:** if pilot says yes → Sprint 28 stays. If pilot says no → consult `docs/operations/sprint-28-rollback-plan.md` and pick Path A or Path B based on accrued pilot data.
+
+### Session 13 (2026-04-28) — Pilot-test follow-ups + Tasks 36 + 37
 
 ### Session 1 (2026-04-24) — Foundation
 
@@ -424,11 +458,15 @@ Per task, in order:
 
 ## Next Up
 
-**Session 13 is essentially complete.** Tasks 36 (column drop) and 37 (BACKLOG sign-off) are committed. Task 32's production run is implicitly satisfied — the user's `.env` and the deployed app share a single Supabase project, so the original Task 32 commit (`6ac66a4`) already migrated all legacy `requiredParts` data on prod when it ran. Task 35 manual verification is partial: the user passed the steps that map onto the issues fixed in Session 13's pilot-test follow-ups (1, 2, 3, 5, 6, 9, 10); the pilot customer is now exercising the rest.
+**Sprint 28 is closed from the runbook side.** Sessions 1–14 are complete. The feature lives on `main` at merge commit `c8ffe0c`. Session 14 added rollback insurance via `docs/operations/sprint-28-rollback-plan.md` + `sprint-28-rollback.sql` and the durable git tag `pre-sprint-28-2026-04-28` → `668523c`.
 
-**Immediate next step (operational, NOT a runbook task):** **Deploy `feature/wartungsteile-phase-a` to Vercel.** Today's Task 36 ran `prisma migrate dev` against the live Supabase project, so the column is gone from the DB but the production app on Vercel still references it via its older Prisma client — every `customer-systems` SELECT will fail with a 500. The branch in its current state is already aligned with the dropped column. Either merge to `main` and let Vercel auto-deploy, or create a preview deployment first; both routes restore code/DB alignment.
+**The only remaining work is operational, not on this runbook:**
 
-**After deploy + pilot sign-off:** Session 14 = `superpowers:finishing-a-development-branch` to formally merge `feature/wartungsteile-phase-a` → `main` (if a preview deploy was used) and run the post-merge cleanup checklist.
+1. User pushes `main` + tags to `origin`, Vercel auto-deploys, prod app code aligns with the already-dropped DB column.
+2. Pilot customer exercises the manual-verification checklist (`docs/superpowers/plans/2026-04-27-wartungsteile-phase-a-manual-verification-checklist.md`).
+3. Pilot decision drives the next move:
+   - **Yes** → Sprint 28 stays. Phase B planning kicks off from the N-1..N-12 backlog entries.
+   - **No** → consult `docs/operations/sprint-28-rollback-plan.md` and pick Path A (soft, feature flag) or Path B (hard, full revert) based on accrued pilot data. Rule of thumb in §8 of that doc: switch from Path B to Path A as soon as `SELECT COUNT(*) FROM maintenance_sets > 1`.
 
 **Carry-forward non-blocking items (cumulative — pick up opportunistically when touching the relevant files):**
 - `src/app/api/maintenance-sets/[id]/route.ts` `handleError`: no ZodError branch. Fine for GET/DELETE-only; add `ZodError → 400` branch if a PATCH handler is ever added.
