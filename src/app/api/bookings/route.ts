@@ -145,6 +145,9 @@ export async function POST(request: NextRequest) {
         userId,
         customerId: system.customer?.id ?? null,
         systemId: system.id,
+        // Inherit the system's technician assignment so technician-scoped views
+        // (packing list, "Meine Termine") work without a separate assignment step.
+        assignedToUserId: system.assignedToUserId,
       },
     });
 

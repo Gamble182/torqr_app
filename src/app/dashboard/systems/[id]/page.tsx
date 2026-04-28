@@ -26,6 +26,7 @@ import { MaintenanceHistory } from '@/components/MaintenanceHistory';
 import { FollowUpSection } from '@/components/FollowUpSection';
 import { BookingFormModal } from '@/components/BookingFormModal';
 import { SystemPhotosCard } from '@/components/SystemPhotosCard';
+import { PartsListCard } from '@/components/systems/PartsListCard';
 import { SYSTEM_TYPE_LABELS } from '@/lib/constants';
 
 export default function SystemDetailPage() {
@@ -191,6 +192,9 @@ export default function SystemDetailPage() {
           </div>
         </div>
       </div>
+
+      {/* Parts list (Wartungsteile Phase A) */}
+      <PartsListCard systemId={systemId} />
 
       {/* System photos */}
       <SystemPhotosCard systemId={systemId} photos={system.photos ?? []} />

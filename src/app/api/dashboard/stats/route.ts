@@ -80,10 +80,19 @@ export async function GET(request: NextRequest) {
     ]);
 
     let unassignedSystemsCount = 0;
+    let inventoryBelowMinStockCount = 0;
     if (isOwner) {
       unassignedSystemsCount = await prisma.customerSystem.count({
         where: { companyId, assignedToUserId: null },
       });
+
+      const inventoryItems = await prisma.inventoryItem.findMany({
+        where: { companyId },
+        select: { currentStock: true, minStock: true },
+      });
+      inventoryBelowMinStockCount = inventoryItems.filter((i) =>
+        i.currentStock.lt(i.minStock),
+      ).length;
     }
 
     return NextResponse.json({
@@ -97,6 +106,7 @@ export async function GET(request: NextRequest) {
         upcomingSystemsList,
         recentMaintenances,
         unassignedSystemsCount,
+        ...(isOwner ? { inventoryBelowMinStockCount } : {}),
       },
     });
   } catch (error) {

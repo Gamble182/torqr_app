@@ -50,6 +50,7 @@ interface DashboardStats {
   upcomingSystemsList: UpcomingSystem[];
   recentMaintenances: RecentMaintenance[];
   unassignedSystemsCount: number;
+  inventoryBelowMinStockCount?: number;
 }
 
 interface ApiResponse<T> {

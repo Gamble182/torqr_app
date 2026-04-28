@@ -51,15 +51,68 @@ export async function POST(request: NextRequest) {
         },
       });
 
+      const warnings: Array<{ inventoryItemId: string; newStock: string }> = [];
+      const snapshot: typeof validatedData.partsUsed = [];
+
+      for (const entry of validatedData.partsUsed ?? []) {
+        snapshot.push(entry);
+        if (!entry.inventoryItemId) continue;
+
+        // Cross-tenant guard: companyId filter prevents referencing
+        // InventoryItems from other tenants. Prisma cannot enforce this
+        // via FK, so the application must.
+        const inv = await tx.inventoryItem.findFirst({
+          where: { id: entry.inventoryItemId, companyId },
+        });
+        if (!inv) {
+          throw new Error('InventoryItem not found during maintenance');
+        }
+
+        await tx.inventoryMovement.create({
+          data: {
+            companyId,
+            inventoryItemId: inv.id,
+            quantityChange: -Math.abs(entry.quantity),
+            reason: 'MAINTENANCE_USE',
+            maintenanceId: maintenance.id,
+            userId,
+          },
+        });
+        const updated = await tx.inventoryItem.update({
+          where: { id: inv.id },
+          data: { currentStock: { decrement: entry.quantity } },
+        });
+        if (updated.currentStock.lt(0)) {
+          warnings.push({
+            inventoryItemId: inv.id,
+            newStock: updated.currentStock.toString(),
+          });
+        }
+      }
+
+      // Merge partsUsed snapshot into checklistData JSON for audit history
+      const existingChecklist = (validatedData.checklistData ?? {}) as Record<string, unknown>;
+      await tx.maintenance.update({
+        where: { id: maintenance.id },
+        data: { checklistData: { ...existingChecklist, partsUsed: snapshot } },
+      });
+
       await tx.customerSystem.update({
         where: { id: validatedData.systemId },
         data: { lastMaintenance: maintenanceDate, nextMaintenance },
       });
 
-      return maintenance;
+      return { maintenance, warnings };
     });
 
-    return NextResponse.json({ success: true, data: result }, { status: 201 });
+    return NextResponse.json(
+      {
+        success: true,
+        data: result.maintenance,
+        negativeStockWarnings: result.warnings,
+      },
+      { status: 201 },
+    );
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ success: false, error: 'Validierungsfehler', details: error.issues }, { status: 400 });

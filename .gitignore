@@ -49,6 +49,7 @@ next-env.d.ts
 
 # Claude Code session state for timesheet auto-tracking
 .claude/state/
+.claude/scheduled_tasks.lock
 
 # graphify session artifacts (machine-specific Python path + temp extraction files)
 .graphify_python

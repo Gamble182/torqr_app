@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import type { CatalogEntry } from './useCatalog';
+import type { CustomerSystemPartOverride } from './useCustomerSystemOverrides';
 
 export interface CustomerSystem {
   id: string;
@@ -15,7 +16,6 @@ export interface CustomerSystem {
   lastMaintenance: string | null;
   nextMaintenance: string | null;
   storageCapacityLiters: number | null;
-  requiredParts: string | null;
   photos: string[];
   assignedToUserId: string | null;
   assignedTo?: { id: string; name: string } | null;
@@ -31,6 +31,11 @@ export interface CustomerSystem {
   _count?: { maintenances: number; followUpJobs?: number };
   maintenances?: Array<{ id: string; date: string; notes: string | null; photos: string[] }>;
   bookings?: Array<{ id: string; startTime: string; endTime: string | null; calBookingUid: string }>;
+  /**
+   * Tenant-scoped part overrides (added via Wartungsteile Phase A).
+   * Only present on the detail GET response, not on list responses.
+   */
+  partOverrides?: CustomerSystemPartOverride[];
 }
 
 interface ApiResponse<T> {
@@ -113,6 +118,9 @@ export function useUpdateCustomerSystem(systemId: string) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['customer-systems'] });
       queryClient.invalidateQueries({ queryKey: ['customer-system', systemId] });
+      // Reassignment changes employee workload + assigned-systems list — bust both caches.
+      queryClient.invalidateQueries({ queryKey: ['employees'] });
+      queryClient.invalidateQueries({ queryKey: ['employee'] });
       toast.success('System erfolgreich aktualisiert!');
     },
     onError: (error: Error) => toast.error(`Fehler: ${error.message}`),

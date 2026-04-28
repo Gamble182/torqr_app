@@ -29,6 +29,13 @@ export interface OverdueItem {
   daysOverdue: number;
 }
 
+export interface LowStockItem {
+  description: string;
+  articleNumber?: string | null;
+  currentStock: string;
+  minStock: string;
+}
+
 export interface WeeklySummaryEmailProps {
   userName: string;
   weekLabel: string;
@@ -47,6 +54,10 @@ export interface WeeklySummaryEmailProps {
     customers: number;
     systems: number;
   };
+  /** OWNER-only — undefined / omitted for TECHNICIAN recipients. */
+  lowStockItems?: LowStockItem[];
+  /** Count of low-stock items beyond the visible top entries. */
+  lowStockItemsMore?: number;
 }
 
 // -- Shared styles --
@@ -84,6 +95,8 @@ export function WeeklySummaryEmail({
   overdueMore,
   retro,
   totals,
+  lowStockItems,
+  lowStockItemsMore,
 }: WeeklySummaryEmailProps) {
   const hasRetroActivity =
     retro.maintenancesCompleted > 0 ||
@@ -253,6 +266,39 @@ export function WeeklySummaryEmail({
                 {overdueMore && overdueMore > 0 && (
                   <Text style={{ margin: '8px 0 0', color: '#9A9A9A', fontSize: '12px' }}>
                     … und {overdueMore} weitere
+                  </Text>
+                )}
+              </Section>
+            )}
+
+            {/* Section 3b: Low-stock inventory (OWNER only, hidden if empty) - AMBER */}
+            {lowStockItems && lowStockItems.length > 0 && (
+              <Section
+                style={{
+                  backgroundColor: '#FEF3C7',
+                  borderLeft: '3px solid #D97706',
+                  borderRadius: '6px',
+                  padding: '14px 16px',
+                  margin: '0 0 16px',
+                }}
+              >
+                <Text style={{ ...sectionLabel, color: '#92400E' }}>
+                  Lager — Teile unter Mindestmenge
+                </Text>
+                {lowStockItems.map((item, i) => (
+                  <Section key={i} style={{ marginBottom: i < lowStockItems.length - 1 ? '8px' : '0' }}>
+                    <Text style={listItemName}>
+                      {item.description}
+                      {item.articleNumber ? ` (${item.articleNumber})` : ''}
+                    </Text>
+                    <Text style={{ ...listItemDetail, color: '#92400E' }}>
+                      Bestand {item.currentStock} · Min {item.minStock}
+                    </Text>
+                  </Section>
+                ))}
+                {lowStockItemsMore && lowStockItemsMore > 0 && (
+                  <Text style={{ margin: '8px 0 0', color: '#9A9A9A', fontSize: '12px' }}>
+                    … und {lowStockItemsMore} weitere
                   </Text>
                 )}
               </Section>

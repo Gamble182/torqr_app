@@ -22,6 +22,9 @@ model Company {
   maintenances    Maintenance[]
   bookings        Booking[]
   followUpJobs    FollowUpJob[]
+  maintenanceSets     MaintenanceSet[]
+  inventoryItems      InventoryItem[]
+  inventoryMovements  InventoryMovement[]
 
   @@map("companies")
 }
@@ -64,6 +67,7 @@ model User {
   followUpJobs    FollowUpJob[]
   assignedSystems CustomerSystem[] @relation("AssignedSystems")
   assignedBookings Booking[]       @relation("AssignedBookings")
+  inventoryMovements InventoryMovement[]
 
   @@index([companyId])
   @@map("users")
@@ -162,6 +166,7 @@ model SystemCatalog {
   createdAt       DateTime        @default(now())
 
   customerSystems CustomerSystem[]
+  maintenanceSets MaintenanceSet[]
 
   @@unique([systemType, manufacturer, name])
   @@index([systemType])
@@ -181,7 +186,6 @@ model CustomerSystem {
   lastMaintenance       DateTime?
   nextMaintenance       DateTime?
   storageCapacityLiters Int?
-  requiredParts         String?
   photos                String[]  @default([])
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
@@ -201,6 +205,7 @@ model CustomerSystem {
   bookings       Booking[]
   checklistItems CustomerSystemChecklistItem[]
   followUpJobs   FollowUpJob[]
+  partOverrides  CustomerSystemPartOverride[]
 
   @@index([companyId])
   @@index([userId])
@@ -232,6 +237,7 @@ model Maintenance {
   user      User           @relation(fields: [userId], references: [id])
 
   followUpJobs FollowUpJob[]
+  inventoryMovements InventoryMovement[]
 
   @@index([companyId])
   @@index([systemId])
@@ -414,4 +420,143 @@ enum BookingStatus {
   CONFIRMED
   CANCELLED
   RESCHEDULED
+}
+
+// ============================================================================
+// MAINTENANCE SETS (tenant-scoped parts library)
+// ============================================================================
+
+model MaintenanceSet {
+  id         String   @id @default(uuid())
+  companyId  String
+  catalogId  String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  company    Company       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  catalog    SystemCatalog @relation(fields: [catalogId], references: [id], onDelete: Restrict)
+  items      MaintenanceSetItem[]
+
+  @@unique([companyId, catalogId])
+  @@index([companyId])
+  @@map("maintenance_sets")
+}
+
+enum PartCategory {
+  SPARE_PART
+  CONSUMABLE
+  TOOL
+}
+
+model MaintenanceSetItem {
+  id                String       @id @default(uuid())
+  maintenanceSetId  String
+  category          PartCategory
+  description       String
+  articleNumber     String?
+  quantity          Decimal      @default(1)
+  unit              String       @default("Stck")
+  required          Boolean      @default(true)
+  note              String?
+  sortOrder         Int          @default(0)
+  inventoryItemId   String?
+  createdAt         DateTime     @default(now())
+
+  maintenanceSet    MaintenanceSet                @relation(fields: [maintenanceSetId], references: [id], onDelete: Cascade)
+  inventoryItem     InventoryItem?                @relation(fields: [inventoryItemId], references: [id], onDelete: SetNull)
+  exclusions        CustomerSystemPartOverride[]  @relation("ExcludesSetItem")
+
+  @@index([maintenanceSetId])
+  @@index([inventoryItemId])
+  @@map("maintenance_set_items")
+}
+
+enum OverrideAction {
+  ADD
+  EXCLUDE
+}
+
+model CustomerSystemPartOverride {
+  id                 String         @id @default(uuid())
+  customerSystemId   String
+  action             OverrideAction
+
+  category           PartCategory?
+  description        String?
+  articleNumber      String?
+  quantity           Decimal?
+  unit               String?
+  required           Boolean        @default(true)
+  note               String?
+  sortOrder          Int            @default(0)
+  inventoryItemId    String?
+
+  excludedSetItemId  String?
+
+  createdAt          DateTime       @default(now())
+
+  customerSystem     CustomerSystem       @relation(fields: [customerSystemId], references: [id], onDelete: Cascade)
+  inventoryItem      InventoryItem?       @relation("OverrideInventory", fields: [inventoryItemId], references: [id], onDelete: SetNull)
+  excludedSetItem    MaintenanceSetItem?  @relation("ExcludesSetItem", fields: [excludedSetItemId], references: [id], onDelete: Cascade)
+
+  @@index([customerSystemId])
+  @@index([inventoryItemId])
+  @@index([excludedSetItemId])
+  @@map("customer_system_part_overrides")
+}
+
+// ============================================================================
+// INVENTORY (tenant-scoped)
+// ============================================================================
+
+model InventoryItem {
+  id               String    @id @default(uuid())
+  companyId        String
+  articleNumber    String?
+  description      String
+  unit             String    @default("Stck")
+  currentStock     Decimal   @default(0)
+  minStock         Decimal   @default(0)
+  lastRestockedAt  DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  company          Company                       @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  setItems         MaintenanceSetItem[]
+  overrides        CustomerSystemPartOverride[]  @relation("OverrideInventory")
+  movements        InventoryMovement[]
+
+  @@unique([companyId, articleNumber])
+  @@index([companyId])
+  @@map("inventory_items")
+}
+
+enum MovementReason {
+  MAINTENANCE_USE
+  MANUAL_ADJUSTMENT
+  RESTOCK
+  CORRECTION
+}
+
+model InventoryMovement {
+  id              String          @id @default(uuid())
+  companyId       String
+  inventoryItemId String
+  quantityChange  Decimal
+  reason          MovementReason
+  maintenanceId   String?
+  userId          String
+  note            String?
+  createdAt       DateTime        @default(now())
+
+  company         Company         @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  inventoryItem   InventoryItem   @relation(fields: [inventoryItemId], references: [id], onDelete: Cascade)
+  maintenance     Maintenance?    @relation(fields: [maintenanceId], references: [id], onDelete: SetNull)
+  user            User            @relation(fields: [userId], references: [id])
+
+  @@index([companyId])
+  @@index([inventoryItemId])
+  @@index([maintenanceId])
+  @@index([createdAt])
+  @@map("inventory_movements")
 }

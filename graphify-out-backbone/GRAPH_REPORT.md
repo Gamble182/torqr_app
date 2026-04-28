@@ -1,402 +1,505 @@
-# Graph Report - src/app + src/lib + src/hooks (Backbone)  (2026-04-27)
+# Graph Report - src/app + src/lib + src/hooks (Backbone)  (2026-04-28)
 
 ## Corpus Check
-- 105 files · ~49,990 words
+- 149 files · ~70,106 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 241 nodes · 261 edges · 57 communities detected
-- Extraction: 85% EXTRACTED · 15% INFERRED · 0% AMBIGUOUS · INFERRED: 40 edges (avg confidence: 0.8)
+- 323 nodes · 358 edges · 74 communities detected
+- Extraction: 88% EXTRACTED · 12% INFERRED · 0% AMBIGUOUS · INFERRED: 42 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
-- [[_COMMUNITY_Domain Logic & API Handlers|Domain Logic & API Handlers]]
-- [[_COMMUNITY_Auth & API Verbs|Auth & API Verbs]]
-- [[_COMMUNITY_Employee Management|Employee Management]]
-- [[_COMMUNITY_Dashboard & Bookings|Dashboard & Bookings]]
-- [[_COMMUNITY_Display Helpers|Display Helpers]]
-- [[_COMMUNITY_Export & Maintenance UI|Export & Maintenance UI]]
-- [[_COMMUNITY_Rate Limiting|Rate Limiting]]
-- [[_COMMUNITY_Cal.com API Client|Cal.com API Client]]
-- [[_COMMUNITY_Customer CRUD|Customer CRUD]]
-- [[_COMMUNITY_Email Service|Email Service]]
-- [[_COMMUNITY_Admin Dashboard Hooks|Admin Dashboard Hooks]]
-- [[_COMMUNITY_Route Test Setup|Route Test Setup]]
-- [[_COMMUNITY_Admin Auth & Layout|Admin Auth & Layout]]
-- [[_COMMUNITY_Customer Systems Hooks|Customer Systems Hooks]]
-- [[_COMMUNITY_Follow-up Jobs Hooks|Follow-up Jobs Hooks]]
-- [[_COMMUNITY_Form Page Handlers|Form Page Handlers]]
-- [[_COMMUNITY_Setup Page Handlers|Setup Page Handlers]]
-- [[_COMMUNITY_Checklist Items Hooks|Checklist Items Hooks]]
-- [[_COMMUNITY_Maintenance Hooks|Maintenance Hooks]]
-- [[_COMMUNITY_Form Submit Pages|Form Submit Pages]]
-- [[_COMMUNITY_Status Badge Pages|Status Badge Pages]]
-- [[_COMMUNITY_Catalog Hook|Catalog Hook]]
-- [[_COMMUNITY_Email Logs Hook|Email Logs Hook]]
-- [[_COMMUNITY_System Photos Hook|System Photos Hook]]
-- [[_COMMUNITY_User Profile Hook|User Profile Hook]]
-- [[_COMMUNITY_Wartungen Hook|Wartungen Hook]]
-- [[_COMMUNITY_Global Error Boundary|Global Error Boundary]]
-- [[_COMMUNITY_Root Layout|Root Layout]]
-- [[_COMMUNITY_Admin Layout Shell|Admin Layout Shell]]
-- [[_COMMUNITY_Type Handler Page|Type Handler Page]]
-- [[_COMMUNITY_Search Page Handler|Search Page Handler]]
-- [[_COMMUNITY_Filter Test|Filter Test]]
-- [[_COMMUNITY_Dashboard Layout|Dashboard Layout]]
-- [[_COMMUNITY_React Query Provider|React Query Provider]]
-- [[_COMMUNITY_shadcn cn Util|shadcn cn Util]]
-- [[_COMMUNITY_Page (singleton)|Page (singleton)]]
-- [[_COMMUNITY_Page (singleton)|Page (singleton)]]
-- [[_COMMUNITY_API Route (singleton)|API Route (singleton)]]
-- [[_COMMUNITY_Route Test (singleton)|Route Test (singleton)]]
-- [[_COMMUNITY_Page (singleton)|Page (singleton)]]
-- [[_COMMUNITY_Page (singleton)|Page (singleton)]]
-- [[_COMMUNITY_NextAuth Config|NextAuth Config]]
-- [[_COMMUNITY_Checklist Defaults|Checklist Defaults]]
-- [[_COMMUNITY_App Constants|App Constants]]
-- [[_COMMUNITY_Prisma Client|Prisma Client]]
-- [[_COMMUNITY_Client Test (singleton)|Client Test (singleton)]]
-- [[_COMMUNITY_Resend Client|Resend Client]]
-- [[_COMMUNITY_Booking Cancellation Email|Booking Cancellation Email]]
-- [[_COMMUNITY_Booking Confirmation Email|Booking Confirmation Email]]
-- [[_COMMUNITY_Booking Reschedule Email|Booking Reschedule Email]]
-- [[_COMMUNITY_Reminder Email|Reminder Email]]
-- [[_COMMUNITY_Weekly Summary Email|Weekly Summary Email]]
-- [[_COMMUNITY_Opt-in Test|Opt-in Test]]
-- [[_COMMUNITY_Admin Email Test|Admin Email Test]]
-- [[_COMMUNITY_Checklist Defaults Test|Checklist Defaults Test]]
-- [[_COMMUNITY_Checklist Validation Test|Checklist Validation Test]]
-- [[_COMMUNITY_System Schemas Test|System Schemas Test]]
+- [[_COMMUNITY_Community 0|Community 0]]
+- [[_COMMUNITY_Community 1|Community 1]]
+- [[_COMMUNITY_Community 2|Community 2]]
+- [[_COMMUNITY_Community 3|Community 3]]
+- [[_COMMUNITY_Community 4|Community 4]]
+- [[_COMMUNITY_Community 5|Community 5]]
+- [[_COMMUNITY_Community 6|Community 6]]
+- [[_COMMUNITY_Community 7|Community 7]]
+- [[_COMMUNITY_Community 8|Community 8]]
+- [[_COMMUNITY_Community 9|Community 9]]
+- [[_COMMUNITY_Community 10|Community 10]]
+- [[_COMMUNITY_Community 11|Community 11]]
+- [[_COMMUNITY_Community 12|Community 12]]
+- [[_COMMUNITY_Community 13|Community 13]]
+- [[_COMMUNITY_Community 14|Community 14]]
+- [[_COMMUNITY_Community 15|Community 15]]
+- [[_COMMUNITY_Community 16|Community 16]]
+- [[_COMMUNITY_Community 17|Community 17]]
+- [[_COMMUNITY_Community 18|Community 18]]
+- [[_COMMUNITY_Community 19|Community 19]]
+- [[_COMMUNITY_Community 20|Community 20]]
+- [[_COMMUNITY_Community 21|Community 21]]
+- [[_COMMUNITY_Community 22|Community 22]]
+- [[_COMMUNITY_Community 23|Community 23]]
+- [[_COMMUNITY_Community 24|Community 24]]
+- [[_COMMUNITY_Community 25|Community 25]]
+- [[_COMMUNITY_Community 26|Community 26]]
+- [[_COMMUNITY_Community 27|Community 27]]
+- [[_COMMUNITY_Community 28|Community 28]]
+- [[_COMMUNITY_Community 29|Community 29]]
+- [[_COMMUNITY_Community 30|Community 30]]
+- [[_COMMUNITY_Community 31|Community 31]]
+- [[_COMMUNITY_Community 32|Community 32]]
+- [[_COMMUNITY_Community 33|Community 33]]
+- [[_COMMUNITY_Community 34|Community 34]]
+- [[_COMMUNITY_Community 35|Community 35]]
+- [[_COMMUNITY_Community 36|Community 36]]
+- [[_COMMUNITY_Community 37|Community 37]]
+- [[_COMMUNITY_Community 38|Community 38]]
+- [[_COMMUNITY_Community 39|Community 39]]
+- [[_COMMUNITY_Community 40|Community 40]]
+- [[_COMMUNITY_Community 41|Community 41]]
+- [[_COMMUNITY_Community 42|Community 42]]
+- [[_COMMUNITY_Community 43|Community 43]]
+- [[_COMMUNITY_Community 44|Community 44]]
+- [[_COMMUNITY_Community 45|Community 45]]
+- [[_COMMUNITY_Community 46|Community 46]]
+- [[_COMMUNITY_Community 47|Community 47]]
+- [[_COMMUNITY_Community 48|Community 48]]
+- [[_COMMUNITY_Community 49|Community 49]]
+- [[_COMMUNITY_Community 50|Community 50]]
+- [[_COMMUNITY_Community 51|Community 51]]
+- [[_COMMUNITY_Community 52|Community 52]]
+- [[_COMMUNITY_Community 53|Community 53]]
+- [[_COMMUNITY_Community 54|Community 54]]
+- [[_COMMUNITY_Community 55|Community 55]]
+- [[_COMMUNITY_Community 56|Community 56]]
+- [[_COMMUNITY_Community 57|Community 57]]
+- [[_COMMUNITY_Community 58|Community 58]]
+- [[_COMMUNITY_Community 59|Community 59]]
+- [[_COMMUNITY_Community 60|Community 60]]
+- [[_COMMUNITY_Community 61|Community 61]]
+- [[_COMMUNITY_Community 62|Community 62]]
+- [[_COMMUNITY_Community 63|Community 63]]
+- [[_COMMUNITY_Community 64|Community 64]]
+- [[_COMMUNITY_Community 65|Community 65]]
+- [[_COMMUNITY_Community 66|Community 66]]
+- [[_COMMUNITY_Community 67|Community 67]]
+- [[_COMMUNITY_Community 68|Community 68]]
+- [[_COMMUNITY_Community 69|Community 69]]
+- [[_COMMUNITY_Community 70|Community 70]]
+- [[_COMMUNITY_Community 71|Community 71]]
+- [[_COMMUNITY_Community 72|Community 72]]
+- [[_COMMUNITY_Community 73|Community 73]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `GET()` - 39 edges
-2. `POST()` - 29 edges
-3. `DELETE()` - 17 edges
-4. `PATCH()` - 15 edges
-5. `requireAuth()` - 7 edges
-6. `requireOwner()` - 6 edges
-7. `rateLimitByUser()` - 6 edges
-8. `rateLimit()` - 5 edges
-9. `rateLimitMiddleware()` - 5 edges
-10. `verifySystemOwnership()` - 4 edges
+1. `GET()` - 51 edges
+2. `POST()` - 36 edges
+3. `DELETE()` - 25 edges
+4. `PATCH()` - 21 edges
+5. `makeRequest()` - 17 edges
+6. `makeParams()` - 10 edges
+7. `requireAuth()` - 7 edges
+8. `rateLimitByUser()` - 7 edges
+9. `requireOwner()` - 6 edges
+10. `handleError()` - 5 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `parseFilters()` --calls--> `GET()`  [INFERRED]
+  src\app\dashboard\termine\page.tsx → src\app\api\wartungen\route.ts
+- `POST()` --calls--> `safeValidateRequest()`  [INFERRED]
+  src\app\api\webhooks\cal\route.ts → src\lib\validations.ts
 - `POST()` --calls--> `sendBookingConfirmation()`  [INFERRED]
   src\app\api\webhooks\cal\route.ts → src\lib\email\service.tsx
 - `PATCH()` --calls--> `sendBookingReschedule()`  [INFERRED]
   src\app\api\user\profile\route.ts → src\lib\email\service.tsx
 - `DELETE()` --calls--> `sendBookingCancellation()`  [INFERRED]
   src\app\api\user\account\route.ts → src\lib\email\service.tsx
-- `setAssignee()` --calls--> `DELETE()`  [INFERRED]
-  src\app\dashboard\systems\page.tsx → src\app\api\user\account\route.ts
-- `GET()` --calls--> `requireAdmin()`  [INFERRED]
-  src\app\api\wartungen\route.ts → src\lib\admin-auth.ts
 
 ## Communities
 
-### Community 0 - "Domain Logic & API Handlers"
+### Community 0 - "Community 0"
 Cohesion: 0.07
-Nodes (12): computeOptInData(), parseFilters(), deriveStatus(), GET(), getEligibleSystemIds(), handleBookingCancelled(), handleBookingCreated(), handleBookingRescheduled() (+4 more)
+Nodes (12): getEffectivePartsForSystem(), deriveStatus(), GET(), getEligibleSystemIds(), handleBookingCancelled(), handleBookingCreated(), handleBookingRescheduled(), handleError() (+4 more)
 
-### Community 1 - "Auth & API Verbs"
-Cohesion: 0.17
-Nodes (8): requireAuth(), requireOwner(), requireRole(), DELETE(), isManual(), PATCH(), deleteMaintenancePhoto(), getSupabaseAdmin()
+### Community 1 - "Community 1"
+Cohesion: 0.12
+Nodes (12): requireAuth(), requireOwner(), requireRole(), computeOptInData(), DELETE(), errorJson(), inventoryErr(), isManual() (+4 more)
 
-### Community 2 - "Employee Management"
+### Community 2 - "Community 2"
+Cohesion: 0.09
+Nodes (4): makeParams(), makeRequest(), mockDecimal(), signedRequest()
+
+### Community 3 - "Community 3"
 Cohesion: 0.17
 Nodes (2): EmployeeDetailPage(), useEmployee()
 
-### Community 3 - "Dashboard & Bookings"
+### Community 4 - "Community 4"
 Cohesion: 0.2
 Nodes (4): DashboardPage(), buildSearchParams(), useBookings(), useDashboardStats()
 
-### Community 4 - "Display Helpers"
+### Community 5 - "Community 5"
 Cohesion: 0.22
 Nodes (1): handleDelete()
 
-### Community 5 - "Export & Maintenance UI"
+### Community 6 - "Community 6"
 Cohesion: 0.22
 Nodes (2): getMaintenanceUrgency(), setAssignee()
 
-### Community 6 - "Rate Limiting"
+### Community 7 - "Community 7"
 Cohesion: 0.42
 Nodes (7): buildLimitResponse(), getClientIdentifier(), getLimiter(), inMemoryCheck(), rateLimit(), rateLimitByUser(), rateLimitMiddleware()
 
-### Community 7 - "Cal.com API Client"
+### Community 8 - "Community 8"
 Cohesion: 0.36
 Nodes (6): apiKey(), base(), CalComApiError, callJson(), cancelCalBooking(), rescheduleCalBooking()
 
-### Community 8 - "Customer CRUD"
+### Community 9 - "Community 9"
 Cohesion: 0.25
 Nodes (2): NewCustomerPage(), useCreateCustomer()
 
-### Community 9 - "Email Service"
+### Community 10 - "Community 10"
 Cohesion: 0.33
 Nodes (6): sendBookingCancellation(), sendBookingConfirmation(), sendBookingReschedule(), sendReminder(), sendWeeklySummary(), sendWeeklySummaryToAll()
 
-### Community 10 - "Admin Dashboard Hooks"
+### Community 11 - "Community 11"
 Cohesion: 0.29
 Nodes (0): 
 
-### Community 11 - "Route Test Setup"
-Cohesion: 0.4
-Nodes (2): makeRequest(), signedRequest()
-
-### Community 12 - "Admin Auth & Layout"
+### Community 12 - "Community 12"
 Cohesion: 0.33
 Nodes (3): requireAdmin(), isAdminEmail(), AdminLayout()
 
-### Community 13 - "Customer Systems Hooks"
+### Community 13 - "Community 13"
 Cohesion: 0.33
 Nodes (0): 
 
-### Community 14 - "Follow-up Jobs Hooks"
+### Community 14 - "Community 14"
+Cohesion: 0.33
+Nodes (0): 
+
+### Community 15 - "Community 15"
 Cohesion: 0.4
 Nodes (0): 
 
-### Community 15 - "Form Page Handlers"
+### Community 16 - "Community 16"
+Cohesion: 0.4
+Nodes (0): 
+
+### Community 17 - "Community 17"
+Cohesion: 0.4
+Nodes (0): 
+
+### Community 18 - "Community 18"
 Cohesion: 0.67
 Nodes (2): handleSubmit(), validateForm()
 
-### Community 16 - "Setup Page Handlers"
+### Community 19 - "Community 19"
 Cohesion: 0.5
 Nodes (0): 
 
-### Community 17 - "Checklist Items Hooks"
+### Community 20 - "Community 20"
 Cohesion: 0.5
 Nodes (0): 
 
-### Community 18 - "Maintenance Hooks"
+### Community 21 - "Community 21"
 Cohesion: 0.5
 Nodes (0): 
 
-### Community 19 - "Form Submit Pages"
+### Community 22 - "Community 22"
 Cohesion: 0.67
 Nodes (1): onSubmit()
 
-### Community 20 - "Status Badge Pages"
+### Community 23 - "Community 23"
 Cohesion: 0.67
 Nodes (1): StatusBadge()
 
-### Community 21 - "Catalog Hook"
+### Community 24 - "Community 24"
+Cohesion: 0.67
+Nodes (1): safeValidateRequest()
+
+### Community 25 - "Community 25"
+Cohesion: 0.67
+Nodes (1): parseFilters()
+
+### Community 26 - "Community 26"
+Cohesion: 0.67
+Nodes (1): Page()
+
+### Community 27 - "Community 27"
 Cohesion: 0.67
 Nodes (0): 
 
-### Community 22 - "Email Logs Hook"
+### Community 28 - "Community 28"
 Cohesion: 0.67
 Nodes (0): 
 
-### Community 23 - "System Photos Hook"
+### Community 29 - "Community 29"
 Cohesion: 0.67
 Nodes (0): 
 
-### Community 24 - "User Profile Hook"
+### Community 30 - "Community 30"
 Cohesion: 0.67
 Nodes (0): 
 
-### Community 25 - "Wartungen Hook"
+### Community 31 - "Community 31"
 Cohesion: 0.67
 Nodes (0): 
 
-### Community 26 - "Global Error Boundary"
+### Community 32 - "Community 32"
+Cohesion: 0.67
+Nodes (0): 
+
+### Community 33 - "Community 33"
+Cohesion: 0.67
+Nodes (0): 
+
+### Community 34 - "Community 34"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 27 - "Root Layout"
+### Community 35 - "Community 35"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 28 - "Admin Layout Shell"
+### Community 36 - "Community 36"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 29 - "Type Handler Page"
+### Community 37 - "Community 37"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 30 - "Search Page Handler"
+### Community 38 - "Community 38"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 31 - "Filter Test"
+### Community 39 - "Community 39"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 32 - "Dashboard Layout"
+### Community 40 - "Community 40"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 33 - "React Query Provider"
+### Community 41 - "Community 41"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 34 - "shadcn cn Util"
+### Community 42 - "Community 42"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 35 - "Page (singleton)"
+### Community 43 - "Community 43"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 36 - "Page (singleton)"
+### Community 44 - "Community 44"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 37 - "API Route (singleton)"
+### Community 45 - "Community 45"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 38 - "Route Test (singleton)"
+### Community 46 - "Community 46"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 39 - "Page (singleton)"
+### Community 47 - "Community 47"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 40 - "Page (singleton)"
+### Community 48 - "Community 48"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 41 - "NextAuth Config"
+### Community 49 - "Community 49"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 42 - "Checklist Defaults"
+### Community 50 - "Community 50"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 43 - "App Constants"
+### Community 51 - "Community 51"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 44 - "Prisma Client"
+### Community 52 - "Community 52"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 45 - "Client Test (singleton)"
+### Community 53 - "Community 53"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 46 - "Resend Client"
+### Community 54 - "Community 54"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 47 - "Booking Cancellation Email"
+### Community 55 - "Community 55"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 48 - "Booking Confirmation Email"
+### Community 56 - "Community 56"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 49 - "Booking Reschedule Email"
+### Community 57 - "Community 57"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 50 - "Reminder Email"
+### Community 58 - "Community 58"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 51 - "Weekly Summary Email"
+### Community 59 - "Community 59"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 52 - "Opt-in Test"
+### Community 60 - "Community 60"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 53 - "Admin Email Test"
+### Community 61 - "Community 61"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 54 - "Checklist Defaults Test"
+### Community 62 - "Community 62"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 55 - "Checklist Validation Test"
+### Community 63 - "Community 63"
 Cohesion: 1.0
 Nodes (0): 
 
-### Community 56 - "System Schemas Test"
+### Community 64 - "Community 64"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 65 - "Community 65"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 66 - "Community 66"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 67 - "Community 67"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 68 - "Community 68"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 69 - "Community 69"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 70 - "Community 70"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 71 - "Community 71"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 72 - "Community 72"
+Cohesion: 1.0
+Nodes (0): 
+
+### Community 73 - "Community 73"
 Cohesion: 1.0
 Nodes (0): 
 
 ## Knowledge Gaps
-- **Thin community `Global Error Boundary`** (2 nodes): `GlobalError()`, `global-error.tsx`
+- **Thin community `Community 34`** (2 nodes): `GlobalError()`, `global-error.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Root Layout`** (2 nodes): `RootLayout()`, `layout.tsx`
+- **Thin community `Community 35`** (2 nodes): `RootLayout()`, `layout.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Admin Layout Shell`** (2 nodes): `AdminLayoutShell()`, `AdminLayoutShell.tsx`
+- **Thin community `Community 36`** (2 nodes): `AdminLayoutShell()`, `AdminLayoutShell.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Type Handler Page`** (2 nodes): `handleType()`, `page.tsx`
+- **Thin community `Community 37`** (2 nodes): `handleType()`, `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Search Page Handler`** (2 nodes): `handleSearch()`, `page.tsx`
+- **Thin community `Community 38`** (2 nodes): `handleSearch()`, `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Filter Test`** (2 nodes): `makeRequest()`, `filter.test.ts`
+- **Thin community `Community 39`** (2 nodes): `makeRequest()`, `filter.test.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Dashboard Layout`** (2 nodes): `DashboardLayout()`, `layout.tsx`
+- **Thin community `Community 40`** (2 nodes): `DashboardLayout()`, `layout.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `React Query Provider`** (2 nodes): `ReactQueryProvider()`, `react-query.tsx`
+- **Thin community `Community 41`** (2 nodes): `LagerPage()`, `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `shadcn cn Util`** (2 nodes): `utils.ts`, `cn()`
+- **Thin community `Community 42`** (2 nodes): `WartungssetsPage()`, `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Page (singleton)`** (1 nodes): `page.tsx`
+- **Thin community `Community 43`** (2 nodes): `formatPartCategory()`, `format.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Page (singleton)`** (1 nodes): `page.tsx`
+- **Thin community `Community 44`** (2 nodes): `ReactQueryProvider()`, `react-query.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `API Route (singleton)`** (1 nodes): `route.ts`
+- **Thin community `Community 45`** (2 nodes): `utils.ts`, `cn()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Route Test (singleton)`** (1 nodes): `route.test.ts`
+- **Thin community `Community 46`** (2 nodes): `d()`, `maintenance-parts.test.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Page (singleton)`** (1 nodes): `page.tsx`
+- **Thin community `Community 47`** (2 nodes): `useEffectiveParts.ts`, `useEffectiveParts()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Page (singleton)`** (1 nodes): `page.tsx`
+- **Thin community `Community 48`** (2 nodes): `usePackingList.ts`, `usePackingList()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `NextAuth Config`** (1 nodes): `auth.ts`
+- **Thin community `Community 49`** (1 nodes): `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Checklist Defaults`** (1 nodes): `checklist-defaults.ts`
+- **Thin community `Community 50`** (1 nodes): `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `App Constants`** (1 nodes): `constants.ts`
+- **Thin community `Community 51`** (1 nodes): `route.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Prisma Client`** (1 nodes): `prisma.ts`
+- **Thin community `Community 52`** (1 nodes): `route.test.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Client Test (singleton)`** (1 nodes): `client.test.ts`
+- **Thin community `Community 53`** (1 nodes): `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Resend Client`** (1 nodes): `client.ts`
+- **Thin community `Community 54`** (1 nodes): `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Booking Cancellation Email`** (1 nodes): `BookingCancellationEmail.tsx`
+- **Thin community `Community 55`** (1 nodes): `auth.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Booking Confirmation Email`** (1 nodes): `BookingConfirmationEmail.tsx`
+- **Thin community `Community 56`** (1 nodes): `checklist-defaults.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Booking Reschedule Email`** (1 nodes): `BookingRescheduleEmail.tsx`
+- **Thin community `Community 57`** (1 nodes): `constants.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Reminder Email`** (1 nodes): `ReminderEmail.tsx`
+- **Thin community `Community 58`** (1 nodes): `prisma.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Weekly Summary Email`** (1 nodes): `WeeklySummaryEmail.tsx`
+- **Thin community `Community 59`** (1 nodes): `units.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Opt-in Test`** (1 nodes): `opt-in.test.ts`
+- **Thin community `Community 60`** (1 nodes): `client.test.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Admin Email Test`** (1 nodes): `admin-email.test.ts`
+- **Thin community `Community 61`** (1 nodes): `client.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Checklist Defaults Test`** (1 nodes): `checklist-defaults.test.ts`
+- **Thin community `Community 62`** (1 nodes): `BookingCancellationEmail.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Checklist Validation Test`** (1 nodes): `checklist-validation.test.ts`
+- **Thin community `Community 63`** (1 nodes): `BookingConfirmationEmail.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `System Schemas Test`** (1 nodes): `system-schemas.test.ts`
+- **Thin community `Community 64`** (1 nodes): `BookingRescheduleEmail.tsx`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 65`** (1 nodes): `ReminderEmail.tsx`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 66`** (1 nodes): `WeeklySummaryEmail.tsx`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 67`** (1 nodes): `opt-in.test.ts`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 68`** (1 nodes): `admin-email.test.ts`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 69`** (1 nodes): `checklist-defaults.test.ts`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 70`** (1 nodes): `checklist-validation.test.ts`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 71`** (1 nodes): `format.test.ts`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 72`** (1 nodes): `system-schemas.test.ts`
+  Too small to be a meaningful cluster - may be noise or needs more connections extracted.
+- **Thin community `Community 73`** (1 nodes): `validations-parts.test.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `GET()` connect `Domain Logic & API Handlers` to `Auth & API Verbs`, `Admin Auth & Layout`, `Email Service`, `Rate Limiting`?**
-  _High betweenness centrality (0.090) - this node is a cross-community bridge._
-- **Why does `POST()` connect `Domain Logic & API Handlers` to `Auth & API Verbs`, `Rate Limiting`, `Email Service`?**
-  _High betweenness centrality (0.059) - this node is a cross-community bridge._
-- **Why does `DELETE()` connect `Auth & API Verbs` to `Email Service`, `Export & Maintenance UI`, `Rate Limiting`, `Cal.com API Client`?**
-  _High betweenness centrality (0.052) - this node is a cross-community bridge._
-- **Are the 10 inferred relationships involving `GET()` (e.g. with `requireAdmin()` and `requireAuth()`) actually correct?**
-  _`GET()` has 10 INFERRED edges - model-reasoned connections that need verification._
+- **Why does `GET()` connect `Community 0` to `Community 1`, `Community 7`, `Community 10`, `Community 12`, `Community 25`?**
+  _High betweenness centrality (0.073) - this node is a cross-community bridge._
+- **Why does `POST()` connect `Community 0` to `Community 24`, `Community 1`, `Community 10`, `Community 7`?**
+  _High betweenness centrality (0.043) - this node is a cross-community bridge._
+- **Why does `DELETE()` connect `Community 1` to `Community 0`, `Community 6`, `Community 7`, `Community 8`, `Community 10`?**
+  _High betweenness centrality (0.041) - this node is a cross-community bridge._
+- **Are the 12 inferred relationships involving `GET()` (e.g. with `requireAdmin()` and `requireAuth()`) actually correct?**
+  _`GET()` has 12 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 11 inferred relationships involving `POST()` (e.g. with `rateLimitMiddleware()` and `safeValidateRequest()`) actually correct?**
   _`POST()` has 11 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 8 inferred relationships involving `DELETE()` (e.g. with `requireAuth()` and `cancelCalBooking()`) actually correct?**

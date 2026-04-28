@@ -25,7 +25,10 @@ import type { ChecklistSnapshot } from '@/types/checklist';
 import { CHECKLIST_DEFAULTS } from '@/lib/checklist-defaults';
 import { useChecklistItems } from '@/hooks/useChecklistItems';
 import { useCreateMaintenance } from '@/hooks/useMaintenances';
+import type { PartsUsageEntry } from '@/hooks/useMaintenances';
 import { useCreateFollowUpJob } from '@/hooks/useFollowUpJobs';
+import { useInventoryItems } from '@/hooks/useInventory';
+import { PartsUsageStep } from '@/components/maintenance/PartsUsageStep';
 
 interface MaintenanceChecklistModalProps {
   systemId: string;
@@ -50,10 +53,11 @@ export function MaintenanceChecklistModal({
 }: MaintenanceChecklistModalProps) {
   const today = new Date().toISOString().split('T')[0];
 
-  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [step, setStep] = useState<1 | 2 | 3 | 4>(1);
   const [entries, setEntries] = useState<ChecklistEntry[]>([]);
   const [notes, setNotes] = useState('');
   const [photos, setPhotos] = useState<File[]>([]);
+  const [partsUsed, setPartsUsed] = useState<PartsUsageEntry[]>([]);
   const [date, setDate] = useState(today);
   const [loading, setLoading] = useState(false);
   const [uploadingPhotos, setUploadingPhotos] = useState(false);
@@ -63,6 +67,7 @@ export function MaintenanceChecklistModal({
   const [newFollowUpDesc, setNewFollowUpDesc] = useState('');
 
   const { data: customItems } = useChecklistItems(systemId);
+  const { data: inventoryItems = [] } = useInventoryItems();
   const createMaintenance = useCreateMaintenance();
   const createFollowUp = useCreateFollowUpJob(systemId, { silent: true });
 
@@ -166,12 +171,13 @@ export function MaintenanceChecklistModal({
         confirmedAt: new Date().toISOString(),
       };
 
-      const maintenance = await createMaintenance.mutateAsync({
+      const { maintenance, negativeStockWarnings } = await createMaintenance.mutateAsync({
         systemId,
         date: new Date(date).toISOString(),
         notes: notes.trim() || null,
         photos: uploadedUrls,
         checklistData,
+        partsUsed,
       });
 
       if (followUps.length > 0) {
@@ -187,6 +193,17 @@ export function MaintenanceChecklistModal({
           );
         } catch {
           toast.error('Wartung gespeichert, aber Fehler beim Erstellen der Nachfolgeaufträge');
+        }
+      }
+
+      // Surface negative-stock warnings as non-blocking toasts.
+      if (negativeStockWarnings.length > 0) {
+        const itemMap = new Map(inventoryItems.map((i) => [i.id, i]));
+        for (const w of negativeStockWarnings) {
+          const item = itemMap.get(w.inventoryItemId);
+          toast.warning(
+            `Lager für „${item?.description ?? w.inventoryItemId}“ unterschritten — Bestand ${w.newStock}${item ? ` ${item.unit}` : ''}`,
+          );
         }
       }
 
@@ -207,7 +224,7 @@ export function MaintenanceChecklistModal({
         {/* Header: step indicator + close */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
           <div className="flex items-center gap-1.5">
-            {([1, 2, 3] as const).map((s) => (
+            {([1, 2, 3, 4] as const).map((s) => (
               <div
                 key={s}
                 className={`rounded-full transition-all duration-200 ${
@@ -220,7 +237,7 @@ export function MaintenanceChecklistModal({
               />
             ))}
           </div>
-          <p className="text-xs text-muted-foreground">Schritt {step} von 3</p>
+          <p className="text-xs text-muted-foreground">Schritt {step} von 4</p>
           <Button
             variant="ghost"
             size="icon-sm"
@@ -464,8 +481,19 @@ export function MaintenanceChecklistModal({
             </div>
           )}
 
-          {/* ── Step 3: Abschließen ── */}
-          {step === 3 && (
+          {/* ── Step 3: Teileverbrauch ──
+              Always mounted (CSS visibility toggle) so internal row/adHoc state
+              survives Step 2/4 navigation. See PartsUsageStep header comment. */}
+          <div style={{ display: step === 3 ? 'block' : 'none' }}>
+            <PartsUsageStep
+              customerSystemId={systemId}
+              onChange={setPartsUsed}
+              inventoryItems={inventoryItems}
+            />
+          </div>
+
+          {/* ── Step 4: Abschließen ── */}
+          {step === 4 && (
             <div className="p-4 space-y-5">
               <div>
                 <h2 className="text-base font-semibold text-foreground">Wartung abschließen</h2>
@@ -552,7 +580,7 @@ export function MaintenanceChecklistModal({
           ) : (
             <Button
               variant="outline"
-              onClick={() => setStep((prev) => (prev - 1) as 1 | 2)}
+              onClick={() => setStep((prev) => (prev - 1) as 1 | 2 | 3)}
               disabled={loading}
               className="h-11"
             >
@@ -561,9 +589,9 @@ export function MaintenanceChecklistModal({
             </Button>
           )}
 
-          {step < 3 ? (
+          {step < 4 ? (
             <Button
-              onClick={() => setStep((prev) => (prev + 1) as 2 | 3)}
+              onClick={() => setStep((prev) => (prev + 1) as 2 | 3 | 4)}
               className="h-11"
             >
               Weiter

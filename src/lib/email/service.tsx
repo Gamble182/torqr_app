@@ -220,6 +220,7 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
     reminderLogs,
     customerCount,
     systemCount,
+    inventoryItemsRaw,
   ] = await Promise.all([
     prisma.booking.findMany({
       where: {
@@ -273,6 +274,11 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
     }),
     prisma.customer.count({ where: { companyId: user.companyId } }),
     prisma.customerSystem.count({ where: systemScope }),
+    // Inventory: OWNER only — Prisma cannot do cross-column comparisons in WHERE,
+    // so fetch all and filter in-memory below.
+    isOwner
+      ? prisma.inventoryItem.findMany({ where: { companyId: user.companyId } })
+      : Promise.resolve([]),
   ]);
 
   const bookingsAttendedLastWeek = await prisma.booking.count({
@@ -305,6 +311,28 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
     daysOverdue: s.nextMaintenance ? differenceInDays(now, s.nextMaintenance) : 0,
   }));
 
+  // Low-stock inventory (OWNER only). Filter in-memory because Prisma's Postgres
+  // driver does not support cross-column comparison in `where`. Sort by largest
+  // shortfall (minStock − currentStock) so the worst gaps surface first.
+  const LOW_STOCK_VISIBLE = 5;
+  const lowStockFiltered = inventoryItemsRaw
+    .filter((i) => i.currentStock.lt(i.minStock))
+    .sort((a, b) =>
+      Number(b.minStock.sub(b.currentStock)) - Number(a.minStock.sub(a.currentStock))
+    );
+  const lowStockItems = isOwner
+    ? lowStockFiltered.slice(0, LOW_STOCK_VISIBLE).map((i) => ({
+        description: i.description,
+        articleNumber: i.articleNumber,
+        currentStock: i.currentStock.toString(),
+        minStock: i.minStock.toString(),
+      }))
+    : undefined;
+  const lowStockItemsMore =
+    isOwner && lowStockFiltered.length > LOW_STOCK_VISIBLE
+      ? lowStockFiltered.length - LOW_STOCK_VISIBLE
+      : undefined;
+
   const weekLabel = `${format(now, 'dd.MM.')} – ${format(weekEnd, 'dd.MM.yyyy')}`;
 
   const html = await render(
@@ -326,6 +354,8 @@ export async function sendWeeklySummary(userId?: string): Promise<{ emailsSent: 
         customers: customerCount,
         systems: systemCount,
       },
+      lowStockItems,
+      lowStockItemsMore,
     })
   );
 
