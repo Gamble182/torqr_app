@@ -199,4 +199,6 @@ export const RATE_LIMIT_PRESETS = {
   REGISTER: { interval: 15 * 60 * 1000, maxRequests: 5 },
   API_USER: { interval: 60 * 1000, maxRequests: 100 },
   FILE_UPLOAD: { interval: 60 * 1000, maxRequests: 10 },
+  BETA_LEAD: { interval: 60 * 60 * 1000, maxRequests: 5 },
+  DEMO_REQUEST: { interval: 60 * 60 * 1000, maxRequests: 3 },
 } as const;
