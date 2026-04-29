@@ -8,9 +8,14 @@ import { WeeklySummaryEmail } from './templates/WeeklySummaryEmail';
 import { BookingConfirmationEmail } from './templates/BookingConfirmationEmail';
 import { BookingRescheduleEmail } from './templates/BookingRescheduleEmail';
 import { BookingCancellationEmail } from './templates/BookingCancellationEmail';
+import { BetaLeadAdminEmail } from './templates/BetaLeadAdminEmail';
+import { DemoRequestAdminEmail } from './templates/DemoRequestAdminEmail';
 import { format, addDays, subDays, differenceInDays } from 'date-fns';
 import { de } from 'date-fns/locale';
 type ReminderType = 'REMINDER_4_WEEKS' | 'REMINDER_1_WEEK';
+
+const BETA_LEAD_NOTIFY_EMAIL = process.env.BETA_LEAD_NOTIFY_EMAIL || 'hello@torqr.de';
+const DEMO_REQUEST_NOTIFY_EMAIL = process.env.DEMO_REQUEST_NOTIFY_EMAIL || 'hello@torqr.de';
 
 /**
  * Send a maintenance reminder email to a customer.
@@ -551,5 +556,79 @@ export async function sendBookingCancellation(
 
   if (error) {
     throw new Error(`Resend error for cancellation ${bookingId}: ${JSON.stringify(error)}`);
+  }
+}
+
+/**
+ * Send admin notification for a new beta-program lead (landing page form).
+ * Returns a result object instead of throwing — caller decides how to react.
+ * `replyTo` set to the lead's email so admin can reply directly.
+ */
+export async function sendBetaLeadNotification(input: {
+  email: string;
+  name?: string | null;
+  company?: string | null;
+  tierInterest?: string | null;
+  source?: string | null;
+}): Promise<{ ok: true } | { ok: false; error: string }> {
+  try {
+    const receivedAt = new Date().toLocaleString('de-DE', {
+      timeZone: 'Europe/Berlin',
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    });
+
+    const result = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: BETA_LEAD_NOTIFY_EMAIL,
+      subject: `[Torqr Beta] Neuer Lead: ${input.email}${input.tierInterest ? ` (${input.tierInterest})` : ''}`,
+      react: BetaLeadAdminEmail({ ...input, receivedAt }),
+      replyTo: input.email,
+    });
+
+    if (result.error) {
+      return { ok: false, error: String(result.error.message ?? result.error) };
+    }
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : 'Unknown email error' };
+  }
+}
+
+/**
+ * Send admin notification for a demo-request submission (landing page form).
+ * Returns a result object instead of throwing — caller decides how to react.
+ * `replyTo` set to the lead's email so admin can reply directly.
+ */
+export async function sendDemoRequestNotification(input: {
+  email: string;
+  name: string;
+  company?: string | null;
+  phone?: string | null;
+  preferredSlot?: string | null;
+  message?: string | null;
+  source?: string | null;
+}): Promise<{ ok: true } | { ok: false; error: string }> {
+  try {
+    const receivedAt = new Date().toLocaleString('de-DE', {
+      timeZone: 'Europe/Berlin',
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    });
+
+    const result = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: DEMO_REQUEST_NOTIFY_EMAIL,
+      subject: `[Torqr Demo] Anfrage von ${input.name} (${input.email})`,
+      react: DemoRequestAdminEmail({ ...input, receivedAt }),
+      replyTo: input.email,
+    });
+
+    if (result.error) {
+      return { ok: false, error: String(result.error.message ?? result.error) };
+    }
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, error: e instanceof Error ? e.message : 'Unknown email error' };
   }
 }
