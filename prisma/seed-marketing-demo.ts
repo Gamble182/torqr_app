@@ -168,7 +168,8 @@ async function main() {
     where: { companyId: company.id },
   });
 
-  if (existingSystems.length < 8) {
+  const toCreate = Math.max(0, 8 - existingSystems.length);
+  if (toCreate > 0) {
     // Catalog-Einträge pro SystemType vorbereiten
     const heatingCat = await prisma.systemCatalog.findFirst({
       where: { systemType: SystemType.HEATING },
@@ -207,11 +208,14 @@ async function main() {
       { customerIdx: 4, type: SystemType.HEATING },
     ];
 
-    for (const m of systemMix) {
+    for (let i = 0; i < toCreate; i++) {
+      // derive from absolute index so partial-state re-runs are deterministic
+      const absIdx = existingSystems.length + i;
+      const m = systemMix[absIdx];
       const cust = allCustomers[m.customerIdx];
       const cat = catalogByType[m.type];
-      const installYear = 2020 + Math.floor(Math.random() * 4);
-      const nextDays = 7 + Math.floor(Math.random() * 28);
+      const installYear = 2020 + (absIdx % 4);
+      const nextDays = 7 + absIdx * 3;
       await prisma.customerSystem.create({
         data: {
           customerId: cust.id,
