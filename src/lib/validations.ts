@@ -660,3 +660,32 @@ export const inventoryMovementCreateSchema = z
     note: z.string().optional(),
   })
   .strict();
+
+// ─── Public landing page form schemas ────────────────────────────────────
+
+export const betaLeadSchema = z.object({
+  email: z.string().trim().min(1, 'E-Mail-Adresse ist erforderlich').email('Bitte gib eine gültige E-Mail-Adresse an'),
+  name: z.string().trim().max(120).optional().or(z.literal('')),
+  company: z.string().trim().max(160).optional().or(z.literal('')),
+  tierInterest: z.enum(['SOLO', 'PRO']).optional(),
+  source: z.string().trim().max(60).optional(),
+  consent: z.literal(true, { message: 'Bitte stimme der Datenverarbeitung zu, damit wir dich kontaktieren können.' }),
+  // Honeypot — must be empty
+  website: z.string().max(0).optional().or(z.literal('')),
+});
+
+export type BetaLeadInput = z.infer<typeof betaLeadSchema>;
+
+export const demoRequestSchema = z.object({
+  email: z.string().trim().min(1, 'E-Mail-Adresse ist erforderlich').email('Bitte gib eine gültige E-Mail-Adresse an'),
+  name: z.string().trim().min(1, 'Bitte gib deinen Namen an').max(120),
+  company: z.string().trim().max(160).optional().or(z.literal('')),
+  phone: z.string().trim().max(40).optional().or(z.literal('')),
+  preferredSlot: z.string().trim().max(200).optional().or(z.literal('')),
+  message: z.string().trim().max(2000).optional().or(z.literal('')),
+  source: z.string().trim().max(60).optional(),
+  consent: z.literal(true, { message: 'Bitte stimme der Datenverarbeitung zu, damit wir dich kontaktieren können.' }),
+  website: z.string().max(0).optional().or(z.literal('')),
+});
+
+export type DemoRequestInput = z.infer<typeof demoRequestSchema>;
