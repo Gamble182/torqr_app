@@ -79,7 +79,7 @@
       "label": "RootLayout()",
       "file_type": "code",
       "source_file": "src\\app\\layout.tsx",
-      "source_location": "L10",
+      "source_location": "L35",
       "id": "layout_rootlayout",
       "community": 52,
       "norm_label": "rootlayout()"
@@ -4812,7 +4812,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src\\app\\layout.tsx",
-      "source_location": "L10",
+      "source_location": "L35",
       "weight": 1.0,
       "_src": "src_app_layout_tsx",
       "_tgt": "layout_rootlayout",
