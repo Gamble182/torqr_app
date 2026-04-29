@@ -12,7 +12,7 @@ export function PilotStatus() {
   return (
     <section id="pilot" className="py-20 sm:py-28 px-6 border-t border-border bg-background">
       <div className="mx-auto max-w-4xl text-center">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-accent/30 bg-accent-surface text-xs uppercase tracking-[1.5px] text-amber-900 font-medium mb-6">
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-accent/30 bg-brand-accent-surface text-xs uppercase tracking-[1.5px] text-amber-900 font-medium mb-6">
           ▰ Aktuell in der Beta-Phase
         </div>
 
