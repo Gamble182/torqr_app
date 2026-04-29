@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "BetaLead" (
+CREATE TABLE "beta_leads" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "name" TEXT,
@@ -9,11 +9,11 @@ CREATE TABLE "BetaLead" (
     "consent" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "BetaLead_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "beta_leads_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "DemoRequest" (
+CREATE TABLE "demo_requests" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "name" TEXT NOT NULL,
@@ -25,17 +25,17 @@ CREATE TABLE "DemoRequest" (
     "consent" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "DemoRequest_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "demo_requests_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
-CREATE INDEX "BetaLead_email_idx" ON "BetaLead"("email");
+CREATE INDEX "beta_leads_email_idx" ON "beta_leads"("email");
 
 -- CreateIndex
-CREATE INDEX "BetaLead_createdAt_idx" ON "BetaLead"("createdAt");
+CREATE INDEX "beta_leads_createdAt_idx" ON "beta_leads"("createdAt");
 
 -- CreateIndex
-CREATE INDEX "DemoRequest_email_idx" ON "DemoRequest"("email");
+CREATE INDEX "demo_requests_email_idx" ON "demo_requests"("email");
 
 -- CreateIndex
-CREATE INDEX "DemoRequest_createdAt_idx" ON "DemoRequest"("createdAt");
+CREATE INDEX "demo_requests_createdAt_idx" ON "demo_requests"("createdAt");

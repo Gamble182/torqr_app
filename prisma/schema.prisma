@@ -575,6 +575,7 @@ model BetaLead {
 
   @@index([email])
   @@index([createdAt])
+  @@map("beta_leads")
 }
 
 model DemoRequest {
@@ -591,4 +592,5 @@ model DemoRequest {
 
   @@index([email])
   @@index([createdAt])
+  @@map("demo_requests")
 }
