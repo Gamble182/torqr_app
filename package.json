@@ -14,7 +14,8 @@
     "migrate:deploy": "prisma migrate deploy --config=config/prisma.config.ts",
     "logs": "npx tsx --env-file=.env scripts/login-logs.ts",
     "test": "vitest",
-    "test:run": "vitest run"
+    "test:run": "vitest run",
+    "seed:marketing-demo": "npx tsx prisma/seed-marketing-demo.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
