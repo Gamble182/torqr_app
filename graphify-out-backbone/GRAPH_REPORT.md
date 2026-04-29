@@ -1,11 +1,11 @@
 # Graph Report - src/app + src/lib + src/hooks (Backbone)  (2026-04-29)
 
 ## Corpus Check
-- 157 files · ~72,231 words
+- 157 files · ~71,880 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 332 nodes · 365 edges · 75 communities detected
+- 333 nodes · 366 edges · 75 communities detected
 - Extraction: 88% EXTRACTED · 12% INFERRED · 0% AMBIGUOUS · INFERRED: 44 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
@@ -417,33 +417,33 @@ Nodes (0):
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 32`** (2 nodes): `RootLayout()`, `layout.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 33`** (2 nodes): `AdminLayoutShell()`, `AdminLayoutShell.tsx`
+- **Thin community `Community 33`** (2 nodes): `Home()`, `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 34`** (2 nodes): `handleType()`, `page.tsx`
+- **Thin community `Community 34`** (2 nodes): `AdminLayoutShell()`, `AdminLayoutShell.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 35`** (2 nodes): `handleSearch()`, `page.tsx`
+- **Thin community `Community 35`** (2 nodes): `handleType()`, `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 36`** (2 nodes): `makeRequest()`, `filter.test.ts`
+- **Thin community `Community 36`** (2 nodes): `handleSearch()`, `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 37`** (2 nodes): `DashboardLayout()`, `layout.tsx`
+- **Thin community `Community 37`** (2 nodes): `makeRequest()`, `filter.test.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 38`** (2 nodes): `LagerPage()`, `page.tsx`
+- **Thin community `Community 38`** (2 nodes): `DashboardLayout()`, `layout.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 39`** (2 nodes): `WartungssetsPage()`, `page.tsx`
+- **Thin community `Community 39`** (2 nodes): `LagerPage()`, `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 40`** (2 nodes): `formatPartCategory()`, `format.ts`
+- **Thin community `Community 40`** (2 nodes): `WartungssetsPage()`, `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 41`** (2 nodes): `ReactQueryProvider()`, `react-query.tsx`
+- **Thin community `Community 41`** (2 nodes): `formatPartCategory()`, `format.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 42`** (2 nodes): `utils.ts`, `cn()`
+- **Thin community `Community 42`** (2 nodes): `ReactQueryProvider()`, `react-query.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 43`** (2 nodes): `d()`, `maintenance-parts.test.ts`
+- **Thin community `Community 43`** (2 nodes): `utils.ts`, `cn()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 44`** (2 nodes): `useEffectiveParts.ts`, `useEffectiveParts()`
+- **Thin community `Community 44`** (2 nodes): `d()`, `maintenance-parts.test.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 45`** (2 nodes): `usePackingList.ts`, `usePackingList()`
+- **Thin community `Community 45`** (2 nodes): `useEffectiveParts.ts`, `useEffectiveParts()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 46`** (1 nodes): `page.tsx`
+- **Thin community `Community 46`** (2 nodes): `usePackingList.ts`, `usePackingList()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 47`** (1 nodes): `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
