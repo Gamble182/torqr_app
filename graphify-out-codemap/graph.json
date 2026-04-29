@@ -2344,6 +2344,24 @@
       "norm_label": "maintenancesetlist.tsx"
     },
     {
+      "label": "MarketingHeader.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\marketing\\MarketingHeader.tsx",
+      "source_location": "L1",
+      "id": "src_components_marketing_marketingheader_tsx",
+      "community": 94,
+      "norm_label": "marketingheader.tsx"
+    },
+    {
+      "label": "MobileNavSheet.tsx",
+      "file_type": "code",
+      "source_file": "src\\components\\marketing\\MobileNavSheet.tsx",
+      "source_location": "L1",
+      "id": "src_components_marketing_mobilenavsheet_tsx",
+      "community": 95,
+      "norm_label": "mobilenavsheet.tsx"
+    },
+    {
       "label": "PackingListPrintView.tsx",
       "file_type": "code",
       "source_file": "src\\components\\packing-list\\PackingListPrintView.tsx",
@@ -2520,7 +2538,7 @@
       "source_file": "src\\components\\systems\\PartsListCard.tsx",
       "source_location": "L1",
       "id": "src_components_systems_partslistcard_tsx",
-      "community": 94,
+      "community": 96,
       "norm_label": "partslistcard.tsx"
     },
     {
@@ -2655,7 +2673,7 @@
       "source_file": "src\\components\\ui\\accordion.tsx",
       "source_location": "L1",
       "id": "src_components_ui_accordion_tsx",
-      "community": 95,
+      "community": 97,
       "norm_label": "accordion.tsx"
     },
     {
@@ -2664,7 +2682,7 @@
       "source_file": "src\\components\\ui\\alert-dialog.tsx",
       "source_location": "L1",
       "id": "src_components_ui_alert_dialog_tsx",
-      "community": 96,
+      "community": 98,
       "norm_label": "alert-dialog.tsx"
     },
     {
@@ -2745,7 +2763,7 @@
       "source_file": "src\\components\\ui\\checkbox.tsx",
       "source_location": "L1",
       "id": "src_components_ui_checkbox_tsx",
-      "community": 97,
+      "community": 99,
       "norm_label": "checkbox.tsx"
     },
     {
@@ -2754,7 +2772,7 @@
       "source_file": "src\\components\\ui\\input.tsx",
       "source_location": "L1",
       "id": "src_components_ui_input_tsx",
-      "community": 98,
+      "community": 100,
       "norm_label": "input.tsx"
     },
     {
@@ -2844,7 +2862,7 @@
       "source_file": "src\\components\\ui\\sheet.tsx",
       "source_location": "L1",
       "id": "src_components_ui_sheet_tsx",
-      "community": 99,
+      "community": 101,
       "norm_label": "sheet.tsx"
     },
     {
@@ -2853,7 +2871,7 @@
       "source_file": "src\\components\\ui\\switch.tsx",
       "source_location": "L1",
       "id": "src_components_ui_switch_tsx",
-      "community": 100,
+      "community": 102,
       "norm_label": "switch.tsx"
     },
     {
@@ -2862,7 +2880,7 @@
       "source_file": "src\\components\\ui\\tabs.tsx",
       "source_location": "L1",
       "id": "src_components_ui_tabs_tsx",
-      "community": 101,
+      "community": 103,
       "norm_label": "tabs.tsx"
     },
     {
@@ -2871,7 +2889,7 @@
       "source_file": "src\\components\\ui\\textarea.tsx",
       "source_location": "L1",
       "id": "src_components_ui_textarea_tsx",
-      "community": 102,
+      "community": 104,
       "norm_label": "textarea.tsx"
     },
     {
@@ -2880,7 +2898,7 @@
       "source_file": "src\\components\\__tests__\\AssigneeBadge.test.tsx",
       "source_location": "L1",
       "id": "src_components_tests_assigneebadge_test_tsx",
-      "community": 103,
+      "community": 105,
       "norm_label": "assigneebadge.test.tsx"
     },
     {
@@ -3762,7 +3780,7 @@
       "source_file": "src\\lib\\auth.ts",
       "source_location": "L1",
       "id": "src_lib_auth_ts",
-      "community": 104,
+      "community": 106,
       "norm_label": "auth.ts"
     },
     {
@@ -3771,7 +3789,7 @@
       "source_file": "src\\lib\\checklist-defaults.ts",
       "source_location": "L1",
       "id": "src_lib_checklist_defaults_ts",
-      "community": 105,
+      "community": 107,
       "norm_label": "checklist-defaults.ts"
     },
     {
@@ -3780,7 +3798,7 @@
       "source_file": "src\\lib\\constants.ts",
       "source_location": "L1",
       "id": "src_lib_constants_ts",
-      "community": 106,
+      "community": 108,
       "norm_label": "constants.ts"
     },
     {
@@ -3825,7 +3843,7 @@
       "source_file": "src\\lib\\prisma.ts",
       "source_location": "L1",
       "id": "src_lib_prisma_ts",
-      "community": 107,
+      "community": 109,
       "norm_label": "prisma.ts"
     },
     {
@@ -3960,7 +3978,7 @@
       "source_file": "src\\lib\\units.ts",
       "source_location": "L1",
       "id": "src_lib_units_ts",
-      "community": 108,
+      "community": 110,
       "norm_label": "units.ts"
     },
     {
@@ -4086,7 +4104,7 @@
       "source_file": "src\\lib\\cal-com\\__tests__\\client.test.ts",
       "source_location": "L1",
       "id": "src_lib_cal_com_tests_client_test_ts",
-      "community": 109,
+      "community": 111,
       "norm_label": "client.test.ts"
     },
     {
@@ -4095,7 +4113,7 @@
       "source_file": "src\\lib\\email\\client.ts",
       "source_location": "L1",
       "id": "src_lib_email_client_ts",
-      "community": 110,
+      "community": 112,
       "norm_label": "client.ts"
     },
     {
@@ -4203,7 +4221,7 @@
       "source_file": "src\\lib\\email\\templates\\BetaLeadAdminEmail.tsx",
       "source_location": "L1",
       "id": "src_lib_email_templates_betaleadadminemail_tsx",
-      "community": 111,
+      "community": 113,
       "norm_label": "betaleadadminemail.tsx"
     },
     {
@@ -4212,7 +4230,7 @@
       "source_file": "src\\lib\\email\\templates\\BookingCancellationEmail.tsx",
       "source_location": "L1",
       "id": "src_lib_email_templates_bookingcancellationemail_tsx",
-      "community": 112,
+      "community": 114,
       "norm_label": "bookingcancellationemail.tsx"
     },
     {
@@ -4221,7 +4239,7 @@
       "source_file": "src\\lib\\email\\templates\\BookingConfirmationEmail.tsx",
       "source_location": "L1",
       "id": "src_lib_email_templates_bookingconfirmationemail_tsx",
-      "community": 113,
+      "community": 115,
       "norm_label": "bookingconfirmationemail.tsx"
     },
     {
@@ -4230,7 +4248,7 @@
       "source_file": "src\\lib\\email\\templates\\BookingRescheduleEmail.tsx",
       "source_location": "L1",
       "id": "src_lib_email_templates_bookingrescheduleemail_tsx",
-      "community": 114,
+      "community": 116,
       "norm_label": "bookingrescheduleemail.tsx"
     },
     {
@@ -4239,7 +4257,7 @@
       "source_file": "src\\lib\\email\\templates\\DemoRequestAdminEmail.tsx",
       "source_location": "L1",
       "id": "src_lib_email_templates_demorequestadminemail_tsx",
-      "community": 115,
+      "community": 117,
       "norm_label": "demorequestadminemail.tsx"
     },
     {
@@ -4248,7 +4266,7 @@
       "source_file": "src\\lib\\email\\templates\\ReminderEmail.tsx",
       "source_location": "L1",
       "id": "src_lib_email_templates_reminderemail_tsx",
-      "community": 116,
+      "community": 118,
       "norm_label": "reminderemail.tsx"
     },
     {
@@ -4257,7 +4275,7 @@
       "source_file": "src\\lib\\email\\templates\\WeeklySummaryEmail.tsx",
       "source_location": "L1",
       "id": "src_lib_email_templates_weeklysummaryemail_tsx",
-      "community": 117,
+      "community": 119,
       "norm_label": "weeklysummaryemail.tsx"
     },
     {
@@ -4266,7 +4284,7 @@
       "source_file": "src\\lib\\email\\__tests__\\opt-in.test.ts",
       "source_location": "L1",
       "id": "src_lib_email_tests_opt_in_test_ts",
-      "community": 118,
+      "community": 120,
       "norm_label": "opt-in.test.ts"
     },
     {
@@ -4275,7 +4293,7 @@
       "source_file": "src\\lib\\email\\__tests__\\service.test.ts",
       "source_location": "L1",
       "id": "src_lib_email_tests_service_test_ts",
-      "community": 119,
+      "community": 121,
       "norm_label": "service.test.ts"
     },
     {
@@ -4284,7 +4302,7 @@
       "source_file": "src\\lib\\__tests__\\admin-email.test.ts",
       "source_location": "L1",
       "id": "src_lib_tests_admin_email_test_ts",
-      "community": 120,
+      "community": 122,
       "norm_label": "admin-email.test.ts"
     },
     {
@@ -4293,7 +4311,7 @@
       "source_file": "src\\lib\\__tests__\\checklist-defaults.test.ts",
       "source_location": "L1",
       "id": "src_lib_tests_checklist_defaults_test_ts",
-      "community": 121,
+      "community": 123,
       "norm_label": "checklist-defaults.test.ts"
     },
     {
@@ -4302,7 +4320,7 @@
       "source_file": "src\\lib\\__tests__\\checklist-validation.test.ts",
       "source_location": "L1",
       "id": "src_lib_tests_checklist_validation_test_ts",
-      "community": 122,
+      "community": 124,
       "norm_label": "checklist-validation.test.ts"
     },
     {
@@ -4311,7 +4329,7 @@
       "source_file": "src\\lib\\__tests__\\format.test.ts",
       "source_location": "L1",
       "id": "src_lib_tests_format_test_ts",
-      "community": 123,
+      "community": 125,
       "norm_label": "format.test.ts"
     },
     {
@@ -4338,7 +4356,7 @@
       "source_file": "src\\lib\\__tests__\\system-schemas.test.ts",
       "source_location": "L1",
       "id": "src_lib_tests_system_schemas_test_ts",
-      "community": 124,
+      "community": 126,
       "norm_label": "system-schemas.test.ts"
     },
     {
@@ -4347,7 +4365,7 @@
       "source_file": "src\\lib\\__tests__\\validations-parts.test.ts",
       "source_location": "L1",
       "id": "src_lib_tests_validations_parts_test_ts",
-      "community": 125,
+      "community": 127,
       "norm_label": "validations-parts.test.ts"
     },
     {
@@ -4356,7 +4374,7 @@
       "source_file": "src\\lib\\__tests__\\validations.test.ts",
       "source_location": "L1",
       "id": "src_lib_tests_validations_test_ts",
-      "community": 126,
+      "community": 128,
       "norm_label": "validations.test.ts"
     },
     {
@@ -4365,7 +4383,7 @@
       "source_file": "src\\styles\\brand.config.ts",
       "source_location": "L1",
       "id": "src_styles_brand_config_ts",
-      "community": 127,
+      "community": 129,
       "norm_label": "brand.config.ts"
     },
     {
@@ -4374,7 +4392,7 @@
       "source_file": "src\\test\\setup.ts",
       "source_location": "L1",
       "id": "src_test_setup_ts",
-      "community": 128,
+      "community": 130,
       "norm_label": "setup.ts"
     },
     {
@@ -4383,7 +4401,7 @@
       "source_file": "src\\test\\smoke.test.ts",
       "source_location": "L1",
       "id": "src_test_smoke_test_ts",
-      "community": 129,
+      "community": 131,
       "norm_label": "smoke.test.ts"
     },
     {
@@ -4392,7 +4410,7 @@
       "source_file": "src\\types\\checklist.ts",
       "source_location": "L1",
       "id": "src_types_checklist_ts",
-      "community": 130,
+      "community": 132,
       "norm_label": "checklist.ts"
     },
     {
