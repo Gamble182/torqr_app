@@ -225,7 +225,7 @@
       "source_file": "src\\app\\admin\\users\\[id]\\page.tsx",
       "source_location": "L1",
       "id": "src_app_admin_users_id_page_tsx",
-      "community": 50,
+      "community": 51,
       "norm_label": "page.tsx"
     },
     {
@@ -306,7 +306,7 @@
       "source_file": "src\\app\\api\\auth\\[...nextauth]\\route.ts",
       "source_location": "L1",
       "id": "src_app_api_auth_nextauth_route_ts",
-      "community": 51,
+      "community": 52,
       "norm_label": "route.ts"
     },
     {
@@ -648,7 +648,7 @@
       "source_file": "src\\app\\api\\employees\\__tests__\\route.test.ts",
       "source_location": "L1",
       "id": "src_app_api_employees_tests_route_test_ts",
-      "community": 52,
+      "community": 53,
       "norm_label": "route.test.ts"
     },
     {
@@ -1170,7 +1170,7 @@
       "source_file": "src\\app\\dashboard\\account\\page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_account_page_tsx",
-      "community": 53,
+      "community": 54,
       "norm_label": "page.tsx"
     },
     {
@@ -1179,7 +1179,7 @@
       "source_file": "src\\app\\dashboard\\customers\\page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_customers_page_tsx",
-      "community": 54,
+      "community": 55,
       "norm_label": "page.tsx"
     },
     {
@@ -1188,7 +1188,7 @@
       "source_file": "src\\app\\dashboard\\customers\\new\\page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_customers_new_page_tsx",
-      "community": 9,
+      "community": 8,
       "norm_label": "page.tsx"
     },
     {
@@ -1197,7 +1197,7 @@
       "source_file": "src\\app\\dashboard\\customers\\new\\page.tsx",
       "source_location": "L28",
       "id": "page_newcustomerpage",
-      "community": 9,
+      "community": 8,
       "norm_label": "newcustomerpage()"
     },
     {
@@ -1206,7 +1206,7 @@
       "source_file": "src\\app\\dashboard\\customers\\[id]\\page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_customers_id_page_tsx",
-      "community": 6,
+      "community": 5,
       "norm_label": "page.tsx"
     },
     {
@@ -1215,7 +1215,7 @@
       "source_file": "src\\app\\dashboard\\customers\\[id]\\page.tsx",
       "source_location": "L42",
       "id": "page_getemailoptindisplay",
-      "community": 6,
+      "community": 5,
       "norm_label": "getemailoptindisplay()"
     },
     {
@@ -1224,7 +1224,7 @@
       "source_file": "src\\app\\dashboard\\customers\\[id]\\page.tsx",
       "source_location": "L69",
       "id": "page_handlesendreminder",
-      "community": 6,
+      "community": 5,
       "norm_label": "handlesendreminder()"
     },
     {
@@ -1233,7 +1233,7 @@
       "source_file": "src\\app\\dashboard\\systems\\[id]\\page.tsx",
       "source_location": "L49",
       "id": "page_handledelete",
-      "community": 6,
+      "community": 5,
       "norm_label": "handledelete()"
     },
     {
@@ -1242,7 +1242,7 @@
       "source_file": "src\\app\\dashboard\\customers\\[id]\\page.tsx",
       "source_location": "L104",
       "id": "page_formatdate",
-      "community": 6,
+      "community": 5,
       "norm_label": "formatdate()"
     },
     {
@@ -1251,7 +1251,7 @@
       "source_file": "src\\app\\dashboard\\customers\\[id]\\page.tsx",
       "source_location": "L107",
       "id": "page_getmaintenancestatus",
-      "community": 6,
+      "community": 5,
       "norm_label": "getmaintenancestatus()"
     },
     {
@@ -1260,7 +1260,7 @@
       "source_file": "src\\app\\dashboard\\customers\\[id]\\page.tsx",
       "source_location": "L118",
       "id": "page_handleeditsystem",
-      "community": 6,
+      "community": 5,
       "norm_label": "handleeditsystem()"
     },
     {
@@ -1269,7 +1269,7 @@
       "source_file": "src\\app\\dashboard\\customers\\[id]\\page.tsx",
       "source_location": "L123",
       "id": "page_handledeletesystem",
-      "community": 6,
+      "community": 5,
       "norm_label": "handledeletesystem()"
     },
     {
@@ -1404,7 +1404,7 @@
       "source_file": "src\\app\\dashboard\\systems\\page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_systems_page_tsx",
-      "community": 5,
+      "community": 6,
       "norm_label": "page.tsx"
     },
     {
@@ -1413,7 +1413,7 @@
       "source_file": "src\\app\\dashboard\\wartungen\\page.tsx",
       "source_location": "L62",
       "id": "page_getmaintenanceurgency",
-      "community": 5,
+      "community": 6,
       "norm_label": "getmaintenanceurgency()"
     },
     {
@@ -1422,7 +1422,7 @@
       "source_file": "src\\app\\dashboard\\systems\\page.tsx",
       "source_location": "L84",
       "id": "page_setassignee",
-      "community": 5,
+      "community": 6,
       "norm_label": "setassignee()"
     },
     {
@@ -1431,7 +1431,7 @@
       "source_file": "src\\app\\dashboard\\systems\\[id]\\page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_systems_id_page_tsx",
-      "community": 6,
+      "community": 5,
       "norm_label": "page.tsx"
     },
     {
@@ -1485,7 +1485,7 @@
       "source_file": "src\\app\\dashboard\\wartungen\\page.tsx",
       "source_location": "L1",
       "id": "src_app_dashboard_wartungen_page_tsx",
-      "community": 5,
+      "community": 6,
       "norm_label": "page.tsx"
     },
     {
@@ -1494,7 +1494,7 @@
       "source_file": "src\\app\\dashboard\\wartungen\\page.tsx",
       "source_location": "L59",
       "id": "page_getsystemlabel",
-      "community": 5,
+      "community": 6,
       "norm_label": "getsystemlabel()"
     },
     {
@@ -1503,7 +1503,7 @@
       "source_file": "src\\app\\dashboard\\wartungen\\page.tsx",
       "source_location": "L72",
       "id": "page_geturgencybadge",
-      "community": 5,
+      "community": 6,
       "norm_label": "geturgencybadge()"
     },
     {
@@ -1512,7 +1512,7 @@
       "source_file": "src\\app\\dashboard\\wartungen\\page.tsx",
       "source_location": "L104",
       "id": "page_getdaysuntil",
-      "community": 5,
+      "community": 6,
       "norm_label": "getdaysuntil()"
     },
     {
@@ -1521,7 +1521,7 @@
       "source_file": "src\\app\\dashboard\\wartungen\\page.tsx",
       "source_location": "L117",
       "id": "page_exporttocsv",
-      "community": 5,
+      "community": 6,
       "norm_label": "exporttocsv()"
     },
     {
@@ -1530,7 +1530,7 @@
       "source_file": "src\\app\\dashboard\\wartungen\\page.tsx",
       "source_location": "L164",
       "id": "page_exporttopdf",
-      "community": 5,
+      "community": 6,
       "norm_label": "exporttopdf()"
     },
     {
@@ -1566,8 +1566,26 @@
       "source_file": "src\\app\\datenschutz\\page.tsx",
       "source_location": "L1",
       "id": "src_app_datenschutz_page_tsx",
-      "community": 55,
+      "community": 56,
       "norm_label": "page.tsx"
+    },
+    {
+      "label": "page.tsx",
+      "file_type": "code",
+      "source_file": "src\\app\\impressum\\page.tsx",
+      "source_location": "L1",
+      "id": "src_app_impressum_page_tsx",
+      "community": 44,
+      "norm_label": "page.tsx"
+    },
+    {
+      "label": "ImpressumPage()",
+      "file_type": "code",
+      "source_file": "src\\app\\impressum\\page.tsx",
+      "source_location": "L12",
+      "id": "page_impressumpage",
+      "community": 44,
+      "norm_label": "impressumpage()"
     },
     {
       "label": "admin-auth.ts",
@@ -1647,7 +1665,7 @@
       "source_file": "src\\lib\\auth.ts",
       "source_location": "L1",
       "id": "src_lib_auth_ts",
-      "community": 56,
+      "community": 57,
       "norm_label": "auth.ts"
     },
     {
@@ -1656,7 +1674,7 @@
       "source_file": "src\\lib\\checklist-defaults.ts",
       "source_location": "L1",
       "id": "src_lib_checklist_defaults_ts",
-      "community": 57,
+      "community": 58,
       "norm_label": "checklist-defaults.ts"
     },
     {
@@ -1665,7 +1683,7 @@
       "source_file": "src\\lib\\constants.ts",
       "source_location": "L1",
       "id": "src_lib_constants_ts",
-      "community": 58,
+      "community": 59,
       "norm_label": "constants.ts"
     },
     {
@@ -1674,7 +1692,7 @@
       "source_file": "src\\lib\\format.ts",
       "source_location": "L1",
       "id": "src_lib_format_ts",
-      "community": 44,
+      "community": 45,
       "norm_label": "format.ts"
     },
     {
@@ -1683,7 +1701,7 @@
       "source_file": "src\\lib\\format.ts",
       "source_location": "L3",
       "id": "format_formatpartcategory",
-      "community": 44,
+      "community": 45,
       "norm_label": "formatpartcategory()"
     },
     {
@@ -1710,7 +1728,7 @@
       "source_file": "src\\lib\\prisma.ts",
       "source_location": "L1",
       "id": "src_lib_prisma_ts",
-      "community": 59,
+      "community": 60,
       "norm_label": "prisma.ts"
     },
     {
@@ -1800,7 +1818,7 @@
       "source_file": "src\\lib\\react-query.tsx",
       "source_location": "L1",
       "id": "src_lib_react_query_tsx",
-      "community": 45,
+      "community": 46,
       "norm_label": "react-query.tsx"
     },
     {
@@ -1809,7 +1827,7 @@
       "source_file": "src\\lib\\react-query.tsx",
       "source_location": "L7",
       "id": "react_query_reactqueryprovider",
-      "community": 45,
+      "community": 46,
       "norm_label": "reactqueryprovider()"
     },
     {
@@ -1845,7 +1863,7 @@
       "source_file": "src\\lib\\units.ts",
       "source_location": "L1",
       "id": "src_lib_units_ts",
-      "community": 60,
+      "community": 61,
       "norm_label": "units.ts"
     },
     {
@@ -1854,7 +1872,7 @@
       "source_file": "src\\lib\\utils.ts",
       "source_location": "L1",
       "id": "src_lib_utils_ts",
-      "community": 46,
+      "community": 47,
       "norm_label": "utils.ts"
     },
     {
@@ -1863,7 +1881,7 @@
       "source_file": "src\\lib\\utils.ts",
       "source_location": "L4",
       "id": "utils_cn",
-      "community": 46,
+      "community": 47,
       "norm_label": "cn()"
     },
     {
@@ -1899,7 +1917,7 @@
       "source_file": "src\\lib\\cal-com\\client.ts",
       "source_location": "L1",
       "id": "src_lib_cal_com_client_ts",
-      "community": 8,
+      "community": 9,
       "norm_label": "client.ts"
     },
     {
@@ -1908,7 +1926,7 @@
       "source_file": "src\\lib\\cal-com\\client.ts",
       "source_location": "L10",
       "id": "client_calcomapierror",
-      "community": 8,
+      "community": 9,
       "norm_label": "calcomapierror"
     },
     {
@@ -1917,7 +1935,7 @@
       "source_file": "src\\lib\\cal-com\\client.ts",
       "source_location": "L11",
       "id": "client_calcomapierror_constructor",
-      "community": 8,
+      "community": 9,
       "norm_label": ".constructor()"
     },
     {
@@ -1926,7 +1944,7 @@
       "source_file": "src\\lib\\cal-com\\client.ts",
       "source_location": "L21",
       "id": "client_apikey",
-      "community": 8,
+      "community": 9,
       "norm_label": "apikey()"
     },
     {
@@ -1935,7 +1953,7 @@
       "source_file": "src\\lib\\cal-com\\client.ts",
       "source_location": "L29",
       "id": "client_base",
-      "community": 8,
+      "community": 9,
       "norm_label": "base()"
     },
     {
@@ -1944,7 +1962,7 @@
       "source_file": "src\\lib\\cal-com\\client.ts",
       "source_location": "L33",
       "id": "client_calljson",
-      "community": 8,
+      "community": 9,
       "norm_label": "calljson()"
     },
     {
@@ -1953,7 +1971,7 @@
       "source_file": "src\\lib\\cal-com\\client.ts",
       "source_location": "L61",
       "id": "client_reschedulecalbooking",
-      "community": 8,
+      "community": 9,
       "norm_label": "reschedulecalbooking()"
     },
     {
@@ -1962,7 +1980,7 @@
       "source_file": "src\\lib\\cal-com\\client.ts",
       "source_location": "L80",
       "id": "client_cancelcalbooking",
-      "community": 8,
+      "community": 9,
       "norm_label": "cancelcalbooking()"
     },
     {
@@ -1971,7 +1989,7 @@
       "source_file": "src\\lib\\cal-com\\__tests__\\client.test.ts",
       "source_location": "L1",
       "id": "src_lib_cal_com_tests_client_test_ts",
-      "community": 61,
+      "community": 62,
       "norm_label": "client.test.ts"
     },
     {
@@ -1980,7 +1998,7 @@
       "source_file": "src\\lib\\email\\client.ts",
       "source_location": "L1",
       "id": "src_lib_email_client_ts",
-      "community": 62,
+      "community": 63,
       "norm_label": "client.ts"
     },
     {
@@ -2088,7 +2106,7 @@
       "source_file": "src\\lib\\email\\templates\\BetaLeadAdminEmail.tsx",
       "source_location": "L1",
       "id": "src_lib_email_templates_betaleadadminemail_tsx",
-      "community": 63,
+      "community": 64,
       "norm_label": "betaleadadminemail.tsx"
     },
     {
@@ -2097,7 +2115,7 @@
       "source_file": "src\\lib\\email\\templates\\BookingCancellationEmail.tsx",
       "source_location": "L1",
       "id": "src_lib_email_templates_bookingcancellationemail_tsx",
-      "community": 64,
+      "community": 65,
       "norm_label": "bookingcancellationemail.tsx"
     },
     {
@@ -2106,7 +2124,7 @@
       "source_file": "src\\lib\\email\\templates\\BookingConfirmationEmail.tsx",
       "source_location": "L1",
       "id": "src_lib_email_templates_bookingconfirmationemail_tsx",
-      "community": 65,
+      "community": 66,
       "norm_label": "bookingconfirmationemail.tsx"
     },
     {
@@ -2115,7 +2133,7 @@
       "source_file": "src\\lib\\email\\templates\\BookingRescheduleEmail.tsx",
       "source_location": "L1",
       "id": "src_lib_email_templates_bookingrescheduleemail_tsx",
-      "community": 66,
+      "community": 67,
       "norm_label": "bookingrescheduleemail.tsx"
     },
     {
@@ -2124,7 +2142,7 @@
       "source_file": "src\\lib\\email\\templates\\DemoRequestAdminEmail.tsx",
       "source_location": "L1",
       "id": "src_lib_email_templates_demorequestadminemail_tsx",
-      "community": 67,
+      "community": 68,
       "norm_label": "demorequestadminemail.tsx"
     },
     {
@@ -2133,7 +2151,7 @@
       "source_file": "src\\lib\\email\\templates\\ReminderEmail.tsx",
       "source_location": "L1",
       "id": "src_lib_email_templates_reminderemail_tsx",
-      "community": 68,
+      "community": 69,
       "norm_label": "reminderemail.tsx"
     },
     {
@@ -2142,7 +2160,7 @@
       "source_file": "src\\lib\\email\\templates\\WeeklySummaryEmail.tsx",
       "source_location": "L1",
       "id": "src_lib_email_templates_weeklysummaryemail_tsx",
-      "community": 69,
+      "community": 70,
       "norm_label": "weeklysummaryemail.tsx"
     },
     {
@@ -2151,7 +2169,7 @@
       "source_file": "src\\lib\\email\\__tests__\\opt-in.test.ts",
       "source_location": "L1",
       "id": "src_lib_email_tests_opt_in_test_ts",
-      "community": 70,
+      "community": 71,
       "norm_label": "opt-in.test.ts"
     },
     {
@@ -2160,7 +2178,7 @@
       "source_file": "src\\lib\\email\\__tests__\\service.test.ts",
       "source_location": "L1",
       "id": "src_lib_email_tests_service_test_ts",
-      "community": 71,
+      "community": 72,
       "norm_label": "service.test.ts"
     },
     {
@@ -2169,7 +2187,7 @@
       "source_file": "src\\lib\\__tests__\\admin-email.test.ts",
       "source_location": "L1",
       "id": "src_lib_tests_admin_email_test_ts",
-      "community": 72,
+      "community": 73,
       "norm_label": "admin-email.test.ts"
     },
     {
@@ -2178,7 +2196,7 @@
       "source_file": "src\\lib\\__tests__\\checklist-defaults.test.ts",
       "source_location": "L1",
       "id": "src_lib_tests_checklist_defaults_test_ts",
-      "community": 73,
+      "community": 74,
       "norm_label": "checklist-defaults.test.ts"
     },
     {
@@ -2187,7 +2205,7 @@
       "source_file": "src\\lib\\__tests__\\checklist-validation.test.ts",
       "source_location": "L1",
       "id": "src_lib_tests_checklist_validation_test_ts",
-      "community": 74,
+      "community": 75,
       "norm_label": "checklist-validation.test.ts"
     },
     {
@@ -2196,7 +2214,7 @@
       "source_file": "src\\lib\\__tests__\\format.test.ts",
       "source_location": "L1",
       "id": "src_lib_tests_format_test_ts",
-      "community": 75,
+      "community": 76,
       "norm_label": "format.test.ts"
     },
     {
@@ -2205,7 +2223,7 @@
       "source_file": "src\\lib\\__tests__\\maintenance-parts.test.ts",
       "source_location": "L1",
       "id": "src_lib_tests_maintenance_parts_test_ts",
-      "community": 47,
+      "community": 48,
       "norm_label": "maintenance-parts.test.ts"
     },
     {
@@ -2214,7 +2232,7 @@
       "source_file": "src\\lib\\__tests__\\maintenance-parts.test.ts",
       "source_location": "L25",
       "id": "maintenance_parts_test_d",
-      "community": 47,
+      "community": 48,
       "norm_label": "d()"
     },
     {
@@ -2223,7 +2241,7 @@
       "source_file": "src\\lib\\__tests__\\system-schemas.test.ts",
       "source_location": "L1",
       "id": "src_lib_tests_system_schemas_test_ts",
-      "community": 76,
+      "community": 77,
       "norm_label": "system-schemas.test.ts"
     },
     {
@@ -2232,7 +2250,7 @@
       "source_file": "src\\lib\\__tests__\\validations-parts.test.ts",
       "source_location": "L1",
       "id": "src_lib_tests_validations_parts_test_ts",
-      "community": 77,
+      "community": 78,
       "norm_label": "validations-parts.test.ts"
     },
     {
@@ -2241,7 +2259,7 @@
       "source_file": "src\\lib\\__tests__\\validations.test.ts",
       "source_location": "L1",
       "id": "src_lib_tests_validations_test_ts",
-      "community": 78,
+      "community": 79,
       "norm_label": "validations.test.ts"
     },
     {
@@ -2439,7 +2457,7 @@
       "source_file": "src\\hooks\\useCustomers.ts",
       "source_location": "L1",
       "id": "src_hooks_usecustomers_ts",
-      "community": 9,
+      "community": 8,
       "norm_label": "usecustomers.ts"
     },
     {
@@ -2448,7 +2466,7 @@
       "source_file": "src\\hooks\\useCustomers.ts",
       "source_location": "L28",
       "id": "usecustomers_usecustomers",
-      "community": 9,
+      "community": 8,
       "norm_label": "usecustomers()"
     },
     {
@@ -2457,7 +2475,7 @@
       "source_file": "src\\hooks\\useCustomers.ts",
       "source_location": "L48",
       "id": "usecustomers_usecustomer",
-      "community": 9,
+      "community": 8,
       "norm_label": "usecustomer()"
     },
     {
@@ -2466,7 +2484,7 @@
       "source_file": "src\\hooks\\useCustomers.ts",
       "source_location": "L71",
       "id": "usecustomers_usecreatecustomer",
-      "community": 9,
+      "community": 8,
       "norm_label": "usecreatecustomer()"
     },
     {
@@ -2475,7 +2493,7 @@
       "source_file": "src\\hooks\\useCustomers.ts",
       "source_location": "L103",
       "id": "usecustomers_useupdatecustomer",
-      "community": 9,
+      "community": 8,
       "norm_label": "useupdatecustomer()"
     },
     {
@@ -2484,7 +2502,7 @@
       "source_file": "src\\hooks\\useCustomers.ts",
       "source_location": "L136",
       "id": "usecustomers_usedeletecustomer",
-      "community": 9,
+      "community": 8,
       "norm_label": "usedeletecustomer()"
     },
     {
@@ -2592,7 +2610,7 @@
       "source_file": "src\\hooks\\useEffectiveParts.ts",
       "source_location": "L1",
       "id": "src_hooks_useeffectiveparts_ts",
-      "community": 48,
+      "community": 49,
       "norm_label": "useeffectiveparts.ts"
     },
     {
@@ -2601,7 +2619,7 @@
       "source_file": "src\\hooks\\useEffectiveParts.ts",
       "source_location": "L55",
       "id": "useeffectiveparts_useeffectiveparts",
-      "community": 48,
+      "community": 49,
       "norm_label": "useeffectiveparts()"
     },
     {
@@ -2952,7 +2970,7 @@
       "source_file": "src\\hooks\\usePackingList.ts",
       "source_location": "L1",
       "id": "src_hooks_usepackinglist_ts",
-      "community": 49,
+      "community": 50,
       "norm_label": "usepackinglist.ts"
     },
     {
@@ -2961,7 +2979,7 @@
       "source_file": "src\\hooks\\usePackingList.ts",
       "source_location": "L92",
       "id": "usepackinglist_usepackinglist",
-      "community": 49,
+      "community": 50,
       "norm_label": "usepackinglist()"
     },
     {
@@ -5997,6 +6015,18 @@
       "_tgt": "page_wartungssetspage",
       "source": "src_app_dashboard_wartungssets_page_tsx",
       "target": "page_wartungssetspage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src\\app\\impressum\\page.tsx",
+      "source_location": "L12",
+      "weight": 1.0,
+      "_src": "src_app_impressum_page_tsx",
+      "_tgt": "page_impressumpage",
+      "source": "src_app_impressum_page_tsx",
+      "target": "page_impressumpage",
       "confidence_score": 1.0
     },
     {
