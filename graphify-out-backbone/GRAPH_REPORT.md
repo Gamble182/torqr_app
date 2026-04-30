@@ -5,7 +5,7 @@
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 340 nodes · 369 edges · 80 communities detected
+- 341 nodes · 370 edges · 80 communities detected
 - Extraction: 88% EXTRACTED · 12% INFERRED · 0% AMBIGUOUS · INFERRED: 44 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
@@ -130,7 +130,7 @@ Cohesion: 0.12
 Nodes (12): requireAuth(), requireOwner(), requireRole(), computeOptInData(), DELETE(), errorJson(), inventoryErr(), isManual() (+4 more)
 
 ### Community 3 - "Community 3"
-Cohesion: 0.18
+Cohesion: 0.17
 Nodes (2): EmployeeDetailPage(), useEmployee()
 
 ### Community 4 - "Community 4"
@@ -139,11 +139,11 @@ Nodes (4): DashboardPage(), buildSearchParams(), useBookings(), useDashboardStat
 
 ### Community 5 - "Community 5"
 Cohesion: 0.22
-Nodes (1): handleDelete()
+Nodes (2): getMaintenanceUrgency(), setAssignee()
 
 ### Community 6 - "Community 6"
 Cohesion: 0.22
-Nodes (2): getMaintenanceUrgency(), setAssignee()
+Nodes (1): handleDelete()
 
 ### Community 7 - "Community 7"
 Cohesion: 0.42
@@ -539,11 +539,11 @@ Nodes (0):
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `GET()` connect `Community 0` to `Community 2`, `Community 11`, `Community 23`, `Community 7`?**
-  _High betweenness centrality (0.069) - this node is a cross-community bridge._
+  _High betweenness centrality (0.068) - this node is a cross-community bridge._
 - **Why does `POST()` connect `Community 0` to `Community 2`, `Community 7`?**
   _High betweenness centrality (0.047) - this node is a cross-community bridge._
-- **Why does `DELETE()` connect `Community 2` to `Community 0`, `Community 9`, `Community 6`, `Community 7`?**
-  _High betweenness centrality (0.039) - this node is a cross-community bridge._
+- **Why does `DELETE()` connect `Community 2` to `Community 0`, `Community 9`, `Community 5`, `Community 7`?**
+  _High betweenness centrality (0.038) - this node is a cross-community bridge._
 - **Are the 12 inferred relationships involving `GET()` (e.g. with `requireAdmin()` and `requireAuth()`) actually correct?**
   _`GET()` has 12 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 13 inferred relationships involving `POST()` (e.g. with `rateLimitMiddleware()` and `safeValidateRequest()`) actually correct?**

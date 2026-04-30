@@ -54,12 +54,24 @@ Akzent-Dot:  circle cx=54 cy=58 r=6, fill #EF9F27
 | `brand.accentSurface`|`#FAEEDA` | `bg-accent-surface`   |
 
 ### Status-Semantik
+
+> **Hinweis (2026-04-30):** Die Status-Triplets wurden im Rahmen des Design-System v3-Updates auf eine desaturierte Stripe/Linear-Palette umgestellt. Hintergründe sind getönte Neutrale; Border und Text tragen das Signal (AA-Kontrast). Quelle: [docs/design-system/project/colors_and_type.css](../design-system/project/colors_and_type.css). Vollständige Begründung in [docs/design-system/DELTA.md](../design-system/DELTA.md) (D-1).
+
 | Status    | bg        | border    | text      | Bedeutung         |
 |-----------|-----------|-----------|-----------|-------------------|
-| ok        | `#E6F2E6` | `#99CC99` | `#006600` | Gewartet, OK      |
-| due       | `#FAEEDA` | `#FAC775` | `#633806` | Wartung bald      |
-| overdue   | `#FAECE7` | `#F5C4B3` | `#712B13` | Überfällig        |
-| info      | `#E6F1FB` | `#B5D4F4` | `#0C447C` | Hinweis / Info    |
+| ok        | `#ECFDF3` | `#067647` | `#054F31` | Gewartet, OK      |
+| due       | `#FEF6E7` | `#B54708` | `#7A2E0E` | Wartung bald      |
+| overdue   | `#FEF3F2` | `#B42318` | `#7A271A` | Überfällig        |
+| info      | `#EFF4FF` | `#175CD3` | `#1E40AF` | Hinweis / Info    |
+
+**Dark-Mode-Triplets** (separate, bereits vor v3 in Produktion und unverändert):
+
+| Status    | bg        | border    | text      |
+|-----------|-----------|-----------|-----------|
+| ok        | `#1A2D1A` | `#2D4D2D` | `#4DA64D` |
+| due       | `#3D2E0F` | `#5C4412` | `#FAC775` |
+| overdue   | `#3D1A14` | `#5C2B1E` | `#F5C4B3` |
+| info      | `#0F2240` | `#1A3D6B` | `#B5D4F4` |
 
 ---
 

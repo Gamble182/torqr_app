@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Torqr — Web App UI Kit</title>
+<link rel="stylesheet" href="../../colors_and_type.css">
+<style>
+  body { margin:0; background:#F7F7F7; font-family:var(--font-sans); color:var(--foreground); }
+  .shell { display:flex; min-height:100vh; }
+
+  /* Sidebar */
+  .sb { width:260px; background:#004D00; color:rgba(255,255,255,.88); display:flex; flex-direction:column; flex-shrink:0; }
+  .sb-logo { display:flex; align-items:center; gap:10px; padding:20px 18px; border-bottom:1px solid rgba(255,255,255,.18); }
+  .sb-logo .word { color:#fff; font-weight:600; font-size:22px; letter-spacing:-1px; line-height:1; }
+  .sb-logo .tag { color:#EF9F27; font-size:9px; letter-spacing:1.5px; text-transform:uppercase; margin-top:3px; font-weight:400; }
+  .sb-section { padding:16px 14px 6px; font-size:10px; text-transform:uppercase; letter-spacing:1.5px; color:rgba(255,255,255,.55); }
+  .sb-nav a { display:flex; align-items:center; gap:12px; padding:10px 14px; margin:2px 8px; color:rgba(255,255,255,.88); text-decoration:none; font-size:14px; font-weight:500; border-radius:8px; }
+  .sb-nav a:hover { background:rgba(255,255,255,.10); color:#fff; }
+  .sb-nav a.active { background:rgba(255,255,255,.16); color:#FFB547; font-weight:600; box-shadow:inset 3px 0 0 #FFB547; }
+  .sb-nav a.active .ico { color:#FFB547; opacity:1; }
+  .sb-nav .badge { margin-left:auto; background:#EF9F27; color:#fff; font-size:11px; font-weight:600; padding:1px 7px; border-radius:9999px; }
+  .ico { width:18px; height:18px; flex-shrink:0; opacity:.9; }
+  .sb-foot { margin-top:auto; padding:14px; border-top:1px solid rgba(255,255,255,.18); display:flex; align-items:center; gap:10px; }
+  .sb-foot .av { width:36px; height:36px; border-radius:9999px; background:#EF9F27; color:#fff; font-weight:600; display:flex;align-items:center;justify-content:center; font-size:13px; }
+  .sb-foot .who { font-size:13px; color:#fff; line-height:1.2; }
+  .sb-foot .who small { color:rgba(255,255,255,.65); font-size:11px; }
+  .role-badge { font-size:9px; background:#EF9F27; color:#fff; font-weight:600; padding:1px 6px; border-radius:9999px; letter-spacing:.5px; margin-left:6px; vertical-align:middle; }
+
+  /* Main */
+  .main { flex:1; display:flex; flex-direction:column; min-width:0; }
+  .topbar { height:64px; background:#fff; border-bottom:1px solid #E0E0E0; display:flex; align-items:center; gap:16px; padding:0 28px; }
+  .breadcrumb { font-size:13px; color:#5C5C5C; }
+  .breadcrumb b { color:#1A1A1A; font-weight:600; }
+  .topbar-right { margin-left:auto; display:flex; align-items:center; gap:12px; }
+  .search { display:flex; align-items:center; gap:8px; height:38px; border:1px solid #E0E0E0; border-radius:10px; padding:0 12px; width:280px; color:#9A9A9A; font-size:13px; }
+  .btn { display:inline-flex; align-items:center; gap:8px; height:38px; padding:0 14px; border-radius:10px; font-size:13px; font-weight:500; cursor:pointer; border:1px solid transparent; }
+  .btn-primary { background:#008000; color:#fff; }
+  .btn-primary:hover { background:rgba(0,128,0,.9); }
+  .btn-outline { background:#fff; color:#1A1A1A; border-color:#E0E0E0; }
+  .btn-outline:hover { background:#E6F2E6; color:#008000; border-color:#E6F2E6; }
+  .btn-ghost { background:transparent; color:#5C5C5C; }
+  .btn-ghost:hover { background:#F7F7F7; }
+
+  .content { padding:28px; display:grid; grid-template-columns:repeat(12,1fr); gap:20px; }
+  h1.page { font-size:28px; font-weight:700; letter-spacing:-.01em; margin:0; grid-column:1/-1; display:flex; align-items:baseline; gap:14px; }
+  h1.page small { font-size:13px; font-weight:400; color:#5C5C5C; letter-spacing:0; }
+
+  .card { background:#fff; border:1px solid #E0E0E0; border-radius:12px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
+  .card-head { display:flex; align-items:center; gap:10px; padding:16px 18px; border-bottom:1px solid #E0E0E0; }
+  .card-head h3 { margin:0; font-size:14px; font-weight:600; }
+  .card-head .more { margin-left:auto; font-size:12px; color:#008000; font-weight:500; cursor:pointer; }
+  .stat { padding:18px; }
+  .stat .lab { font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:1.5px; color:#5C5C5C; }
+  .stat .num { font-size:32px; font-weight:700; letter-spacing:-.02em; margin-top:6px; line-height:1.1; }
+  .stat .delta { font-size:12px; margin-top:4px; color:#5C5C5C; }
+  .stat .delta.up { color:var(--status-ok-text); }
+  .stat .delta.warn { color:var(--status-due-text); }
+
+  /* Status pill */
+  .pill { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:500; padding:3px 9px; border-radius:9999px; border:1px solid; line-height:1; white-space:nowrap; }
+  .pill.ok { background:var(--status-ok-bg); border-color:var(--status-ok-border); color:var(--status-ok-text); }
+  .pill.due { background:var(--status-due-bg); border-color:var(--status-due-border); color:var(--status-due-text); }
+  .pill.overdue { background:var(--status-overdue-bg); border-color:var(--status-overdue-border); color:var(--status-overdue-text); }
+  .pill.info { background:var(--status-info-bg); border-color:var(--status-info-border); color:var(--status-info-text); }
+  .pill .dot { width:6px; height:6px; border-radius:50%; }
+
+  /* Table */
+  table.kunden { width:100%; border-collapse:collapse; font-size:13px; }
+  table.kunden th { text-align:left; font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:1.2px; color:#5C5C5C; padding:10px 18px; border-bottom:1px solid #E0E0E0; background:#FAFAFA; }
+  table.kunden td { padding:14px 18px; border-bottom:1px solid #F0F0F0; vertical-align:middle; }
+  table.kunden tr:last-child td { border-bottom:0; }
+  table.kunden tr:hover td { background:#FAFCFA; }
+  .who-cell { display:flex; align-items:center; gap:10px; }
+  .av-sm { width:32px; height:32px; border-radius:9999px; background:#E6F2E6; color:#006600; font-weight:600; font-size:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .who-cell .name { font-weight:500; color:#1A1A1A; }
+  .who-cell .sub { font-size:11px; color:#9A9A9A; font-family:var(--font-mono); }
+  .anlage { font-size:13px; }
+  .anlage .model { font-weight:500; }
+  .anlage .meta { font-size:11px; color:#9A9A9A; font-family:var(--font-mono); margin-top:1px; }
+  .icon-btn { width:28px; height:28px; border-radius:8px; border:1px solid #E0E0E0; background:#fff; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; }
+  .icon-btn:hover { background:#F7F7F7; }
+
+  /* Phone for checklist */
+  .phone-wrap { background:radial-gradient(circle at 30% 20%, #114c11 0%, #082008 60%, #050d05 100%); border-radius:18px; padding:28px; display:flex; align-items:center; justify-content:center; min-height:680px; }
+  .phone { width:300px; background:#fff; border-radius:36px; border:8px solid #1a1a1a; box-shadow:0 25px 50px -12px rgba(0,0,0,.45); overflow:hidden; position:relative; }
+  .phone .notch { position:absolute; top:8px; left:50%; transform:translateX(-50%); width:90px; height:22px; background:#1a1a1a; border-radius:0 0 14px 14px; z-index:2; }
+  .phone-screen { padding:34px 18px 22px; min-height:560px; display:flex; flex-direction:column; }
+  .phone-status { display:flex; justify-content:space-between; font-size:11px; font-weight:600; padding:0 6px 6px; }
+  .ck-head { padding:8px 6px 14px; }
+  .ck-head .eyebrow { font-size:9px; font-weight:500; text-transform:uppercase; letter-spacing:1.2px; color:#008000; }
+  .ck-head h2 { margin:4px 0 6px; font-size:18px; font-weight:700; line-height:1.2; }
+  .ck-head .who { font-size:12px; color:#5C5C5C; font-family:var(--font-mono); }
+  .ck-progress { display:flex; gap:6px; margin:12px 6px 16px; }
+  .ck-progress span { flex:1; height:4px; border-radius:9999px; background:#E0E0E0; }
+  .ck-progress span.done { background:#008000; }
+  .ck-progress span.cur { background:#EF9F27; }
+  .ck-step { padding:0 6px; }
+  .ck-step .num { display:inline-block; width:22px; height:22px; border-radius:9999px; background:#EF9F27; color:#fff; font-size:11px; font-weight:700; line-height:22px; text-align:center; }
+  .ck-step h3 { margin:8px 0 4px; font-size:15px; font-weight:600; }
+  .ck-step p { margin:0; font-size:12px; color:#5C5C5C; line-height:1.45; }
+  .ck-input { margin-top:14px; height:44px; border:2px solid #008000; border-radius:10px; display:flex; align-items:center; padding:0 14px; font-size:16px; font-weight:600; box-shadow:0 0 0 3px rgba(0,128,0,.12); }
+  .ck-input .unit { margin-left:auto; font-size:12px; color:#5C5C5C; font-weight:400; }
+  .ck-foto { margin-top:12px; height:90px; background:#E6F2E6; border:2px dashed #99CC99; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:12px; color:#006600; gap:6px; }
+  .ck-foot { margin-top:auto; display:flex; gap:8px; padding-top:18px; }
+  .ck-foot .btn { flex:1; height:44px; justify-content:center; font-size:14px; }
+
+  /* System detail card */
+  .system-detail .head { padding:18px; display:flex; gap:14px; border-bottom:1px solid #E0E0E0; }
+  .system-detail .head .ico-box { width:48px; height:48px; border-radius:10px; background:#E6F2E6; color:#008000; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .system-detail .head h3 { margin:0; font-size:16px; font-weight:600; }
+  .system-detail .head .meta { font-size:12px; color:#5C5C5C; margin-top:2px; font-family:var(--font-mono); }
+  .system-detail .body { padding:18px; }
+  .timeline { list-style:none; margin:0; padding:0; }
+  .timeline li { position:relative; padding:0 0 16px 22px; font-size:13px; }
+  .timeline li::before { content:""; position:absolute; left:5px; top:6px; width:8px; height:8px; border-radius:50%; background:#008000; }
+  .timeline li::after { content:""; position:absolute; left:8px; top:16px; bottom:0; width:2px; background:#E0E0E0; }
+  .timeline li:last-child { padding-bottom:0; }
+  .timeline li:last-child::after { display:none; }
+  .timeline li.future::before { background:var(--status-due-bg); border:2px solid var(--status-due-border); left:3px; }
+  .timeline li .when { font-size:11px; color:#9A9A9A; font-family:var(--font-mono); }
+  .timeline li .what { font-weight:500; }
+  .timeline li .by { font-size:12px; color:#5C5C5C; }
+
+  /* Row of feature blocks at bottom */
+  .legend { background:#fff; border:1px solid #E0E0E0; border-radius:12px; padding:18px; }
+  .legend h4 { margin:0 0 6px; font-size:13px; font-weight:600; }
+  .legend p { margin:0; font-size:12px; color:#5C5C5C; line-height:1.5; }
+
+  .grid-12 { grid-column:1/-1; }
+  .grid-3 { grid-column:span 3; }
+  .grid-4 { grid-column:span 4; }
+  .grid-5 { grid-column:span 5; }
+  .grid-7 { grid-column:span 7; }
+  .grid-8 { grid-column:span 8; }
+  .grid-9 { grid-column:span 9; }
+
+  /* Map / footer notes */
+  .kit-note { font-size:11px; color:#9A9A9A; padding:4px 0 0; }
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+  <!-- Sidebar -->
+  <aside class="sb">
+    <div class="sb-logo">
+      <img src="../../assets/torqr-icon-ghost-on-green.svg" width="36" height="36" alt="">
+      <div>
+        <div class="word">torqr</div>
+        <div class="tag">Wartungsmanagement</div>
+      </div>
+    </div>
+    <div class="sb-section">Übersicht</div>
+    <nav class="sb-nav">
+      <a class="active"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Dashboard</a>
+      <a><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Kunden<span class="badge">128</span></a>
+      <a><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Anlagen</a>
+      <a><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Termine</a>
+      <a><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Wartungen</a>
+      <a><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>Teile<span class="badge" style="background:#FAC775;color:#1a1a1a">3</span></a>
+      <div class="sb-section">System</div>
+      <a><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Einstellungen</a>
+    </nav>
+    <div class="sb-foot">
+      <div class="av">MK</div>
+      <div class="who">Max Kreuzer<span class="role-badge">OWNER</span><br><small>Heizung Kreuzer GmbH</small></div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <div class="topbar">
+      <div class="breadcrumb">Übersicht / <b>Dashboard</b></div>
+      <div class="topbar-right">
+        <div class="search">
+          <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Suche · Kunden, Anlagen, Termine
+        </div>
+        <button class="btn btn-outline">+ Wartung erfassen</button>
+        <button class="btn btn-primary">+ Kunde anlegen</button>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <h1 class="page">Guten Morgen, Max. <small>Heute, 14. März · 4 Wartungen anstehend</small></h1>
+
+      <!-- Stat row -->
+      <div class="card grid-3"><div class="stat">
+        <div class="lab">Kunden</div>
+        <div class="num">128</div>
+        <div class="delta up">+ 6 in den letzten 30 Tagen</div>
+      </div></div>
+      <div class="card grid-3"><div class="stat">
+        <div class="lab">Anlagen aktiv</div>
+        <div class="num">204</div>
+        <div class="delta">davon 156 mit Wartungsvertrag</div>
+      </div></div>
+      <div class="card grid-3"><div class="stat">
+        <div class="lab">Diesen Monat fällig</div>
+        <div class="num" style="color:var(--status-due-text)">17</div>
+        <div class="delta warn">12 Erinnerungen automatisch versendet</div>
+      </div></div>
+      <div class="card grid-3"><div class="stat">
+        <div class="lab">Überfällig</div>
+        <div class="num" style="color:var(--status-overdue-text)">2</div>
+        <div class="delta" style="color:var(--status-overdue-text)">älteste seit 23 Tagen</div>
+      </div></div>
+
+      <!-- Kunden table -->
+      <div class="card grid-8">
+        <div class="card-head">
+          <h3>Anstehende Wartungen</h3>
+          <span class="more">Alle anzeigen →</span>
+        </div>
+        <table class="kunden">
+          <thead><tr>
+            <th style="width:32%">Kunde</th>
+            <th style="width:32%">Anlage</th>
+            <th>Fällig</th>
+            <th>Status</th>
+            <th></th>
+          </tr></thead>
+          <tbody>
+            <tr>
+              <td><div class="who-cell"><div class="av-sm">HM</div><div><div class="name">Heinz Müller</div><div class="sub">80331 München</div></div></div></td>
+              <td><div class="anlage"><div class="model">Viessmann Vitodens 200-W</div><div class="meta">BJ 2018 · SN VM-200-7842</div></div></td>
+              <td>14. Mär 2026</td>
+              <td><span class="pill due"><span class="dot" style="background:var(--status-due-border)"></span>Wartung fällig</span></td>
+              <td><button class="icon-btn">→</button></td>
+            </tr>
+            <tr>
+              <td><div class="who-cell"><div class="av-sm" style="background:var(--status-due-bg);color:var(--status-due-text)">SF</div><div><div class="name">Susanne Friedrich</div><div class="sub">80539 München</div></div></div></td>
+              <td><div class="anlage"><div class="model">Buderus Logamax plus GB182i</div><div class="meta">BJ 2021 · SN BD-182-1144</div></div></td>
+              <td>21. Feb 2026</td>
+              <td><span class="pill overdue"><span class="dot" style="background:var(--status-overdue-border)"></span>Überfällig 22 Tage</span></td>
+              <td><button class="icon-btn">→</button></td>
+            </tr>
+            <tr>
+              <td><div class="who-cell"><div class="av-sm">RS</div><div><div class="name">Robert Schuster</div><div class="sub">82008 Unterhaching</div></div></div></td>
+              <td><div class="anlage"><div class="model">Vaillant ecoTEC plus VC</div><div class="meta">BJ 2016 · SN VL-ECO-9912</div></div></td>
+              <td>22. Mär 2026</td>
+              <td><span class="pill due"><span class="dot" style="background:var(--status-due-border)"></span>Wartung fällig</span></td>
+              <td><button class="icon-btn">→</button></td>
+            </tr>
+            <tr>
+              <td><div class="who-cell"><div class="av-sm">MK</div><div><div class="name">Margarete Kraus</div><div class="sub">80799 München</div></div></div></td>
+              <td><div class="anlage"><div class="model">Wolf CGB-2-14</div><div class="meta">BJ 2020 · SN WO-CGB-3401</div></div></td>
+              <td>04. Apr 2026</td>
+              <td><span class="pill ok"><span class="dot" style="background:var(--status-ok-border)"></span>Erinnerung gesendet</span></td>
+              <td><button class="icon-btn">→</button></td>
+            </tr>
+            <tr>
+              <td><div class="who-cell"><div class="av-sm">DH</div><div><div class="name">Dieter Hartmann</div><div class="sub">81675 München</div></div></div></td>
+              <td><div class="anlage"><div class="model">Junkers Cerapur 9000i</div><div class="meta">BJ 2014 · SN JK-CER-2207</div></div></td>
+              <td>17. Apr 2026</td>
+              <td><span class="pill ok"><span class="dot" style="background:var(--status-ok-border)"></span>Wartung aktuell</span></td>
+              <td><button class="icon-btn">→</button></td>
+            </tr>
+            <tr>
+              <td><div class="who-cell"><div class="av-sm" style="background:var(--status-info-bg);color:var(--status-info-text)">AB</div><div><div class="name">Anna Bauer</div><div class="sub">80636 München</div></div></div></td>
+              <td><div class="anlage"><div class="model">Bosch Condens 7000iW</div><div class="meta">BJ 2023 · SN BO-CD-5582</div></div></td>
+              <td>02. Mai 2026</td>
+              <td><span class="pill info"><span class="dot" style="background:var(--status-info-border)"></span>Termin gebucht</span></td>
+              <td><button class="icon-btn">→</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- System detail card -->
+      <div class="card grid-4 system-detail">
+        <div class="head">
+          <div class="ico-box">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+          </div>
+          <div>
+            <h3>Vitodens 200-W</h3>
+            <div class="meta">Heinz Müller · BJ 2018 · 1 Anlage</div>
+          </div>
+        </div>
+        <div class="body">
+          <div style="display:flex;gap:8px;margin-bottom:14px"><span class="pill due"><span class="dot" style="background:var(--status-due-border)"></span>Wartung fällig</span><span class="pill ok"><span class="dot" style="background:#006600"></span>Erinnerung versendet</span></div>
+          <div style="font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:1.5px;color:#5C5C5C;margin-bottom:10px">Verlauf</div>
+          <ul class="timeline">
+            <li class="future"><div class="when">14. März 2026</div><div class="what">Wartung anstehend</div><div class="by">Termin noch nicht gebucht</div></li>
+            <li><div class="when">12. Feb 2026</div><div class="what">Erinnerung versendet</div><div class="by">an heinz.mueller@…de</div></li>
+            <li><div class="when">10. März 2025</div><div class="what">Jahreswartung</div><div class="by">Max Kreuzer · 32 Min · Druck 1.4 bar</div></li>
+            <li><div class="when">15. März 2024</div><div class="what">Jahreswartung</div><div class="by">Max Kreuzer · 28 Min · Brenner gereinigt</div></li>
+            <li><div class="when">12. März 2023</div><div class="what">Inbetriebnahme</div><div class="by">Heizung Kreuzer GmbH</div></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Mobile checklist -->
+      <div class="grid-5">
+        <div class="phone-wrap">
+          <div class="phone">
+            <div class="notch"></div>
+            <div class="phone-screen">
+              <div class="phone-status"><span>9:41</span><span>●●●● 5G</span></div>
+              <div class="ck-head">
+                <div class="eyebrow">Wartungs-Checkliste · 1 von 3</div>
+                <h2>Vitodens 200-W</h2>
+                <div class="who">Heinz Müller · 80331 München</div>
+              </div>
+              <div class="ck-progress"><span class="cur"></span><span></span><span></span></div>
+              <div class="ck-step">
+                <span class="num">1</span>
+                <h3>Anlagendruck prüfen</h3>
+                <p>Manometer ablesen. Sollwert: zwischen 1.0 und 2.0 bar bei kalter Anlage.</p>
+                <div class="ck-input">1.4<span class="unit">bar</span></div>
+                <div class="ck-foto">📷 Foto vom Manometer</div>
+              </div>
+              <div class="ck-foot">
+                <button class="btn btn-outline">Zurück</button>
+                <button class="btn btn-primary">Weiter →</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="kit-note" style="text-align:center;margin-top:8px">Mobile Wartungs-Checklist · 30-Sekunden-Wizard vor dem Gerät</div>
+      </div>
+
+      <!-- Bottom feature blocks -->
+      <div class="card grid-7">
+        <div class="card-head">
+          <h3>Aktivität</h3>
+          <span class="more">Alles anzeigen →</span>
+        </div>
+        <div style="padding:6px 18px 12px">
+          <ul class="timeline" style="padding:8px 0">
+            <li><div class="when">vor 12 Min</div><div class="what">Termin gebucht: Anna Bauer · 02. Mai · 09:30</div><div class="by">via Cal.com → Torqr-Sync</div></li>
+            <li><div class="when">heute, 08:14</div><div class="what">Erinnerung an Heinz Müller versendet</div><div class="by">automatisch · 4 Wochen vor Fälligkeit</div></li>
+            <li><div class="when">gestern</div><div class="what">Wartung abgeschlossen: Werner Klotz · Vitodens 100-W</div><div class="by">Max Kreuzer · 26 Min · Foto angehängt</div></li>
+            <li><div class="when">gestern</div><div class="what">Lagerbestand niedrig: Brennerelektrode (3 Stk)</div><div class="by">unter Mindestbestand 5</div></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Legend / system reference -->
+      <div class="grid-12" style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px">
+        <div class="legend">
+          <h4 style="color:#008000">Voll-automatisch</h4>
+          <p>4 Wochen + 1 Woche vor Fälligkeit gehen Erinnerungen mit Double-Opt-In raus. Resend + React Email.</p>
+        </div>
+        <div class="legend">
+          <h4 style="color:#008000">Self-Booking</h4>
+          <p>Endkunde bucht über Cal.com, Slot syncht zurück nach Torqr — kein Anruf, kein Outlook-Pingpong.</p>
+        </div>
+        <div class="legend">
+          <h4 style="color:#008000">904 Hersteller</h4>
+          <p>Modell-Datenbank vorgepflegt: Viessmann, Buderus, Vaillant, Wolf, Bosch, Junkers, …</p>
+        </div>
+        <div class="legend">
+          <h4 style="color:#008000">DSGVO &amp; EU</h4>
+          <p>Hosting in Frankfurt (Vercel) · Daten in Supabase eu-central-1 · 🇩🇪 Made in Germany.</p>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>

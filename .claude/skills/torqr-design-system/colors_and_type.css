@@ -1,0 +1,221 @@
+/* Torqr Design System — Colors & Type
+ * Source of truth: src/app/globals.css (Tailwind v4 @theme inline) + src/styles/brand.config.ts
+ * Drop this file into any HTML doc with <link rel="stylesheet" href="colors_and_type.css">.
+ */
+
+/* —— Brand fonts (Segoe UI Historic, uploaded by brand owner) —— */
+/* Path note: @font-face URLs are resolved relative to THIS css file, so
+   "fonts/..." works from any HTML doc that links this stylesheet. */
+@font-face {
+  font-family: 'Segoe UI';
+  src: url('fonts/segoeuithis.ttf') format('truetype');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Segoe UI';
+  src: url('fonts/segoeuithisi.ttf') format('truetype');
+  font-weight: 400; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'Segoe UI';
+  src: url('fonts/segoeuithibd.ttf') format('truetype');
+  font-weight: 500 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Segoe UI';
+  src: url('fonts/segoeuithisz.ttf') format('truetype');
+  font-weight: 500 700; font-style: italic; font-display: swap;
+}
+
+:root {
+  /* —— Color: Brand —— */
+  --brand-50:  #E6F2E6;
+  --brand-100: #CCDFCC;
+  --brand-200: #99CC99;
+  --brand-400: #4DA64D;
+  --brand:     #008000; /* primary */
+  --brand-600: #006600;
+  --brand-700: #004D00; /* sidebar bg */
+
+  --brand-accent:         #EF9F27; /* amber dot, beta pill, popular ribbon */
+  --brand-accent-light:   #FAC775;
+  --brand-accent-surface: #FAEEDA;
+
+  /* —— Color: Neutrals —— */
+  --background: #FFFFFF;
+  --foreground: #1A1A1A;
+  --card:       #FFFFFF;
+  --muted:           #F7F7F7;
+  --muted-foreground: #5C5C5C;
+  --text-tertiary:    #9A9A9A;
+  --border: #E0E0E0;
+  --input:  #E0E0E0;
+  --ring:   #008000;
+
+  /* —— Semantic / Roles —— */
+  --primary:           var(--brand);
+  --primary-foreground:#FFFFFF;
+  --secondary:           var(--brand-accent);
+  --secondary-foreground:#FFFFFF;
+  --accent:           var(--brand-50);
+  --accent-foreground:var(--brand);
+  --destructive:           #DC2626;
+  --destructive-foreground:#FFFFFF;
+  --warning:           var(--brand-accent);
+  --warning-foreground:#633806;
+  --success:           var(--brand);
+  --success-foreground:#FFFFFF;
+
+  /* —— Status (always bg + border + text) ——
+   * v3 — premium SaaS feel (Stripe/Linear). Tinted neutrals, not candy.
+   * Backgrounds desaturated; borders + text carry the confidence.
+   * AA contrast on text. */
+  --status-ok-bg:#ECFDF3;       --status-ok-border:#067647;       --status-ok-text:#054F31;
+  --status-due-bg:#FEF6E7;      --status-due-border:#B54708;      --status-due-text:#7A2E0E;
+  --status-overdue-bg:#FEF3F2;  --status-overdue-border:#B42318;  --status-overdue-text:#7A271A;
+  --status-info-bg:#EFF4FF;     --status-info-border:#175CD3;     --status-info-text:#1E40AF;
+
+  /* —— Sidebar —— */
+  --sidebar:                    #004D00;
+  --sidebar-foreground:         rgba(255,255,255,0.88);
+  --sidebar-primary:            #EF9F27;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent:             rgba(255,255,255,0.16);
+  --sidebar-accent-foreground:  #FFFFFF;
+  --sidebar-border:             rgba(255,255,255,0.18);
+
+  /* —— Radius —— */
+  --radius:    0.75rem;     /* 12 px */
+  --radius-sm: 0.5rem;      /* 8 px  — buttons, inputs, small badges */
+  --radius-md: 0.625rem;    /* 10 px — shadcn buttons/inputs default */
+  --radius-lg: 0.75rem;     /* 12 px — cards */
+  --radius-xl: 1rem;        /* 16 px — modals, hero pricing card, CTA panels */
+  --radius-2xl: 1.375rem;   /* 22 px — Torqr app icon container only */
+  --radius-full: 9999px;    /* chips, status pills */
+
+  /* —— Shadows —— */
+  --shadow-sm: 0 1px 3px  rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.10);
+  --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+  --shadow-xs: 0 1px 2px  rgba(0,0,0,0.04);
+
+  /* —— Type —— */
+  --font-sans: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* Font sizes (rem from a 16 px base) */
+  --fs-xs:   0.75rem;   /* 12 — eyebrows, micro-captions */
+  --fs-sm:   0.875rem;  /* 14 — secondary copy, table cells */
+  --fs-base: 1rem;      /* 16 — body, form inputs */
+  --fs-lg:   1.125rem;  /* 18 — marketing lead */
+  --fs-xl:   1.25rem;   /* 20 — marketing lead larger */
+  --fs-2xl:  1.5rem;    /* 24 — sub-section title */
+  --fs-3xl:  1.875rem;  /* 30 — section H2 mobile */
+  --fs-4xl:  2.25rem;   /* 36 — section H2 desktop / hero H1 mobile */
+  --fs-5xl:  3rem;      /* 48 — hero H1 sm */
+  --fs-6xl:  3.75rem;   /* 60 — hero H1 lg */
+
+  --fw-regular:  400;
+  --fw-medium:   500;
+  --fw-semibold: 600;
+  --fw-bold:     700;
+
+  --lh-tight: 1.1;
+  --lh-snug:  1.25;
+  --lh-base:  1.5;
+  --lh-relaxed: 1.625;
+}
+
+/* Dark mode (app only — marketing is light-only) */
+:root.dark, .dark {
+  --background: #0F1A0F;
+  --foreground: #E8F0E8;
+  --card: #152115;
+  --muted: #1A2D1A; --muted-foreground: #8BAA8B;
+  --border: #243524; --input: #243524; --ring: #4DA64D;
+  --primary: #4DA64D; --primary-foreground: #0F1A0F;
+  --secondary: #FAC775; --secondary-foreground: #1A1A1A;
+  --accent: #1A2D1A; --accent-foreground: #E8F0E8;
+  --brand-50:#1A2D1A; --brand-100:#1E331E; --brand-200:#2D4D2D; --brand-400:#4DA64D;
+  --brand:#4DA64D; --brand-600:#3D8C3D; --brand-700:#2D7A2D;
+  --brand-accent:#FAC775; --brand-accent-light:#EF9F27; --brand-accent-surface:#3D2E0F;
+  --status-ok-bg:#1A2D1A;       --status-ok-border:#2D4D2D;       --status-ok-text:#4DA64D;
+  --status-due-bg:#3D2E0F;      --status-due-border:#5C4412;      --status-due-text:#FAC775;
+  --status-overdue-bg:#3D1A14;  --status-overdue-border:#5C2B1E;  --status-overdue-text:#F5C4B3;
+  --status-info-bg:#0F2240;     --status-info-border:#1A3D6B;     --status-info-text:#B5D4F4;
+  --sidebar:#0A140A; --sidebar-foreground:rgba(255,255,255,0.65);
+}
+
+/* —— Base —— */
+html, body {
+  font-family: var(--font-sans);
+  color: var(--foreground);
+  background: var(--background);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* —— Semantic type helpers —— */
+.t-eyebrow {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--primary);
+}
+.t-h1 {
+  font-size: clamp(var(--fs-4xl), 6vw, var(--fs-6xl));
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+}
+.t-h2 {
+  font-size: clamp(var(--fs-3xl), 4vw, var(--fs-4xl));
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-snug);
+  letter-spacing: -0.01em;
+  color: var(--foreground);
+}
+.t-h3 {
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-snug);
+  color: var(--foreground);
+}
+.t-lead {
+  font-size: var(--fs-lg);
+  line-height: var(--lh-relaxed);
+  color: var(--muted-foreground);
+}
+.t-body {
+  font-size: var(--fs-base);
+  line-height: var(--lh-base);
+  color: var(--foreground);
+}
+.t-small {
+  font-size: var(--fs-sm);
+  line-height: var(--lh-base);
+  color: var(--muted-foreground);
+}
+.t-micro {
+  font-size: var(--fs-xs);
+  line-height: var(--lh-base);
+  color: var(--muted-foreground);
+}
+.t-mono {
+  font-family: var(--font-mono);
+}
+
+/* —— Wordmark conventions —— */
+.t-wordmark {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -1px;
+  text-transform: lowercase;
+}
+.t-tagline {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}

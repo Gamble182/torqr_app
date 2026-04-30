@@ -5,7 +5,7 @@
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 534 nodes · 499 edges · 155 communities detected
+- 539 nodes · 504 edges · 155 communities detected
 - Extraction: 88% EXTRACTED · 12% INFERRED · 0% AMBIGUOUS · INFERRED: 61 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
@@ -213,52 +213,52 @@ Cohesion: 0.17
 Nodes (6): BookingFormModal(), DashboardPage(), buildSearchParams(), useBookings(), useCreateBooking(), useDashboardStats()
 
 ### Community 5 - "Community 5"
-Cohesion: 0.18
-Nodes (5): EmailActionsCard(), register(), NotificationsCard(), ProfileCard(), useUser()
+Cohesion: 0.17
+Nodes (2): EmployeeDetailPage(), useEmployee()
 
 ### Community 6 - "Community 6"
 Cohesion: 0.18
-Nodes (2): EmployeeDetailPage(), useEmployee()
+Nodes (5): EmailActionsCard(), register(), NotificationsCard(), ProfileCard(), useUser()
 
 ### Community 7 - "Community 7"
 Cohesion: 0.31
 Nodes (8): middleware(), buildLimitResponse(), getClientIdentifier(), getLimiter(), inMemoryCheck(), rateLimit(), rateLimitByUser(), rateLimitMiddleware()
 
 ### Community 8 - "Community 8"
+Cohesion: 0.2
+Nodes (0): 
+
+### Community 9 - "Community 9"
 Cohesion: 0.22
 Nodes (1): handleDelete()
 
-### Community 9 - "Community 9"
+### Community 10 - "Community 10"
 Cohesion: 0.25
 Nodes (2): NewCustomerPage(), useCreateCustomer()
 
-### Community 10 - "Community 10"
+### Community 11 - "Community 11"
 Cohesion: 0.36
 Nodes (6): apiKey(), base(), CalComApiError, callJson(), cancelCalBooking(), rescheduleCalBooking()
 
-### Community 11 - "Community 11"
+### Community 12 - "Community 12"
 Cohesion: 0.29
 Nodes (1): handleSubmit()
 
-### Community 12 - "Community 12"
+### Community 13 - "Community 13"
 Cohesion: 0.33
 Nodes (2): addAdHoc(), resetAdHocDraft()
-
-### Community 13 - "Community 13"
-Cohesion: 0.29
-Nodes (0): 
 
 ### Community 14 - "Community 14"
 Cohesion: 0.29
 Nodes (0): 
 
 ### Community 15 - "Community 15"
-Cohesion: 0.33
-Nodes (3): requireAdmin(), isAdminEmail(), AdminLayout()
-
-### Community 16 - "Community 16"
 Cohesion: 0.4
 Nodes (2): handleAdd(), handleKeyDown()
+
+### Community 16 - "Community 16"
+Cohesion: 0.33
+Nodes (0): 
 
 ### Community 17 - "Community 17"
 Cohesion: 0.33
@@ -266,23 +266,23 @@ Nodes (0):
 
 ### Community 18 - "Community 18"
 Cohesion: 0.33
-Nodes (0): 
+Nodes (3): requireAdmin(), isAdminEmail(), AdminLayout()
 
 ### Community 19 - "Community 19"
 Cohesion: 0.4
 Nodes (0): 
 
 ### Community 20 - "Community 20"
-Cohesion: 0.5
-Nodes (3): CatalogPicker(), useCatalog(), useCreateCatalogEntry()
-
-### Community 21 - "Community 21"
 Cohesion: 0.4
 Nodes (0): 
 
-### Community 22 - "Community 22"
+### Community 21 - "Community 21"
 Cohesion: 0.5
 Nodes (2): closeExcludePicker(), handleExcludeConfirm()
+
+### Community 22 - "Community 22"
+Cohesion: 0.5
+Nodes (3): CatalogPicker(), useCatalog(), useCreateCatalogEntry()
 
 ### Community 23 - "Community 23"
 Cohesion: 0.4
@@ -905,57 +905,57 @@ Nodes (0):
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 96`** (2 nodes): `cn()`, `button.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 97`** (2 nodes): `Label()`, `label.tsx`
+- **Thin community `Community 97`** (2 nodes): `Input()`, `input.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 98`** (2 nodes): `useEffectiveParts.ts`, `useEffectiveParts()`
+- **Thin community `Community 98`** (2 nodes): `Label()`, `label.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 99`** (2 nodes): `usePackingList.ts`, `usePackingList()`
+- **Thin community `Community 99`** (2 nodes): `useEffectiveParts.ts`, `useEffectiveParts()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 100`** (2 nodes): `formatPartCategory()`, `format.ts`
+- **Thin community `Community 100`** (2 nodes): `usePackingList.ts`, `usePackingList()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 101`** (2 nodes): `ReactQueryProvider()`, `react-query.tsx`
+- **Thin community `Community 101`** (2 nodes): `formatPartCategory()`, `format.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 102`** (2 nodes): `utils.ts`, `cn()`
+- **Thin community `Community 102`** (2 nodes): `ReactQueryProvider()`, `react-query.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 103`** (2 nodes): `d()`, `maintenance-parts.test.ts`
+- **Thin community `Community 103`** (2 nodes): `utils.ts`, `cn()`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 104`** (1 nodes): `instrumentation-client.ts`
+- **Thin community `Community 104`** (2 nodes): `d()`, `maintenance-parts.test.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 105`** (1 nodes): `page.tsx`
+- **Thin community `Community 105`** (1 nodes): `instrumentation-client.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 106`** (1 nodes): `route.ts`
+- **Thin community `Community 106`** (1 nodes): `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 107`** (1 nodes): `route.test.ts`
+- **Thin community `Community 107`** (1 nodes): `route.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 108`** (1 nodes): `page.tsx`
+- **Thin community `Community 108`** (1 nodes): `route.test.ts`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 109`** (1 nodes): `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 110`** (1 nodes): `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 111`** (1 nodes): `InventoryList.tsx`
+- **Thin community `Community 111`** (1 nodes): `page.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 112`** (1 nodes): `MaintenanceSetList.tsx`
+- **Thin community `Community 112`** (1 nodes): `InventoryList.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 113`** (1 nodes): `FeatureSection.tsx`
+- **Thin community `Community 113`** (1 nodes): `MaintenanceSetList.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 114`** (1 nodes): `MarketingHeader.tsx`
+- **Thin community `Community 114`** (1 nodes): `FeatureSection.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 115`** (1 nodes): `MobileNavSheet.tsx`
+- **Thin community `Community 115`** (1 nodes): `MarketingHeader.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 116`** (1 nodes): `Pricing.tsx`
+- **Thin community `Community 116`** (1 nodes): `MobileNavSheet.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 117`** (1 nodes): `PricingCard.tsx`
+- **Thin community `Community 117`** (1 nodes): `Pricing.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 118`** (1 nodes): `PartsListCard.tsx`
+- **Thin community `Community 118`** (1 nodes): `PricingCard.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 119`** (1 nodes): `accordion.tsx`
+- **Thin community `Community 119`** (1 nodes): `PartsListCard.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 120`** (1 nodes): `alert-dialog.tsx`
+- **Thin community `Community 120`** (1 nodes): `accordion.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 121`** (1 nodes): `checkbox.tsx`
+- **Thin community `Community 121`** (1 nodes): `alert-dialog.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
-- **Thin community `Community 122`** (1 nodes): `input.tsx`
+- **Thin community `Community 122`** (1 nodes): `checkbox.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
 - **Thin community `Community 123`** (1 nodes): `sheet.tsx`
   Too small to be a meaningful cluster - may be noise or needs more connections extracted.
@@ -1025,11 +1025,11 @@ Nodes (0):
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `GET()` connect `Community 0` to `Community 1`, `Community 3`, `Community 7`, `Community 11`, `Community 15`?**
-  _High betweenness centrality (0.036) - this node is a cross-community bridge._
+- **Why does `GET()` connect `Community 0` to `Community 1`, `Community 3`, `Community 7`, `Community 12`, `Community 18`?**
+  _High betweenness centrality (0.035) - this node is a cross-community bridge._
 - **Why does `POST()` connect `Community 0` to `Community 1`, `Community 3`, `Community 7`?**
   _High betweenness centrality (0.023) - this node is a cross-community bridge._
-- **Why does `DELETE()` connect `Community 1` to `Community 0`, `Community 10`, `Community 3`, `Community 7`?**
+- **Why does `DELETE()` connect `Community 1` to `Community 0`, `Community 3`, `Community 11`, `Community 7`?**
   _High betweenness centrality (0.014) - this node is a cross-community bridge._
 - **Are the 13 inferred relationships involving `GET()` (e.g. with `requireAdmin()` and `requireAuth()`) actually correct?**
   _`GET()` has 13 INFERRED edges - model-reasoned connections that need verification._
