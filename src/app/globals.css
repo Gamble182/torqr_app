@@ -126,19 +126,21 @@
   --brand-accent-light: #FAC775;
   --brand-accent-surface: #FAEEDA;
 
-  /* Status semantic colors */
-  --status-ok-bg: #E6F2E6;
-  --status-ok-border: #99CC99;
-  --status-ok-text: #006600;
-  --status-due-bg: #FAEEDA;
-  --status-due-border: #FAC775;
-  --status-due-text: #633806;
-  --status-overdue-bg: #FAECE7;
-  --status-overdue-border: #F5C4B3;
-  --status-overdue-text: #712B13;
-  --status-info-bg: #E6F1FB;
-  --status-info-border: #B5D4F4;
-  --status-info-text: #0C447C;
+  /* Status semantic colors — v3 (Stripe/Linear desaturated palette).
+   * Backgrounds are tinted neutrals; borders + text carry the signal.
+   * AA contrast on text. See docs/design-system/DELTA.md (D-1). */
+  --status-ok-bg: #ECFDF3;
+  --status-ok-border: #067647;
+  --status-ok-text: #054F31;
+  --status-due-bg: #FEF6E7;
+  --status-due-border: #B54708;
+  --status-due-text: #7A2E0E;
+  --status-overdue-bg: #FEF3F2;
+  --status-overdue-border: #B42318;
+  --status-overdue-text: #7A271A;
+  --status-info-bg: #EFF4FF;
+  --status-info-border: #175CD3;
+  --status-info-text: #1E40AF;
 
   /* Charts */
   --chart-1: #008000;
