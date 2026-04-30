@@ -236,6 +236,25 @@
   --sidebar-ring: #EF9F27;
 }
 
+/* Brand-specific type helpers (D-3 from design-system/DELTA.md).
+ * Encode the lowercase wordmark and uppercase tagline conventions
+ * so they cannot be forgotten in non-Tailwind surfaces (emails, embeds).
+ * Other .t-* helpers from the bundle are intentionally NOT ported —
+ * Tailwind utilities cover them in production code. */
+.t-wordmark {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -1px;
+  text-transform: lowercase;
+}
+
+.t-tagline {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
