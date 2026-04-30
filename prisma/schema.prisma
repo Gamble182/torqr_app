@@ -560,3 +560,37 @@ model InventoryMovement {
   @@index([createdAt])
   @@map("inventory_movements")
 }
+
+// ─── Public landing page leads ────────────────────────────────────────────
+
+model BetaLead {
+  id           String   @id @default(cuid())
+  email        String
+  name         String?
+  company      String?
+  tierInterest String?  // "SOLO" | "PRO" | null (Enterprise → DemoRequest)
+  source       String?  // "hero" | "pricing-solo" | "pricing-pro" | "pilot-status" | "direct"
+  consent      Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  @@index([email])
+  @@index([createdAt])
+  @@map("beta_leads")
+}
+
+model DemoRequest {
+  id            String   @id @default(cuid())
+  email         String
+  name          String
+  company       String?
+  phone         String?
+  preferredSlot String?
+  message       String?  @db.Text
+  source        String?  // "hero" | "pricing-enterprise" | "header" | "direct"
+  consent       Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  @@index([email])
+  @@index([createdAt])
+  @@map("demo_requests")
+}

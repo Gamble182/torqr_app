@@ -88,6 +88,8 @@ const EXEMPT_ROUTES: Record<string, string> = {
   'auth/[...nextauth]/route.ts':      'Auth handler — not a data route',
   'auth/register/route.ts':           'Registration — creates new company + user',
   'upload/photo/route.ts':            'Storage-only route — ownership verified via companyId on maintenance record',
+  'beta-leads/route.ts':              'Public marketing form — no session, dedicated BetaLead table outside tenant model',
+  'demo-requests/route.ts':           'Public marketing form — no session, dedicated DemoRequest table outside tenant model',
 };
 
 function readRoute(relativePath: string): string {
