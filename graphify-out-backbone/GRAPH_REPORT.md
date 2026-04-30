@@ -1,7 +1,7 @@
-# Graph Report - src/app + src/lib + src/hooks (Backbone)  (2026-04-29)
+# Graph Report - src/app + src/lib + src/hooks (Backbone)  (2026-04-30)
 
 ## Corpus Check
-- 161 files · ~72,693 words
+- 161 files · ~72,668 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
