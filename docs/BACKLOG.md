@@ -90,9 +90,13 @@ Marketing-Briefing als Single Source of Truth: [`docs/marketing/MARKETING_BRIEFI
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| 67 | Marketing | **Landingpage `torqr.de`** — heute zeigt die Domain direkt das Login. Konzept + Hero + Features + Pricing-Tier-Karten + Trust-Signale + CTA "Beta beitreten" / "Demo anfragen". | High | 2026-04-28 |
-| 68 | Marketing | **Pricing-Seite mit 3 Tiers bauen** — Tier-Struktur und Trial-Modell entschieden (Solo €29 / Professional €49 / Enterprise €99, 30-Tage Free Trial, Tier-Gating siehe `MARKETING_BRIEFING.md` §7.2). Aufgabe ist nur noch UI/UX + Copy + Annual-Toggle (2 Monate gratis). | High | 2026-04-28 |
-| 69 | Compliance | **Datenschutzerklärung + Impressum + Cookie-Banner** für `torqr.de`. Pflicht vor öffentlichem Marketing-Launch. | Critical (vor Launch) | 2026-04-28 |
+| 69 | Compliance | **Datenschutz + Impressum vor Public-Launch finalisieren** — Pages existieren als Skeleton (Sprint 29), aber: 4× `TODO Anwalt`-Marker in Datenschutz brauchen Anwalt-Review · Impressum-Adresse `[Straße + Hausnummer]` und `[PLZ] [Ort]` durch echte Werte ersetzen · USt-ID einfügen oder Sektion entfernen · Cookie-Banner-Entscheidung (aktuell nur Auth-Session-Cookie, technisch optional, aber DSGVO-Best-Practice). | Critical (vor Public-Launch) | 2026-04-28 |
+| 87 | Marketing | **Hero/Feature-GIFs optimieren** — beide aktuelle GIFs (`wartungs-checklist.gif`, `checklist-mobile.gif`) sind 7.9 MB → page-weight 16 MB → Lighthouse Mobile Performance 75. Target: ≤ 500 KB pro GIF via gifsicle/ezgif. Ohne Fix bleibt Performance unter dem 90er-Target. | High (vor Public-Launch) | 2026-04-30 |
+| 88 | Marketing | **`workload-desktop.png` Screenshot fehlt** — Feature-Block #4 (Multi-User & Workload) zeigt sonst broken-image. Speicherpfad: `public/marketing/features/workload-desktop.png` (1440×900, ≤ 500 KB). | High (vor Public-Launch) | 2026-04-30 |
+| 89 | Marketing | **OG-Image (`public/og-image.png`) fehlt** — 1200×630 Wordmark + Tagline + Hero-Headline. Ohne dies zeigen Social-Shares (LinkedIn, Facebook, WhatsApp) blanke Vorschau. | High (vor Public-Launch) | 2026-04-30 |
+| 90 | A11y | **Color-Contrast-Findings (axe-CLI)** — Hero-Badge `border-brand-200` und 3× TechStackStrip-Logos (`text-foreground/80` + `opacity-60`) unter WCAG AA. Lighthouse A11y trotzdem 97/100. Polish-Item, nicht-blockierend. | Medium | 2026-04-30 |
+| 91 | Marketing | **ROI-Rechner-Tool** als V2-Inline-CTA in `RoiBlock` (TODO-Marker in [RoiBlock.tsx](../src/components/marketing/RoiBlock.tsx) hinterlegt). Interaktives Tool: Wartungsverträge × Stundensatz → ROI-Faktor. Lead-Magnet-Potenzial (siehe #75). | Medium | 2026-04-30 |
+| 92 | Decision | **Cal.com Multi-Customer-Strategie** — aktuell ein einziger Event-Type für alle Pilot-Kunden. Bei mehreren Kunden gleichzeitig: Pro Kunde eigenes Event-Type / Routing über metadata `customerId` / Bezahlmodell. Decision vor Phase-2 (≥ 5 Kunden) nötig. | Medium | 2026-04-30 |
 | 70 | Compliance | **AVV-Vertragsvorlage** (Art. 28 DSGVO) als PDF-Download im Onboarding. Voraussetzung für seriöse B2B-Akquise. | High | 2026-04-28 |
 | 71 | Marketing | **Self-Service-Signup + Billing-Integration** (Stripe oder Paddle). Voraussetzung für SaaS-Phase. Aktuell sind Kundenanlage + Bezahlung manuell. | High | 2026-04-28 |
 | 72 | Marketing | **Pitchdeck + One-Pager** für Innungs-/Handwerkskammer-Termine. PDF, brand-konform. | Medium | 2026-04-28 |
@@ -138,6 +142,18 @@ Ideas worth keeping in mind but not planned for current sprints. No implementati
 ## Completed / Resolved
 
 Items are grouped by sprint / work session, ordered newest first.
+
+### Sprint 29 — Public Landingpage V1 (2026-04-29 → 2026-04-30)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 67 | Marketing | **Landingpage `torqr.de`** — Marketing-Landing ersetzt Login-Redirect-Placeholder. 10-Sektionen (MarketingHeader · Hero · Pain · 3-Step · Features · ROI · Pilot-Status · Trust · Pricing · FAQ · Final-CTA · MarketingFooter). Spec: `docs/superpowers/specs/2026-04-29-landingpage-design.md`. Plan: `docs/superpowers/plans/2026-04-29-landingpage.md` (35 Tasks). | 2026-04-30 |
+| 68 | Marketing | **Pricing-Seite mit 3 Tiers** — `Pricing.tsx` mit Solo €29 / Professional €49 (highlight) / Enterprise €99, Monthly/Annual-Toggle (Annual = -2 Monate), Tier-spezifische Hash-CTAs (`#cta-beta-solo`, `#cta-beta-pro`, `#cta-demo`) mit Preselect im FinalCta-Form. | 2026-04-30 |
+| — | Backend | **Beta-Lead + Demo-Request Persistenz** — Prisma-Models `BetaLead` + `DemoRequest`, Migration `20260429120000_landing_page_leads`, `/api/beta-leads` + `/api/demo-requests` Routes mit Zod-Validation, Rate-Limit (`BETA_LEAD` + `DEMO_REQUEST` Presets), Honeypot-Spam-Protection, DSGVO-Consent-Pflicht. | 2026-04-30 |
+| — | Email | **Admin-Notification-Templates** — `BetaLeadAdminEmail.tsx` + `DemoRequestAdminEmail.tsx` (React Email), `sendBetaLeadNotification` + `sendDemoRequestNotification` in `email/service.tsx`. | 2026-04-30 |
+| — | SEO | **SEO-Metadata + Structured Data** — `metadataBase`, OpenGraph, Twitter, JSON-LD `SoftwareApplication`-Schema, `sitemap.ts` (Home + Datenschutz + Impressum), `robots.ts` (Disallow `/dashboard/`, `/api/`, `/admin/`). | 2026-04-30 |
+| — | Legal | **Datenschutz + Impressum als Skeleton-Pages** — `/datenschutz` + `/impressum` mit Pflicht-Sektionen (DSGVO Art. 6/15-21, §5 TMG, AVV-Liste, Streitschlichtung). 4× `TODO Anwalt`-Marker + Adresse-Platzhalter intentional → Pre-Launch-Tasks im Open-Backlog #69. | 2026-04-30 |
+| — | Test | **348/348 Tests grün** — Tenant-Isolation-Audit erweitert um `EXEMPT_ROUTES` für public Marketing-Forms (`beta-leads`, `demo-requests`). Lighthouse Mobile: A11y 97 · BP 100 · SEO 100 · Performance 75 (siehe Open #87). | 2026-04-30 |
 
 ### Marketing-Decisions (2026-04-28)
 
