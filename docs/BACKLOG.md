@@ -15,6 +15,43 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 
 ---
 
+## Planned Sprints
+
+### Sprint 30 — Public-Launch-Ready *(planned, Tag 1: 2026-05-01)*
+
+**Scope:** bringt die Landingpage in Outbound-Reife (Compliance + Polish + Analytics + Cookie-Banner). Niedriges Risiko, klare End-Bedingung *"Site bereit für LinkedIn-Posts und Innungs-Kontakte"*.
+
+**Decisions (getroffen 2026-04-30):**
+- **Analytics:** Vercel Analytics (free, integriert) + **PostHog Free Tier auf EU-Cloud** (1 M Events/Monat, DSGVO-konform)
+- **Cookie-Banner:** Custom (brand-konform, ~2 h Build), 3-Option-Layout: *"Alle akzeptieren · Nur essentielle · Einstellungen"*. Vercel-Analytics + PostHog separat toggle-bar (DSGVO Best Practice)
+- **Anwalt-Loop** für #69 Datenschutz wird Tag 1 parallel angestoßen
+- **Performance-Optimierung entfällt:** Vercel-Production-Lighthouse-Score bereits exzellent (FCP 1.0 s, LCP 1.4 s, SI 2.5 s) — Sprint-29-Score 52 war Mobile-Simulations-Artefakt
+
+**Tasks (alle bereits als Open-Items im Backlog, hier nur gruppiert):**
+
+| # | Item | Aufwand | Abhängigkeit |
+|---|------|---------|--------------|
+| #89 | OG-Image via `next/og` (`src/app/opengraph-image.tsx`) — Wordmark + Tagline + Hero-Headline programmatisch gerendert | S (~1.5 h) | keine |
+| #90 | Color-Contrast-Findings beheben (Hero-Badge `border-brand-200`, 3× TechStackStrip `text-foreground/80 opacity-60`) | S (~1.5 h) | keine |
+| #77 | Vercel Analytics + PostHog Integration · Conversion-Events: Beta-Submit + Demo-Submit · CSP-Anpassung in `next.config.ts` | M (~2 h) | PostHog-Account-Anlage durch User |
+| Cookie-Banner | Custom 3-Option-Layout mit Service-Toggles · LocalStorage-Consent-State · React Context für `useConsent()` | M (~2 h) | hängt an #77 |
+| #69 | Datenschutz Final-Integration nach Anwalt-Redlines · PostHog/Vercel/Cookie-Banner-Texte ergänzen | S (~1 h Integration + Anwalt-Wartezeit) | Anwalt-Review |
+
+**Out of Scope (in Sprint 31 verschoben):**
+- #52 Cal.com End-to-End-Booking-Flow-Test
+- #88 Workload-Screenshot durch echten ersetzen
+
+**Vor Sprint-Start:** Plan via `/superpowers:writing-plans` formalisieren (TDD-Tasks, Commit-Cadence, Verify-Gates wie beim Design-System-v3-Sprint).
+
+### Sprint 31 — *Backlog (geplant nach Sprint 30)*
+
+| # | Item |
+|---|------|
+| #52 | Cal.com E2E-Booking-Flow-Test gegen Production |
+| #88 | Workload-Screenshot durch echten ersetzen (1440×900, ≤200 KB) |
+
+---
+
 ## Open Items
 
 ### Architecture & Security
@@ -52,7 +89,7 @@ Generic "Wartungstermin" event type configured (60 min, Mon–Fri 7:30–17:00).
 | 42 | Config | Per-system-type event durations — different Cal.com event types per system type (Wärmepumpe, Gas, Öl, etc.) if pilot customer needs it. Deferred until feedback. | Low | 2026-04-16 |
 | 44 | Config | Target email — booking confirmation currently goes to personal email. Change to business address when available. | Low | 2026-04-16 |
 | 51 | Decision | Cal.com multi-tenant strategy — current single-account setup doesn't scale beyond pilot. Options: Cal.com Teams, per-user Cal.com accounts, or custom booking UI via Cal.com API. Decide post-pilot. | Low | 2026-04-22 |
-| 52 | Testing | Test full booking flow end-to-end — customer receives reminder, clicks Cal.com link, books, webhook fires, booking appears in torqr dashboard. | Medium | 2026-04-22 |
+| 52 | Testing | Test full booking flow end-to-end — customer receives reminder, clicks Cal.com link, books, webhook fires, booking appears in torqr dashboard. **Sprint 31 deferred (2026-04-30).** | Medium | 2026-04-22 |
 | 11 | Decision | Calendar integration strategy — recommendation: do NOT build own calendar. Use Cal.com for scheduling, let users sync to Google/Outlook via Cal.com. Embed iframe if needed later. | Low | 2026-04-14 |
 
 ### Email System
@@ -90,9 +127,8 @@ Marketing-Briefing als Single Source of Truth: [`docs/marketing/MARKETING_BRIEFI
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| 69 | Compliance | **Datenschutz + Impressum vor Public-Launch finalisieren** — Pages existieren als Skeleton (Sprint 29), aber: 4× `TODO Anwalt`-Marker in Datenschutz brauchen Anwalt-Review · Impressum-Adresse `[Straße + Hausnummer]` und `[PLZ] [Ort]` durch echte Werte ersetzen · USt-ID einfügen oder Sektion entfernen · Cookie-Banner-Entscheidung (aktuell nur Auth-Session-Cookie, technisch optional, aber DSGVO-Best-Practice). | Critical (vor Public-Launch) | 2026-04-28 |
-| 87 | Marketing | **Lighthouse Mobile Performance unter Target** — nach GIF-Optimierung (7,9 MB → 958 KB, Page-Weight 2,3 MB) springt der Score nicht ins 90er-Band, sondern bleibt bei ~52 mit LCP 11,3 s + TBT 900 ms. Echtes TTFB lokal ist nur 119 ms — der Score kommt aus Lighthouse-Simulation (Moto G4 + 3G + DevTools-Throttle). Auf Vercel-Edge mit echtem Cache und modernen Devices erwartet ≥ 80. **Vor Action:** echten Vercel-Production-Score messen. Falls trotzdem < 80: Lazy-Mount der `BetaListForm` + `DemoRequestForm` (aktuell beide eager, nicht erst on-tab-click), Reduktion AuthProvider+ReactQueryProvider+Sentry-Init im Public-Tree. | Medium | 2026-04-30 |
-| 88 | Marketing | **Workload-Screenshot ist Placeholder** — `public/marketing/features/workload-desktop.png` ist aktuell ein Duplikat von `dashboard-desktop.png`. Echten Screenshot von `/dashboard/team/workload` (1440×900, ≤ 200 KB) nachreichen. | Medium | 2026-04-30 |
+| 69 | Compliance | **Datenschutz + Impressum vor Public-Launch finalisieren** — Sprint-29-Stand: Impressum-Adresse + USt-ID-Decision erledigt. Sprint-30-Decisions (2026-04-30): Cookie-Banner ja (custom 3-Option, weil PostHog Cookies setzt), Analytics = Vercel + PostHog EU-Cloud. **Verbleibend:** (a) Anwalt-Review der 2× `TODO Anwalt`-Marker in `datenschutz/page.tsx` (Z. 24 + 50) → wird Sprint 30 Tag 1 angestoßen; (b) Custom Cookie-Banner bauen mit Service-Toggles für Vercel-Analytics + PostHog; (c) Datenschutz-Text um PostHog/Vercel/Cookie-Banner ergänzen nach Anwalt-Redlines. | Critical (vor Public-Launch) | 2026-04-28 |
+| 88 | Marketing | **Workload-Screenshot ist Placeholder** — `public/marketing/features/workload-desktop.png` ist aktuell ein Duplikat von `dashboard-desktop.png`. Echten Screenshot von `/dashboard/team/workload` (1440×900, ≤ 200 KB) nachreichen. **In Sprint 31 deferred (2026-04-30).** | Medium | 2026-04-30 |
 | 89 | Marketing | **OG-Image (`public/og-image.png`) fehlt** — 1200×630 Wordmark + Tagline + Hero-Headline. Ohne dies zeigen Social-Shares (LinkedIn, Facebook, WhatsApp) blanke Vorschau. | High (vor Public-Launch) | 2026-04-30 |
 | 90 | A11y | **Color-Contrast-Findings (axe-CLI)** — Hero-Badge `border-brand-200` und 3× TechStackStrip-Logos (`text-foreground/80` + `opacity-60`) unter WCAG AA. Lighthouse A11y trotzdem 97/100. Polish-Item, nicht-blockierend. | Medium | 2026-04-30 |
 | 91 | Marketing | **ROI-Rechner-Tool** als V2-Inline-CTA in `RoiBlock` (TODO-Marker in [RoiBlock.tsx](../src/components/marketing/RoiBlock.tsx) hinterlegt). Interaktives Tool: Wartungsverträge × Stundensatz → ROI-Faktor. Lead-Magnet-Potenzial (siehe #75). | Medium | 2026-04-30 |
@@ -143,11 +179,20 @@ Ideas worth keeping in mind but not planned for current sprints. No implementati
 
 Items are grouped by sprint / work session, ordered newest first.
 
+### Sprint 30 Bootstrap & Decisions (2026-04-30 abends)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 87 | Marketing | **Lighthouse Mobile Performance** auf Vercel Production gemessen — FCP 1.0 s · LCP 1.4 s · Speed Index 2.5 s (alle Einzel-Scores 0.98–1.00). Sprint-29-Score 52 war Mobile-Simulations-Artefakt; auf Vercel-Edge mit Cache und modernen Devices Score deutlich >> 80. **Performance-Optimierung (Lazy-Mount Forms, Provider-Tree-Reduktion) entfällt komplett.** | 2026-04-30 |
+| — | Decision | **Analytics-Tool:** Vercel Analytics (free, integriert) + PostHog Free Tier auf EU-Cloud (1 M Events/Monat, DSGVO-konform). Plausible erst nach Pilot-Rollout sinnvoll. | 2026-04-30 |
+| — | Decision | **Cookie-Banner:** Custom (brand-konform, ~2 h Build), 3-Option-Layout *"Alle akzeptieren · Nur essentielle · Einstellungen"*. Vercel-Analytics + PostHog separat toggle-bar. Library-Optionen (Klaro, react-cookie-consent) verworfen wegen generischem Look. | 2026-04-30 |
+| — | Planning | **Sprint 30 Backlog-Grooming** — Group-A "Public-Launch-Readiness" als Sprint 30 spezifiziert (Step-by-Step in Conversation), in BACKLOG.md unter `## Planned Sprints` hinterlegt. Sprint 31 als Carry-Over angelegt (#52 Cal.com E2E, #88 Workload-Screenshot). | 2026-04-30 |
+
 ### Design System v3 Adoption (2026-04-30)
 
 | # | Area | Description | Resolved |
 |---|------|-------------|----------|
-| 89 | Design | **v3 Status-Palette (Light-Mode)** auf Produktion gezogen — Stripe/Linear-feel desaturierte Triplets für ok/due/overdue/info in `src/app/globals.css :root`. Dark-Mode-Block bereits vor v3 in Produktion und unverändert. Token-Assertion-Test in `src/app/__tests__/design-tokens.test.ts` (7/7 grün). | 2026-04-30 |
+| 93 | Design | **v3 Status-Palette (Light-Mode)** auf Produktion gezogen — Stripe/Linear-feel desaturierte Triplets für ok/due/overdue/info in `src/app/globals.css :root`. Dark-Mode-Block bereits vor v3 in Produktion und unverändert. Token-Assertion-Test in `src/app/__tests__/design-tokens.test.ts` (7/7 grün). | 2026-04-30 |
 | — | Brand | **`.t-wordmark` + `.t-tagline`** Brand-Type-Helpers in `globals.css` portiert (D-3) — kodieren lowercase wordmark / uppercase tagline Konventionen für Non-Tailwind-Surfaces (Email-Templates, Embeds). Restliche `.t-*`-Helpers aus Bundle bewusst NICHT portiert (redundant zu Tailwind-Utilities). | 2026-04-30 |
 | — | Docs | **Design-System-Bundle** aus claude.ai/design Workflow eingebunden — `docs/design-system/` (canonical home) + `.claude/skills/torqr-design-system/` (Skill-Install) + `docs/design-system/DELTA.md` (vollständiger Delta-Report) + neuer CLAUDE.md-Workflow-Section. Brand-Spec Status-Tabelle auf v3 aktualisiert. Bundle-Asset `globals.css` und Skill-Mirror auf v3 Produktion synchronisiert. | 2026-04-30 |
 | — | Decision | **D-2 Web-Fonts:** Bundle-TTFs (Segoe UI Historic) NICHT in Produktion gezogen — System-Font-Stack (`'Segoe UI', system-ui, -apple-system, sans-serif`) cascaded bereits korrekt: Windows → Segoe UI, macOS/iOS → SF Pro, Linux → System-default. TTFs verbleiben in `docs/design-system/project/fonts/` als Design-Bundle-Archiv. Lizenzfrage damit umschifft. | 2026-04-30 |
