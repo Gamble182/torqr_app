@@ -19,21 +19,16 @@ export default function ImpressumPage() {
 
           <h2>Angaben gemäß §5 TMG</h2>
           <p>
-            {/* TODO: vollständige Adresse + Steuer-ID/USt-ID einfügen */}
             Yannik Dorth<br />
-            [Straße + Hausnummer]<br />
-            [PLZ] [Ort]<br />
+            Puller Weg 2<br />
+            35794 Mengerskirchen<br />
             Deutschland
           </p>
 
           <h2>Kontakt</h2>
           <p>
-            E-Mail: <a href="mailto:hello@torqr.de">hello@torqr.de</a><br />
-            {/* Optional: Telefon */}
+            E-Mail: <a href="mailto:hello@torqr.de">hello@torqr.de</a>
           </p>
-
-          <h2>Umsatzsteuer-ID</h2>
-          <p>{/* TODO: USt-ID einfügen, falls vorhanden — andernfalls Sektion entfernen */}</p>
 
           <h2>Verantwortlich für den Inhalt nach §55 Abs. 2 RStV</h2>
           <p>Yannik Dorth (Anschrift wie oben)</p>
