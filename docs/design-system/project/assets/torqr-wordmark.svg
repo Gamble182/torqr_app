@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 96" width="320" height="96" role="img" aria-label="torqr Wartungsmanagement">
+  <rect x="0" y="0" width="96" height="96" rx="22" fill="#008000"></rect>
+  <polyline points="12,48 26,48 32,22 40,74 48,36 54,58 60,48 84,48" stroke="white" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"></polyline>
+  <circle cx="54" cy="58" r="6" fill="#EF9F27"></circle>
+  <text x="118" y="56" font-family="&#39;Segoe UI&#39;, system-ui, -apple-system, sans-serif" font-weight="600" font-size="40" fill="#1A1A1A" letter-spacing="-1">torqr</text>
+  <text x="119" y="78" font-family="&#39;Segoe UI&#39;, system-ui, -apple-system, sans-serif" font-weight="400" font-size="11" fill="#008000" letter-spacing="1.5">WARTUNGSMANAGEMENT</text>
+</svg>

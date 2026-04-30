@@ -1,0 +1,33 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="_base.css"><title>Inputs</title></head>
+<body><div class="card">
+  <style>
+    .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+    label{font-size:13px;font-weight:500;color:#1A1A1A}
+    .input{height:44px;border:1px solid #E0E0E0;border-radius:10px;padding:0 14px;font-family:var(--font-sans);font-size:16px;background:#fff;color:#1A1A1A;outline:none}
+    .input:focus{border-color:#008000;box-shadow:0 0 0 3px rgba(0,128,0,.15)}
+    .help{font-size:12px;color:var(--muted-foreground)}
+    .err{font-size:12px;color:#DC2626}
+  </style>
+  <div class="field">
+    <label>E-Mail des Kunden</label>
+    <input class="input" value="heinz.mueller@example.de">
+    <div class="help">Wir senden Erinnerungen automatisch an diese Adresse.</div>
+  </div>
+  <div class="field">
+    <label>Anlagen-Modell</label>
+    <input class="input" value="Viessmann Vitodens 200-W">
+  </div>
+  <div class="field">
+    <label>Nächste Wartung</label>
+    <input class="input" value="2026-03-14" style="border-color:#008000;box-shadow:0 0 0 3px rgba(0,128,0,.15)">
+  </div>
+  <div class="field">
+    <label>Postleitzahl</label>
+    <input class="input" value="" placeholder="z.B. 80331" style="border-color:#DC2626">
+    <div class="err">Bitte eine gültige PLZ eingeben.</div>
+  </div>
+  <hr class="sep">
+  <div style="font-size:12px;color:var(--muted-foreground);line-height:1.55">
+    Inputs are 16px <em>(prevents iOS auto-zoom on focus)</em>. 44px touch target. Focus ring = 3px <code style="font-family:var(--font-mono);font-size:11px">rgba(0,128,0,.15)</code>. Errors describe cause + next step.
+  </div>
+</div></body></html>

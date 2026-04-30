@@ -1,0 +1,51 @@
+/* Preview-card base — minimal chrome, the asset name is shown OUTSIDE the card */
+@import url("../colors_and_type.css");
+
+* { box-sizing: border-box; }
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-sans);
+  color: var(--foreground);
+  background: var(--background);
+}
+.card {
+  width: 700px;
+  padding: 24px;
+  background: var(--background);
+  display: flex;
+  flex-direction: column;
+}
+.row { display: flex; gap: 12px; align-items: stretch; flex-wrap: wrap; }
+.col { display: flex; flex-direction: column; gap: 8px; }
+.swatch {
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  display: flex;
+  flex-direction: column;
+}
+.swatch .fill { height: 56px; }
+.swatch .meta {
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: var(--background);
+}
+.swatch .name { font-weight: 600; color: var(--foreground); font-family: var(--font-sans); }
+.swatch .hex  { color: var(--muted-foreground); }
+.label {
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--muted-foreground);
+}
+hr.sep {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 16px 0;
+}

@@ -13,7 +13,9 @@
       "Bash(rm -f .git/hooks/post-checkout)",
       "Bash(chmod +x .git/hooks/post-commit)",
       "Read(//c/Users/y.dorth/.claude/plugins/**)",
-      "Read(//c/Users/y.dorth/.claude/plugins/repos/**)"
+      "Read(//c/Users/y.dorth/.claude/plugins/repos/**)",
+      "Bash(mkdir -p .claude/skills)",
+      "Bash(cp -r docs/design-system/project .claude/skills/torqr-design-system)"
     ],
     "additionalDirectories": [
       "c:\\Users\\y.dorth\\Documents\\torqr_app\\torqr_app\\src\\app\\api\\customers\\[id]",

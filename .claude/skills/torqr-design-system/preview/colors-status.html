@@ -1,0 +1,62 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="../colors_and_type.css"><link rel="stylesheet" href="_base.css"><title>Status Colors</title></head>
+<body><div class="card">
+  <style>
+    .row-card { display:flex; align-items:center; gap:14px; padding:14px 16px; border-radius:10px; border:1px solid; }
+    .row-card .name { font-weight:600; font-size:14px; letter-spacing:-.01em; }
+    .row-card .meta { font-family:var(--font-mono); font-size:11px; opacity:.85; margin-top:3px; }
+    .row-card .swatches { margin-left:auto; display:flex; gap:0; border-radius:8px; overflow:hidden; border:1px solid rgba(0,0,0,.08); flex-shrink:0; }
+    .row-card .sw { width:38px; height:38px; }
+    .pill2 { display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:500; padding:4px 10px; border-radius:9999px; border:1px solid; line-height:1; }
+    .dot2 { width:6px; height:6px; border-radius:9999px; }
+    .icon { width:14px; height:14px; flex-shrink:0; }
+  </style>
+  <div style="display:flex;flex-direction:column;gap:8px">
+
+    <div class="row-card" style="border-color:#067647;background:#ECFDF3;color:#054F31">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+      <div>
+        <div class="name">Wartung aktuell</div>
+        <div class="meta">ok · #ECFDF3 · #067647 · #054F31</div>
+      </div>
+      <div class="swatches"><div class="sw" style="background:#ECFDF3"></div><div class="sw" style="background:#067647"></div><div class="sw" style="background:#054F31"></div></div>
+    </div>
+
+    <div class="row-card" style="border-color:#B54708;background:#FEF6E7;color:#7A2E0E">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>
+      <div>
+        <div class="name">Wartung fällig</div>
+        <div class="meta">due · #FEF6E7 · #B54708 · #7A2E0E</div>
+      </div>
+      <div class="swatches"><div class="sw" style="background:#FEF6E7"></div><div class="sw" style="background:#B54708"></div><div class="sw" style="background:#7A2E0E"></div></div>
+    </div>
+
+    <div class="row-card" style="border-color:#B42318;background:#FEF3F2;color:#7A271A">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div>
+        <div class="name">Überfällig</div>
+        <div class="meta">overdue · #FEF3F2 · #B42318 · #7A271A</div>
+      </div>
+      <div class="swatches"><div class="sw" style="background:#FEF3F2"></div><div class="sw" style="background:#B42318"></div><div class="sw" style="background:#7A271A"></div></div>
+    </div>
+
+    <div class="row-card" style="border-color:#175CD3;background:#EFF4FF;color:#1E40AF">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+      <div>
+        <div class="name">Hinweis</div>
+        <div class="meta">info · #EFF4FF · #175CD3 · #1E40AF</div>
+      </div>
+      <div class="swatches"><div class="sw" style="background:#EFF4FF"></div><div class="sw" style="background:#175CD3"></div><div class="sw" style="background:#1E40AF"></div></div>
+    </div>
+
+  </div>
+  <hr class="sep">
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+    <span class="pill2" style="background:#ECFDF3;border-color:#067647;color:#054F31"><span class="dot2" style="background:#067647"></span>Wartung aktuell</span>
+    <span class="pill2" style="background:#FEF6E7;border-color:#B54708;color:#7A2E0E"><span class="dot2" style="background:#B54708"></span>Wartung fällig</span>
+    <span class="pill2" style="background:#FEF3F2;border-color:#B42318;color:#7A271A"><span class="dot2" style="background:#B42318"></span>Überfällig</span>
+    <span class="pill2" style="background:#EFF4FF;border-color:#175CD3;color:#1E40AF"><span class="dot2" style="background:#175CD3"></span>Hinweis</span>
+  </div>
+  <div style="font-size:12px;color:var(--muted-foreground);line-height:1.55">
+    v3 — Premium-SaaS-Feel (Stripe/Linear-Niveau). Hintergründe getintet, nicht bunt; Border + Text tragen die Aussage. Ruhiger, vertrauenswürdiger, im Grid einer Tabelle nicht ablenkend. Triplet-Regel bleibt — bg + border + text — damit Status auch ohne Farbsehen funktioniert.
+  </div>
+</div></body></html>
