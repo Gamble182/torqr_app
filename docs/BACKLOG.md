@@ -143,6 +143,15 @@ Ideas worth keeping in mind but not planned for current sprints. No implementati
 
 Items are grouped by sprint / work session, ordered newest first.
 
+### Design System v3 Adoption (2026-04-30)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 89 | Design | **v3 Status-Palette (Light-Mode)** auf Produktion gezogen — Stripe/Linear-feel desaturierte Triplets für ok/due/overdue/info in `src/app/globals.css :root`. Dark-Mode-Block bereits vor v3 in Produktion und unverändert. Token-Assertion-Test in `src/app/__tests__/design-tokens.test.ts` (7/7 grün). | 2026-04-30 |
+| — | Brand | **`.t-wordmark` + `.t-tagline`** Brand-Type-Helpers in `globals.css` portiert (D-3) — kodieren lowercase wordmark / uppercase tagline Konventionen für Non-Tailwind-Surfaces (Email-Templates, Embeds). Restliche `.t-*`-Helpers aus Bundle bewusst NICHT portiert (redundant zu Tailwind-Utilities). | 2026-04-30 |
+| — | Docs | **Design-System-Bundle** aus claude.ai/design Workflow eingebunden — `docs/design-system/` (canonical home) + `.claude/skills/torqr-design-system/` (Skill-Install) + `docs/design-system/DELTA.md` (vollständiger Delta-Report) + neuer CLAUDE.md-Workflow-Section. Brand-Spec Status-Tabelle auf v3 aktualisiert. Bundle-Asset `globals.css` und Skill-Mirror auf v3 Produktion synchronisiert. | 2026-04-30 |
+| — | Decision | **D-2 Web-Fonts:** Bundle-TTFs (Segoe UI Historic) NICHT in Produktion gezogen — System-Font-Stack (`'Segoe UI', system-ui, -apple-system, sans-serif`) cascaded bereits korrekt: Windows → Segoe UI, macOS/iOS → SF Pro, Linux → System-default. TTFs verbleiben in `docs/design-system/project/fonts/` als Design-Bundle-Archiv. Lizenzfrage damit umschifft. | 2026-04-30 |
+
 ### Sprint 29 — Public Landingpage V1 (2026-04-29 → 2026-04-30)
 
 | # | Area | Description | Resolved |
