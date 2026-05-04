@@ -25,9 +25,8 @@ export const metadata: Metadata = {
     siteName: 'Torqr',
     locale: 'de_DE',
     type: 'website',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Torqr Landing-Page-Vorschau' }],
   },
-  twitter: { card: 'summary_large_image', title: 'Torqr · Die Wartungsakte für Heizungsbauer', description: 'Aus Excel raus. In die Hosentasche rein.', images: ['/og-image.png'] },
+  twitter: { card: 'summary_large_image', title: 'Torqr · Die Wartungsakte für Heizungsbauer', description: 'Aus Excel raus. In die Hosentasche rein.' },
   robots: { index: true, follow: true },
   alternates: { canonical: 'https://torqr.de' },
 };
