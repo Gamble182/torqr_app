@@ -8,6 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2Icon, Loader2Icon } from 'lucide-react';
 import { betaLeadSchema, type BetaLeadInput } from '@/lib/validations';
+import { trackBetaLeadSubmitted } from '@/lib/analytics/track';
 
 export function BetaListForm() {
   const [submitState, setSubmitState] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
@@ -57,6 +58,10 @@ export function BetaListForm() {
         return;
       }
       setSubmitState('success');
+      void trackBetaLeadSubmitted({
+        tier: data.tierInterest ?? null,
+        source: data.source ?? null,
+      });
     } catch (e) {
       setErrorMsg(e instanceof Error ? e.message : 'Netzwerkfehler');
       setSubmitState('error');

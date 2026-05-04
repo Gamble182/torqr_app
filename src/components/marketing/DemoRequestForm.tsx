@@ -9,6 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { CheckCircle2Icon, Loader2Icon } from 'lucide-react';
 import { demoRequestSchema, type DemoRequestInput } from '@/lib/validations';
+import { trackDemoRequestSubmitted } from '@/lib/analytics/track';
 
 export function DemoRequestForm() {
   const [submitState, setSubmitState] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
@@ -49,6 +50,9 @@ export function DemoRequestForm() {
         return;
       }
       setSubmitState('success');
+      void trackDemoRequestSubmitted({
+        source: data.source ?? null,
+      });
     } catch (e) {
       setErrorMsg(e instanceof Error ? e.message : 'Netzwerkfehler');
       setSubmitState('error');
