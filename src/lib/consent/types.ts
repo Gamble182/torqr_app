@@ -1,6 +1,6 @@
 // src/lib/consent/types.ts
 export const CONSENT_VERSION = 1;
-export const CONSENT_STORAGE_KEY = 'torqr-consent-v1';
+export const CONSENT_STORAGE_KEY = `torqr-consent-v${CONSENT_VERSION}`;
 
 export type ServiceConsent = {
   vercelAnalytics: boolean;

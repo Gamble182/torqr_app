@@ -44,6 +44,11 @@ describe('consent storage', () => {
     expect(loadConsent()).toEqual(DEFAULT_CONSENT);
   });
 
+  it('returns DEFAULT_CONSENT when stored shape is incomplete (matching version, missing services)', () => {
+    memoryStore.set(CONSENT_STORAGE_KEY, JSON.stringify({ version: 1, decided: true }));
+    expect(loadConsent()).toEqual(DEFAULT_CONSENT);
+  });
+
   it('resetConsent removes the key', () => {
     saveConsent({ ...DEFAULT_CONSENT, decided: true });
     resetConsent();

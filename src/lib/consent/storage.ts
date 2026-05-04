@@ -13,6 +13,11 @@ export function loadConsent(): ConsentState {
     if (!raw) return DEFAULT_CONSENT;
     const parsed = JSON.parse(raw) as ConsentState;
     if (parsed.version !== CONSENT_VERSION) return DEFAULT_CONSENT;
+    if (
+      typeof parsed.decided !== 'boolean' ||
+      typeof parsed.services?.vercelAnalytics !== 'boolean' ||
+      typeof parsed.services?.posthog !== 'boolean'
+    ) return DEFAULT_CONSENT;
     return parsed;
   } catch {
     return DEFAULT_CONSENT;
