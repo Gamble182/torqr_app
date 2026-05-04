@@ -33,8 +33,8 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 |---|------|---------|--------------|
 | ~~#89~~ | ~~OG-Image via `next/og`~~ | ~~S (~1.5 h)~~ | **✅ resolved 2026-05-04** |
 | ~~#90~~ | ~~Color-Contrast-Findings (Hero-Badge + TechStackStrip)~~ | ~~S (~1.5 h)~~ | **✅ resolved 2026-05-04** |
-| #77 | Vercel Analytics + PostHog Integration · Conversion-Events: Beta-Submit + Demo-Submit · CSP-Anpassung in `next.config.ts` | M (~2 h) | PostHog-Account-Anlage durch User |
-| Cookie-Banner | Custom 3-Option-Layout mit Service-Toggles · LocalStorage-Consent-State · React Context für `useConsent()` | M (~2 h) | hängt an #77 |
+| ~~#77~~ | ~~Vercel Analytics + PostHog Integration~~ | ~~M (~2 h)~~ | **✅ resolved 2026-05-04** |
+| ~~Cookie-Banner~~ | ~~Custom 3-Option-Layout~~ | ~~M (~2 h)~~ | **✅ resolved 2026-05-04** |
 | #69 | Datenschutz Final-Integration nach Anwalt-Redlines · PostHog/Vercel/Cookie-Banner-Texte ergänzen | S (~1 h Integration + Anwalt-Wartezeit) | Anwalt-Review |
 
 **Out of Scope (in Sprint 31 verschoben):**
@@ -138,7 +138,6 @@ Marketing-Briefing als Single Source of Truth: [`docs/marketing/MARKETING_BRIEFI
 | 74 | Marketing | **3 SEO-Cornerstone-Artikel** veröffentlichen: "Heizungswartung-Pflicht 2026", "Wartungsintervalle nach Gerätetyp", "DSGVO-konforme Kundenkommunikation für Heizungsbauer". | Medium | 2026-04-28 |
 | 75 | Marketing | **Lead-Magnet-Tools**: Wartungsintervall-Rechner + Wartungsprotokoll-PDF-Vorlage als kostenloser Download (Email-Capture). | Medium | 2026-04-28 |
 | 76 | Marketing | **Pilotkunden-Case-Study** (nach 6 Monaten Daten — ab Mitte 2026): Zeitersparnis-Quote, Zitat, Foto. Voraussetzung: Pilotkunden-Freigabe + Daten-Tracking. | Medium | 2026-04-28 |
-| 77 | Marketing | **DSGVO-konforme Analytics** einrichten (Plausible oder Vercel Analytics + Posthog) — vor Launch der Landingpage. | Medium | 2026-04-28 |
 | 78 | Brand | **Wordmark-Variationen** (horizontal, vertikal, monochrom, Negativ) als SVG-Set. | Medium | 2026-04-28 |
 | 79 | Brand | **Social-Media-Asset-Pack** (LinkedIn, Instagram, Facebook) im Brand-Stil. | Low | 2026-04-28 |
 | 80 | Brand | **Tagline-Validierung** — Hauptkandidat *"Die Wartungsakte für Heizungsbauer."* (Decision D-2) mit Pilotkunden + 3 Kollegen testen. Backup-Optionen siehe Briefing §11.1. | Medium | 2026-04-28 |
@@ -146,6 +145,7 @@ Marketing-Briefing als Single Source of Truth: [`docs/marketing/MARKETING_BRIEFI
 | 84 | Marketing | **CRM-Light für Lead-Management** (Outbound an Innungen, Pilotkunden-Funnel, Beta-Liste). Optionen: HubSpot Free, Notion-Datenbank, Airtable. | Low | 2026-04-28 |
 | 85 | Marketing | **Email-Drip-Onboarding-Strecke** für Self-Service-Signups. Voraussetzung: #71 + #82. | Medium (nach #71) | 2026-04-28 |
 | 86 | Marketing | **Daten-Export für DSGVO-Pflicht (Art. 20)** als Self-Service-Funktion (kein Marketing-Item per se, aber FAQ-relevant: "Was passiert mit meinen Daten beim Kündigen?"). Aktuell nur per DB-Dump möglich. | Medium | 2026-04-28 |
+| 94 | Security | **Content-Security-Policy (CSP) Header in `next.config.ts` einführen.** Aktuell fehlt CSP komplett — `connect-src`, `script-src`, `img-src`, `style-src`, `frame-src` müssen mit Whitelist für eu.i.posthog.com, eu-assets.i.posthog.com, va.vercel-scripts.com, *.sentry.io, supabase.co (Storage URLs), cal.com (Booking-Iframe im Dashboard) erstellt werden. Inkl. `nonce`-Strategie für Next.js. Regressionstests gegen alle Auth-Flows + Booking-Flow nötig. | Medium | 2026-05-04 |
 
 ---
 
@@ -184,6 +184,12 @@ Items are grouped by sprint / work session, ordered newest first.
 | 89 | Marketing | **OG-Image** — `src/app/opengraph-image.tsx` via `next/og` `ImageResponse`. 1200×630, Wordmark + Headline ("Aus Excel raus. In die Hosentasche rein.") + Tagline + Brand-Icon auf Brand-50-Surface. `twitter-image.tsx` re-exportiert für Twitter-Card-Parität. Statische `/og-image.png`-Verweise aus `layout.tsx` entfernt — File-Convention überschreibt automatisch. Verifiziert via Browser: HTTP 200, 45 KB PNG. | 2026-05-04 |
 | 90 | A11y | **Color-Contrast Findings behoben** — Hero-Badge: `border-brand-200` (#99CC99 auf #E6F2E6 = 1.4:1 fail) → `border-brand` (#008000 = 5.7:1 AAA). TechStackStrip: kombinierte `text-foreground/80` × `opacity-60` (effektiv 48 % fail) → `text-muted-foreground` + `opacity-80` (single transformation, ~5.6:1). Visuelle Subtilität bleibt erhalten. | 2026-05-04 |
 | — | Infra | **Repo-Aufräumen** — `graphify-out-{codemap,backbone,docs,marketing}/`, `error_screenshots/`, `kundenaustausch/` aus Repo-Root nach `docs/` migriert. CLAUDE.md (12 Pfad-Refs), BACKLOG.md (N-5), `.gitignore`, `.git/hooks/post-commit` entsprechend geupdatet (mit `parents=True` für saubere Erstanlage). Hook-Rebuild zur neuen Location verifiziert. | 2026-05-04 |
+
+### Sprint 30 Tag 2 — Consent + Analytics (2026-05-04)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 77 | Marketing | **Vercel Analytics + PostHog Integration (consent-gated)** — `ConsentProvider` mit LocalStorage-Persistenz (`torqr-consent-v1`, version=1), 3-Option Cookie-Banner (Alle akzeptieren / Nur essentielle / Einstellungen) mit equal-weight CTAs (DSGVO-konform, ECJ Planet49), per-Service-Toggles via Dialog (Switch-Komponente), PostHog via dynamic `import('posthog-js')` — keine Bytes vor Consent (im Browser-Smoke verifiziert). PostHog konfiguriert: EU-Host, `identified_only` Person Profiles, `autocapture: false`, `disable_session_recording: true`. Conversion-Events `beta_lead_submitted` + `demo_request_submitted` in BetaListForm + DemoRequestForm. CSP-Einführung als Follow-up #94 verschoben (kein bestehender CSP-Header — Einführung = separate Risk-Box). Spec: `docs/superpowers/plans/2026-05-04-cookie-consent-and-analytics.md`. 19 neue vitest cases (storage 7 + reducer 5 + track 4 + diverse Hardening-Adds). | 2026-05-04 |
 
 ### Sprint 30 Bootstrap & Decisions (2026-04-30 abends)
 

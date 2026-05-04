@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { TorqrWordmark } from '@/components/brand/TorqrIcon';
+import { CookieSettingsLink } from './CookieSettingsLink';
 
 export function MarketingFooter() {
   return (
@@ -26,6 +27,7 @@ export function MarketingFooter() {
             <ul className="space-y-2 text-sm">
               <li><Link href="/datenschutz" className="text-foreground hover:text-primary">Datenschutz</Link></li>
               <li><Link href="/impressum" className="text-foreground hover:text-primary">Impressum</Link></li>
+              <li><CookieSettingsLink className="text-foreground hover:text-primary" /></li>
             </ul>
           </div>
 
