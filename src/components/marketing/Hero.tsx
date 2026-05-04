@@ -9,7 +9,7 @@ export function Hero() {
     <section id="hero" className="pt-32 pb-32 sm:pb-40 px-6 overflow-hidden">
       <div className="mx-auto max-w-6xl grid gap-16 lg:grid-cols-2 lg:items-center">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-brand-200 bg-brand-50 text-xs uppercase tracking-[1.5px] text-primary font-medium">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-brand bg-brand-50 text-xs uppercase tracking-[1.5px] text-primary font-medium">
             ▰ Die Wartungsakte für Heizungsbauer
           </div>
 

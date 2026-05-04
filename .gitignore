@@ -60,3 +60,6 @@ graphify-out/
 
 # Superpowers brainstorming visual companion (mockup HTML, server state)
 .superpowers/
+
+# Playwright MCP browser automation artifacts (screenshots, snapshots, console logs)
+.playwright-mcp/

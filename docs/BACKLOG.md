@@ -31,8 +31,8 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 
 | # | Item | Aufwand | Abhängigkeit |
 |---|------|---------|--------------|
-| #89 | OG-Image via `next/og` (`src/app/opengraph-image.tsx`) — Wordmark + Tagline + Hero-Headline programmatisch gerendert | S (~1.5 h) | keine |
-| #90 | Color-Contrast-Findings beheben (Hero-Badge `border-brand-200`, 3× TechStackStrip `text-foreground/80 opacity-60`) | S (~1.5 h) | keine |
+| ~~#89~~ | ~~OG-Image via `next/og`~~ | ~~S (~1.5 h)~~ | **✅ resolved 2026-05-04** |
+| ~~#90~~ | ~~Color-Contrast-Findings (Hero-Badge + TechStackStrip)~~ | ~~S (~1.5 h)~~ | **✅ resolved 2026-05-04** |
 | #77 | Vercel Analytics + PostHog Integration · Conversion-Events: Beta-Submit + Demo-Submit · CSP-Anpassung in `next.config.ts` | M (~2 h) | PostHog-Account-Anlage durch User |
 | Cookie-Banner | Custom 3-Option-Layout mit Service-Toggles · LocalStorage-Consent-State · React Context für `useConsent()` | M (~2 h) | hängt an #77 |
 | #69 | Datenschutz Final-Integration nach Anwalt-Redlines · PostHog/Vercel/Cookie-Banner-Texte ergänzen | S (~1 h Integration + Anwalt-Wartezeit) | Anwalt-Review |
@@ -129,8 +129,6 @@ Marketing-Briefing als Single Source of Truth: [`docs/marketing/MARKETING_BRIEFI
 |---|------|-------------|----------|-------|
 | 69 | Compliance | **Datenschutz + Impressum vor Public-Launch finalisieren** — Sprint-29-Stand: Impressum-Adresse + USt-ID-Decision erledigt. Sprint-30-Decisions (2026-04-30): Cookie-Banner ja (custom 3-Option, weil PostHog Cookies setzt), Analytics = Vercel + PostHog EU-Cloud. **Verbleibend:** (a) Anwalt-Review der 2× `TODO Anwalt`-Marker in `datenschutz/page.tsx` (Z. 24 + 50) → wird Sprint 30 Tag 1 angestoßen; (b) Custom Cookie-Banner bauen mit Service-Toggles für Vercel-Analytics + PostHog; (c) Datenschutz-Text um PostHog/Vercel/Cookie-Banner ergänzen nach Anwalt-Redlines. | Critical (vor Public-Launch) | 2026-04-28 |
 | 88 | Marketing | **Workload-Screenshot ist Placeholder** — `public/marketing/features/workload-desktop.png` ist aktuell ein Duplikat von `dashboard-desktop.png`. Echten Screenshot von `/dashboard/team/workload` (1440×900, ≤ 200 KB) nachreichen. **In Sprint 31 deferred (2026-04-30).** | Medium | 2026-04-30 |
-| 89 | Marketing | **OG-Image (`public/og-image.png`) fehlt** — 1200×630 Wordmark + Tagline + Hero-Headline. Ohne dies zeigen Social-Shares (LinkedIn, Facebook, WhatsApp) blanke Vorschau. | High (vor Public-Launch) | 2026-04-30 |
-| 90 | A11y | **Color-Contrast-Findings (axe-CLI)** — Hero-Badge `border-brand-200` und 3× TechStackStrip-Logos (`text-foreground/80` + `opacity-60`) unter WCAG AA. Lighthouse A11y trotzdem 97/100. Polish-Item, nicht-blockierend. | Medium | 2026-04-30 |
 | 91 | Marketing | **ROI-Rechner-Tool** als V2-Inline-CTA in `RoiBlock` (TODO-Marker in [RoiBlock.tsx](../src/components/marketing/RoiBlock.tsx) hinterlegt). Interaktives Tool: Wartungsverträge × Stundensatz → ROI-Faktor. Lead-Magnet-Potenzial (siehe #75). | Medium | 2026-04-30 |
 | 92 | Decision | **Cal.com Multi-Customer-Strategie** — aktuell ein einziger Event-Type für alle Pilot-Kunden. Bei mehreren Kunden gleichzeitig: Pro Kunde eigenes Event-Type / Routing über metadata `customerId` / Bezahlmodell. Decision vor Phase-2 (≥ 5 Kunden) nötig. | Medium | 2026-04-30 |
 | 70 | Compliance | **AVV-Vertragsvorlage** (Art. 28 DSGVO) als PDF-Download im Onboarding. Voraussetzung für seriöse B2B-Akquise. | High | 2026-04-28 |
@@ -178,6 +176,14 @@ Ideas worth keeping in mind but not planned for current sprints. No implementati
 ## Completed / Resolved
 
 Items are grouped by sprint / work session, ordered newest first.
+
+### Sprint 30 Tag 1 — Public-Launch Polish (2026-05-04)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 89 | Marketing | **OG-Image** — `src/app/opengraph-image.tsx` via `next/og` `ImageResponse`. 1200×630, Wordmark + Headline ("Aus Excel raus. In die Hosentasche rein.") + Tagline + Brand-Icon auf Brand-50-Surface. `twitter-image.tsx` re-exportiert für Twitter-Card-Parität. Statische `/og-image.png`-Verweise aus `layout.tsx` entfernt — File-Convention überschreibt automatisch. Verifiziert via Browser: HTTP 200, 45 KB PNG. | 2026-05-04 |
+| 90 | A11y | **Color-Contrast Findings behoben** — Hero-Badge: `border-brand-200` (#99CC99 auf #E6F2E6 = 1.4:1 fail) → `border-brand` (#008000 = 5.7:1 AAA). TechStackStrip: kombinierte `text-foreground/80` × `opacity-60` (effektiv 48 % fail) → `text-muted-foreground` + `opacity-80` (single transformation, ~5.6:1). Visuelle Subtilität bleibt erhalten. | 2026-05-04 |
+| — | Infra | **Repo-Aufräumen** — `graphify-out-{codemap,backbone,docs,marketing}/`, `error_screenshots/`, `kundenaustausch/` aus Repo-Root nach `docs/` migriert. CLAUDE.md (12 Pfad-Refs), BACKLOG.md (N-5), `.gitignore`, `.git/hooks/post-commit` entsprechend geupdatet (mit `parents=True` für saubere Erstanlage). Hook-Rebuild zur neuen Location verifiziert. | 2026-05-04 |
 
 ### Sprint 30 Bootstrap & Decisions (2026-04-30 abends)
 
