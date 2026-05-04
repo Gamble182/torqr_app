@@ -80,6 +80,7 @@ export function CookieSettingsDialog({
         </div>
 
         <DialogFooter>
+          <Button variant="ghost" onClick={() => onOpenChange(false)}>Abbrechen</Button>
           <Button onClick={onSave}>Speichern und schließen</Button>
         </DialogFooter>
       </DialogContent>

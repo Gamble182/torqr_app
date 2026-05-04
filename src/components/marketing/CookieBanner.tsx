@@ -13,8 +13,7 @@ export function CookieBanner() {
 
   return (
     <>
-      <div
-        role="dialog"
+      <aside
         aria-labelledby="cookie-banner-title"
         aria-describedby="cookie-banner-description"
         className="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-4 sm:max-w-md z-50 rounded-lg border border-border bg-background shadow-lg p-5"
@@ -28,7 +27,7 @@ export function CookieBanner() {
           <a href="/datenschutz" className="underline">Datenschutzerklärung</a>.
         </p>
         <div className="flex flex-col sm:flex-row gap-2">
-          <Button onClick={acceptAll} size="sm" className="flex-1">Alle akzeptieren</Button>
+          <Button onClick={acceptAll} size="sm" variant="outline" className="flex-1">Alle akzeptieren</Button>
           <Button onClick={rejectAll} size="sm" variant="outline" className="flex-1">Nur essentielle</Button>
           <Button
             onClick={() => setSettingsOpen(true)}
@@ -39,7 +38,7 @@ export function CookieBanner() {
             Einstellungen
           </Button>
         </div>
-      </div>
+      </aside>
       <CookieSettingsDialog open={settingsOpen} onOpenChange={setSettingsOpen} />
     </>
   );
