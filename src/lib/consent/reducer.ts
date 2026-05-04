@@ -39,5 +39,9 @@ export function consentReducer(state: ConsentState, action: ConsentAction): Cons
       };
     case 'reopen':
       return { ...state, decided: false };
+    default: {
+      const _exhaustive: never = action;
+      return state;
+    }
   }
 }
