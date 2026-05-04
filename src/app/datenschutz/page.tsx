@@ -52,6 +52,8 @@ export default function DatenschutzPage() {
           </p>
           <ul>
             <li>Vercel Inc. (Hosting der Anwendung) — Standort EU-Region, Auftragsverarbeitungsvertrag abgeschlossen</li>
+            <li>Vercel Inc. (Vercel Analytics, optional nach Einwilligung) — anonyme Performance- und Seitenaufruf-Daten ohne Cookies, EU-Region</li>
+            <li>PostHog Inc. (Product Analytics, optional nach Einwilligung) — Server-Region EU (Frankfurt), Auftragsverarbeitungsvertrag abgeschlossen</li>
             <li>Supabase Inc. (Datenbank) — Server-Region eu-central-1 (Frankfurt), Auftragsverarbeitungsvertrag abgeschlossen</li>
             <li>Resend (E-Mail-Versand) — Auftragsverarbeitungsvertrag abgeschlossen</li>
             <li>Upstash (Rate-Limiting) — Auftragsverarbeitungsvertrag abgeschlossen</li>
@@ -64,11 +66,28 @@ export default function DatenschutzPage() {
             nach DSGVO. Außerdem hast du das Recht auf Beschwerde bei der zuständigen Aufsichtsbehörde.
           </p>
 
-          <h2>6. Cookies</h2>
+          <h2>6. Cookies und Analyse-Tools</h2>
           <p>
-            Diese Website setzt aktuell ausschließlich technisch notwendige Session-Cookies (Auth) ein.
-            Tracking- oder Analyse-Cookies werden nicht eingesetzt.
+            Diese Website setzt technisch notwendige Cookies ein (Login-Session, Sicherheit) sowie
+            optional — nach deiner ausdrücklichen Einwilligung — Analyse-Tools von Vercel und PostHog.
+            Vor deiner Einwilligung wird kein Analyse-Code geladen oder ausgeführt.
           </p>
+          <p>
+            Du kannst deine Einwilligung jederzeit ändern oder widerrufen über den Link
+            &quot;Cookie-Einstellungen&quot; im Footer der Seite.
+          </p>
+          <ul>
+            <li>
+              <strong>Vercel Analytics</strong> (Vercel Inc.) — anonyme Seitenaufrufe und
+              Performance-Daten. Setzt keine Cookies. Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO.
+            </li>
+            <li>
+              <strong>PostHog</strong> (PostHog Inc., EU-Server in Frankfurt) — anonyme Nutzungsanalyse
+              für Produktverbesserung. Person Profiles nur bei expliziter Identifikation
+              (identified_only-Modus), keine Auto-Capture, keine Session-Replays.
+              Rechtsgrundlage: Art. 6 Abs. 1 lit. a DSGVO.
+            </li>
+          </ul>
 
           <h2>7. Kontakt</h2>
           <p>
