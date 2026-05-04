@@ -56,7 +56,7 @@ next-env.d.ts
 .graphify_*.json
 .graphify_*.txt
 graphify-out/
-**/graphify-out/cache/.graphify_chunk_*.json
+**/graphify-out-*/cache/.graphify_chunk_*.json
 
 # Superpowers brainstorming visual companion (mockup HTML, server state)
 .superpowers/

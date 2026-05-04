@@ -164,7 +164,7 @@ Ideas worth keeping in mind but not planned for current sprints. No implementati
 | N-2 | Feature | **Bestellworkflow** — order suggestions from low-stock alerts, supplier link templates, order status tracking. | Phase B. |
 | N-3 | Feature | **Echtzeit-Lager-Alert-Mail** — S3 variant; per-event email on first threshold breach with debounce. | Phase B. |
 | N-4 | Feature | **Multi-Wartungstyp** — add `maintenanceType: STANDARD \| INSPECTION \| EMERGENCY` to `MaintenanceSet`. | Additive schema change. |
-| N-5 | Feature | **PDF-Import für Wartungssets** — install tesseract/ocrmypdf/poppler; parse manufacturer service-parts PDFs. | Phase B; requires OCR toolchain. Seed material exists at `kundenaustausch/Wartungsteile/wartungsheft_bosch_junkers.json` (30 sets / 163 parts, manually transcribed). |
+| N-5 | Feature | **PDF-Import für Wartungssets** — install tesseract/ocrmypdf/poppler; parse manufacturer service-parts PDFs. | Phase B; requires OCR toolchain. Seed material exists at `docs/kundenaustausch/Wartungsteile/wartungsheft_bosch_junkers.json` (30 sets / 163 parts, manually transcribed). |
 | N-6 | Feature | **Per-Item-Foto** auf MaintenanceSetItem für Vor-Ort-Identifikation. | Phase B. |
 | N-7 | Feature | **CSV/XLSX-Bulk-Import** for InventoryItems and MaintenanceSetItems. | Combine with #25. |
 | N-8 | Integration | **Drittanbieter-Lager-Integration** (Sortly / Doron / Fifo). | Phase C. |
