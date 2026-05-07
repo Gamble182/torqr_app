@@ -464,6 +464,32 @@ Full decision record: `docs/superpowers/specs/2026-04-22-company-multi-user-arch
 - Migrations via Prisma — never hand-edit the DB schema
 - Direct URL for migrations, connection pooling URL for runtime
 
+### RLS Deny-All — Defense Against PostgREST Exposure
+
+Torqr's primary tenant isolation is **application-layer** via `requireAuth()` (see Multi-Tenancy Isolation Rule). On top of that, every table in the `public` schema carries a Postgres-level `deny_all` RLS policy. This blocks the parallel attack surface of the auto-generated PostgREST API at `https://<project>.supabase.co/rest/v1/...`, which is reachable by anyone with the (public-by-design) anon key.
+
+**Why this is safe for the app:**
+- Prisma connects as the `postgres` table owner → bypasses RLS by default.
+- The Supabase service role key (storage only, in `src/lib/supabase.ts`) carries `BYPASSRLS` → unaffected.
+- Only the `anon` and `authenticated` PostgREST roles are blocked — the app does not use them.
+
+**Auto-enforcement for new tables:**
+- The event trigger `apply_rls_to_new_table` (created in migration `20260507120000_enable_rls_deny_all_auto`) fires on every `CREATE TABLE` in `public` and applies `deny_all` automatically. New Prisma migrations adding tables are PostgREST-safe by default — no manual follow-up is needed.
+- If the event trigger is ever missing (e.g. dropped, or insufficient privilege on a new Postgres instance), the manual fallback is one line at the end of the migration:
+
+  ```sql
+  SELECT public.apply_rls_deny_all_to_all_public_tables();
+  ```
+
+  This is idempotent and free to call from any future migration as a belt-and-suspenders measure.
+
+**What you must NOT do:**
+- Do **not** set `FORCE ROW LEVEL SECURITY` on tables — that would block Prisma too.
+- Do **not** grant the `anon` or `authenticated` role privileges that depend on reading data; the deny_all policy will return zero rows by design.
+- Do **not** drop the helper functions or the event trigger without an explicit replacement — Sprint 30 Tag 3 introduced them after a Supabase Advisor incident.
+
+**Verification:** Supabase Dashboard → Advisors → Security should show zero `rls_disabled_in_public` and zero `sensitive_columns_exposed` lints after deploy. If it doesn't, run the bulk helper above on the affected database.
+
 ---
 
 ## Code Quality Rules
