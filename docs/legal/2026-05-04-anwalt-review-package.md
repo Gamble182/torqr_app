@@ -261,6 +261,6 @@ Nach Erhalt der Redlines:
 
 ## 8. Kontakt für Rückfragen
 
-**Mandant:** Yannik Dorth · y.dorth182@gmx.de · *(Telefon auf Anfrage)*
+**Mandant:** Yannik Dorth · yannik.dorth@gmx.de · *(Telefon auf Anfrage)*
 
 Anwalt darf Rückfragen direkt per E-Mail an hello@torqr.de oder an die persönliche Adresse senden.

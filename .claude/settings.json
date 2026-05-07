@@ -15,7 +15,12 @@
       "Read(//c/Users/y.dorth/.claude/plugins/**)",
       "Read(//c/Users/y.dorth/.claude/plugins/repos/**)",
       "Bash(mkdir -p .claude/skills)",
-      "Bash(cp -r docs/design-system/project .claude/skills/torqr-design-system)"
+      "Bash(cp -r docs/design-system/project .claude/skills/torqr-design-system)",
+      "Bash(powershell -Command \"Get-NetTCPConnection -LocalPort 3000 -State Listen | Select-Object -ExpandProperty OwningProcess\")",
+      "Bash(powershell -Command \"Stop-Process -Id 27460 -Force; Start-Sleep -Milliseconds 500; Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue\")",
+      "mcp__next-devtools__browser_eval",
+      "Bash(powershell -NoProfile -Command \"Get-NetTCPConnection -LocalPort 3000 -State Listen -ErrorAction SilentlyContinue | Select-Object -ExpandProperty OwningProcess\")",
+      "Bash(powershell -NoProfile -Command \"Stop-Process -Id 27908 -Force\")"
     ],
     "additionalDirectories": [
       "c:\\Users\\y.dorth\\Documents\\torqr_app\\torqr_app\\src\\app\\api\\customers\\[id]",
