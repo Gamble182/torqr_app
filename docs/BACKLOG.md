@@ -191,6 +191,14 @@ Items are grouped by sprint / work session, ordered newest first.
 |---|------|-------------|----------|
 | 77 | Marketing | **Vercel Analytics + PostHog Integration (consent-gated)** — `ConsentProvider` mit LocalStorage-Persistenz (`torqr-consent-v1`, version=1), 3-Option Cookie-Banner (Alle akzeptieren / Nur essentielle / Einstellungen) mit equal-weight CTAs (DSGVO-konform, ECJ Planet49), per-Service-Toggles via Dialog (Switch-Komponente), PostHog via dynamic `import('posthog-js')` — keine Bytes vor Consent (im Browser-Smoke verifiziert). PostHog konfiguriert: EU-Host, `identified_only` Person Profiles, `autocapture: false`, `disable_session_recording: true`. Conversion-Events `beta_lead_submitted` + `demo_request_submitted` in BetaListForm + DemoRequestForm. CSP-Einführung als Follow-up #94 verschoben (kein bestehender CSP-Header — Einführung = separate Risk-Box). Spec: `docs/superpowers/plans/2026-05-04-cookie-consent-and-analytics.md`. 19 neue vitest cases (storage 7 + reducer 5 + track 4 + diverse Hardening-Adds). | 2026-05-04 |
 
+### Sprint 30 Tag 3 — RLS Deny-All Hardening + Auto-Enforcement (2026-05-07)
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| — | Security | **Supabase Advisor "rls_disabled_in_public" + "sensitive_columns_exposed" geschlossen** — Migration `20260507120000_enable_rls_deny_all_auto` aktiviert RLS + RESTRICTIVE `deny_all`-Policy auf allen 21 public-Tables (inkl. `sessions.token`-Spur). Schließt PostgREST-API-Angriffsfläche über den anon-Key, ohne Prisma- oder Service-Role-Pfad zu beeinträchtigen (beide bypassen RLS). | 2026-05-07 |
+| — | Security | **Future-Resilience eingebaut** — PL/pgSQL-Helfer `public.apply_rls_deny_all(schema, table)` + `public.apply_rls_deny_all_to_all_public_tables()` (idempotent). Event Trigger `apply_rls_to_new_table` feuert auf `ddl_command_end` bei `CREATE TABLE` und appliziert deny_all automatisch — neue Prisma-Migrationen sind PostgREST-safe by default. Self-Verify-Block am Migrations-Ende lässt die Migration scheitern, falls eine Tabelle ungeschützt bliebe. | 2026-05-07 |
+| — | Docs | **CLAUDE.md erweitert** — RLS-Konvention dokumentiert: jede neue Tabelle erbt deny_all automatisch, manueller Fallback via `SELECT public.apply_rls_deny_all_to_all_public_tables();` falls Event Trigger auf einer Postgres-Instanz nicht erstellbar ist. | 2026-05-07 |
+
 ### Sprint 30 Bootstrap & Decisions (2026-04-30 abends)
 
 | # | Area | Description | Resolved |
