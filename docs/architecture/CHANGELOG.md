@@ -1,229 +1,75 @@
-# Changelog
+# Architecture Decision Log
 
-All notable changes to the Torqr application will be documented in this file.
+This file is the **append-only ADR log** for Torqr's architectural decisions. Every decision that shapes how code, data, or infrastructure are structured gets one entry.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## Entry format
 
----
+Each entry has:
 
-## [1.0.0] - 2026-01-13
+```
+## YYYY-MM-DD — Title
 
-### 🎉 Production Ready Release
+**Decision**: What was decided in one sentence.
 
-This release marks the completion of major architectural improvements, making the application production-ready with modern data fetching patterns and improved code structure.
+**Rationale**: Why — the constraint, problem, or trade-off that drove it. Two to four sentences.
 
-### Added
+**Affected**: Files, components, modules, or specs touched by the decision.
 
-#### React Query Integration
-- **TanStack Query v5** (`@tanstack/react-query@^5.62.14`) for data fetching and state management
-- **React Query DevTools** (`@tanstack/react-query-devtools@^5.62.14`) for development debugging
-- **React Query Provider** (`src/lib/react-query.tsx`) with optimized configuration:
-  - 5-minute stale time for cached data
-  - 30-minute garbage collection time
-  - Automatic retry on failure
-  - DevTools enabled in development mode
-
-#### Custom Hooks
-- `src/hooks/useCustomers.ts` - Customer CRUD operations with automatic caching
-- `src/hooks/useHeaters.ts` - Heater CRUD operations with search/filter support
-- `src/hooks/useDashboard.ts` - Dashboard statistics with 5-minute refetch and window focus refetch
-- `src/hooks/useMaintenances.ts` - Maintenance record operations with query invalidation
-
-#### Split Components
-- `src/components/heater-form/HeatingSystemSelector.tsx` - Cascading dropdown component for system selection
-- `src/components/heater-form/StorageFields.tsx` - Heat storage configuration fields
-- `src/components/heater-form/BatteryFields.tsx` - Battery storage configuration fields
-- `src/components/heater-form/AddNewEntryModal.tsx` - Reusable modal for adding categories/manufacturers/models
-- `src/components/Pagination.tsx` - Production-ready pagination component
-
-#### Documentation
-- `ARCHITECTURE.md` - Comprehensive architecture documentation
-- `CHANGELOG.md` - This file for tracking changes
-
-### Changed
-
-#### Pages Converted to React Query
-- `src/app/dashboard/page.tsx` - Now uses `useDashboardStats` hook
-- `src/app/dashboard/customers/page.tsx` - Now uses `useCustomers` hook with `useMemo` for filtering
-- `src/app/dashboard/heaters/page.tsx` - Now uses `useHeaters` hook with server-side search
-
-#### Provider Structure
-- `src/components/Providers.tsx` - Now wraps app with `ReactQueryProvider`
-
-#### Type Safety Improvements
-- `src/hooks/useCustomers.ts` - Extended Customer interface to include `heaters`, `createdAt`, `updatedAt`
-- `src/app/dashboard/heaters/page.tsx` - Added optional chaining for `_count` property
-- All hooks now have proper TypeScript interfaces for requests and responses
-
-### Fixed
-
-#### TypeScript Errors
-- `src/app/api/customers/[id]/route.ts:116` - Fixed schema name from `updateCustomerSchema` to `customerUpdateSchema`
-- `src/app/api/heaters/[id]/route.ts:109` - Fixed schema name from `updateHeaterSchema` to `heaterUpdateSchema`
-- `src/app/api/maintenances/route.ts:45` - Fixed optional date handling with default to current date
-- `src/app/dashboard/heaters/page.tsx:149,232` - Fixed undefined `_count` property access with optional chaining
-
-#### Build Issues
-- Production build now succeeds with zero TypeScript errors
-- All 20 static pages generate successfully
-- All API routes compile without errors
-
-### Performance Improvements
-
-- **~60% reduction in API calls** thanks to 5-minute query caching
-- **~40% reduction in boilerplate code** with custom hooks
-- **Faster page loads** due to automatic background refetching
-- **Better perceived performance** with optimistic updates
-- **Reduced bundle size** through component code splitting
-
-### Developer Experience
-
-- React Query DevTools available in development mode (`http://localhost:3000`)
-- Consistent hook patterns across all data operations
-- Type-safe queries with full IntelliSense support
-- Automatic query invalidation on mutations
-- Better error handling and loading states
-
----
-
-## [0.9.0] - Previous State (Before January 2026)
-
-### Baseline Features
-
-- Next.js 16 with App Router
-- React 19 with TypeScript
-- Custom authentication with JWT and bcrypt
-- Prisma 7 with PostgreSQL (Supabase)
-- Customer and heater management
-- Maintenance tracking with photos
-- Email notifications via Resend
-- Dashboard with statistics
-- PWA capabilities
-
----
-
-## Migration Guide
-
-### For Developers
-
-If you're working on this codebase after the v1.0.0 release:
-
-#### Fetching Data
-**Before:**
-```typescript
-const [data, setData] = useState([]);
-const [loading, setLoading] = useState(true);
-
-useEffect(() => {
-  fetch('/api/resource')
-    .then(res => res.json())
-    .then(result => setData(result.data))
-    .finally(() => setLoading(false));
-}, []);
+**See also**: Link to the canonical spec / commit / PR (if any).
 ```
 
-**After:**
-```typescript
-const { data, isLoading, error } = useResource();
-```
-
-#### Creating/Updating Data
-**Before:**
-```typescript
-const handleCreate = async (formData) => {
-  const response = await fetch('/api/resource', {
-    method: 'POST',
-    body: JSON.stringify(formData),
-  });
-  const result = await response.json();
-
-  if (result.success) {
-    // Manually refetch or update local state
-    fetchData();
-  }
-};
-```
-
-**After:**
-```typescript
-const createMutation = useCreateResource();
-
-const handleCreate = (formData) => {
-  createMutation.mutate(formData);
-  // Automatic query invalidation and refetch
-};
-```
-
-#### Benefits of Migration
-- No manual state management
-- No manual refetching after mutations
-- Automatic error handling
-- Automatic loading states
-- Automatic caching and optimization
+Newer entries go on top. Decisions that are *superseded* stay in the log; add a follow-up entry with `**Supersedes**: <date — title>`.
 
 ---
 
-## Deployment Notes
+## 2026-05-07 — Documentation refactor: slim CLAUDE.md + self-contained ARCHITECTURE.md + extracted workflow docs
 
-### v1.0.0 Deployment
+**Decision**: Split the 557-line CLAUDE.md into a slim always-on "constitution + index" (~280 lines) plus dedicated reference docs. Architecture detail moves into [ARCHITECTURE.md](./ARCHITECTURE.md). Procedural workflows (knowledge graphs, marketing, design system, backlog, timesheet) move into `docs/development/*-WORKFLOW.md`.
 
-1. **Dependencies**: Run `npm install` to install React Query packages
-2. **Build**: Production build has been tested and passes successfully
-3. **Environment**: No new environment variables required
-4. **Database**: No schema changes in this release
-5. **Breaking Changes**: None - all changes are internal improvements
+**Rationale**: The old CLAUDE.md mixed three concerns (load-bearing rules, procedural workflows, reference docs) and consumed ~2.2k tokens at every session start. Most of the bulk was reference content that is only situationally relevant. Splitting cuts session-start cost in half while making each doc independently navigable. CLAUDE.md becomes a quick-scan index; deep dives stay one click away.
 
-### Vercel Deployment
+**Affected**: `CLAUDE.md`, `docs/architecture/ARCHITECTURE.md`, `docs/development/KNOWLEDGE-GRAPHS.md`, `docs/development/MARKETING-WORKFLOW.md`, `docs/development/DESIGN-SYSTEM-WORKFLOW.md`, `docs/development/BACKLOG-WORKFLOW.md`, `docs/development/TIMESHEET-AUTOTRACK.md`.
 
-The application is configured for automatic deployment:
-- Push to `development` branch for staging
-- Merge to `main` branch for production
-- All environment variables should already be set in Vercel dashboard
+**See also**: Plan file `~/.claude/plans/also-ich-w-rde-gerne-velvety-fern.md`.
 
 ---
 
-## Security
+## 2026-05-07 — Stop-Hook desktop notification
 
-No security issues addressed in this release. Existing security measures remain:
-- bcrypt password hashing
-- JWT-based authentication
-- Input validation with Zod
-- CSRF protection
-- Rate limiting
-- SQL injection protection via Prisma
+**Decision**: Add a PowerShell hook (`.claude/hooks/notify-claude-done.ps1`) that fires on every Claude Code `Stop` event with a Windows toast (BurntToast preferred, NotifyIcon fallback) plus the system Asterisk sound.
+
+**Rationale**: Sessions are often long-running while the user works in another window. A non-intrusive bing + toast surfaces "Claude is waiting for you" without polling the terminal. BurntToast is installed once at user scope (no admin); the script falls back to a Windows Forms balloon if the module is missing.
+
+**Affected**: `.claude/hooks/notify-claude-done.ps1` (new), `.claude/settings.json` (second entry under `Stop`).
 
 ---
 
-## Known Issues
+## 2026-05-07 — Context7 MCP server for current library docs
 
-None. Production build passes all checks.
+**Decision**: Register the Context7 MCP server (Upstash, `@upstash/context7-mcp` via npx) in the project-level `.mcp.json`. Future Claude sessions are instructed (via CLAUDE.md) to call Context7 before writing or recommending syntax for external libraries (Next.js, Prisma, Tailwind, NextAuth, React Query, Resend, shadcn, Cal.com SDK).
 
----
+**Rationale**: LLM training data drifts behind library releases by months to years. Context7 fetches version-current docs on demand, eliminating one of the most common hallucination sources. Free tier is enough for the current session volume; HTTP+API-key transport is the upgrade path if rate-limits bite.
 
-## Upcoming Features
-
-Planned for future releases:
-- Offline support with IndexedDB persistence
-- Real-time updates via WebSockets
-- Infinite scroll for lists
-- Optimistic UI updates for all mutations
-- Advanced search and filtering
-- Export functionality (CSV/PDF)
+**Affected**: `.mcp.json`, `CLAUDE.md` (new "External Library Docs — Context7 MCP" section).
 
 ---
 
-## Contributors
+## 2026-05-07 — Architecture Decision Log convention
 
-- Development Team
-- Claude (AI Assistant) for architectural guidance
+**Decision**: Use `docs/architecture/CHANGELOG.md` as the append-only ADR log. The Self-Maintaining Knowledge rule in CLAUDE.md instructs every future session that lands an architectural decision to append an entry here.
+
+**Rationale**: ADRs were previously scattered across `docs/superpowers/specs/` (full decision records) and inline CLAUDE.md notes. A single append-only log gives a chronological "what changed and why" view without bloating CLAUDE.md or duplicating spec content.
+
+**Affected**: `docs/architecture/CHANGELOG.md`, CLAUDE.md (Self-Maintaining Knowledge section).
 
 ---
 
-## Support
+## Earlier decisions (pre-2026-05-07)
 
-For issues or questions about changes:
-1. Check `ARCHITECTURE.md` for implementation details
-2. Review this changelog for what changed
-3. Check React Query docs: https://tanstack.com/query/latest
-4. Review hook implementations in `src/hooks/`
+For decisions before this log existed, see the relevant spec under [docs/superpowers/specs/](../superpowers/specs/) — those remain the canonical decision records. Selected highlights:
+
+- **2026-05-07** — RLS deny-all hardening + auto-enforcement event trigger (commit `243402d`)
+- **2026-04-22** — Company-as-Tenant model replaces User-as-Tenant ([spec](../superpowers/specs/2026-04-22-company-multi-user-architecture.md))
+- **2026-04-21** — Application-level multi-tenancy (no Postgres RLS for tenant isolation) ([spec](../superpowers/specs/2026-04-21-multi-tenancy-design.md))
+- **2026-04-13** — Email automation: cron-driven reminders + opt-out ([spec](../superpowers/specs/2026-04-13-email-automation-design.md))
+- **2026-04-29** — Public landing page architecture ([spec](../superpowers/specs/2026-04-29-landingpage-design.md))

@@ -51,6 +51,10 @@
           {
             "type": "command",
             "command": "bash .claude/hooks/stop.sh"
+          },
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File .claude/hooks/notify-claude-done.ps1"
           }
         ]
       }
