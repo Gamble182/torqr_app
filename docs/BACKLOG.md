@@ -77,7 +77,6 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
 | 49 | Infra | Delete old Supabase project (`vvsmxzebaoslofigxakt`, eu-west-1) — migrated to new project (`hwagqyywixhhorhjtydt`, eu-central-1) via Vercel integration. Delete once confident everything works. | Low | 2026-04-22 |
-| 60 | Architecture | `CatalogPicker` "Ändern" button passes `entries[0]` to `onChange` when clearing — semantically incorrect. `onChange` signature should support `null` entry for clear action. | Low | 2026-04-22 |
 
 ### Workload & Scheduling — Upcoming Features
 
@@ -196,6 +195,12 @@ Ideas worth keeping in mind but not planned for current sprints. No implementati
 Items are grouped by sprint / work session, ordered newest first.
 
 > **Archiv**: Items älter als 30 Tage → [BACKLOG-ARCHIVE.md](./BACKLOG-ARCHIVE.md). Regel: [development/BACKLOG-WORKFLOW.md § Archival cadence](./development/BACKLOG-WORKFLOW.md).
+
+### Sprint 31 — Conversion + Polish *(in progress, 2026-05-11)*
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 60 | Architecture | **CatalogPicker `onChange` `null`-Support** — Signatur erweitert auf `(catalogId: string \| null, entry: CatalogEntry \| null)`. "Ändern"-Button signalisiert Clear-Action jetzt ehrlich via `(null, null)` statt `('', entries[0])`. `SystemAssignmentModal` coerced `null → ''` am Boundary, lokale State bleibt `string`. 742 Tests grün. | 2026-05-11 |
 
 ### Sprint 30 Tag 1 — Public-Launch Polish (2026-05-04)
 
