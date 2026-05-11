@@ -177,6 +177,8 @@ Ideas worth keeping in mind but not planned for current sprints. No implementati
 
 Items are grouped by sprint / work session, ordered newest first.
 
+> **Archiv**: Items älter als 30 Tage → [BACKLOG-ARCHIVE.md](./BACKLOG-ARCHIVE.md). Regel: [development/BACKLOG-WORKFLOW.md § Archival cadence](./development/BACKLOG-WORKFLOW.md).
+
 ### Sprint 30 Tag 1 — Public-Launch Polish (2026-05-04)
 
 | # | Area | Description | Resolved |
@@ -499,35 +501,3 @@ Items are grouped by sprint / work session, ordered newest first.
 | S4-14 | Infra | Production live on torqr.de — Cloudflare DNS + custom domain. | 2026-04-14 |
 | S4-15 | Email | Reminder template redesigned — technician contact in footer. | 2026-04-14 |
 | S4-16 | Email | Email service updated to pass technician name + email. | 2026-04-14 |
-
-### Sprint 3 — Heater & Maintenance Management + Architecture (2026-01-13)
-
-| # | Area | Description | Resolved |
-|---|------|-------------|----------|
-| S3-1 | Backend | Heater CRUD API with category/manufacturer/model structure. | 2026-01-13 |
-| S3-2 | Backend | Maintenance CRUD API with photo upload. | 2026-01-13 |
-| S3-3 | Backend | Supabase Storage for maintenance photos. | 2026-01-13 |
-| S3-4 | Backend | Dashboard stats API — overdue/upcoming counts. | 2026-01-13 |
-| S3-5 | UI | Heater list, detail, maintenance form, overview page, dashboard. | 2026-01-13 |
-| S3-6 | UI | HeatingSystemSelector — cascading category → manufacturer → model. | 2026-01-13 |
-| S3-7 | UI | AddNewEntryModal, StorageFields, BatteryFields, Pagination. | 2026-01-13 |
-| A-1 | Architecture | TanStack Query v5 integration — global QueryClient, 5-min stale time. | 2026-01-13 |
-| A-2 | Hooks | `useCustomers`, `useHeaters`, `useMaintenances`, `useDashboard` hooks. | 2026-01-13 |
-| A-3 | Infra | Production deployment on Vercel — initial setup. | 2026-01-13 |
-
-### Sprint 2 — Customer Management (2026-01-08)
-
-| # | Area | Description | Resolved |
-|---|------|-------------|----------|
-| S2-1 | Backend | Customer CRUD API with Zod validation. | 2026-01-08 |
-| S2-2 | UI | Customer list, create/edit forms, detail page, MultiSelect, toast notifications. | 2026-01-08 |
-| S2-3 | Config | `heating-systems.json` — 9 categories, 30+ manufacturers. | 2026-01-08 |
-
-### Sprint 1 — Authentication & Setup (2026-01-08)
-
-| # | Area | Description | Resolved |
-|---|------|-------------|----------|
-| S1-1 | Auth | NextAuth v5 with email/password, protected routes, session management. | 2026-01-08 |
-| S1-2 | Security | CSRF protection, rate limiting, bcrypt password hashing, login logging. | 2026-01-08 |
-| S1-3 | DB | Prisma schema — User, Customer, Heater, Maintenance models. Supabase PostgreSQL (eu-west-1). | 2026-01-08 |
-| S1-4 | UI | Login and register pages. | 2026-01-08 |

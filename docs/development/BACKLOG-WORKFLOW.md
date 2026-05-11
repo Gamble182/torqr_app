@@ -66,6 +66,29 @@ The Timesheet works the opposite way — see [TIMESHEET-AUTOTRACK.md](./TIMESHEE
 
 ---
 
+## 6. Archival cadence
+
+**Goal**: Keep `docs/BACKLOG.md` lean enough for one Read call. Items resolved more than 30 days ago move to `docs/BACKLOG-ARCHIVE.md`.
+
+**Trigger check**: On every `/backlog` session-start (after loading open items), scan the **oldest entries** at the bottom of the Completed / Resolved section. Compare each sprint section's `Resolved` date(s) against `today − 30 days`.
+
+**Rule**:
+
+- If **every** row in a sprint section has a `Resolved` date ≥ 30 days before today, move the **entire sprint section** (heading + table) from `BACKLOG.md` into `BACKLOG-ARCHIVE.md`.
+- Sprint sections are **atomic**: move the whole section or none of it. Do not split a section by date.
+- Insert the moved section at the **top** of the archive's `Completed / Resolved (archived)` (newest archived sprint first). Do not interleave with older archived sprints.
+- Preserve the exact heading format (`### Sprint N — Title (YYYY-MM-DD)`) and table shape. Content is moved **verbatim** — not compressed, summarised, or rewritten.
+- Update the archive's own `Changelog` section with a one-line entry naming the moved sprint(s) and reason.
+
+**Frequency**: Tripwire, not a scheduled task. Most sessions move zero sprints. Only act when the check above actually fires.
+
+**Cross-link discipline**: `BACKLOG.md` keeps a permanent hint above its Completed section pointing to the archive. Never remove or weaken that hint.
+
+**Post-archive step**: After moving sprint(s), rebuild the Documentation knowledge graph (`/graphify docs/ --update`) so cross-references in the Docs graph reflect the new file layout. Skip the rebuild if no sprint was actually moved this session.
+
+---
+
 ## Changelog
 
+- **2026-05-11** — Added § 6 Archival cadence. Items resolved > 30 days ago move atomically as full sprint sections to `BACKLOG-ARCHIVE.md`, newest-first. Tripwire on session-start, not scheduled. Initial migration: Sprint 1, 2, 3 (Januar-Initial-Setup).
 - **2026-05-07** — Extracted from CLAUDE.md to slim it down. Content unchanged.
