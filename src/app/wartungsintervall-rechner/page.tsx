@@ -6,9 +6,9 @@ import { WartungsintervallCalculator } from '@/components/marketing/Wartungsinte
 import { WartungsintervallEmailCapture } from '@/components/marketing/WartungsintervallEmailCapture';
 
 export const metadata: Metadata = {
-  title: 'Wartungsintervall-Rechner | Torqr',
+  title: 'Wartungsintervall-Rechner',
   description:
-    'Wann muss deine Heizung, Klima-Anlage, Wasseraufbereitung oder dein Pufferspeicher gewartet werden? Kostenloser Rechner mit gesetzlichen Pflichten (KÜO, DIN 4795, F-Gas-Verordnung).',
+    'Kostenloser Rechner: Wann muss deine Heizung, Klima, Wasseraufbereitung oder dein Pufferspeicher gewartet werden? Mit KÜO, DIN 4795 und F-Gas-Pflichten.',
   alternates: { canonical: 'https://torqr.de/wartungsintervall-rechner' },
   openGraph: {
     title: 'Wartungsintervall-Rechner für Heizung, Klima & Wasseraufbereitung',
