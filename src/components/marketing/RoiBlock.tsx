@@ -1,5 +1,6 @@
 // src/components/marketing/RoiBlock.tsx
 import { ClockIcon, EuroIcon, ShieldCheckIcon } from 'lucide-react';
+import { RoiCalculator } from './RoiCalculator';
 
 const tiles = [
   {
@@ -37,22 +38,7 @@ export function RoiBlock() {
           ))}
         </div>
 
-        <div className="rounded-xl bg-background border border-border p-8 text-center">
-          <h3 className="text-base font-semibold text-foreground mb-3">Was bedeutet das in einem Jahr?</h3>
-          <p className="text-base text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-            Bei 50 Wartungsverträgen und €348/Jahr Solo-Tier:{' '}
-            <strong className="text-foreground">ROI-Faktor ~35×.</strong> Break-even nach knapp{' '}
-            <strong className="text-foreground">zwei Wochen.</strong> Die ersten 30 Tage sind kostenlos —
-            du gehst kein Risiko ein.
-          </p>
-        </div>
-
-        <p className="mt-6 text-xs italic text-muted-foreground text-center max-w-2xl mx-auto">
-          ø-Werte für Solo-Betriebe mit ~50 Wartungsverträgen. Basis: Business-Model-Canvas-Berechnung 2024,
-          validiert mit Pilotkunden-Daten.
-        </p>
-
-        {/* TODO V2: ROI-Rechner-Tool — Inline-CTA aktivieren wenn /roi-rechner live ist */}
+        <RoiCalculator />
       </div>
     </section>
   );
