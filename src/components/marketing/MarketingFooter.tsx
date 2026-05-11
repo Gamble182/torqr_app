@@ -26,8 +26,10 @@ export function MarketingFooter() {
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Rechtliches</p>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/datenschutz" className="text-foreground hover:text-primary">Datenschutz</Link></li>
               <li><Link href="/impressum" className="text-foreground hover:text-primary">Impressum</Link></li>
+              <li><Link href="/datenschutz" className="text-foreground hover:text-primary">Datenschutz</Link></li>
+              <li><Link href="/agb" className="text-foreground hover:text-primary">AGB</Link></li>
+              <li><Link href="/avv" className="text-foreground hover:text-primary">AVV</Link></li>
               <li><CookieSettingsLink className="text-foreground hover:text-primary" /></li>
             </ul>
           </div>
