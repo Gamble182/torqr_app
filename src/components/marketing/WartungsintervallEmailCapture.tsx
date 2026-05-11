@@ -74,7 +74,6 @@ export function WartungsintervallEmailCapture() {
         className="hidden"
         aria-hidden
       />
-      <input type="hidden" value={SOURCE} {...register('source')} />
 
       <div>
         <Label htmlFor="wartungsintervall-email">E-Mail-Adresse *</Label>
