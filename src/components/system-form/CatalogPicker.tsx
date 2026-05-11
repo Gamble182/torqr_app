@@ -8,7 +8,7 @@ import type { CatalogEntry, SystemType, AcSubtype, StorageSubtype } from '@/hook
 interface CatalogPickerProps {
   systemType: SystemType;
   value: string; // catalogId
-  onChange: (catalogId: string, entry: CatalogEntry) => void;
+  onChange: (catalogId: string | null, entry: CatalogEntry | null) => void;
 }
 
 const AC_SUBTYPE_OPTIONS: Array<{ value: AcSubtype; label: string }> = [
@@ -101,7 +101,7 @@ export function CatalogPicker({ systemType, value, onChange }: CatalogPickerProp
           <button
             type="button"
             className="text-xs text-muted-foreground hover:text-foreground"
-            onClick={() => onChange('', entries[0])}
+            onClick={() => onChange(null, null)}
           >
             Ändern
           </button>

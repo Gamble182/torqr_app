@@ -53,8 +53,8 @@ export function SystemAssignmentModal({
   const [copyInstallDate, setCopyInstallDate] = useState(false);
   const [savedLastMaintenance, setSavedLastMaintenance] = useState('');
 
-  const handleCatalogChange = (id: string, _entry: CatalogEntry) => {
-    setCatalogId(id);
+  const handleCatalogChange = (id: string | null, _entry: CatalogEntry | null) => {
+    setCatalogId(id ?? '');
   };
 
   const handleCopyInstallDateToggle = (checked: boolean) => {
