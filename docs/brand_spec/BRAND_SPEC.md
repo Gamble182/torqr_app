@@ -128,6 +128,26 @@ import { TorqrWordmark } from "@/components/brand/TorqrIcon";
 
 ---
 
+## Wordmark Asset Set (Standalone-SVG)
+
+Für **externe Verwendung** außerhalb der React-App — Outbound-Materialien, E-Mail-Signaturen, Pitchdecks, Print-Drucksachen, Innungs-/Kammer-Materialien — liegen die Wordmark-Varianten als statische SVG-Files in [`public/brand/wordmark/`](../../public/brand/wordmark/).
+
+| Datei | Format | Wann verwenden | Hintergrund |
+|---|---|---|---|
+| `wordmark-horizontal.svg` | 320×96 (≈ 3,3:1) | Default. E-Mail-Footer, Web-Embeds, Header. | Hell |
+| `wordmark-vertical.svg` | 200×160 (≈ 1,25:1) | Quadratische Surfaces — Social-Profile, Stempel, Avatar-Kacheln. | Hell |
+| `wordmark-monochrome-black.svg` | 320×96 | B/W-Print, Faxe, Drucksachen ohne Farbverwendung, Embossed-Print. | Hell |
+| `wordmark-monochrome-white.svg` | 320×96 | "Negativ" für dunkle Hintergründe — Pitchdeck-Cover, dunkle Hero-Surfaces, Photo-Overlays. | **Dunkel** |
+
+**Verwendungs-Regeln** (siehe [`public/brand/wordmark/README.md`](../../public/brand/wordmark/README.md) für Details):
+- Geometrie der SVGs ist **identisch** zur `<TorqrIcon>` / `<TorqrWordmark>` React-Komponente. Bei jeder Änderung an [`src/components/brand/TorqrIcon.tsx`](../../src/components/brand/TorqrIcon.tsx) müssen die SVGs nachgezogen werden, sonst driften externe und in-App-Wordmark auseinander.
+- Mono-Varianten lassen den Amber-Dot weg (single-color-Identität).
+- Für Pitchdeck-/Print-Auslieferung mit pixel-identischem Rendering über alle Empfänger-Systeme: Text in Adobe Illustrator / Inkscape zu Pfaden konvertieren.
+
+In-App-Verwendung (DashboardNav, Login, Register, OG-Image) bleibt bei der React-Komponente — siehe oben.
+
+---
+
 ## Email-Template
 
 **Datei:** `email-template.html`
