@@ -43,30 +43,7 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 
 **Vor Sprint-Start:** Plan via `/superpowers:writing-plans` formalisieren (TDD-Tasks, Commit-Cadence, Verify-Gates wie beim Design-System-v3-Sprint).
 
-### Sprint 31 — Conversion + Polish *(planned 2026-05-11)*
-
-**Scope:** Landingpage outbound-bereit machen + Sprint-30-Follow-ups schließen. Niedriges Risiko, klare End-Bedingung: *"Site bereit für ernsthaftes Outbound + Booking-Flow regressions-getestet"*.
-
-**Tasks:**
-
-| # | Item | Aufwand | Abhängigkeit |
-|---|------|---------|--------------|
-| #52 | Cal.com E2E-Booking-Flow-Test gegen Production — Analyse User-Befund + Fix gefundener Regressions | M (~1.5 h) | User-Pre-Test (manuelles Booking) |
-| #88 | Workload-Screenshot — User-vorbereitete Datei einbinden (1440×900, ≤200 KB) | S (~15 min) | User-Screenshot |
-| #91 | ROI-Rechner inline CTA in [RoiBlock.tsx](../src/components/marketing/RoiBlock.tsx) — interaktiver Rechner (Wartungsverträge × Stundensatz → ROI-Faktor) | M (~2 h) | — |
-| #60 | CatalogPicker `onChange` Signatur — `null`-Entry für Clear-Action erlauben | S (~30 min) | — |
-
-**Stretch (optional, falls Tasks gut laufen):**
-
-| # | Item | Aufwand | Abhängigkeit |
-|---|------|---------|--------------|
-| #94 | Content-Security-Policy Header in `next.config.ts` einführen — Handover existiert: [docs/superpowers/handovers/2026-05-04-csp-introduction-handover.md](./superpowers/handovers/2026-05-04-csp-introduction-handover.md) | L (~3 h, multi-flow regression) | — |
-| #78 | Wordmark-Variationen (horizontal/vertikal/monochrom/Negativ) als SVG-Set | M (~1.5 h) | — |
-
-**Parallel-Track (falls Anwalt-Antwort vorliegt):**
-- **#69 Datenschutz-Final-Integration** — Redlines aus Anwalt-Review-Paket einbauen + PostHog/Vercel/Cookie-Banner-Texte ergänzen + 2× `TODO Anwalt`-Marker in `datenschutz/page.tsx` (Z. 24 + 50) auflösen.
-
-**Vor Sprint-Start:** Plan via `/superpowers:writing-plans` formalisieren (TDD-Tasks, Commit-Cadence, Verify-Gates).
+_(Sprint 31 abgeschlossen 2026-05-11 — siehe `## Completed / Resolved`. Nächster Sprint noch nicht geplant.)_
 
 ---
 
@@ -106,7 +83,7 @@ Generic "Wartungstermin" event type configured (60 min, Mon–Fri 7:30–17:00).
 | 42 | Config | Per-system-type event durations — different Cal.com event types per system type (Wärmepumpe, Gas, Öl, etc.) if pilot customer needs it. Deferred until feedback. | Low | 2026-04-16 |
 | 44 | Config | Target email — booking confirmation currently goes to personal email. Change to business address when available. | Low | 2026-04-16 |
 | 51 | Decision | Cal.com multi-tenant strategy — current single-account setup doesn't scale beyond pilot. Options: Cal.com Teams, per-user Cal.com accounts, or custom booking UI via Cal.com API. Decide post-pilot. | Low | 2026-04-22 |
-| 52 | Testing | Test full booking flow end-to-end — customer receives reminder, clicks Cal.com link, books, webhook fires, booking appears in torqr dashboard. **Sprint 31 deferred (2026-04-30).** | Medium | 2026-04-22 |
+| 52 | Testing | Test full booking flow end-to-end — customer receives reminder, clicks Cal.com link, books, webhook fires, booking appears in torqr dashboard. **Sprint 31 nicht angegangen (2026-05-11)** — User-Pre-Test (manuelles Booking) noch nicht erfolgt; Code-Fix kann erst nach Befund priorisiert werden. | Medium | 2026-04-22 |
 | 11 | Decision | Calendar integration strategy — recommendation: do NOT build own calendar. Use Cal.com for scheduling, let users sync to Google/Outlook via Cal.com. Embed iframe if needed later. | Low | 2026-04-14 |
 
 ### Email System
@@ -145,7 +122,7 @@ Marketing-Briefing als Single Source of Truth: [`docs/marketing/MARKETING_BRIEFI
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
 | 69 | Compliance | **Datenschutz + Impressum vor Public-Launch finalisieren** — Sprint-29-Stand: Impressum-Adresse + USt-ID-Decision erledigt. Sprint-30-Decisions (2026-04-30): Cookie-Banner ja (custom 3-Option, weil PostHog Cookies setzt), Analytics = Vercel + PostHog EU-Cloud. **Verbleibend:** (a) Anwalt-Review der 2× `TODO Anwalt`-Marker in `datenschutz/page.tsx` (Z. 24 + 50) → wird Sprint 30 Tag 1 angestoßen; (b) Custom Cookie-Banner bauen mit Service-Toggles für Vercel-Analytics + PostHog; (c) Datenschutz-Text um PostHog/Vercel/Cookie-Banner ergänzen nach Anwalt-Redlines. | Critical (vor Public-Launch) | 2026-04-28 |
-| 88 | Marketing | **Workload-Screenshot ist Placeholder** — `public/marketing/features/workload-desktop.png` ist aktuell ein Duplikat von `dashboard-desktop.png`. Echten Screenshot von `/dashboard/team/workload` (1440×900, ≤ 200 KB) nachreichen. **In Sprint 31 deferred (2026-04-30).** | Medium | 2026-04-30 |
+| 88 | Marketing | **Workload-Screenshot fehlt** — Echten Screenshot von `/dashboard/team/workload` (1440×900, ≤ 200 KB) nachreichen. Bestehende Datei stammt aus Sprint 29 (162 KB, möglicherweise schon aktualisiert — vor Re-Use prüfen). **Sprint 31 nicht angegangen (2026-05-11)** — User-Asset noch nicht bereitgestellt. | Medium | 2026-04-30 |
 | 92 | Decision | **Cal.com Multi-Customer-Strategie** — aktuell ein einziger Event-Type für alle Pilot-Kunden. Bei mehreren Kunden gleichzeitig: Pro Kunde eigenes Event-Type / Routing über metadata `customerId` / Bezahlmodell. Decision vor Phase-2 (≥ 5 Kunden) nötig. | Medium | 2026-04-30 |
 | 70 | Compliance | **AVV-Vertragsvorlage** (Art. 28 DSGVO) als PDF-Download im Onboarding. Voraussetzung für seriöse B2B-Akquise. | High | 2026-04-28 |
 | 71 | Marketing | **Self-Service-Signup + Billing-Integration** (Stripe oder Paddle). Voraussetzung für SaaS-Phase. Aktuell sind Kundenanlage + Bezahlung manuell. | High | 2026-04-28 |
@@ -154,14 +131,13 @@ Marketing-Briefing als Single Source of Truth: [`docs/marketing/MARKETING_BRIEFI
 | 74 | Marketing | **3 SEO-Cornerstone-Artikel** veröffentlichen: "Heizungswartung-Pflicht 2026", "Wartungsintervalle nach Gerätetyp", "DSGVO-konforme Kundenkommunikation für Heizungsbauer". | Medium | 2026-04-28 |
 | 75 | Marketing | **Lead-Magnet-Tools**: Wartungsintervall-Rechner + Wartungsprotokoll-PDF-Vorlage als kostenloser Download (Email-Capture). | Medium | 2026-04-28 |
 | 76 | Marketing | **Pilotkunden-Case-Study** (nach 6 Monaten Daten — ab Mitte 2026): Zeitersparnis-Quote, Zitat, Foto. Voraussetzung: Pilotkunden-Freigabe + Daten-Tracking. | Medium | 2026-04-28 |
-| 78 | Brand | **Wordmark-Variationen** (horizontal, vertikal, monochrom, Negativ) als SVG-Set. | Medium | 2026-04-28 |
 | 79 | Brand | **Social-Media-Asset-Pack** (LinkedIn, Instagram, Facebook) im Brand-Stil. | Low | 2026-04-28 |
 | 80 | Brand | **Tagline-Validierung** — Hauptkandidat *"Die Wartungsakte für Heizungsbauer."* (Decision D-2) mit Pilotkunden + 3 Kollegen testen. Backup-Optionen siehe Briefing §11.1. | Medium | 2026-04-28 |
 | 83 | Decision | **White-Label-Strategie**: Innungen aktiv ansprechen oder nur on-demand? Pricing-Modell klären (500 €/Monat pro Partner aus BMC). | Low | 2026-04-28 |
 | 84 | Marketing | **CRM-Light für Lead-Management** (Outbound an Innungen, Pilotkunden-Funnel, Beta-Liste). Optionen: HubSpot Free, Notion-Datenbank, Airtable. | Low | 2026-04-28 |
 | 85 | Marketing | **Email-Drip-Onboarding-Strecke** für Self-Service-Signups. Voraussetzung: #71 + #82. | Medium (nach #71) | 2026-04-28 |
 | 86 | Marketing | **Daten-Export für DSGVO-Pflicht (Art. 20)** als Self-Service-Funktion (kein Marketing-Item per se, aber FAQ-relevant: "Was passiert mit meinen Daten beim Kündigen?"). Aktuell nur per DB-Dump möglich. | Medium | 2026-04-28 |
-| 94 | Security | **Content-Security-Policy (CSP) Header in `next.config.ts` einführen.** Aktuell fehlt CSP komplett — `connect-src`, `script-src`, `img-src`, `style-src`, `frame-src` müssen mit Whitelist für eu.i.posthog.com, eu-assets.i.posthog.com, va.vercel-scripts.com, *.sentry.io, supabase.co (Storage URLs), cal.com (Booking-Iframe im Dashboard) erstellt werden. Inkl. `nonce`-Strategie für Next.js. Regressionstests gegen alle Auth-Flows + Booking-Flow nötig. | Medium | 2026-05-04 |
+| 94 | Security | **Content-Security-Policy (CSP) Header in `next.config.ts` einführen.** Aktuell fehlt CSP komplett — `connect-src`, `script-src`, `img-src`, `style-src`, `frame-src` müssen mit Whitelist für eu.i.posthog.com, eu-assets.i.posthog.com, va.vercel-scripts.com, *.sentry.io, supabase.co (Storage URLs), cal.com (Booking-Iframe im Dashboard) erstellt werden. Inkl. `nonce`-Strategie für Next.js. Regressionstests gegen alle Auth-Flows + Booking-Flow nötig. **Sprint 31 stretch nicht angegangen (2026-05-11)** — Risiko: CSP kann Booking-Flow brechen, der wegen #52 nicht E2E-verifiziert ist. Erst nach #52 sinnvoll. | Medium | 2026-05-04 |
 
 ---
 
@@ -195,13 +171,16 @@ Items are grouped by sprint / work session, ordered newest first.
 
 > **Archiv**: Items älter als 30 Tage → [BACKLOG-ARCHIVE.md](./BACKLOG-ARCHIVE.md). Regel: [development/BACKLOG-WORKFLOW.md § Archival cadence](./development/BACKLOG-WORKFLOW.md).
 
-### Sprint 31 — Conversion + Polish *(in progress, 2026-05-11)*
+### Sprint 31 — Conversion + Polish (2026-05-11)
+
+**Scope-Erfüllung:** 2 von 4 Core-Items + 1 Add-on + 1 Stretch geliefert. #52 Cal.com-E2E und #88 Workload-Screenshot blieben blockiert (User-Pre-Tests / -Asset nicht erfolgt) → zurück in Open Items mit Defer-Note. #94 CSP nicht angegangen (Stretch, blockiert von #52). #69 Anwalt-Parallel-Track entfiel (keine Antwort vorliegend). Mid-sprint Pricing-Toggle-Removal-Add-on aufgenommen.
 
 | # | Area | Description | Resolved |
 |---|------|-------------|----------|
 | 60 | Architecture | **CatalogPicker `onChange` `null`-Support** — Signatur erweitert auf `(catalogId: string \| null, entry: CatalogEntry \| null)`. "Ändern"-Button signalisiert Clear-Action jetzt ehrlich via `(null, null)` statt `('', entries[0])`. `SystemAssignmentModal` coerced `null → ''` am Boundary, lokale State bleibt `string`. 742 Tests grün. | 2026-05-11 |
 | 91 | Marketing | **ROI-Rechner inline in `RoiBlock`** — `src/lib/marketing/roi.ts` exportiert pure `computeRoi()` + dokumentierte Konstanten (`HOURS_SAVED_PER_CONTRACT_PER_WEEK=0.12`, `WORK_WEEKS_PER_YEAR=48`, `SOLO_TIER_ANNUAL_PRICE_EUR=348`); 5 vitest cases. `src/components/marketing/RoiCalculator.tsx` Client-Component mit Slider+Number-Inputs für Wartungsverträge (10–500) + Stundensatz (20–150 €/h), Live-Result-Tiles (Zeit-Wert / ROI-Faktor / Break-even) und Reset-Button. `RoiBlock` ersetzt statische "Was bedeutet das in einem Jahr?"-Box samt V2-TODO-Marker durch `<RoiCalculator />`. Plan: [docs/superpowers/plans/2026-05-11-roi-rechner-inline.md](./superpowers/plans/2026-05-11-roi-rechner-inline.md). 747 Tests grün, npm run build sauber, browser-verifiziert. | 2026-05-11 |
 | — | Marketing | **Pricing-Toggle entfernt — flat €29/€49/€99 monatlich** (Sprint-31 Add-on, mid-sprint angefragt). `PricingToggle.tsx` gelöscht (PricingProvider + usePricingCycle weg), `PricingCard` ohne `annualPrice`-Prop und Cycle-Logik, `Pricing.tsx` ohne Toggle-Render. Begründung: einfachere Konversions-Story für die Pilot-Phase; Annual-Plan kann re-introduced werden, sobald Self-Service-Billing live ist. **Decision D-3 revoked** — Synced docs: `MARKETING_BRIEFING.md` §7.3, `legal/2026-05-04-anwalt-review-package.md` Z. 17, `BACKLOG.md` D-3 entry, `design-system/DELTA.md` neue D-4-Section. ROI-Rechner-Anker bleibt €348/Jahr Solo (= 29×12, jetzt einzig gültiger Jahres-Wert). 747 Tests grün, build sauber, browser-verifiziert. | 2026-05-11 |
+| 78 | Brand | **Wordmark-Asset-Set für externe Verwendung** — 4 Standalone-SVGs in `public/brand/wordmark/` (horizontal 320×96, vertikal 200×160, monochrom-schwarz, monochrom-weiß für Negativ). Geometrie identisch zur React-Komponente `<TorqrWordmark>` (Polyline-Punkte, Amber-Dot, Border-Radius); Mono-Varianten lassen Amber-Dot weg + nutzen Outline-Rect statt Fill. README im Asset-Ordner mit Verwendungs-Regeln + neue "Wordmark Asset Set"-Section in [`docs/brand_spec/BRAND_SPEC.md`](./brand_spec/BRAND_SPEC.md) mit Drift-Hinweis (SVG ↔ TorqrIcon.tsx synchron halten). | 2026-05-11 |
 
 ### Sprint 30 Tag 1 — Public-Launch Polish (2026-05-04)
 
