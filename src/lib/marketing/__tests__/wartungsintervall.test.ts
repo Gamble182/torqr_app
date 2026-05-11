@@ -49,6 +49,7 @@ describe('computeWartungsintervall', () => {
     expect(r.empfohlenInMonaten).toBe(24);
     expect(r.gesetzlichePflicht).toBe(false);
     expect(r.begruendung).toMatch(/Anode/);
+    expect(r.isAltAnlage).toBe(false);
   });
 
   it('appends Anlagenalter-Hinweis when system is >= 15 years old (HEATING)', () => {
@@ -80,6 +81,18 @@ describe('computeWartungsintervall', () => {
   it('throws RangeError for non-integer baujahr', () => {
     expect(() =>
       computeWartungsintervall({ systemType: 'HEATING', baujahr: 2020.5 }),
+    ).toThrow(RangeError);
+  });
+
+  it('throws RangeError for NaN baujahr', () => {
+    expect(() =>
+      computeWartungsintervall({ systemType: 'HEATING', baujahr: Number.NaN }),
+    ).toThrow(RangeError);
+  });
+
+  it('throws RangeError for Infinity baujahr', () => {
+    expect(() =>
+      computeWartungsintervall({ systemType: 'HEATING', baujahr: Number.POSITIVE_INFINITY }),
     ).toThrow(RangeError);
   });
 
