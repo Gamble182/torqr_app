@@ -1,4 +1,3 @@
-import { PricingProvider, PricingToggle } from './PricingToggle';
 import { PricingCard } from './PricingCard';
 
 const tiers = [
@@ -6,7 +5,6 @@ const tiers = [
     tier: 'Solo' as const,
     audience: 'Für den Ein-Mann-Betrieb',
     monthlyPrice: 29,
-    annualPrice: 290,
     features: [
       'Bis 50 Kunden',
       'Mobile Wartungs-Checklist',
@@ -24,7 +22,6 @@ const tiers = [
     tier: 'Professional' as const,
     audience: 'Für Teams ab 2 Personen',
     monthlyPrice: 49,
-    annualPrice: 490,
     highlight: true,
     features: [
       'Alles aus Solo, plus:',
@@ -41,7 +38,6 @@ const tiers = [
     tier: 'Enterprise' as const,
     audience: 'Für Mehr-Standort-Betriebe & Partner',
     monthlyPrice: 99,
-    annualPrice: 990,
     features: [
       'Alles aus Professional, plus:',
       'Unlimited Kunden',
@@ -66,15 +62,9 @@ export function Pricing() {
           </p>
         </div>
 
-        <PricingProvider>
-          <div className="flex justify-center mb-12">
-            <PricingToggle />
-          </div>
-
-          <div className="grid gap-6 lg:grid-cols-3">
-            {tiers.map((t) => <PricingCard key={t.tier} {...t} />)}
-          </div>
-        </PricingProvider>
+        <div className="grid gap-6 lg:grid-cols-3">
+          {tiers.map((t) => <PricingCard key={t.tier} {...t} />)}
+        </div>
 
         <p className="mt-10 text-xs text-center text-muted-foreground">
           Alle Preise zzgl. USt. · 30 Tage gratis · keine Kreditkarte · jederzeit kündbar.

@@ -1,25 +1,18 @@
-'use client';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { CheckIcon } from 'lucide-react';
-import { usePricingCycle } from './PricingToggle';
 
 export interface PricingCardProps {
   tier: 'Solo' | 'Professional' | 'Enterprise';
   audience: string;
   monthlyPrice: number;
-  annualPrice: number; // total per year
   highlight?: boolean;
   features: string[];
   ctaLabel: string;
   ctaHref: string;
 }
 
-export function PricingCard({ tier, audience, monthlyPrice, annualPrice, highlight, features, ctaLabel, ctaHref }: PricingCardProps) {
-  const { cycle } = usePricingCycle();
-  const displayPrice = cycle === 'annual' ? Math.round(annualPrice / 12) : monthlyPrice;
-  const annualHint = cycle === 'annual' ? `(${annualPrice} €/Jahr)` : null;
-
+export function PricingCard({ tier, audience, monthlyPrice, highlight, features, ctaLabel, ctaHref }: PricingCardProps) {
   return (
     <div className={`relative rounded-2xl p-8 flex flex-col ${
       highlight
@@ -37,10 +30,9 @@ export function PricingCard({ tier, audience, monthlyPrice, annualPrice, highlig
 
       <div className="mt-6">
         <div className="flex items-baseline gap-2">
-          <span className="text-4xl font-bold text-foreground">€{displayPrice}</span>
+          <span className="text-4xl font-bold text-foreground">€{monthlyPrice}</span>
           <span className="text-sm text-muted-foreground">/ Monat</span>
         </div>
-        {annualHint ? <p className="text-xs text-muted-foreground mt-1">{annualHint}</p> : null}
       </div>
 
       <ul className="mt-6 space-y-3 flex-1">

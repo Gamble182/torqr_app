@@ -370,8 +370,7 @@ System-Font-Stack (`'Segoe UI', system-ui, -apple-system, sans-serif`) — bewus
 
 - **30 Tage Free Trial** für alle Tiers, ohne Kreditkarte. Begründung: Heizungswartung ist saisonal — User braucht Zeit, den Erinnerungs-Effekt überhaupt erleben zu können (4-Wochen-Reminder taktet einmal in den 30 Tagen).
 - **Bezahlt-Konversion am Tag 31.** Reminder-E-Mail an Tag 25 + Tag 28 + Tag 30.
-- **Annual-Billing-Discount: 2 Monate gratis** bei Jahresabo (= 17 % Rabatt). Standard im Markt, verbessert LTV.
-- **Annual zuerst empfehlen** im Pricing-Toggle (Default-Position), Monthly als Sekundär-Option.
+- **Nur monatliche Abrechnung.** Kein Jahresvertrag, kein Annual-Discount. Begründung (2026-05-11 revoked): einfache Preis-Story (29/49/99 €/Monat) schlägt LTV-Optimierung in der Pilot-/Akquise-Phase; ein Jahresplan kann später re-introduced werden, sobald Self-Service-Billing live ist und Conversion-Daten existieren.
 
 ### 7.4 Unit Economics (BMC-Annahme, weiterhin gültig)
 

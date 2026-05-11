@@ -146,7 +146,6 @@ Marketing-Briefing als Single Source of Truth: [`docs/marketing/MARKETING_BRIEFI
 |---|------|-------------|----------|-------|
 | 69 | Compliance | **Datenschutz + Impressum vor Public-Launch finalisieren** — Sprint-29-Stand: Impressum-Adresse + USt-ID-Decision erledigt. Sprint-30-Decisions (2026-04-30): Cookie-Banner ja (custom 3-Option, weil PostHog Cookies setzt), Analytics = Vercel + PostHog EU-Cloud. **Verbleibend:** (a) Anwalt-Review der 2× `TODO Anwalt`-Marker in `datenschutz/page.tsx` (Z. 24 + 50) → wird Sprint 30 Tag 1 angestoßen; (b) Custom Cookie-Banner bauen mit Service-Toggles für Vercel-Analytics + PostHog; (c) Datenschutz-Text um PostHog/Vercel/Cookie-Banner ergänzen nach Anwalt-Redlines. | Critical (vor Public-Launch) | 2026-04-28 |
 | 88 | Marketing | **Workload-Screenshot ist Placeholder** — `public/marketing/features/workload-desktop.png` ist aktuell ein Duplikat von `dashboard-desktop.png`. Echten Screenshot von `/dashboard/team/workload` (1440×900, ≤ 200 KB) nachreichen. **In Sprint 31 deferred (2026-04-30).** | Medium | 2026-04-30 |
-| 91 | Marketing | **ROI-Rechner-Tool** als V2-Inline-CTA in `RoiBlock` (TODO-Marker in [RoiBlock.tsx](../src/components/marketing/RoiBlock.tsx) hinterlegt). Interaktives Tool: Wartungsverträge × Stundensatz → ROI-Faktor. Lead-Magnet-Potenzial (siehe #75). | Medium | 2026-04-30 |
 | 92 | Decision | **Cal.com Multi-Customer-Strategie** — aktuell ein einziger Event-Type für alle Pilot-Kunden. Bei mehreren Kunden gleichzeitig: Pro Kunde eigenes Event-Type / Routing über metadata `customerId` / Bezahlmodell. Decision vor Phase-2 (≥ 5 Kunden) nötig. | Medium | 2026-04-30 |
 | 70 | Compliance | **AVV-Vertragsvorlage** (Art. 28 DSGVO) als PDF-Download im Onboarding. Voraussetzung für seriöse B2B-Akquise. | High | 2026-04-28 |
 | 71 | Marketing | **Self-Service-Signup + Billing-Integration** (Stripe oder Paddle). Voraussetzung für SaaS-Phase. Aktuell sind Kundenanlage + Bezahlung manuell. | High | 2026-04-28 |
@@ -201,6 +200,7 @@ Items are grouped by sprint / work session, ordered newest first.
 | # | Area | Description | Resolved |
 |---|------|-------------|----------|
 | 60 | Architecture | **CatalogPicker `onChange` `null`-Support** — Signatur erweitert auf `(catalogId: string \| null, entry: CatalogEntry \| null)`. "Ändern"-Button signalisiert Clear-Action jetzt ehrlich via `(null, null)` statt `('', entries[0])`. `SystemAssignmentModal` coerced `null → ''` am Boundary, lokale State bleibt `string`. 742 Tests grün. | 2026-05-11 |
+| 91 | Marketing | **ROI-Rechner inline in `RoiBlock`** — `src/lib/marketing/roi.ts` exportiert pure `computeRoi()` + dokumentierte Konstanten (`HOURS_SAVED_PER_CONTRACT_PER_WEEK=0.12`, `WORK_WEEKS_PER_YEAR=48`, `SOLO_TIER_ANNUAL_PRICE_EUR=348`); 5 vitest cases. `src/components/marketing/RoiCalculator.tsx` Client-Component mit Slider+Number-Inputs für Wartungsverträge (10–500) + Stundensatz (20–150 €/h), Live-Result-Tiles (Zeit-Wert / ROI-Faktor / Break-even) und Reset-Button. `RoiBlock` ersetzt statische "Was bedeutet das in einem Jahr?"-Box samt V2-TODO-Marker durch `<RoiCalculator />`. Plan: [docs/superpowers/plans/2026-05-11-roi-rechner-inline.md](./superpowers/plans/2026-05-11-roi-rechner-inline.md). 747 Tests grün, npm run build sauber, browser-verifiziert. | 2026-05-11 |
 
 ### Sprint 30 Tag 1 — Public-Launch Polish (2026-05-04)
 
@@ -259,7 +259,7 @@ Items are grouped by sprint / work session, ordered newest first.
 | # | Area | Description | Resolved |
 |---|------|-------------|----------|
 | 81 | Decision | **Marken-Strategie:** Torqr beibehalten — Domain läuft, Wordmark + Brand-Spec ausgearbeitet, internationalisierbar. (Decision D-1, dokumentiert in `MARKETING_BRIEFING.md` §0.5) | 2026-04-28 |
-| 82 | Decision | **Trial-Modell:** 30 Tage Free Trial ohne Kreditkarte für alle Tiers. Begründung: Wartungs-Saisonalität, User braucht ≥1 Reminder-Zyklus. Annual-Discount: 2 Monate gratis. (Decision D-3, `MARKETING_BRIEFING.md` §7.3) | 2026-04-28 |
+| 82 | Decision | **Trial-Modell:** 30 Tage Free Trial ohne Kreditkarte für alle Tiers. Begründung: Wartungs-Saisonalität, User braucht ≥1 Reminder-Zyklus. ~~Annual-Discount: 2 Monate gratis.~~ → **revoked 2026-05-11**: nur monatliche Abrechnung, kein Annual-Plan, einfachere Preis-Story für die Pilot-Phase. (Decision D-3, `MARKETING_BRIEFING.md` §7.3) | 2026-04-28 |
 | — | Decision | **Tier-Gating:** Solo single-user / Professional Multi-User+Wartungsteile / Enterprise +API+Custom-Branding+Priority-Support. Cal.com-Buchung in allen Tiers (Kern-USP). (Decision D-4, `MARKETING_BRIEFING.md` §7.2) | 2026-04-28 |
 | — | Decision | **Zielregion:** Phase 1–3 ausschließlich Deutschland, Sprache nur Deutsch. DACH/EN frühestens 2027. (Decision D-5) | 2026-04-28 |
 | — | Decision | **Anrede:** "Du" auf Landingpage / Marketing / Outbound an Heizungsbauer; "Sie" in Endkunden-Mails (Reminder, Booking-Confirmation). (Decision D-6) | 2026-04-28 |

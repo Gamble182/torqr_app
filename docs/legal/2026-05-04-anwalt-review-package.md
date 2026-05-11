@@ -14,7 +14,7 @@
 **Geschäftszweck:** Entwicklung und Betrieb der SaaS-Plattform *Torqr* — eine Wartungsmanagement-Software für **Heizungsbauer / SHK-Fachbetriebe in Deutschland**.
 
 **Geschäftsmodell:**
-- B2B-SaaS, monatlich/jährlich abrechnete Tiers (Solo €29 / Professional €49 / Enterprise €99)
+- B2B-SaaS, monatlich abgerechnete Tiers (Solo €29 / Professional €49 / Enterprise €99)
 - Aktuell *Beta-Phase* — Pilotkunden, keine Self-Service-Bezahlung implementiert
 - Zielgruppe: deutsche Heizungsbauer-Betriebe (1-50 Mitarbeiter)
 - Phase 1-3: ausschließlich Deutschland, Sprache nur Deutsch

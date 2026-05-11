@@ -95,6 +95,21 @@ They're wired up via `@font-face` in `colors_and_type.css` with `font-display: s
 
 **Affects:** `public/fonts/` (new folder), `src/app/globals.css` (new `@font-face` block), `next.config.ts` (font preload headers), bundle size.
 
+### D-4 · Pricing toggle removed in production (Bundle still has it)
+
+The bundle's `project/src/components/marketing/PricingToggle.tsx` and the cycle-aware `PricingCard.tsx` are **no longer byte-identical to production** as of 2026-05-11. Production ripped out:
+
+- `src/components/marketing/PricingToggle.tsx` (deleted)
+- `PricingProvider` + `usePricingCycle` hook (gone with the toggle)
+- `annualPrice` field on every `PricingCardProps` and tier object
+- Cycle-conditional `displayPrice` / `annualHint` logic in `PricingCard`
+
+Production now shows flat monthly prices (€29 / €49 / €99) with no toggle and no annual-discount line. Rationale: simpler conversion story for the pilot phase; an annual plan can be re-introduced once self-service billing is live (see `MARKETING_BRIEFING.md` §7.3 — D-3 revocation note 2026-05-11).
+
+**Bundle subtree drift:** Treat `docs/design-system/project/src/components/marketing/PricingToggle.tsx` and the bundle's `PricingCard.tsx` as historical reference only. Do not re-introduce them via copy-paste.
+
+**Affects:** `Pricing.tsx`, `PricingCard.tsx`, deleted `PricingToggle.tsx`, `MARKETING_BRIEFING.md` §7.3, `BACKLOG.md` D-3 entry, `legal/2026-05-04-anwalt-review-package.md` Z. 17.
+
 ### D-3 · Semantic CSS helpers: port to production or keep mock-only?
 
 The bundle's `colors_and_type.css` ships utility classes that do not exist in production:
@@ -152,7 +167,7 @@ The landing mockup at `docs/design-system/project/ui_kits/marketing_site/landing
 - Hero pill (`▰ Die Wartungsakte für Heizungsbauer`) → matches production
 - Hero H1 (`Aus Excel raus. In die Hosentasche rein.`) → matches production
 - 10-section flow (nav → hero → pain → 3-step → features → ROI → trust → pricing → FAQ → CTA → footer) → matches production
-- Pricing tiers (Solo €19 / Pro €49 / Enterprise on request) → matches production
+- Pricing tiers (Solo €29 / Pro €49 / Enterprise €99, alle monatlich) → matches production *(updated 2026-05-11; see D-4 below)*
 - Trust strip wording → matches production
 
 **Action:** Treat the mockup as a *visual verification target* during the v3 status palette rollout, not a redesign brief.
