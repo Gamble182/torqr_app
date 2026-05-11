@@ -19,6 +19,7 @@ export function MarketingFooter() {
               <li><a href="/#features" className="text-foreground hover:text-primary">Features</a></li>
               <li><a href="/#pricing" className="text-foreground hover:text-primary">Preise</a></li>
               <li><a href="/#faq" className="text-foreground hover:text-primary">FAQ</a></li>
+              <li><Link href="/wartungsintervall-rechner" className="text-foreground hover:text-primary">Wartungsintervall-Rechner</Link></li>
             </ul>
           </div>
 

@@ -1,7 +1,9 @@
 'use client';
+import type { ReactNode } from 'react';
+import Link from 'next/link';
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
 
-const faqs = [
+const faqs: Array<{ q: string; a: ReactNode }> = [
   {
     q: 'Was passiert nach den 30 Tagen kostenlos?',
     a: 'Du wählst den Tier, der zu dir passt — oder du kündigst. Keine Verlängerungs-Falle, keine Kreditkarte im Voraus. Wir erinnern dich rechtzeitig per E-Mail.',
@@ -9,6 +11,21 @@ const faqs = [
   {
     q: 'Ist Torqr nur für Heizungsbauer geeignet?',
     a: 'Nein — Torqr unterstützt vier Anlagentypen: Heizung, Klima, Wasseraufbereitung und Energiespeicher (Boiler / Pufferspeicher). 904 Hersteller-Modell-Einträge sind vorgepflegt, eigene kannst du jederzeit ergänzen.',
+  },
+  {
+    q: 'Wie oft muss meine Anlage gewartet werden?',
+    a: (
+      <>
+        Heizung und Klima sind in der Regel jährlich wartungspflichtig (KÜO,
+        DIN 4795, F-Gas-Verordnung). Wasseraufbereitung und Pufferspeicher haben
+        keine gesetzliche Pflicht, sind aber alle 12–24 Monate sinnvoll. Genaue
+        Empfehlung pro Anlagentyp und Baujahr im kostenlosen{' '}
+        <Link href="/wartungsintervall-rechner" className="underline">
+          Wartungsintervall-Rechner
+        </Link>
+        .
+      </>
+    ),
   },
   {
     q: 'Kann ich meine bestehende Excel-Kundenliste importieren?',
