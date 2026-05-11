@@ -129,7 +129,7 @@ Marketing-Briefing als Single Source of Truth: [`docs/marketing/MARKETING_BRIEFI
 | 72 | Marketing | **Pitchdeck + One-Pager** für Innungs-/Handwerkskammer-Termine. PDF, brand-konform. | Medium | 2026-04-28 |
 | 73 | Marketing | **Demo-Video** (~90 s, Smartphone-Hand-Recording) für Landingpage und Outbound. | Medium | 2026-04-28 |
 | 74 | Marketing | **3 SEO-Cornerstone-Artikel** veröffentlichen: "Heizungswartung-Pflicht 2026", "Wartungsintervalle nach Gerätetyp", "DSGVO-konforme Kundenkommunikation für Heizungsbauer". | Medium | 2026-04-28 |
-| 75 | Marketing | **Lead-Magnet-Tools**: Wartungsintervall-Rechner + Wartungsprotokoll-PDF-Vorlage als kostenloser Download (Email-Capture). | Medium | 2026-04-28 |
+| 75 | Marketing | **Lead-Magnet-Tools — Phase 2: Wartungsprotokoll-PDF-Vorlage** als kostenloser Download (Email-Capture). Phase 1 (Wartungsintervall-Rechner) in Sprint 32 abgeschlossen. PDF-Generation braucht `@react-pdf/renderer` oder ähnliche Lib + Template-Design. | Medium | 2026-04-28 |
 | 76 | Marketing | **Pilotkunden-Case-Study** (nach 6 Monaten Daten — ab Mitte 2026): Zeitersparnis-Quote, Zitat, Foto. Voraussetzung: Pilotkunden-Freigabe + Daten-Tracking. | Medium | 2026-04-28 |
 | 79 | Brand | **Social-Media-Asset-Pack** (LinkedIn, Instagram, Facebook) im Brand-Stil. | Low | 2026-04-28 |
 | 80 | Brand | **Tagline-Validierung** — Hauptkandidat *"Die Wartungsakte für Heizungsbauer."* (Decision D-2) mit Pilotkunden + 3 Kollegen testen. Backup-Optionen siehe Briefing §11.1. | Medium | 2026-04-28 |
@@ -170,6 +170,16 @@ Ideas worth keeping in mind but not planned for current sprints. No implementati
 Items are grouped by sprint / work session, ordered newest first.
 
 > **Archiv**: Items älter als 30 Tage → [BACKLOG-ARCHIVE.md](./BACKLOG-ARCHIVE.md). Regel: [development/BACKLOG-WORKFLOW.md § Archival cadence](./development/BACKLOG-WORKFLOW.md).
+
+### Sprint 32 — Lead-Magnet, Brand-Polish, Compliance (2026-05-11 → …)
+
+**Scope-Erfüllung:** Path A startend mit #75 (Phase 1) Wartungsintervall-Rechner geliefert. PDF-Vorlage und Rest-Scope (#79 Social-Media-Assets, #86 Datenexport) noch offen.
+
+| # | Area | Description | Resolved |
+|---|------|-------------|----------|
+| 75 (Phase 1) | Marketing | **Wartungsintervall-Rechner als Standalone-Tool** — `src/lib/marketing/wartungsintervall.ts` exportiert pure `computeWartungsintervall()` + Konstanten (4 SystemTypes × Monate/Pflicht/Begründung, Alt-Anlagen-Augmentation bei ≥ 15 Jahren); 13 vitest cases mit `vi.useFakeTimers`. `src/components/marketing/WartungsintervallCalculator.tsx` Client-Component mit Radio-Selector + Baujahr-Slider/Number-Dual-Input + 3 Result-Tiles (Intervall / Pflicht / Anlagenalter). `src/components/marketing/WartungsintervallEmailCapture.tsx` Slim-Form (Email + Consent + Honeypot) → reused `/api/beta-leads` mit `source='wartungsintervall-rechner'`. Eigene Page `src/app/wartungsintervall-rechner/page.tsx` (Hero + Calculator + Email-Capture; SEO Metadata + JSON-LD `WebApplication`-Schema; Title template-aware). Cross-Links: FAQ-Eintrag "Wie oft muss meine Anlage gewartet werden?" + Footer "Produkt"-Spalte. PDF-Vorlage und optionaler `leistung_kw`-Input explizit aus Scope. Plan: [docs/superpowers/plans/2026-05-11-wartungsintervall-rechner.md](./superpowers/plans/2026-05-11-wartungsintervall-rechner.md). 389 Tests grün (+13 vs. Sprint-31-Baseline 376), `npm run build` sauber. | 2026-05-11 |
+
+---
 
 ### Sprint 31 — Conversion + Polish (2026-05-11)
 
