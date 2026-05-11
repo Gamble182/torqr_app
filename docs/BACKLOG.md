@@ -17,103 +17,48 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 
 ## Planned Sprints
 
-### Sprint 30 — Public-Launch-Ready *(planned, Tag 1: 2026-05-01)*
+### Sprint 32 — Lead-Magnet, Brand-Polish, Compliance *(active since 2026-05-11)*
 
-**Scope:** bringt die Landingpage in Outbound-Reife (Compliance + Polish + Analytics + Cookie-Banner). Niedriges Risiko, klare End-Bedingung *"Site bereit für LinkedIn-Posts und Innungs-Kontakte"*.
+**Original-Scope:** #75 Phase 2 (Wartungsprotokoll-PDF-Vorlage) · #79 Social-Media-Assets · #86 Daten-Export.
 
-**Decisions (getroffen 2026-04-30):**
-- **Analytics:** Vercel Analytics (free, integriert) + **PostHog Free Tier auf EU-Cloud** (1 M Events/Monat, DSGVO-konform)
-- **Cookie-Banner:** Custom (brand-konform, ~2 h Build), 3-Option-Layout: *"Alle akzeptieren · Nur essentielle · Einstellungen"*. Vercel-Analytics + PostHog separat toggle-bar (DSGVO Best Practice)
-- **Anwalt-Loop** für #69 Datenschutz wird Tag 1 parallel angestoßen
-- **Performance-Optimierung entfällt:** Vercel-Production-Lighthouse-Score bereits exzellent (FCP 1.0 s, LCP 1.4 s, SI 2.5 s) — Sprint-29-Score 52 war Mobile-Simulations-Artefakt
+**Geliefert (Detail im Completed-Log):**
+- #75 Phase 1 (Wartungsintervall-Rechner) — 2026-05-11
+- **Ad-hoc-Aufnahme:** Legal-Docs "Perfect-Version"-Baseline + Live-Page-Rewrites (Vorarbeit für #69 + #70, plus neuer #95 Sentry-Status) — 2026-05-11
 
-**Tasks (alle bereits als Open-Items im Backlog, hier nur gruppiert):**
+**Offen im Sprint:** #75 Phase 2 · #79 · #86.
 
-| # | Item | Aufwand | Abhängigkeit |
-|---|------|---------|--------------|
-| ~~#89~~ | ~~OG-Image via `next/og`~~ | ~~S (~1.5 h)~~ | **✅ resolved 2026-05-04** |
-| ~~#90~~ | ~~Color-Contrast-Findings (Hero-Badge + TechStackStrip)~~ | ~~S (~1.5 h)~~ | **✅ resolved 2026-05-04** |
-| ~~#77~~ | ~~Vercel Analytics + PostHog Integration~~ | ~~M (~2 h)~~ | **✅ resolved 2026-05-04** |
-| ~~Cookie-Banner~~ | ~~Custom 3-Option-Layout~~ | ~~M (~2 h)~~ | **✅ resolved 2026-05-04** |
-| #69 | Datenschutz Final-Integration nach Anwalt-Redlines · PostHog/Vercel/Cookie-Banner-Texte ergänzen | S (~1 h Integration + Anwalt-Wartezeit) | Anwalt-Review |
-
-**Out of Scope (in Sprint 31 verschoben):**
-- #52 Cal.com End-to-End-Booking-Flow-Test
-- #88 Workload-Screenshot durch echten ersetzen
-
-**Vor Sprint-Start:** Plan via `/superpowers:writing-plans` formalisieren (TDD-Tasks, Commit-Cadence, Verify-Gates wie beim Design-System-v3-Sprint).
-
-_(Sprint 31 abgeschlossen 2026-05-11 — siehe `## Completed / Resolved`. Nächster Sprint noch nicht geplant.)_
+**Sprint 33:** noch nicht spezifiziert. Kandidaten je nach Priorität: Reaktion auf Anwalts-Redlines (#69 + #70 finalisieren) · #94 CSP (blockiert auf #52) · #71 Self-Service-Billing · #74 SEO-Cornerstone-Artikel.
 
 ---
 
 ## Open Items
 
-### Architecture & Security
+> Sortierung innerhalb jedes Blocks: **Critical → High → Medium → Low**. Felder ohne offene Items wurden entfernt (Schreibgewohnheit: bei neuem Item den Header passend neu einfügen).
+
+### Compliance & Pre-Public-Launch
+
+Was vor Public-Launch entschieden / abgeschlossen sein muss.
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| 49 | Infra | Delete old Supabase project (`vvsmxzebaoslofigxakt`, eu-west-1) — migrated to new project (`hwagqyywixhhorhjtydt`, eu-central-1) via Vercel integration. Delete once confident everything works. | Low | 2026-04-22 |
+| 69 | Compliance | **Datenschutz + Impressum vor Public-Launch finalisieren** — Sprint-29-Stand: Impressum-Adresse + USt-ID-Decision erledigt. Sprint-30-Decisions (2026-04-30): Cookie-Banner ja (custom 3-Option), Analytics = Vercel + PostHog EU. **Stand 2026-05-11:** "Perfekte" Referenz-Baseline + Live-Pages auf DDG/TDDDG/Sie/DPF/Dual-Rolle gemergt in `main` (siehe [`docs/legal/2026-05-11-perfect-version/`](./legal/2026-05-11-perfect-version/)). **Verbleibend:** Anwalts-Redlines abwarten + Section-für-Section gegen die Baseline abgleichen. | Critical (vor Public-Launch) | 2026-04-28 |
+| 95 | Compliance | **Sentry-Status in Datenschutz klären (vor Public-Launch)** — Sentry verarbeitet IPs + Stack-Traces (Server- *und* aktuell auch Client-Bundle), wird aber in `/datenschutz` §6 bewusst (Stand 2026-05-11) nicht erwähnt. Zwei Auflösungspfade: (a) Sentry-Eintrag in §6 ergänzen (Anbieter, Sitz, Daten, DPF + SCC, Speicherdauer; AVV vorher abschließen) ODER (b) Sentry auf serverseitig-only umkonfigurieren und Client-Bundle entfernen. Ohne Entscheidung droht Art.-13-DSGVO-Verstoß. Siehe `docs/legal/2026-05-11-perfect-version/README.md` §"Inhaltliche Entscheidungen mit Risikobewertung". | High (vor Public-Launch) | 2026-05-11 |
+| 70 | Compliance | **AVV-Vertragsvorlage** (Art. 28 DSGVO). **Stand 2026-05-11:** Draft-Page unter `/avv` mit Print-CSS gemergt in `main` (siehe [`docs/legal/2026-05-11-perfect-version/avv-mustervertrag.md`](./legal/2026-05-11-perfect-version/avv-mustervertrag.md)). **Verbleibend:** Anwalts-Review, dann ggf. signiertes PDF im Onboarding-Flow + DB-Acceptance-Tracking. | High | 2026-04-28 |
+| 94 | Security | **Content-Security-Policy (CSP) Header in `next.config.ts` einführen.** Aktuell fehlt CSP komplett — `connect-src`, `script-src`, `img-src`, `style-src`, `frame-src` mit Whitelist für eu.i.posthog.com, eu-assets.i.posthog.com, va.vercel-scripts.com, *.sentry.io, supabase.co (Storage URLs), cal.com (Booking-Iframe im Dashboard) erstellen. Inkl. `nonce`-Strategie für Next.js. Regressionstests gegen alle Auth-Flows + Booking-Flow nötig. **Sprint 31 stretch nicht angegangen (2026-05-11)** — Risiko: CSP kann Booking-Flow brechen, der wegen #52 nicht E2E-verifiziert ist. Erst nach #52 sinnvoll. | Medium | 2026-05-04 |
 
-### Workload & Scheduling — Upcoming Features
+### Cal.com Integration
 
-| # | Area | Description | Priority | Found |
-|---|------|-------------|----------|-------|
-| 63 | Feature | Drag-and-drop rescheduling on calendar view. | Low | 2026-04-23 |
-| 64 | Feature | Weekly/daily calendar modes. | Low | 2026-04-23 |
-
-### System Model — Follow-up
-
-_(no open items)_
-
-### Cal.com Booking Integration
-
-Booking is functional (webhook + customer resolution + system link + Terminiert badge). One follow-up remains.
+Booking is functional (webhook + customer resolution + system link + Terminiert badge). Generic "Wartungstermin" event type configured (60 min, Mon–Fri 7:30–17:00). Open items: end-to-end-Test gating + Scale-out-Entscheidungen.
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
+| 92 | Decision | **Cal.com Multi-Customer-Strategie** — aktuell ein einziger Event-Type für alle Pilot-Kunden. Bei mehreren Kunden gleichzeitig: Pro Kunde eigenes Event-Type / Routing über metadata `customerId` / Bezahlmodell. Decision vor Phase-2 (≥ 5 Kunden) nötig. | Medium | 2026-04-30 |
 | 33 | Feature | Multi-system booking — if a customer has multiple systems with the same maintenance interval, allow selecting all for a single appointment. | Medium | 2026-04-16 |
-
-### Cal.com Configuration
-
-Generic "Wartungstermin" event type configured (60 min, Mon–Fri 7:30–17:00). Per-system-type event types deferred until pilot feedback.
-
-| # | Area | Description | Priority | Found |
-|---|------|-------------|----------|-------|
+| 52 | Testing | Test full booking flow end-to-end — customer receives reminder, clicks Cal.com link, books, webhook fires, booking appears in torqr dashboard. **Sprint 31 nicht angegangen (2026-05-11)** — User-Pre-Test (manuelles Booking) noch nicht erfolgt; Code-Fix kann erst nach Befund priorisiert werden. | Medium | 2026-04-22 |
 | 42 | Config | Per-system-type event durations — different Cal.com event types per system type (Wärmepumpe, Gas, Öl, etc.) if pilot customer needs it. Deferred until feedback. | Low | 2026-04-16 |
 | 44 | Config | Target email — booking confirmation currently goes to personal email. Change to business address when available. | Low | 2026-04-16 |
 | 51 | Decision | Cal.com multi-tenant strategy — current single-account setup doesn't scale beyond pilot. Options: Cal.com Teams, per-user Cal.com accounts, or custom booking UI via Cal.com API. Decide post-pilot. | Low | 2026-04-22 |
-| 52 | Testing | Test full booking flow end-to-end — customer receives reminder, clicks Cal.com link, books, webhook fires, booking appears in torqr dashboard. **Sprint 31 nicht angegangen (2026-05-11)** — User-Pre-Test (manuelles Booking) noch nicht erfolgt; Code-Fix kann erst nach Befund priorisiert werden. | Medium | 2026-04-22 |
 | 11 | Decision | Calendar integration strategy — recommendation: do NOT build own calendar. Use Cal.com for scheduling, let users sync to Google/Outlook via Cal.com. Embed iframe if needed later. | Low | 2026-04-14 |
-
-### Email System
-
-_(no open items)_
-
-### Field Service & Mobile
-
-Features for technicians working on-site. Digital checklist (#35) is live. Follow-up jobs (#27) are live.
-
-_(no open items)_
-
-### Workforce & Scheduling
-
-_(no open items — calendar view shipped as part of Sprint 25 Termine page)_
-
-### Data Import
-
-| # | Area | Description | Priority | Found |
-|---|------|-------------|----------|-------|
-| 25 | Feature | CSV/Excel customer import — import customers from external tools (e.g. Tooltime export). Map columns to Customer model fields. | Medium | 2026-04-16 |
-
-### Architecture & Account
-
-_(no open items)_
-
-### Bookkeeping
-
-| # | Area | Description | Priority | Found |
-|---|------|-------------|----------|-------|
 
 ### Marketing & Go-to-Market
 
@@ -121,24 +66,33 @@ Marketing-Briefing als Single Source of Truth: [`docs/marketing/MARKETING_BRIEFI
 
 | # | Area | Description | Priority | Found |
 |---|------|-------------|----------|-------|
-| 69 | Compliance | **Datenschutz + Impressum vor Public-Launch finalisieren** — Sprint-29-Stand: Impressum-Adresse + USt-ID-Decision erledigt. Sprint-30-Decisions (2026-04-30): Cookie-Banner ja (custom 3-Option, weil PostHog Cookies setzt), Analytics = Vercel + PostHog EU-Cloud. **Stand 2026-05-11:** Interne "Perfekte" Referenz-Baseline erstellt in [`docs/legal/2026-05-11-perfect-version/`](./legal/2026-05-11-perfect-version/) + Live-Pages auf DDG/TDDDG/Sie/DPF/Dual-Rolle umgestellt (Branch `feature/legal-docs-perfect-v1`). **Verbleibend:** Anwalts-Redlines erwarten und Section-für-Section gegen die Baseline abgleichen (siehe `docs/legal/2026-05-11-perfect-version/README.md` §"Wie diese Baseline gegen Anwalts-Redlines vergleichen?"). | Critical (vor Public-Launch) | 2026-04-28 |
-| 88 | Marketing | **Workload-Screenshot fehlt** — Echten Screenshot von `/dashboard/team/workload` (1440×900, ≤ 200 KB) nachreichen. Bestehende Datei stammt aus Sprint 29 (162 KB, möglicherweise schon aktualisiert — vor Re-Use prüfen). **Sprint 31 nicht angegangen (2026-05-11)** — User-Asset noch nicht bereitgestellt. | Medium | 2026-04-30 |
-| 92 | Decision | **Cal.com Multi-Customer-Strategie** — aktuell ein einziger Event-Type für alle Pilot-Kunden. Bei mehreren Kunden gleichzeitig: Pro Kunde eigenes Event-Type / Routing über metadata `customerId` / Bezahlmodell. Decision vor Phase-2 (≥ 5 Kunden) nötig. | Medium | 2026-04-30 |
-| 70 | Compliance | **AVV-Vertragsvorlage** (Art. 28 DSGVO). **Stand 2026-05-11:** Draft-Page unter `/avv` live (siehe [`docs/legal/2026-05-11-perfect-version/avv-mustervertrag.md`](./legal/2026-05-11-perfect-version/avv-mustervertrag.md)) — Print-CSS für Browser-PDF-Export. **Verbleibend:** Anwalts-Review, dann ggf. signiertes PDF im Onboarding-Flow + DB-Acceptance-Tracking. | High | 2026-04-28 |
-| 95 | Compliance | **Sentry-Status in Datenschutz klären (vor Public-Launch)** — Sentry verarbeitet IPs + Stack-Traces (Server- *und* aktuell auch Client-Bundle), wird aber in `/datenschutz` §6 bewusst (Stand 2026-05-11) nicht erwähnt. Zwei Auflösungspfade: (a) Sentry-Eintrag in §6 ergänzen (Anbieter, Sitz, Daten, DPF + SCC, Speicherdauer; AVV vorher abschließen) ODER (b) Sentry auf serverseitig-only umkonfigurieren und Client-Bundle entfernen. Ohne Entscheidung droht Art.-13-DSGVO-Verstoß. Siehe `docs/legal/2026-05-11-perfect-version/README.md` §"Inhaltliche Entscheidungen mit Risikobewertung". | High (vor Public-Launch) | 2026-05-11 |
 | 71 | Marketing | **Self-Service-Signup + Billing-Integration** (Stripe oder Paddle). Voraussetzung für SaaS-Phase. Aktuell sind Kundenanlage + Bezahlung manuell. | High | 2026-04-28 |
 | 72 | Marketing | **Pitchdeck + One-Pager** für Innungs-/Handwerkskammer-Termine. PDF, brand-konform. | Medium | 2026-04-28 |
 | 73 | Marketing | **Demo-Video** (~90 s, Smartphone-Hand-Recording) für Landingpage und Outbound. | Medium | 2026-04-28 |
 | 74 | Marketing | **3 SEO-Cornerstone-Artikel** veröffentlichen: "Heizungswartung-Pflicht 2026", "Wartungsintervalle nach Gerätetyp", "DSGVO-konforme Kundenkommunikation für Heizungsbauer". | Medium | 2026-04-28 |
 | 75 | Marketing | **Lead-Magnet-Tools — Phase 2: Wartungsprotokoll-PDF-Vorlage** als kostenloser Download (Email-Capture). Phase 1 (Wartungsintervall-Rechner) in Sprint 32 abgeschlossen. PDF-Generation braucht `@react-pdf/renderer` oder ähnliche Lib + Template-Design. | Medium | 2026-04-28 |
 | 76 | Marketing | **Pilotkunden-Case-Study** (nach 6 Monaten Daten — ab Mitte 2026): Zeitersparnis-Quote, Zitat, Foto. Voraussetzung: Pilotkunden-Freigabe + Daten-Tracking. | Medium | 2026-04-28 |
-| 79 | Brand | **Social-Media-Asset-Pack** (LinkedIn, Instagram, Facebook) im Brand-Stil. | Low | 2026-04-28 |
 | 80 | Brand | **Tagline-Validierung** — Hauptkandidat *"Die Wartungsakte für Heizungsbauer."* (Decision D-2) mit Pilotkunden + 3 Kollegen testen. Backup-Optionen siehe Briefing §11.1. | Medium | 2026-04-28 |
-| 83 | Decision | **White-Label-Strategie**: Innungen aktiv ansprechen oder nur on-demand? Pricing-Modell klären (500 €/Monat pro Partner aus BMC). | Low | 2026-04-28 |
-| 84 | Marketing | **CRM-Light für Lead-Management** (Outbound an Innungen, Pilotkunden-Funnel, Beta-Liste). Optionen: HubSpot Free, Notion-Datenbank, Airtable. | Low | 2026-04-28 |
 | 85 | Marketing | **Email-Drip-Onboarding-Strecke** für Self-Service-Signups. Voraussetzung: #71 + #82. | Medium (nach #71) | 2026-04-28 |
 | 86 | Marketing | **Daten-Export für DSGVO-Pflicht (Art. 20)** als Self-Service-Funktion (kein Marketing-Item per se, aber FAQ-relevant: "Was passiert mit meinen Daten beim Kündigen?"). Aktuell nur per DB-Dump möglich. | Medium | 2026-04-28 |
-| 94 | Security | **Content-Security-Policy (CSP) Header in `next.config.ts` einführen.** Aktuell fehlt CSP komplett — `connect-src`, `script-src`, `img-src`, `style-src`, `frame-src` müssen mit Whitelist für eu.i.posthog.com, eu-assets.i.posthog.com, va.vercel-scripts.com, *.sentry.io, supabase.co (Storage URLs), cal.com (Booking-Iframe im Dashboard) erstellt werden. Inkl. `nonce`-Strategie für Next.js. Regressionstests gegen alle Auth-Flows + Booking-Flow nötig. **Sprint 31 stretch nicht angegangen (2026-05-11)** — Risiko: CSP kann Booking-Flow brechen, der wegen #52 nicht E2E-verifiziert ist. Erst nach #52 sinnvoll. | Medium | 2026-05-04 |
+| 88 | Marketing | **Workload-Screenshot fehlt** — Echten Screenshot von `/dashboard/team/workload` (1440×900, ≤ 200 KB) nachreichen. Bestehende Datei stammt aus Sprint 29 (162 KB, möglicherweise schon aktualisiert — vor Re-Use prüfen). **Sprint 31 nicht angegangen (2026-05-11)** — User-Asset noch nicht bereitgestellt. | Medium | 2026-04-30 |
+| 79 | Brand | **Social-Media-Asset-Pack** (LinkedIn, Instagram, Facebook) im Brand-Stil. | Low | 2026-04-28 |
+| 83 | Decision | **White-Label-Strategie**: Innungen aktiv ansprechen oder nur on-demand? Pricing-Modell klären (500 €/Monat pro Partner aus BMC). | Low | 2026-04-28 |
+| 84 | Marketing | **CRM-Light für Lead-Management** (Outbound an Innungen, Pilotkunden-Funnel, Beta-Liste). Optionen: HubSpot Free, Notion-Datenbank, Airtable. | Low | 2026-04-28 |
+
+### Features
+
+| # | Area | Description | Priority | Found |
+|---|------|-------------|----------|-------|
+| 25 | Feature | CSV/Excel customer import — import customers from external tools (e.g. Tooltime export). Map columns to Customer model fields. | Medium | 2026-04-16 |
+| 63 | Feature | Drag-and-drop rescheduling on calendar view. | Low | 2026-04-23 |
+| 64 | Feature | Weekly/daily calendar modes. | Low | 2026-04-23 |
+
+### Infrastructure
+
+| # | Area | Description | Priority | Found |
+|---|------|-------------|----------|-------|
+| 49 | Infra | Delete old Supabase project (`vvsmxzebaoslofigxakt`, eu-west-1) — migrated to new project (`hwagqyywixhhorhjtydt`, eu-central-1) via Vercel integration. Delete once confident everything works. | Low | 2026-04-22 |
 
 ---
 
@@ -174,10 +128,11 @@ Items are grouped by sprint / work session, ordered newest first.
 
 ### Sprint 32 — Lead-Magnet, Brand-Polish, Compliance (2026-05-11 → …)
 
-**Scope-Erfüllung:** Path A startend mit #75 (Phase 1) Wartungsintervall-Rechner geliefert. PDF-Vorlage und Rest-Scope (#79 Social-Media-Assets, #86 Datenexport) noch offen.
+**Scope-Erfüllung:** #75 Phase 1 (Wartungsintervall-Rechner) als Path-A-Start geliefert. Mid-sprint Ad-hoc-Erweiterung um "perfekte" Legal-Docs-Baseline als Vorbereitung für Anwalts-Review (#69 + #70 + neuer #95). PDF-Vorlage und Rest-Scope (#79 Social-Media-Assets, #86 Datenexport) bleiben offen.
 
 | # | Area | Description | Resolved |
 |---|------|-------------|----------|
+| 69, 70, 95 (Vorbereitung) | Compliance | **Legal-Docs "Perfect-Version"-Baseline + Live-Page-Rewrites** — Ad-hoc-Aufnahme in Sprint 32. Worktree `feature/legal-docs-perfect-v1` mit 8 Commits in `main` gemergt (Merge-Commit `97b5f89`). Liefert: (1) 4 produktionsreife Legal-Pages — `/datenschutz` (9 §§, DDG/TDDDG/Sie/DPF+SCC/Dual-Rolle), `/impressum` (§5 DDG, Kleinunternehmer §19 UStG, MStV-Block raus, §§7-10 DDG-Haftung), `/agb` (B2B-only §14 BGB, 12 §§, Beta-Paragraph, Kardinalpflicht-Ausnahme), `/avv` (Art. 28 DSGVO, 14 §§, TOM-Anhang, Print-CSS); (2) 5 Markdown-Quelldokumente unter [`docs/legal/2026-05-11-perfect-version/`](./legal/2026-05-11-perfect-version/) als Audit-Trail mit Annahmen-Log, Quellen-Verzeichnis und Cross-Check-Checkliste für späteren Anwalts-Redline-Vergleich; (3) Footer erweitert um AGB- und AVV-Links; (4) BACKLOG: #69 + #70 auf neuen Stand, **#95 Sentry-Status neu** (Art.-13-Risiko Pre-Public-Launch). Verification: `tsc --noEmit` clean, `npm run build` clean, Dev-Smoke HTTP 200 + Schlüssel-Phrasen (§5 DDG / TDDDG / §14 BGB / Art. 28 DSGVO) auf allen 4 Pages. Disclaimer: Baseline ist LLM-generiert und ersetzt **keine** anwaltliche Beratung — verbindlich gilt die spätere Anwalts-Fassung. | 2026-05-11 |
 | 75 (Phase 1) | Marketing | **Wartungsintervall-Rechner als Standalone-Tool** — `src/lib/marketing/wartungsintervall.ts` exportiert pure `computeWartungsintervall()` + Konstanten (4 SystemTypes × Monate/Pflicht/Begründung, Alt-Anlagen-Augmentation bei ≥ 15 Jahren); 13 vitest cases mit `vi.useFakeTimers`. `src/components/marketing/WartungsintervallCalculator.tsx` Client-Component mit Radio-Selector + Baujahr-Slider/Number-Dual-Input + 3 Result-Tiles (Intervall / Pflicht / Anlagenalter). `src/components/marketing/WartungsintervallEmailCapture.tsx` Slim-Form (Email + Consent + Honeypot) → reused `/api/beta-leads` mit `source='wartungsintervall-rechner'`. Eigene Page `src/app/wartungsintervall-rechner/page.tsx` (Hero + Calculator + Email-Capture; SEO Metadata + JSON-LD `WebApplication`-Schema; Title template-aware). Cross-Links: FAQ-Eintrag "Wie oft muss meine Anlage gewartet werden?" + Footer "Produkt"-Spalte. PDF-Vorlage und optionaler `leistung_kw`-Input explizit aus Scope. Plan: [docs/superpowers/plans/2026-05-11-wartungsintervall-rechner.md](./superpowers/plans/2026-05-11-wartungsintervall-rechner.md). 389 Tests grün (+13 vs. Sprint-31-Baseline 376), `npm run build` sauber. | 2026-05-11 |
 
 ---
