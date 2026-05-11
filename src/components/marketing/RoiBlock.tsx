@@ -16,7 +16,7 @@ const tiles = [
   {
     icon: ShieldCheckIcon,
     headline: '~5 % weniger Kundenabwanderung',
-    sub: 'Vergessene Wartungen kosten Kunden — Torqr fängt sie automatisch ab',
+    sub: 'Vergessene Wartungen kosten Kunden — Torqr fängt sie ab',
   },
 ];
 
@@ -32,8 +32,8 @@ export function RoiBlock() {
           {tiles.map((t) => (
             <div key={t.headline} className="rounded-xl border border-border bg-background p-8 text-center">
               <t.icon className="h-8 w-8 text-primary mx-auto mb-4" />
-              <p className="text-2xl sm:text-3xl font-bold text-foreground mb-2">{t.headline}</p>
-              <p className="text-sm text-muted-foreground">{t.sub}</p>
+              <p className="text-2xl sm:text-3xl font-bold text-foreground mb-2 text-balance">{t.headline}</p>
+              <p className="text-sm text-muted-foreground text-balance">{t.sub}</p>
             </div>
           ))}
         </div>
