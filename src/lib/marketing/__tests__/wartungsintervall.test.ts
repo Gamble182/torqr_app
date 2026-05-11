@@ -74,7 +74,7 @@ describe('computeWartungsintervall', () => {
 
   it('throws RangeError for baujahr before MIN_BAUJAHR', () => {
     expect(() =>
-      computeWartungsintervall({ systemType: 'HEATING', baujahr: 1899 }),
+      computeWartungsintervall({ systemType: 'HEATING', baujahr: 1979 }),
     ).toThrow(RangeError);
   });
 
@@ -104,7 +104,7 @@ describe('computeWartungsintervall', () => {
   it('exposes documented defaults and constants', () => {
     expect(DEFAULT_SYSTEM_TYPE).toBe('HEATING');
     expect(DEFAULT_BAUJAHR_OFFSET_YEARS).toBe(5);
-    expect(MIN_BAUJAHR).toBe(1900);
+    expect(MIN_BAUJAHR).toBe(1980);
     expect(OLD_SYSTEM_THRESHOLD_YEARS).toBe(15);
   });
 });

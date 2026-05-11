@@ -10,7 +10,7 @@ export type SystemTypeKey = (typeof SYSTEM_TYPE_KEYS)[number];
 
 export const DEFAULT_SYSTEM_TYPE: SystemTypeKey = 'HEATING';
 export const DEFAULT_BAUJAHR_OFFSET_YEARS = 5;
-export const MIN_BAUJAHR = 1900;
+export const MIN_BAUJAHR = 1980;
 export const OLD_SYSTEM_THRESHOLD_YEARS = 15;
 
 export interface WartungsintervallInput {
