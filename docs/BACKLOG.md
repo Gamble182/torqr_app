@@ -43,12 +43,30 @@ Priority levels: **Critical** · **High** · **Medium** · **Low**
 
 **Vor Sprint-Start:** Plan via `/superpowers:writing-plans` formalisieren (TDD-Tasks, Commit-Cadence, Verify-Gates wie beim Design-System-v3-Sprint).
 
-### Sprint 31 — *Backlog (geplant nach Sprint 30)*
+### Sprint 31 — Conversion + Polish *(planned 2026-05-11)*
 
-| # | Item |
-|---|------|
-| #52 | Cal.com E2E-Booking-Flow-Test gegen Production |
-| #88 | Workload-Screenshot durch echten ersetzen (1440×900, ≤200 KB) |
+**Scope:** Landingpage outbound-bereit machen + Sprint-30-Follow-ups schließen. Niedriges Risiko, klare End-Bedingung: *"Site bereit für ernsthaftes Outbound + Booking-Flow regressions-getestet"*.
+
+**Tasks:**
+
+| # | Item | Aufwand | Abhängigkeit |
+|---|------|---------|--------------|
+| #52 | Cal.com E2E-Booking-Flow-Test gegen Production — Analyse User-Befund + Fix gefundener Regressions | M (~1.5 h) | User-Pre-Test (manuelles Booking) |
+| #88 | Workload-Screenshot — User-vorbereitete Datei einbinden (1440×900, ≤200 KB) | S (~15 min) | User-Screenshot |
+| #91 | ROI-Rechner inline CTA in [RoiBlock.tsx](../src/components/marketing/RoiBlock.tsx) — interaktiver Rechner (Wartungsverträge × Stundensatz → ROI-Faktor) | M (~2 h) | — |
+| #60 | CatalogPicker `onChange` Signatur — `null`-Entry für Clear-Action erlauben | S (~30 min) | — |
+
+**Stretch (optional, falls Tasks gut laufen):**
+
+| # | Item | Aufwand | Abhängigkeit |
+|---|------|---------|--------------|
+| #94 | Content-Security-Policy Header in `next.config.ts` einführen — Handover existiert: [docs/superpowers/handovers/2026-05-04-csp-introduction-handover.md](./superpowers/handovers/2026-05-04-csp-introduction-handover.md) | L (~3 h, multi-flow regression) | — |
+| #78 | Wordmark-Variationen (horizontal/vertikal/monochrom/Negativ) als SVG-Set | M (~1.5 h) | — |
+
+**Parallel-Track (falls Anwalt-Antwort vorliegt):**
+- **#69 Datenschutz-Final-Integration** — Redlines aus Anwalt-Review-Paket einbauen + PostHog/Vercel/Cookie-Banner-Texte ergänzen + 2× `TODO Anwalt`-Marker in `datenschutz/page.tsx` (Z. 24 + 50) auflösen.
+
+**Vor Sprint-Start:** Plan via `/superpowers:writing-plans` formalisieren (TDD-Tasks, Commit-Cadence, Verify-Gates).
 
 ---
 
